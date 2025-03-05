@@ -1,15 +1,8 @@
---[[
-	Credit:
-	Original Fluent : https://github.com/dawid-scripts/Fluent
-	Themes : https://github.com/ActualMasterOogway/Fluent-Renewed/
-]]
-
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local TextService = game:GetService("TextService")
 local Camera = game:GetService("Workspace").CurrentCamera
 local Mouse = LocalPlayer:GetMouse()
 local httpService = game:GetService("HttpService")
@@ -20,25 +13,24 @@ local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
 
 local Themes = {
 	Names = {
-		"Dark Typewriter",
-		"Quantum",
 		"Dark",
 		"Darker",
 		"Light",
 		"Aqua",
 		"Amethyst",
-		"Amethyst Dark",
 		"Rose",
-		"Sakura"
+		"Sakura",
+        "Quantum"
 	},
-	["Quantum"] = {
-		Accent = Color3.fromRGB(0, 255, 0),
+    Quantum = {
+        Name = "Quantum",
+        Accent = Color3.fromRGB(0, 255, 0),
     
         AcrylicMain = Color3.fromRGB(0, 0, 0),
-        AcrylicBorder = Color3.fromRGB(171, 171, 171),
+        AcrylicBorder = Color3.fromRGB(51, 153, 153),
         AcrylicGradient = ColorSequence.new(Color3.fromRGB(20, 20, 20), Color3.fromRGB(0, 0, 0)),
     
-        TitleBarLine = Color3.fromRGB(171, 171, 171),
+        TitleBarLine = Color3.fromRGB(51, 153, 153),
         Tab = Color3.fromRGB(51, 153, 153),
     
         Element = Color3.fromRGB(60, 60, 60),
@@ -77,98 +69,6 @@ local Themes = {
         Hover = Color3.fromRGB(100, 0, 255),
         HoverChange = 0.1,
     },
-	["Dark Typewriter"] = {
-		Accent = Color3.fromRGB(109, 180, 120),
-
-		AcrylicMain = Color3.fromRGB(38, 38, 38),
-		AcrylicBorder = Color3.fromRGB(85, 85, 85),
-		AcrylicGradient = ColorSequence.new(Color3.fromRGB(38, 38, 38), Color3.fromRGB(38, 38, 38)),
-		AcrylicNoise = 1,
-
-		TitleBarLine = Color3.fromRGB(189, 189, 189),
-		Tab = Color3.fromRGB(109, 180, 120),
-
-		Element = Color3.fromRGB(42, 42, 42),
-		ElementBorder = Color3.fromRGB(51, 51, 51),
-		InElementBorder = Color3.fromRGB(51, 51, 51),
-		ElementTransparency = 0,
-
-		ToggleSlider = Color3.fromRGB(103, 169, 113),
-		ToggleToggled = Color3.fromRGB(255, 255, 255),
-
-		SliderRail = Color3.fromRGB(51, 51, 51),
-
-		DropdownFrame = Color3.fromRGB(68, 68, 68),
-		DropdownHolder = Color3.fromRGB(68, 68, 68),
-		DropdownBorder = Color3.fromRGB(38, 38, 38),
-		DropdownOption = Color3.fromRGB(153, 200, 255),
-
-		Keybind = Color3.fromRGB(54, 54, 54),
-
-		Input = Color3.fromRGB(27, 27, 27),
-		InputFocused = Color3.fromRGB(51, 51, 51),
-		InputIndicator = Color3.fromRGB(197, 184, 161),
-
-		Dialog = Color3.fromRGB(38, 38, 38),
-		DialogHolder = Color3.fromRGB(58, 52, 46),
-		DialogHolderLine = Color3.fromRGB(40, 40, 40),
-		DialogButton = Color3.fromRGB(42, 42, 42),
-		DialogButtonBorder = Color3.fromRGB(51, 51, 51),
-		DialogBorder = Color3.fromRGB(189, 189, 189),
-		DialogInput = Color3.fromRGB(27, 27, 27),
-		DialogInputLine = Color3.fromRGB(197, 184, 161),
-
-		Text = Color3.fromRGB(197, 184, 161),
-		SubText = Color3.fromRGB(158, 158, 158),
-		Hover = Color3.fromRGB(149, 149, 149),
-		HoverChange = 0.04
-	},
-	["Amethyst Dark"] = {
-		Accent = Color3.fromHex("#b133ff"),
-
-		AcrylicMain = Color3.fromHex("#120024"),
-		AcrylicBorder = Color3.fromHex("#4d057b"),
-		AcrylicGradient = ColorSequence.new(Color3.fromHex("#120024"), Color3.fromHex("#120024")),
-		AcrylicNoise = 0.92,
-
-		TitleBarLine = Color3.fromHex("#4d057b"),
-		Tab = Color3.fromHex("#e9d9f2"),
-
-		Element = Color3.fromHex("#25013c"),
-		ElementBorder = Color3.fromHex("#4d057b"),
-		InElementBorder = Color3.fromHex("#b133ff"),
-		ElementTransparency = 0.85,
-
-		ToggleSlider = Color3.fromHex("#7d16bf"),
-		ToggleToggled = Color3.fromHex("#120024"),
-
-		SliderRail = Color3.fromHex("#7d16bf"),
-
-		DropdownFrame = Color3.fromHex("#25013c"),
-		DropdownHolder = Color3.fromHex("#25013c"),
-		DropdownBorder = Color3.fromHex("#4d057b"),
-		DropdownOption = Color3.fromHex("#e9d9f2"),
-
-		Keybind = Color3.fromHex("#25013c"),
-
-		Input = Color3.fromHex("#180030"),
-		InputFocused = Color3.fromHex("#180030"),
-		InputIndicator = Color3.fromHex("#9e85ad"),
-
-		Dialog = Color3.fromHex("#25013c"),
-		DialogHolder = Color3.fromHex("#120024"),
-		DialogHolderLine = Color3.fromHex("#4d057b"),
-		DialogButton = Color3.fromHex("#25013c"),
-		DialogButtonBorder = Color3.fromHex("#4d057b"),
-		DialogBorder = Color3.fromHex("#4d057b"),
-		DialogInput = Color3.fromHex("#180030"),
-		DialogInputLine = Color3.fromHex("#b133ff"),
-
-		Text = Color3.fromHex("#e9d9f2"),
-		SubText = Color3.fromHex("#9e85ad"),
-		Hover = Color3.fromHex("#4d057b"),
-		HoverChange = 0.1
-	},
 	Dark = {
 		Name = "Dark",
 		Accent = Color3.fromRGB(96, 205, 255),
@@ -513,7 +413,6 @@ local Library = {
 	Acrylic = false,
 	Transparency = true,
 	MinimizeKeybind = nil,
-	MinimizerIcon = nil,
 	MinimizeKey = Enum.KeyCode.LeftControl,
 }
 
@@ -656,66 +555,46 @@ function Spring.new(targetValue, options)
 end
 
 function Spring:step(state, dt)
-	local d = self._dampingRatio
-	local f = self._frequency * 2 * math.pi
-	local g = self._targetValue
-	local p0 = state.value
-	local v0 = state.velocity or 0
+	local dampingRatio = self._dampingRatio
+	local angularFrequency = self._frequency * 2 * math.pi
+	local targetValue = self._targetValue
+	local currentValue = state.value
+	local velocity = state.velocity or 0
 
-	local offset = p0 - g
-	local decay = math.exp(-d * f * dt)
+	local offset = currentValue - targetValue
+	local decay = math.exp(-dampingRatio * angularFrequency * dt)
 
-	local p1, v1
+	local newValue, newVelocity
 
-	if d == 1 then
-		p1 = (offset * (1 + f * dt) + v0 * dt) * decay + g
-		v1 = (v0 * (1 - f * dt) - offset * (f * f * dt)) * decay
-	elseif d < 1 then
-		local c = math.sqrt(1 - d * d)
-
-		local i = math.cos(f * c * dt)
-		local j = math.sin(f * c * dt)
-
-		local z
-		if c > EPS then
-			z = j / c
-		else
-			local a = dt * f
-			z = a + ((a * a) * (c * c) * (c * c) / 20 - c * c) * (a * a * a) / 6
-		end
-
-		local y
-		if f * c > EPS then
-			y = j / (f * c)
-		else
-			local b = f * c
-			y = dt + ((dt * dt) * (b * b) * (b * b) / 20 - b * b) * (dt * dt * dt) / 6
-		end
-
-		p1 = (offset * (i + d * z) + v0 * y) * decay + g
-		v1 = (v0 * (i - z * d) - offset * (z * f)) * decay
+	if dampingRatio == 1 then
+		newValue = (offset * (1 + angularFrequency * dt) + velocity * dt) * decay + targetValue
+		newVelocity = (velocity * (1 - angularFrequency * dt) - offset * (angularFrequency ^ 2 * dt)) * decay
+	elseif dampingRatio < 1 then
+		local c = math.sqrt(1 - dampingRatio ^ 2)
+		local cosTerm = math.cos(angularFrequency * c * dt)
+		local sinTerm = math.sin(angularFrequency * c * dt)
+		local zTerm = (c > EPS) and (sinTerm / c) or (angularFrequency * dt)
+		local yTerm = (angularFrequency * c > EPS) and (sinTerm / (angularFrequency * c)) or dt
+		newValue = (offset * (cosTerm + dampingRatio * zTerm) + velocity * yTerm) * decay + targetValue
+		newVelocity = (velocity * (cosTerm - zTerm * dampingRatio) - offset * (angularFrequency * zTerm)) * decay
 	else
-		local c = math.sqrt(d * d - 1)
-
-		local r1 = -f * (d - c)
-		local r2 = -f * (d + c)
-
-		local co2 = (v0 - offset * r1) / (2 * f * c)
-		local co1 = offset - co2
-
-		local e1 = co1 * math.exp(r1 * dt)
-		local e2 = co2 * math.exp(r2 * dt)
-
-		p1 = e1 + e2 + g
-		v1 = e1 * r1 + e2 * r2
+		local c = math.sqrt(dampingRatio ^ 2 - 1)
+		local r1 = -angularFrequency * (dampingRatio - c)
+		local r2 = -angularFrequency * (dampingRatio + c)
+		local expCoefficient1 = (velocity - offset * r1) / (2 * angularFrequency * c)
+		local expCoefficient2 = offset - expCoefficient1
+		local expTerm1 = expCoefficient2 * math.exp(r1 * dt)
+		local expTerm2 = expCoefficient1 * math.exp(r2 * dt)
+		newValue = expTerm1 + expTerm2 + targetValue
+		newVelocity = expTerm1 * r1 + expTerm2 * r2
 	end
 
-	local complete = math.abs(v1) < VELOCITY_THRESHOLD and math.abs(p1 - g) < POSITION_THRESHOLD
+	local complete = math.abs(newVelocity) < VELOCITY_THRESHOLD and math.abs(newValue - targetValue) < POSITION_THRESHOLD
 
 	return {
 		complete = complete,
-		value = complete and g or p1,
-		velocity = v1,
+		value = complete and targetValue or newValue,
+		velocity = newVelocity,
 	}
 end
 
@@ -723,7 +602,6 @@ local noop = function() end
 
 local BaseMotor = {}
 BaseMotor.__index = BaseMotor
-
 function BaseMotor.new()
 	return setmetatable({
 		_onStep = Signal.new(),
@@ -973,7 +851,7 @@ local Creator = {
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
 			BackgroundTransparency = 1,
-			TextSize = 18,
+			TextSize = 14,
 		},
 		TextButton = {
 			BackgroundColor3 = Color3.new(1, 1, 1),
@@ -982,7 +860,7 @@ local Creator = {
 			Font = Enum.Font.SourceSans,
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
-			TextSize = 18,
+			TextSize = 14,
 		},
 		TextBox = {
 			BackgroundColor3 = Color3.new(1, 1, 1),
@@ -991,7 +869,7 @@ local Creator = {
 			Font = Enum.Font.SourceSans,
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
-			TextSize = 18,
+			TextSize = 14,
 		},
 		ImageLabel = {
 			BackgroundTransparency = 1,
@@ -1076,7 +954,6 @@ function Creator.New(Name, Properties, Children)
 	for Name, Value in next, Creator.DefaultProperties[Name] or {} do
 		Object[Name] = Value
 	end
-
 	for Name, Value in next, Properties or {} do
 		if Name ~= "ThemeTag" then
 			Object[Name] = Value
@@ -1354,7 +1231,7 @@ function AcrylicPaint()
 				},
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 4),
+					CornerRadius = UDim.new(0, 8),
 				}),
 			}),
 
@@ -1522,7 +1399,7 @@ Components.Element = (function()
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Desc,
 			TextColor3 = Color3.fromRGB(200, 200, 200),
-			TextSize = 14,
+			TextSize = 12,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -1675,7 +1552,7 @@ Components.Section = (function()
 				TextTransparency = 0,
 				FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
 				TextSize = 18,
-				TextXAlignment = "Left",
+				TextXAlignment = "Center",
 				TextYAlignment = "Center",
 				Size = UDim2.new(1, -16, 0, 18),
 				Position = UDim2.fromOffset(0, 2),
@@ -1749,7 +1626,7 @@ Components.Tab = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 4),
+				CornerRadius = UDim.new(0, 6),
 			}),
 			New("TextLabel", {
 				AnchorPoint = Vector2.new(0, 0.5),
@@ -1763,7 +1640,7 @@ Components.Tab = (function()
 					Enum.FontWeight.Regular,
 					Enum.FontStyle.Normal
 				),
-				TextSize = 14,
+				TextSize = 12,
 				TextXAlignment = "Left",
 				TextYAlignment = "Center",
 				Size = UDim2.new(1, -12, 1, 0),
@@ -1902,7 +1779,7 @@ Components.Button = (function()
 		Button.Title = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			TextColor3 = Color3.fromRGB(200, 200, 200),
-			TextSize = 18,
+			TextSize = 14,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Center,
 			TextYAlignment = Enum.TextYAlignment.Center,
@@ -2185,7 +2062,7 @@ Components.Notification = (function()
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Config.Content,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextSize = 18,
+			TextSize = 14,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			AutomaticSize = Enum.AutomaticSize.Y,
 			Size = UDim2.new(1, 0, 0, 14),
@@ -2201,7 +2078,7 @@ Components.Notification = (function()
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Config.SubContent,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextSize = 18,
+			TextSize = 14,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			AutomaticSize = Enum.AutomaticSize.Y,
 			Size = UDim2.new(1, 0, 0, 14),
@@ -2336,7 +2213,7 @@ Components.Textbox = (function()
 		Textbox.Input = New("TextBox", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			TextColor3 = Color3.fromRGB(200, 200, 200),
-			TextSize = 18,
+			TextSize = 14,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextYAlignment = Enum.TextYAlignment.Center,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -2468,7 +2345,7 @@ Components.TitleBar = (function()
 				},
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 9),
+					CornerRadius = UDim.new(0, 7),
 				}),
 				New("ImageLabel", {
 					Image = Icon,
@@ -2529,7 +2406,7 @@ Components.TitleBar = (function()
 						Enum.FontWeight.Regular,
 						Enum.FontStyle.Normal
 					),
-					TextSize = 14,
+					TextSize = 12,
 					TextXAlignment = "Left",
 					TextYAlignment = "Center",
 					Size = UDim2.fromScale(0, 1),
@@ -2548,7 +2425,7 @@ Components.TitleBar = (function()
 						Enum.FontWeight.Regular,
 						Enum.FontStyle.Normal
 					),
-					TextSize = 14,
+					TextSize = 12,
 					TextXAlignment = "Left",
 					TextYAlignment = "Center",
 					Size = UDim2.fromScale(0, 1),
@@ -2571,8 +2448,8 @@ Components.TitleBar = (function()
 
 		TitleBar.CloseButton = BarButton(Components.Assets.Close, UDim2.new(1, -4, 0, 4), TitleBar.Frame, function()
 			Library.Window:Dialog({
-				Title = "Close",
-				Content = "Are you sure you want to unload the interface?",
+				Title = "Close  Hub",
+				Content = "Are you sure you want to exit Quantum Hub?",
 				Buttons = {
 					{
 						Title = "Yes",
@@ -2586,12 +2463,10 @@ Components.TitleBar = (function()
 				},
 			})
 		end)
-		TitleBar.MaxButton = BarButton(Components.Assets.Max, UDim2.new(1, -40, 0, 4), TitleBar.Frame, function()
-			Config.Window.Maximize(not Config.Window.Maximized)
-		end)
-		TitleBar.MinButton = BarButton(Components.Assets.Min, UDim2.new(1, -80, 0, 4), TitleBar.Frame, function()
+		TitleBar.MinButton = BarButton(Components.Assets.Min, UDim2.new(1, -40, 0, 4), TitleBar.Frame, function()
 			Library.Window:Minimize()
 		end)
+
 
 		return TitleBar
 	end
@@ -2701,11 +2576,25 @@ Components.Window = (function()
 		})
 
 		Window.Root = New("Frame", {
-			BackgroundTransparency = 1,
+			BackgroundTransparency = 0.7,
 			Size = Window.Size,
 			Position = Window.Position,
 			Parent = Config.Parent,
 		}, {
+			New("UICorner", {
+				CornerRadius = UDim.new(0, 10),
+			}),
+			New("ImageLabel", {
+				Size = UDim2.fromScale(1, 1),
+				Position = UDim2.fromScale(0, 0),
+				BackgroundTransparency = 0.7,
+				Image = "rbxassetid://16325191359",
+				ZIndex = 0,
+			}, {
+				New("UICorner", {
+					CornerRadius = UDim.new(0, 10),
+				}),
+			}),
 			Window.AcrylicPaint.Frame,
 			Window.TabDisplay,
 			Window.ContainerCanvas,
@@ -2718,6 +2607,15 @@ Components.Window = (function()
 			SubTitle = Config.SubTitle,
 			Parent = Window.Root,
 			Window = Window,
+		}, {
+			New("ImageLabel", {
+				Size = UDim2.fromOffset(24, 24),
+				Position = UDim2.new(0, 8, 0.5, -12),
+				AnchorPoint = Vector2.new(0, 0.5),
+				Image = "rbxassetid://12143948578",
+				BackgroundTransparency = 1,
+			}),
+			Window.TitleBar
 		})
 
 		if Library.UseAcrylic then
@@ -2930,7 +2828,7 @@ Components.Window = (function()
 				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 				Text = Config.Content,
 				TextColor3 = Color3.fromRGB(240, 240, 240),
-				TextSize = 18,
+				TextSize = 14,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextYAlignment = Enum.TextYAlignment.Top,
 				Size = UDim2.new(1, -40, 1, 0),
@@ -2964,7 +2862,7 @@ Components.Window = (function()
 		end
 
 		local TabModule = Components.Tab:Init(Window)
-		function Window:AddTab(TabConfig)
+		function Window:T(TabConfig)
 			return TabModule:New(TabConfig.Title, TabConfig.Icon, Window.TabHolder)
 		end
 
@@ -2997,8 +2895,8 @@ ElementsTable.Button = (function()
 		local ButtonFrame = Components.Element(Config.Title, Config.Description, self.Container, true, Config)
 
 		local ButtonIco = New("ImageLabel", {
-			Image = "rbxassetid://10709791437",
-			Size = UDim2.fromOffset(16, 16),
+			Image = "rbxassetid://17293879614",
+			Size = UDim2.fromOffset(20, 20),
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -10, 0.5, 0),
 			BackgroundTransparency = 1,
@@ -3043,22 +2941,22 @@ ElementsTable.Toggle = (function()
 			AnchorPoint = Vector2.new(0, 0.5),
 			Size = UDim2.fromOffset(14, 14),
 			Position = UDim2.new(0, 2, 0.5, 0),
-			Image = "http://www.roblox.com/asset/?id=12266946128",
-			ImageTransparency = 0.5,
+			Image = "http://www.roblox.com/asset/?id=12288739321",
+			ImageTransparency = 0,
 			ThemeTag = {
-				ImageColor3 = "ToggleSlider",
+				ImageColor3 = "ToggleCorner",
 			},
 		})
 
 		local ToggleBorder = New("UIStroke", {
 			Transparency = 0.5,
 			ThemeTag = {
-				Color = "ToggleSlider",
+				Color = "ToggleCorner",
 			},
 		})
 
 		local ToggleSlider = New("Frame", {
-			Size = UDim2.fromOffset(36, 20),
+			Size = UDim2.fromOffset(36, 18),
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -10, 0.5, 0),
 			Parent = ToggleFrame.Frame,
@@ -3068,7 +2966,7 @@ ElementsTable.Toggle = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 4}),
+				CornerRadius = UDim.new(0, 10),
 			}),
 			ToggleBorder,
 			ToggleCircle,
@@ -3083,8 +2981,8 @@ ElementsTable.Toggle = (function()
 			Value = not not Value
 			Toggle.Value = Value
 
-			Creator.OverrideTag(ToggleBorder, { Color = Toggle.Value and "Accent" or "ToggleSlider" })
-			Creator.OverrideTag(ToggleCircle, { ImageColor3 = Toggle.Value and "ToggleToggled" or "ToggleSlider" })
+			Creator.OverrideTag(ToggleBorder, { Color = Toggle.Value and "Accent" or "ToggleCorner" })
+			Creator.OverrideTag(ToggleCircle, { ImageColor3 = Toggle.Value and "ToggleToggled" or "ToggleCorner" })
 			TweenService:Create(
 				ToggleCircle,
 				TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
@@ -3133,7 +3031,6 @@ ElementsTable.Dropdown = (function()
 			Opened = false,
 			Type = "Dropdown",
 			Callback = Config.Callback or function() end,
-			Searchable = Config.Searchable or false
 		}
 
 		if Dropdown.Multi and Config.AllowNull then
@@ -3148,36 +3045,29 @@ ElementsTable.Dropdown = (function()
 		Dropdown.Visible = DropdownFrame.Visible
 		Dropdown.Elements = DropdownFrame
 
-		local DropdownDisplay = New("TextBox", {
+		local DropdownDisplay = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
-			Text = "",
-			PlaceholderText = "Value",
-			PlaceholderColor3 = Color3.fromRGB(240, 240, 240),
+			Text = "Value",
 			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextSize = 18,
-			AutomaticSize = Enum.AutomaticSize.Y,
-			TextYAlignment = Enum.TextYAlignment.Center,
+			TextSize = 13,
 			TextXAlignment = Enum.TextXAlignment.Left,
-			Size = UDim2.new(1, -40, 0.5, 0),
+			Size = UDim2.new(1, -30, 0, 14),
 			Position = UDim2.new(0, 8, 0.5, 0),
 			AnchorPoint = Vector2.new(0, 0.5),
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1,
 			TextTruncate = Enum.TextTruncate.AtEnd,
-			Interactable = Dropdown.Searchable,
 			ThemeTag = {
 				TextColor3 = "Text",
-				PlaceholderColor3 = "Text"
 			},
 		})
 
 		local DropdownIco = New("ImageLabel", {
-			Image = "rbxassetid://10709790948",
+			Image = "rbxassetid://16848361091",
 			Size = UDim2.fromOffset(16, 16),
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -8, 0.5, 0),
 			BackgroundTransparency = 1,
-			Rotation = 180,
 			ThemeTag = {
 				ImageColor3 = "SubText",
 			},
@@ -3194,7 +3084,7 @@ ElementsTable.Dropdown = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 10),
+				CornerRadius = UDim.new(0, 9),
 			}),
 			New("UIStroke", {
 				Transparency = 0.5,
@@ -3270,7 +3160,7 @@ ElementsTable.Dropdown = (function()
 		table.insert(Library.OpenFrames, DropdownHolderCanvas)
 
 		local function RecalculateListPosition()
-			local Add = -40
+			local Add = 0
 			if Camera.ViewportSize.Y - DropdownInner.AbsolutePosition.Y < DropdownHolderCanvas.AbsoluteSize.Y - 5 then
 				Add = DropdownHolderCanvas.AbsoluteSize.Y
 				- 5
@@ -3300,49 +3190,7 @@ ElementsTable.Dropdown = (function()
 		Creator.AddSignal(DropdownInner:GetPropertyChangedSignal("AbsolutePosition"), RecalculateListPosition)
 
 		Creator.AddSignal(DropdownInner.MouseButton1Click, function()
-			if Dropdown.Opened then
-				Dropdown:Close()
-				return
-			end
 			Dropdown:Open()
-		end)
-
-		Creator.AddSignal(DropdownDisplay:GetPropertyChangedSignal("Text"), function()
-			local Text = DropdownDisplay.Text
-			if #Text == 0 then
-				for _, Element in next, DropdownScrollFrame:GetChildren() do
-					if not Element:IsA("UIListLayout") then
-						local Value = Element.ButtonLabel.Text
-						local Similar = Value:lower():match(Text:lower()) or Value:lower() == Text:lower()
-						Element.Visible = true
-					end
-				end
-			end
-			for _, Element in next, DropdownScrollFrame:GetChildren() do
-				if not Element:IsA("UIListLayout") then
-					local Value = Element.ButtonLabel.Text
-					local Similar = Value:lower():match(Text:lower()) or Value:lower() == Text:lower()
-					Element.Visible = Similar and true or false
-				end
-			end
-
-			RecalculateListPosition()
-			RecalculateListSize()
-		end)
-
-		Creator.AddSignal(DropdownDisplay.Focused, function()
-			DropdownDisplay.Text = ""
-		end)
-
-		Creator.AddSignal(DropdownDisplay.FocusLost, function(Enter, Input)
-			if #DropdownDisplay.Text > 0 then
-				local Tick = tick()
-				repeat wait() until tick() - Tick > 5 or DropdownDisplay:IsFocused()
-				if not DropdownDisplay:IsFocused() then
-					DropdownDisplay.Text = ""
-					Dropdown:Display()
-				end
-			end
 		end)
 
 		Creator.AddSignal(UserInputService.InputBegan, function(Input)
@@ -3365,7 +3213,6 @@ ElementsTable.Dropdown = (function()
 		local ScrollFrame = self.ScrollFrame
 		function Dropdown:Open()
 			Dropdown.Opened = true
-			DropdownDisplay.Interactable = Dropdown.Searchable and true or false
 			ScrollFrame.ScrollingEnabled = false
 			DropdownHolderCanvas.Visible = true
 			TweenService:Create(
@@ -3373,29 +3220,13 @@ ElementsTable.Dropdown = (function()
 				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
 				{ Size = UDim2.fromScale(1, 1) }
 			):Play()
-			TweenService:Create(
-				DropdownIco,
-				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-				{ Rotation = 0 }
-			):Play()
-			if Dropdown.Searchable then
-				DropdownDisplay:CaptureFocus()
-			end
 		end
 
 		function Dropdown:Close()
 			Dropdown.Opened = false
 			ScrollFrame.ScrollingEnabled = true
-			DropdownDisplay.Interactable = false
 			DropdownHolderFrame.Size = UDim2.fromScale(1, 0.6)
 			DropdownHolderCanvas.Visible = false
-			TweenService:Create(
-				DropdownIco,
-				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-				{ Rotation = 180 }
-			):Play()
-			DropdownDisplay:ReleaseFocus(false)
-			Dropdown:Display()
 		end
 
 		function Dropdown:Display()
@@ -3412,8 +3243,7 @@ ElementsTable.Dropdown = (function()
 			else
 				Str = Dropdown.Value or ""
 			end
-
-			DropdownDisplay.PlaceholderText = (Str == "" and "--" or Str)
+			DropdownDisplay.Text = (Str == "" and "--" or Str)
 		end
 
 		function Dropdown:GetActiveValues()
@@ -3428,15 +3258,6 @@ ElementsTable.Dropdown = (function()
 			else
 				return Dropdown.Value and 1 or 0
 			end
-		end
-
-		function Dropdown:SetActiveValues(Value)
-			Dropdown.Value = Value
-
-			Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-			Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
-
-			Dropdown:BuildDropdownList()
 		end
 
 		function Dropdown:BuildDropdownList()
@@ -3548,33 +3369,33 @@ ElementsTable.Dropdown = (function()
 					SetSelTransparency(Selected and 0 or 1)
 				end
 
-				AddSignal(Button.Activated, function()
-					local Try = not Selected
+				ButtonLabel.InputBegan:Connect(function(Input)
+					if
+						Input.UserInputType == Enum.UserInputType.MouseButton1
+						or Input.UserInputType == Enum.UserInputType.Touch
+					then
+						local Try = not Selected
 
-					if Dropdown:GetActiveValues() == 1 and not Try and not Config.AllowNull then
-					else
-						if Config.Multi then
-							Selected = Try
-							Dropdown.Value[Value] = Selected and true or nil
+						if Dropdown:GetActiveValues() == 1 and not Try and not Config.AllowNull then
 						else
-							Selected = Try
-							Dropdown.Value = Selected and Value or nil
+							if Config.Multi then
+								Selected = Try
+								Dropdown.Value[Value] = Selected and true or nil
+							else
+								Selected = Try
+								Dropdown.Value = Selected and Value or nil
 
-							for _, OtherButton in next, Buttons do
-								OtherButton:UpdateButton()
+								for _, OtherButton in next, Buttons do
+									OtherButton:UpdateButton()
+								end
 							end
-						end
 
-						Table:UpdateButton()
-
-						if Dropdown.Searchable and #DropdownDisplay.Text > 0 then
-
-						else
+							Table:UpdateButton()
 							Dropdown:Display()
-						end
 
-						Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-						Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+							Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
+							Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+						end
 					end
 				end)
 
@@ -3743,8 +3564,8 @@ ElementsTable.Slider = (function()
 		local SliderDot = New("ImageLabel", {
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, -7, 0.5, 0),
-			Size = UDim2.fromOffset(14, 14),
-			Image = "http://www.roblox.com/asset/?id=12266946128",
+			Size = UDim2.fromOffset(20, 20),
+			Image = "http://www.roblox.com/asset/?id=15969672655",
 			ThemeTag = {
 				ImageColor3 = "Accent",
 			},
@@ -3753,13 +3574,13 @@ ElementsTable.Slider = (function()
 		local SliderRail = New("Frame", {
 			BackgroundTransparency = 1,
 			Position = UDim2.fromOffset(7, 0),
-			Size = UDim2.new(1, -14, 1, 0),
+			Size = UDim2.new(1, -10, 1, 0),
 		}, {
 			SliderDot,
 		})
 
 		local SliderFill = New("Frame", {
-			Size = UDim2.new(0, 0, 1, 0),
+			Size = UDim2.new(1, 0, 1, 0),
 			ThemeTag = {
 				BackgroundColor3 = "Accent",
 			},
@@ -3772,7 +3593,7 @@ ElementsTable.Slider = (function()
 		local SliderDisplay = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = "Value",
-			TextSize = 14,
+			TextSize = 12,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Right,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -4700,7 +4521,6 @@ local Icons = {
 	["lucide-archive"] = "rbxassetid://10709762233",
 	["lucide-archive-restore"] = "rbxassetid://10709762058",
 	["lucide-armchair"] = "rbxassetid://10709762327",
-	["lucide-anvil"] = "rbxassetid://77943964625400",
 	["lucide-arrow-big-down"] = "rbxassetid://10747796644",
 	["lucide-arrow-big-left"] = "rbxassetid://10709762574",
 	["lucide-arrow-big-right"] = "rbxassetid://10709762727",
@@ -4917,7 +4737,6 @@ local Icons = {
 	["lucide-dollar-sign"] = "rbxassetid://10723343958",
 	["lucide-download"] = "rbxassetid://10723344270",
 	["lucide-download-cloud"] = "rbxassetid://10723344088",
-	["lucide-door-open"] = "rbxassetid://124179241653522",
 	["lucide-droplet"] = "rbxassetid://10723344432",
 	["lucide-droplets"] = "rbxassetid://10734883356",
 	["lucide-drumstick"] = "rbxassetid://10723344737",
@@ -5310,7 +5129,6 @@ local Icons = {
 	["lucide-scissors"] = "rbxassetid://10734942778",
 	["lucide-screen-share"] = "rbxassetid://10734943193",
 	["lucide-screen-share-off"] = "rbxassetid://10734942967",
-	["lucide-shell"] = "rbxassetid://83825045910816",
 	["lucide-scroll"] = "rbxassetid://10734943448",
 	["lucide-search"] = "rbxassetid://10734943674",
 	["lucide-send"] = "rbxassetid://10734943902",
@@ -5460,7 +5278,6 @@ local Icons = {
 	["lucide-volume-1"] = "rbxassetid://10747375450",
 	["lucide-volume-2"] = "rbxassetid://10747375679",
 	["lucide-volume-x"] = "rbxassetid://10747375880",
-	["lucide-wheat"] = "rbxassetid://80877624162595",
 	["lucide-wallet"] = "rbxassetid://10747376205",
 	["lucide-wand"] = "rbxassetid://10747376565",
 	["lucide-wand-2"] = "rbxassetid://10747376349",
@@ -5481,7 +5298,9 @@ local Icons = {
 	["lucide-cat"] = "rbxassetid://16935650691",
 	["lucide-message-circle-question"] = "rbxassetid://16970049192",
 	["lucide-webhook"] = "rbxassetid://17320556264",
-	["lucide-dumbbell"] = "rbxassetid://18273453053"
+	["lucide-dumbbell"] = "rbxassetid://18273453053",
+    ["lucide-home-quantum"] = "rbxassetid://81460299233144",
+    ["lucide-kawai-quantum"] = "rbxassetid://120371179323048"
 }
 function Library:GetIcon(Name)
 	if Name ~= nil and Icons["lucide-" .. Name] then
@@ -5585,44 +5404,35 @@ local SaveManager = {} do
 			end,
 		},
 	}
-
 	function SaveManager:SetIgnoreIndexes(list)
 		for _, key in next, list do
 			self.Ignore[key] = true
 		end
 	end
-
 	function SaveManager:SetFolder(folder)
 		self.Folder = folder;
 		self:BuildFolderTree()
 	end
-
 	function SaveManager:Save(name)
-		if (not name) then
-			return false, "no config file is selected"
-		end
-
-		local fullPath = self.Folder .. "/" .. name .. ".json"
-
-		local data = {
-			objects = {}
-		}
-
-		for idx, option in next, SaveManager.Options do
-			if not self.Parser[option.Type] then continue end
-			if self.Ignore[idx] then continue end
-
-			table.insert(data.objects, self.Parser[option.Type].Save(idx, option))
-		end	
-
-		local success, encoded = pcall(httpService.JSONEncode, httpService, data)
-		if not success then
-			return false, "failed to encode data"
-		end
-
-		writefile(fullPath, encoded)
-		return true
-	end
+        if not name then
+            return false, "No config file is selected"
+        end
+        local fullPath = self.Folder .. "/" .. name .. ".json"
+        local data = {
+            objects = {}
+        }
+        for idx, option in pairs(SaveManager.Options) do
+            if self.Parser[option.Type] and not self.Ignore[idx] then
+                table.insert(data.objects, self.Parser[option.Type].Save(idx, option))
+            end
+        end
+        local success, encoded = pcall(function() return httpService:JSONEncode(data) end)
+        if not success then
+            return false, "Failed to encode data"
+        end
+        writefile(fullPath, encoded)
+        return true
+    end
 
 	function SaveManager:Load(name)
 		if (not name) then
@@ -5637,13 +5447,11 @@ local SaveManager = {} do
 
 		for _, option in next, decoded.objects do
 			if self.Parser[option.type] and not self.Ignore[option.idx] then
-				task.spawn(function() self.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
+				task.spawn(function() self.Parser[option.type].Load(option.idx, option) end)
 			end
 		end
 
-		Fluent.SettingLoaded = true
-
-		return true, decoded
+		return true
 	end
 
 	function SaveManager:IgnoreThemeSettings()
@@ -5833,8 +5641,6 @@ local SaveManager = {} do
 
 		SaveManager:SetIgnoreIndexes({ "SaveManager_ConfigList", "SaveManager_ConfigName" })
 	end
-
-	-- SaveManager:BuildFolderTree()
 end
 
 local InterfaceManager = {} do
@@ -5900,6 +5706,8 @@ local InterfaceManager = {} do
 		local Library = self.Library
 		local Settings = InterfaceManager.Settings
 
+		InterfaceManager:LoadSettings()
+
 		local section = tab:AddSection("Interface")
 		local InterfaceTheme = section:AddDropdown("InterfaceTheme", {
 			Title = "Theme",
@@ -5927,11 +5735,11 @@ local InterfaceManager = {} do
 				end
 			})
 		end
-		
+
 		section:AddToggle("TransparentToggle", {
 			Title = "Transparency",
 			Description = "Makes the interface transparent.",
-			Default = Library.Transparency,
+			Default = Settings.Transparency,
 			Callback = function(Value)
 				Library:ToggleTransparency(Value)
 				Settings.Transparency = Value
@@ -5945,8 +5753,6 @@ local InterfaceManager = {} do
 			InterfaceManager:SaveSettings()
 		end)
 		Library.MinimizeKeybind = MenuKeybind
-
-		InterfaceManager:LoadSettings()
 	end
 end
 
@@ -5962,7 +5768,6 @@ function Library:CreateWindow(Config)
 	Library.UseAcrylic = Config.Acrylic or false
 	Library.Acrylic = Config.Acrylic or false
 	Library.Theme = Config.Theme or "Dark"
-	Library.Transparency = Config.Transparency or false
 	if Config.Acrylic then
 		Acrylic.init()
 	end
@@ -5978,135 +5783,6 @@ function Library:CreateWindow(Config)
 	Library.Window = Window
 	InterfaceManager:SetTheme(Config.Theme)
 	Library:SetTheme(Config.Theme)
-
-	local Dragging, DragInput, MousePos, StartPos = false
-
-	local MinimizeButton = New("TextButton", {
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, 0, 1, 0),
-		BorderSizePixel = 0
-	}, {
-		New("UIPadding", {
-			PaddingBottom = UDim.new(0, 2),
-			PaddingLeft = UDim.new(0, 2),
-			PaddingRight = UDim.new(0, 2),
-			PaddingTop = UDim.new(0, 2),
-		}),
-		New("ImageLabel", {
-			Image = Config.MinimizerIcon or "rbxassetid://17071506793",
-			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundTransparency = 1,
-		}, {
-			New("UIAspectRatioConstraint", {
-				AspectRatio = 1,
-				AspectType = Enum.AspectType.FitWithinMaxSize,
-			})
-		})
-	})
-
-	local Minimizer = New("Frame", {
-		Parent = GUI,
-		Size = UDim2.new(0, 32, 0, 32),
-		Position = UDim2.new(0.45, 0, 0.025, 0),
-		BackgroundTransparency = 1,
-		ZIndex = 999999999,
-	},
-	{
-		New("Frame", {
-			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundTransparency = 0.5,
-			BorderSizePixel = 0
-		}, {
-			New("UICorner", {
-				CornerRadius = UDim.new(0.25, 0),
-			}),
-			MinimizeButton
-		})
-	})
-
-	Creator.AddSignal(Minimizer.InputBegan, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			Dragging = true
-			MousePos = Input.Position
-			StartPos = Minimizer.Position
-
-			Input.Changed:Connect(function()
-				if Input.UserInputState == Enum.UserInputState.End then
-					Dragging = false
-				end
-			end)
-		end
-	end)
-
-	Creator.AddSignal(MinimizeButton.InputBegan, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			Dragging = true
-			MousePos = Input.Position
-			StartPos = Minimizer.Position
-
-			Input.Changed:Connect(function()
-				if Input.UserInputState == Enum.UserInputState.End then
-					Dragging = false
-				end
-			end)
-		end
-	end)
-
-	Creator.AddSignal(MinimizeButton.InputChanged, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseMovement
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			DragInput = Input
-		end
-	end)
-	Creator.AddSignal(Minimizer.InputChanged, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseMovement
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			DragInput = Input
-		end
-	end)
-
-	Creator.AddSignal(UserInputService.InputChanged, function(Input)
-		if Input == DragInput and Dragging then
-			local GuiInset = game:GetService("GuiService"):GetGuiInset()
-			local Delta = Input.Position - MousePos
-			local ViewportSize = workspace.Camera.ViewportSize
-			local CurrentX = StartPos.X.Scale + (Delta.X/ViewportSize.X)
-			local CurrentY = StartPos.Y.Scale + (Delta.Y/ViewportSize.Y)
-
-			if CurrentX<0 or CurrentX > (ViewportSize.X - Minimizer.AbsoluteSize.X)/ViewportSize.X then
-				if CurrentX < 0 then
-					CurrentX = 0
-				else
-					CurrentX = (ViewportSize.X - Minimizer.AbsoluteSize.X)/ViewportSize.X
-				end
-			end
-
-			if CurrentY < 0 or CurrentY > ((ViewportSize.Y + GuiInset.Y) - Minimizer.AbsoluteSize.Y)/(ViewportSize.Y + GuiInset.Y) then
-				if CurrentY < 0 then
-					CurrentY = 0
-				else
-					CurrentY = ((ViewportSize.Y + GuiInset.Y) - Minimizer.AbsoluteSize.Y)/(ViewportSize.Y + GuiInset.Y)
-				end
-			end
-			
-			Minimizer.Position = UDim2.fromScale(CurrentX, CurrentY)
-		end
-	end)
-
-	AddSignal(MinimizeButton.MouseButton1Click, function()
-		Window:Minimize()
-	end)
 
 	return Window
 end
@@ -6158,5 +5834,7 @@ if getgenv then
 else
 	Fluent = Library
 end
+
+local Dragging, DragInput, MousePos, StartPos = false
 
 return Library, SaveManager, InterfaceManager
