@@ -21,7 +21,7 @@ local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
 local Themes = {
 	Names = {
 		"Dark Typewriter",
-		"VSC Dark High Contrast",
+		"Quantum",
 		"Dark",
 		"Darker",
 		"Light",
@@ -31,52 +31,52 @@ local Themes = {
 		"Rose",
 		"Sakura"
 	},
-	["VSC Dark High Contrast"] = {
-		Accent = Color3.fromHex("#569cd6"),
-
-		AcrylicMain = Color3.fromHex("#000000"),
-		AcrylicBorder = Color3.fromHex("#FFFFFF"),
-		AcrylicGradient = ColorSequence.new(Color3.fromHex("#000000"), Color3.fromHex("#000000")),
-		AcrylicNoise = 1,
-
-		TitleBarLine = Color3.fromHex("#FFFFFF"),
-		Tab = Color3.fromHex("#FFFFFF"),
-
-		Element = Color3.fromHex("#000000"),
-		ElementBorder = Color3.fromHex("#FFFFFF"),
-		InElementBorder = Color3.fromHex("#569cd6"),
-		ElementTransparency = 0,
-
-		ToggleSlider = Color3.fromHex("#569cd6"),
-		ToggleToggled = Color3.fromHex("#000000"),
-
-		SliderRail = Color3.fromHex("#569cd6"),
-
-		DropdownFrame = Color3.fromHex("#000000"),
-		DropdownHolder = Color3.fromHex("#000000"),
-		DropdownBorder = Color3.fromHex("#FFFFFF"),
-		DropdownOption = Color3.fromHex("#FFFFFF"),
-
-		Keybind = Color3.fromHex("#000000"),
-
-		Input = Color3.fromHex("#000000"),
-		InputFocused = Color3.fromHex("#000000"),
-		InputIndicator = Color3.fromHex("#7c7c7c"),
-
-		Dialog = Color3.fromHex("#000000"),
-		DialogHolder = Color3.fromHex("#000000"),
-		DialogHolderLine = Color3.fromHex("#FFFFFF"),
-		DialogButton = Color3.fromHex("#000000"),
-		DialogButtonBorder = Color3.fromHex("#FFFFFF"),
-		DialogBorder = Color3.fromHex("#FFFFFF"),
-		DialogInput = Color3.fromHex("#000000"),
-		DialogInputLine = Color3.fromHex("#569cd6"),
-
-		Text = Color3.fromHex("#FFFFFF"),
-		SubText = Color3.fromHex("#9D9D9D"),
-		Hover = Color3.fromHex("#383a49"),
-		HoverChange = 0.1
-	},
+	["Quantum"] = {
+		Accent = Color3.fromRGB(0, 255, 0),
+    
+        AcrylicMain = Color3.fromRGB(0, 0, 0),
+        AcrylicBorder = Color3.fromRGB(51, 153, 153),
+        AcrylicGradient = ColorSequence.new(Color3.fromRGB(20, 20, 20), Color3.fromRGB(0, 0, 0)),
+    
+        TitleBarLine = Color3.fromRGB(51, 153, 153),
+        Tab = Color3.fromRGB(51, 153, 153),
+    
+        Element = Color3.fromRGB(60, 60, 60),
+        ElementBorder = Color3.fromRGB(80, 80, 80),
+        InElementBorder = Color3.fromRGB(100, 100, 100),
+        ElementTransparency = 0.85,
+    
+        ToggleSlider = Color3.fromRGB(0, 255, 0),
+		ToggleCorner = Color3.fromRGB(96, 96, 99),
+        ToggleToggled = Color3.fromRGB(0, 0, 0),
+    
+        SliderRail = Color3.fromRGB(80, 0, 160),
+    
+        DropdownFrame = Color3.fromRGB(50, 50, 50),
+        DropdownHolder = Color3.fromRGB(30, 30, 30),
+        DropdownBorder = Color3.fromRGB(60, 60, 60),
+        DropdownOption = Color3.fromRGB(0, 255, 0),
+    
+        Keybind = Color3.fromRGB(0, 255, 0),
+    
+        Input = Color3.fromRGB(40, 40, 40),
+        InputFocused = Color3.fromRGB(0, 0, 0),
+        InputIndicator = Color3.fromRGB(80, 80, 80),
+    
+        Dialog = Color3.fromRGB(0, 0, 0),
+        DialogHolder = Color3.fromRGB(20, 20, 20),
+        DialogHolderLine = Color3.fromRGB(40, 40, 40),
+        DialogButton = Color3.fromRGB(30, 30, 30),
+        DialogButtonBorder = Color3.fromRGB(0, 255, 0),
+        DialogBorder = Color3.fromRGB(0, 255, 0),
+        DialogInput = Color3.fromRGB(40, 40, 40),
+        DialogInputLine = Color3.fromRGB(0, 255, 0),
+    
+        Text = Color3.fromRGB(255, 255, 255),
+        SubText = Color3.fromRGB(200, 200, 200),
+        Hover = Color3.fromRGB(100, 0, 255),
+        HoverChange = 0.1,
+    },
 	["Dark Typewriter"] = {
 		Accent = Color3.fromRGB(109, 180, 120),
 
