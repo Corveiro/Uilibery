@@ -973,7 +973,7 @@ local Creator = {
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
 			BackgroundTransparency = 1,
-			TextSize = 14,
+			TextSize = 18,
 		},
 		TextButton = {
 			BackgroundColor3 = Color3.new(1, 1, 1),
@@ -982,7 +982,7 @@ local Creator = {
 			Font = Enum.Font.SourceSans,
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
-			TextSize = 14,
+			TextSize = 18,
 		},
 		TextBox = {
 			BackgroundColor3 = Color3.new(1, 1, 1),
@@ -991,7 +991,7 @@ local Creator = {
 			Font = Enum.Font.SourceSans,
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
-			TextSize = 14,
+			TextSize = 18,
 		},
 		ImageLabel = {
 			BackgroundTransparency = 1,
@@ -1354,7 +1354,7 @@ function AcrylicPaint()
 				},
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 8),
+					CornerRadius = UDim.new(0, 4),
 				}),
 			}),
 
@@ -1522,7 +1522,7 @@ Components.Element = (function()
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Desc,
 			TextColor3 = Color3.fromRGB(200, 200, 200),
-			TextSize = 12,
+			TextSize = 14,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -1577,7 +1577,7 @@ Components.Element = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 4),
+				CornerRadius = UDim.new(0, 9),
 			}),
 			Element.Border,
 			Element.LabelHolder,
@@ -1749,7 +1749,7 @@ Components.Tab = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 6),
+				CornerRadius = UDim.new(0, 4),
 			}),
 			New("TextLabel", {
 				AnchorPoint = Vector2.new(0, 0.5),
@@ -1763,7 +1763,7 @@ Components.Tab = (function()
 					Enum.FontWeight.Regular,
 					Enum.FontStyle.Normal
 				),
-				TextSize = 12,
+				TextSize = 14,
 				TextXAlignment = "Left",
 				TextYAlignment = "Center",
 				Size = UDim2.new(1, -12, 1, 0),
@@ -1902,7 +1902,7 @@ Components.Button = (function()
 		Button.Title = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			TextColor3 = Color3.fromRGB(200, 200, 200),
-			TextSize = 14,
+			TextSize = 18,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Center,
 			TextYAlignment = Enum.TextYAlignment.Center,
@@ -2185,7 +2185,7 @@ Components.Notification = (function()
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Config.Content,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextSize = 14,
+			TextSize = 18,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			AutomaticSize = Enum.AutomaticSize.Y,
 			Size = UDim2.new(1, 0, 0, 14),
@@ -2201,7 +2201,7 @@ Components.Notification = (function()
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Config.SubContent,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextSize = 14,
+			TextSize = 18,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			AutomaticSize = Enum.AutomaticSize.Y,
 			Size = UDim2.new(1, 0, 0, 14),
@@ -2336,7 +2336,7 @@ Components.Textbox = (function()
 		Textbox.Input = New("TextBox", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			TextColor3 = Color3.fromRGB(200, 200, 200),
-			TextSize = 14,
+			TextSize = 18,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextYAlignment = Enum.TextYAlignment.Center,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -2378,7 +2378,7 @@ Components.Textbox = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 4),
+				CornerRadius = UDim.new(0, 9),
 			}),
 			New("UIStroke", {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -2468,7 +2468,7 @@ Components.TitleBar = (function()
 				},
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 7),
+					CornerRadius = UDim.new(0, 9),
 				}),
 				New("ImageLabel", {
 					Image = Icon,
@@ -2529,7 +2529,7 @@ Components.TitleBar = (function()
 						Enum.FontWeight.Regular,
 						Enum.FontStyle.Normal
 					),
-					TextSize = 12,
+					TextSize = 14,
 					TextXAlignment = "Left",
 					TextYAlignment = "Center",
 					Size = UDim2.fromScale(0, 1),
@@ -2548,7 +2548,7 @@ Components.TitleBar = (function()
 						Enum.FontWeight.Regular,
 						Enum.FontStyle.Normal
 					),
-					TextSize = 12,
+					TextSize = 14,
 					TextXAlignment = "Left",
 					TextYAlignment = "Center",
 					Size = UDim2.fromScale(0, 1),
@@ -2631,7 +2631,7 @@ Components.Window = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 2),
+				CornerRadius = UDim.new(1, 9),
 			}),
 		})
 
@@ -2930,7 +2930,7 @@ Components.Window = (function()
 				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 				Text = Config.Content,
 				TextColor3 = Color3.fromRGB(240, 240, 240),
-				TextSize = 14,
+				TextSize = 18,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextYAlignment = Enum.TextYAlignment.Top,
 				Size = UDim2.new(1, -40, 1, 0),
@@ -3058,7 +3058,7 @@ ElementsTable.Toggle = (function()
 		})
 
 		local ToggleSlider = New("Frame", {
-			Size = UDim2.fromOffset(36, 18),
+			Size = UDim2.fromOffset(36, 20),
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -10, 0.5, 0),
 			Parent = ToggleFrame.Frame,
@@ -3154,7 +3154,7 @@ ElementsTable.Dropdown = (function()
 			PlaceholderText = "Value",
 			PlaceholderColor3 = Color3.fromRGB(240, 240, 240),
 			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextSize = 14,
+			TextSize = 18,
 			AutomaticSize = Enum.AutomaticSize.Y,
 			TextYAlignment = Enum.TextYAlignment.Center,
 			TextXAlignment = Enum.TextXAlignment.Left,
@@ -3194,7 +3194,7 @@ ElementsTable.Dropdown = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 5),
+				CornerRadius = UDim.new(0, 10),
 			}),
 			New("UIStroke", {
 				Transparency = 0.5,
@@ -3236,7 +3236,7 @@ ElementsTable.Dropdown = (function()
 		}, {
 			DropdownScrollFrame,
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 7),
+				CornerRadius = UDim.new(0, 9),
 			}),
 			New("UIStroke", {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -3466,7 +3466,7 @@ ElementsTable.Dropdown = (function()
 					},
 				}, {
 					New("UICorner", {
-						CornerRadius = UDim.new(0, 2),
+						CornerRadius = UDim.new(0, 9),
 					}),
 				})
 
@@ -3500,7 +3500,7 @@ ElementsTable.Dropdown = (function()
 					ButtonSelector,
 					ButtonLabel,
 					New("UICorner", {
-						CornerRadius = UDim.new(0, 6),
+						CornerRadius = UDim.new(0, 9),
 					}),
 				})
 
@@ -3772,7 +3772,7 @@ ElementsTable.Slider = (function()
 		local SliderDisplay = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = "Value",
-			TextSize = 12,
+			TextSize = 14,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Right,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -3922,7 +3922,7 @@ ElementsTable.Keybind = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 5),
+				CornerRadius = UDim.new(0, 9),
 			}),
 			New("UIPadding", {
 				PaddingLeft = UDim.new(0, 8),
