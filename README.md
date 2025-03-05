@@ -3068,7 +3068,7 @@ ElementsTable.Toggle = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 9),
+				CornerRadius = UDim.new(0, 4}),
 			}),
 			ToggleBorder,
 			ToggleCircle,
