@@ -3041,9 +3041,9 @@ ElementsTable.Toggle = (function()
 
 		local ToggleCircle = New("ImageLabel", {
 			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.fromOffset(14, 14),
+			Size = UDim2.fromOffset(18, 14),
 			Position = UDim2.new(0, 2, 0.5, 0),
-			Image = "http://www.roblox.com/asset/?id=12266946128",
+			Image = "http://www.roblox.com/asset/?id=12288739321",
 			ImageTransparency = 0.5,
 			ThemeTag = {
 				ImageColor3 = "ToggleSlider",
@@ -3051,7 +3051,7 @@ ElementsTable.Toggle = (function()
 		})
 
 		local ToggleBorder = New("UIStroke", {
-			Transparency = 0.2,
+			Transparency = 0.3,
 			ThemeTag = {
 				Color = "ToggleSlider",
 			},
@@ -3743,7 +3743,7 @@ ElementsTable.Slider = (function()
 		local SliderDot = New("ImageLabel", {
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, -7, 0.5, 0),
-			Size = UDim2.fromOffset(14, 14),
+			Size = UDim2.fromOffset(20, 14),
 			Image = "http://www.roblox.com/asset/?id=12266946128",
 			ThemeTag = {
 				ImageColor3 = "Accent",
@@ -4267,7 +4267,7 @@ ElementsTable.Colorpicker = (function()
 			})
 
 			local HueDrag = New("ImageLabel", {
-				Size = UDim2.fromOffset(14, 14),
+				Size = UDim2.fromOffset(20, 14),
 				Image = "http://www.roblox.com/asset/?id=12266946128",
 				Parent = HueDragHolder,
 				ThemeTag = {
@@ -4319,7 +4319,7 @@ ElementsTable.Colorpicker = (function()
 				})
 
 				TransparencyDrag = New("ImageLabel", {
-					Size = UDim2.fromOffset(14, 14),
+					Size = UDim2.fromOffset(20, 14),
 					Image = "http://www.roblox.com/asset/?id=12266946128",
 					Parent = TransparencyDragHolder,
 					ThemeTag = {
