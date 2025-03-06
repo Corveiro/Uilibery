@@ -11,17 +11,6 @@ local httpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
-local Mobile
-if RunService:IsStudio() then
-	Mobile = false
-else
-	Mobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, UserInputService:GetPlatform()) ~= nil
-end
-
-if Show_Button then
-	Mobile = true
-end
-
 local Asset = "rbxassetid://"
 if Game.GameId == 5750914919 then
 	Asset = ""
