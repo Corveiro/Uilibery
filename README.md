@@ -32,30 +32,30 @@ local Themes = {
 		"Sakura"
 	},
 	["Quantum"] = {
-		Accent = Color3.fromRGB(0, 255, 0),
+		Accent = Color3.fromRGB(132, 132 132),
     
         AcrylicMain = Color3.fromRGB(0, 0, 0),
-        AcrylicBorder = Color3.fromRGB(51, 153, 153),
+        AcrylicBorder = Color3.fromRGB(132, 132, 132),
         AcrylicGradient = ColorSequence.new(Color3.fromRGB(20, 20, 20), Color3.fromRGB(0, 0, 0)),
     
-        TitleBarLine = Color3.fromRGB(51, 153, 153),
-        Tab = Color3.fromRGB(51, 153, 153),
+        TitleBarLine = Color3.fromRGB(132, 132, 132),
+        Tab = Color3.fromRGB(132, 132, 132),
     
-        Element = Color3.fromRGB(60, 60, 60),
+        Element = Color3.fromRGB(40, 40, 40),
         ElementBorder = Color3.fromRGB(80, 80, 80),
         InElementBorder = Color3.fromRGB(100, 100, 100),
         ElementTransparency = 0.85,
     
-        ToggleSlider = Color3.fromRGB(0, 255, 0),
+        ToggleSlider = Color3.fromRGB(132, 132, 132),
 		ToggleCorner = Color3.fromRGB(96, 96, 99),
         ToggleToggled = Color3.fromRGB(0, 0, 0),
     
-        SliderRail = Color3.fromRGB(80, 0, 160),
+        SliderRail = Color3.fromRGB(80, 80, 80),
     
-        DropdownFrame = Color3.fromRGB(50, 50, 50),
+        DropdownFrame = Color3.fromRGB(40, 40, 40),
         DropdownHolder = Color3.fromRGB(30, 30, 30),
         DropdownBorder = Color3.fromRGB(60, 60, 60),
-        DropdownOption = Color3.fromRGB(0, 255, 0),
+        DropdownOption = Color3.fromRGB(132, 132, 132}),
     
         Keybind = Color3.fromRGB(0, 255, 0),
     
@@ -67,14 +67,14 @@ local Themes = {
         DialogHolder = Color3.fromRGB(20, 20, 20),
         DialogHolderLine = Color3.fromRGB(40, 40, 40),
         DialogButton = Color3.fromRGB(30, 30, 30),
-        DialogButtonBorder = Color3.fromRGB(0, 255, 0),
+        DialogButtonBorder = Color3.fromRGB(132, 132, 132),
         DialogBorder = Color3.fromRGB(0, 255, 0),
         DialogInput = Color3.fromRGB(40, 40, 40),
         DialogInputLine = Color3.fromRGB(0, 255, 0),
     
         Text = Color3.fromRGB(255, 255, 255),
         SubText = Color3.fromRGB(200, 200, 200),
-        Hover = Color3.fromRGB(100, 0, 255),
+        Hover = Color3.fromRGB(255, 255, 255),
         HoverChange = 0.1,
     },
 	["Dark Typewriter"] = {
@@ -1507,7 +1507,7 @@ Components.Element = (function()
 		Element.TitleLabel = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
 			Text = Title,
-			TextColor3 = Color3.fromRGB(240, 240, 240),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 13,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Size = UDim2.new(1, 0, 0, 14),
@@ -1521,7 +1521,7 @@ Components.Element = (function()
 		Element.DescLabel = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Desc,
-			TextColor3 = Color3.fromRGB(200, 200, 200),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 12,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Left,
@@ -1756,7 +1756,7 @@ Components.Tab = (function()
 				Position = Icon and UDim2.new(0, 30, 0.5, 0) or UDim2.new(0, 12, 0.5, 0),
 				Text = Title,
 				RichText = true,
-				TextColor3 = Color3.fromRGB(255, 255, 255),
+				TextColor3 = Color3.fromRGB(132, 132, 132),
 				TextTransparency = 0,
 				FontFace = Font.new(
 					"rbxasset://fonts/families/GothamSSm.json",
@@ -1774,7 +1774,7 @@ Components.Tab = (function()
 			}),
 			New("ImageLabel", {
 				AnchorPoint = Vector2.new(0, 0.5),
-				Size = UDim2.fromOffset(16, 16),
+				Size = UDim2.fromOffset(20, 16),
 				Position = UDim2.new(0, 8, 0.5, 0),
 				BackgroundTransparency = 1,
 				Image = Icon and Icon or nil,
@@ -1901,7 +1901,7 @@ Components.Button = (function()
 
 		Button.Title = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-			TextColor3 = Color3.fromRGB(200, 200, 200),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 18,
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Center,
@@ -2035,7 +2035,7 @@ Components.Dialog = (function()
 				Enum.FontStyle.Normal
 			),
 			Text = "Dialog",
-			TextColor3 = Color3.fromRGB(240, 240, 240),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 22,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Size = UDim2.new(1, 0, 0, 22),
@@ -2167,7 +2167,7 @@ Components.Notification = (function()
 			Position = UDim2.new(0, 14, 0, 17),
 			Text = Config.Title,
 			RichText = true,
-			TextColor3 = Color3.fromRGB(255, 255, 255),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextTransparency = 0,
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			TextSize = 13,
@@ -2184,7 +2184,7 @@ Components.Notification = (function()
 		NewNotification.ContentLabel = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Config.Content,
-			TextColor3 = Color3.fromRGB(240, 240, 240),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 18,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			AutomaticSize = Enum.AutomaticSize.Y,
@@ -2200,7 +2200,7 @@ Components.Notification = (function()
 		NewNotification.SubContentLabel = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			Text = Config.SubContent,
-			TextColor3 = Color3.fromRGB(240, 240, 240),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 18,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			AutomaticSize = Enum.AutomaticSize.Y,
@@ -2238,7 +2238,7 @@ Components.Notification = (function()
 		}, {
 			New("ImageLabel", {
 				Image = Components.Close,
-				Size = UDim2.fromOffset(16, 16),
+				Size = UDim2.fromOffset(20, 16),
 				Position = UDim2.fromScale(0.5, 0.5),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundTransparency = 1,
@@ -2335,7 +2335,7 @@ Components.Textbox = (function()
 
 		Textbox.Input = New("TextBox", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-			TextColor3 = Color3.fromRGB(200, 200, 200),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 18,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextYAlignment = Enum.TextYAlignment.Center,
@@ -2472,7 +2472,7 @@ Components.TitleBar = (function()
 				}),
 				New("ImageLabel", {
 					Image = Icon,
-					Size = UDim2.fromOffset(16, 16),
+					Size = UDim2.fromOffset(20, 16),
 					Position = UDim2.fromScale(0.5, 0.5),
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					BackgroundTransparency = 1,
@@ -2929,7 +2929,7 @@ Components.Window = (function()
 			local Content = New("TextLabel", {
 				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 				Text = Config.Content,
-				TextColor3 = Color3.fromRGB(240, 240, 240),
+				TextColor3 = Color3.fromRGB(132, 132, 132),
 				TextSize = 18,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextYAlignment = Enum.TextYAlignment.Top,
@@ -2998,7 +2998,7 @@ ElementsTable.Button = (function()
 
 		local ButtonIco = New("ImageLabel", {
 			Image = "rbxassetid://10709791437",
-			Size = UDim2.fromOffset(16, 16),
+			Size = UDim2.fromOffset(20, 16),
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -10, 0.5, 0),
 			BackgroundTransparency = 1,
@@ -3041,9 +3041,9 @@ ElementsTable.Toggle = (function()
 
 		local ToggleCircle = New("ImageLabel", {
 			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.fromOffset(18, 14),
+			Size = UDim2.fromOffset(20, 14),
 			Position = UDim2.new(0, 2, 0.5, 0),
-			Image = "http://www.roblox.com/asset/?id=12288739321",
+			Image = "http://www.roblox.com/asset/?id=12266946128",
 			ImageTransparency = 0.5,
 			ThemeTag = {
 				ImageColor3 = "ToggleSlider",
@@ -3051,7 +3051,7 @@ ElementsTable.Toggle = (function()
 		})
 
 		local ToggleBorder = New("UIStroke", {
-			Transparency = 0.3,
+			Transparency = 0.2,
 			ThemeTag = {
 				Color = "ToggleSlider",
 			},
@@ -3153,7 +3153,7 @@ ElementsTable.Dropdown = (function()
 			Text = "",
 			PlaceholderText = "Value",
 			PlaceholderColor3 = Color3.fromRGB(240, 240, 240),
-			TextColor3 = Color3.fromRGB(240, 240, 240),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 18,
 			AutomaticSize = Enum.AutomaticSize.Y,
 			TextYAlignment = Enum.TextYAlignment.Center,
@@ -3173,7 +3173,7 @@ ElementsTable.Dropdown = (function()
 
 		local DropdownIco = New("ImageLabel", {
 			Image = "rbxassetid://10709790948",
-			Size = UDim2.fromOffset(16, 16),
+			Size = UDim2.fromOffset(20, 16),
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -8, 0.5, 0),
 			BackgroundTransparency = 1,
@@ -3473,7 +3473,7 @@ ElementsTable.Dropdown = (function()
 				local ButtonLabel = New("TextLabel", {
 					FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 					Text = Value,
-					TextColor3 = Color3.fromRGB(200, 200, 200),
+					TextColor3 = Color3.fromRGB(132, 132, 132),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -3896,7 +3896,7 @@ ElementsTable.Keybind = (function()
 		local KeybindDisplayLabel = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
 			Text = Config.Default,
-			TextColor3 = Color3.fromRGB(240, 240, 240),
+			TextColor3 = Color3.fromRGB(132, 132, 132),
 			TextSize = 13,
 			TextXAlignment = Enum.TextXAlignment.Center,
 			Size = UDim2.new(0, 0, 0, 14),
@@ -4149,7 +4149,7 @@ ElementsTable.Colorpicker = (function()
 						Enum.FontStyle.Normal
 					),
 					Text = Text,
-					TextColor3 = Color3.fromRGB(240, 240, 240),
+					TextColor3 = Color3.fromRGB(132, 132, 132),
 					TextSize = 13,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					Size = UDim2.new(1, 0, 0, 32),
