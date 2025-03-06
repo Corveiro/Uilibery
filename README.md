@@ -7,7 +7,7 @@ dsc.gg/hydrahub  |   29.01 - well well well removed last update, added "Bloody" 
 
 --- FLUENT PLUS SETTINGS ---
 local Show_Button = true -- Shows the button for toggle fluent ui manually. If "false", works only on mobile, if "true", works everytime.
-local Button_Icon = "rbxassetid://77608020849823" -- Icon of the button for toggle fluent ui
+local Button_Icon = "rbxassetid://127057715088982" -- Icon of the button for toggle fluent ui
 ----------------------------
 
 local Lighting = game:GetService("Lighting")
