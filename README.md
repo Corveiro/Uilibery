@@ -1,9 +1,3 @@
---[[
-	Credit:
-	Original Fluent : https://github.com/dawid-scripts/Fluent
-	Themes : https://github.com/ActualMasterOogway/Fluent-Renewed/
-]]
-
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
@@ -20,192 +14,58 @@ local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
 
 local Themes = {
 	Names = {
-		"Dark Typewriter",
-		"AMOLED",
 		"Dark",
 		"Darker",
 		"Light",
 		"Aqua",
 		"Amethyst",
-		"Amethyst Dark",
 		"Rose",
 		"Sakura"
 	},
-	["AMOLED"] = {
-		Accent = Color3.fromRGB(255, 255, 255),
-		AcrylicMain = Color3.fromRGB(0, 0, 0),
-		AcrylicBorder = Color3.fromRGB(20, 20, 20),
-		AcrylicGradient = ColorSequence.new(Color3.fromRGB(0, 0, 0), Color3.fromRGB(0, 0, 0)),
-		AcrylicNoise = 1,
-		TitleBarLine = Color3.fromRGB(25, 25, 25),
-		Tab = Color3.fromRGB(40, 40, 40),
-		Element = Color3.fromRGB(15, 15, 15),
-		ElementBorder = Color3.fromRGB(0, 0, 0),
-		InElementBorder = Color3.fromRGB(40, 40, 40),
-		ElementTransparency = 0.95,
-		ToggleSlider = Color3.fromRGB(40, 40, 40),
-		ToggleToggled = Color3.fromRGB(255, 255, 255),
-		SliderRail = Color3.fromRGB(40, 40, 40),
-		DropdownFrame = Color3.fromRGB(20, 20, 20),
-		DropdownHolder = Color3.fromRGB(0, 0, 0),
-		DropdownBorder = Color3.fromRGB(0, 0, 0),
-		DropdownOption = Color3.fromRGB(40, 40, 40),
-		Keybind = Color3.fromRGB(40, 40, 40),
-		Input = Color3.fromRGB(40, 40, 40),
-		InputFocused = Color3.fromRGB(0, 0, 0),
-		InputIndicator = Color3.fromRGB(60, 60, 60),
-		InputIndicatorFocus = Color3.fromRGB(255, 255, 255),
-		Dialog = Color3.fromRGB(0, 0, 0),
-		DialogHolder = Color3.fromRGB(0, 0, 0),
-		DialogHolderLine = Color3.fromRGB(20, 20, 20),
-		DialogButton = Color3.fromRGB(15, 15, 15),
-		DialogButtonBorder = Color3.fromRGB(30, 30, 30),
-		DialogBorder = Color3.fromRGB(27, 27, 27),
-		DialogInput = Color3.fromRGB(15, 15, 15),
-		DialogInputLine = Color3.fromRGB(60, 60, 60),
-		Text = Color3.fromRGB(255, 255, 255),
-		SubText = Color3.fromRGB(170, 170, 170),
-		Hover = Color3.fromRGB(40, 40, 40),
-		HoverChange = 0.04
-	},
-	["Dark Typewriter"] = {
-		Accent = Color3.fromRGB(109, 180, 120),
-
-		AcrylicMain = Color3.fromRGB(38, 38, 38),
-		AcrylicBorder = Color3.fromRGB(85, 85, 85),
-		AcrylicGradient = ColorSequence.new(Color3.fromRGB(38, 38, 38), Color3.fromRGB(38, 38, 38)),
-		AcrylicNoise = 1,
-
-		TitleBarLine = Color3.fromRGB(189, 189, 189),
-		Tab = Color3.fromRGB(109, 180, 120),
-
-		Element = Color3.fromRGB(42, 42, 42),
-		ElementBorder = Color3.fromRGB(51, 51, 51),
-		InElementBorder = Color3.fromRGB(51, 51, 51),
-		ElementTransparency = 0,
-
-		ToggleSlider = Color3.fromRGB(103, 169, 113),
-		ToggleToggled = Color3.fromRGB(255, 255, 255),
-
-		SliderRail = Color3.fromRGB(51, 51, 51),
-
-		DropdownFrame = Color3.fromRGB(68, 68, 68),
-		DropdownHolder = Color3.fromRGB(68, 68, 68),
-		DropdownBorder = Color3.fromRGB(38, 38, 38),
-		DropdownOption = Color3.fromRGB(153, 200, 255),
-
-		Keybind = Color3.fromRGB(54, 54, 54),
-
-		Input = Color3.fromRGB(27, 27, 27),
-		InputFocused = Color3.fromRGB(51, 51, 51),
-		InputIndicator = Color3.fromRGB(197, 184, 161),
-
-		Dialog = Color3.fromRGB(38, 38, 38),
-		DialogHolder = Color3.fromRGB(58, 52, 46),
-		DialogHolderLine = Color3.fromRGB(40, 40, 40),
-		DialogButton = Color3.fromRGB(42, 42, 42),
-		DialogButtonBorder = Color3.fromRGB(51, 51, 51),
-		DialogBorder = Color3.fromRGB(189, 189, 189),
-		DialogInput = Color3.fromRGB(27, 27, 27),
-		DialogInputLine = Color3.fromRGB(197, 184, 161),
-
-		Text = Color3.fromRGB(197, 184, 161),
-		SubText = Color3.fromRGB(158, 158, 158),
-		Hover = Color3.fromRGB(149, 149, 149),
-		HoverChange = 0.04
-	},
-	["Amethyst Dark"] = {
-		Accent = Color3.fromHex("#b133ff"),
-
-		AcrylicMain = Color3.fromHex("#120024"),
-		AcrylicBorder = Color3.fromHex("#4d057b"),
-		AcrylicGradient = ColorSequence.new(Color3.fromHex("#120024"), Color3.fromHex("#120024")),
-		AcrylicNoise = 0.92,
-
-		TitleBarLine = Color3.fromHex("#4d057b"),
-		Tab = Color3.fromHex("#e9d9f2"),
-
-		Element = Color3.fromHex("#25013c"),
-		ElementBorder = Color3.fromHex("#4d057b"),
-		InElementBorder = Color3.fromHex("#b133ff"),
-		ElementTransparency = 0.85,
-
-		ToggleSlider = Color3.fromHex("#7d16bf"),
-		ToggleToggled = Color3.fromHex("#120024"),
-
-		SliderRail = Color3.fromHex("#7d16bf"),
-
-		DropdownFrame = Color3.fromHex("#25013c"),
-		DropdownHolder = Color3.fromHex("#25013c"),
-		DropdownBorder = Color3.fromHex("#4d057b"),
-		DropdownOption = Color3.fromHex("#e9d9f2"),
-
-		Keybind = Color3.fromHex("#25013c"),
-
-		Input = Color3.fromHex("#180030"),
-		InputFocused = Color3.fromHex("#180030"),
-		InputIndicator = Color3.fromHex("#9e85ad"),
-
-		Dialog = Color3.fromHex("#25013c"),
-		DialogHolder = Color3.fromHex("#120024"),
-		DialogHolderLine = Color3.fromHex("#4d057b"),
-		DialogButton = Color3.fromHex("#25013c"),
-		DialogButtonBorder = Color3.fromHex("#4d057b"),
-		DialogBorder = Color3.fromHex("#4d057b"),
-		DialogInput = Color3.fromHex("#180030"),
-		DialogInputLine = Color3.fromHex("#b133ff"),
-
-		Text = Color3.fromHex("#e9d9f2"),
-		SubText = Color3.fromHex("#9e85ad"),
-		Hover = Color3.fromHex("#4d057b"),
-		HoverChange = 0.1
-	},
 	Dark = {
 		Name = "Dark",
-		Accent = Color3.fromRGB(96, 205, 255),
-
-		AcrylicMain = Color3.fromRGB(60, 60, 60),
-		AcrylicBorder = Color3.fromRGB(90, 90, 90),
-		AcrylicGradient = ColorSequence.new(Color3.fromRGB(40, 40, 40), Color3.fromRGB(40, 40, 40)),
-		AcrylicNoise = 0.9,
-
-		TitleBarLine = Color3.fromRGB(75, 75, 75),
-		Tab = Color3.fromRGB(120, 120, 120),
-
-		Element = Color3.fromRGB(120, 120, 120),
-		ElementBorder = Color3.fromRGB(35, 35, 35),
-		InElementBorder = Color3.fromRGB(90, 90, 90),
-		ElementTransparency = 0.87,
-
-		ToggleSlider = Color3.fromRGB(120, 120, 120),
-		ToggleToggled = Color3.fromRGB(0, 0, 0),
-
-		SliderRail = Color3.fromRGB(120, 120, 120),
-
-		DropdownFrame = Color3.fromRGB(160, 160, 160),
-		DropdownHolder = Color3.fromRGB(45, 45, 45),
-		DropdownBorder = Color3.fromRGB(35, 35, 35),
-		DropdownOption = Color3.fromRGB(120, 120, 120),
-
-		Keybind = Color3.fromRGB(120, 120, 120),
-
-		Input = Color3.fromRGB(160, 160, 160),
-		InputFocused = Color3.fromRGB(10, 10, 10),
-		InputIndicator = Color3.fromRGB(150, 150, 150),
-
-		Dialog = Color3.fromRGB(45, 45, 45),
-		DialogHolder = Color3.fromRGB(35, 35, 35),
-		DialogHolderLine = Color3.fromRGB(30, 30, 30),
-		DialogButton = Color3.fromRGB(45, 45, 45),
-		DialogButtonBorder = Color3.fromRGB(80, 80, 80),
-		DialogBorder = Color3.fromRGB(70, 70, 70),
-		DialogInput = Color3.fromRGB(55, 55, 55),
-		DialogInputLine = Color3.fromRGB(160, 160, 160),
-
-		Text = Color3.fromRGB(240, 240, 240),
-		SubText = Color3.fromRGB(170, 170, 170),
-		Hover = Color3.fromRGB(120, 120, 120),
-		HoverChange = 0.07,
+        Accent = Color3.fromRGB(248, 248, 255),
+    
+        AcrylicMain = Color3.fromRGB(0, 0, 0),
+        AcrylicBorder = Color3.fromRGB(51, 153, 153),
+        AcrylicGradient = ColorSequence.new(Color3.fromRGB(20, 20, 20), Color3.fromRGB(0, 0, 0)),
+    
+        TitleBarLine = Color3.fromRGB(51, 153, 153),
+        Tab = Color3.fromRGB(51, 153, 153),
+    
+        Element = Color3.fromRGB(60, 60, 60),
+        ElementBorder = Color3.fromRGB(80, 80, 80),
+        InElementBorder = Color3.fromRGB(100, 100, 100),
+        ElementTransparency = 0.85,
+    
+        ToggleSlider = Color3.fromRGB(248, 248, 255),
+		ToggleCorner = Color3.fromRGB(96, 96, 99),
+        ToggleToggled = Color3.fromRGB(0, 0, 0),
+    
+        SliderRail = Color3.fromRGB(80, 0, 160),
+    
+        DropdownFrame = Color3.fromRGB(50, 50, 50),
+        DropdownHolder = Color3.fromRGB(30, 30, 30),
+        DropdownBorder = Color3.fromRGB(60, 60, 60),
+        DropdownOption = Color3.fromRGB(248, 248, 255),
+    
+        Keybind = Color3.fromRGB(248, 248, 255),
+    
+        Input = Color3.fromRGB(40, 40, 40),
+        InputFocused = Color3.fromRGB(0, 0, 0),
+        InputIndicator = Color3.fromRGB(80, 80, 80),
+    
+        Dialog = Color3.fromRGB(0, 0, 0),
+        DialogHolder = Color3.fromRGB(20, 20, 20),
+        DialogHolderLine = Color3.fromRGB(40, 40, 40),
+        DialogButton = Color3.fromRGB(30, 30, 30),
+        DialogButtonBorder = Color3.fromRGB(248, 248, 255),
+        DialogBorder = Color3.fromRGB(248, 248, 255),
+        DialogInput = Color3.fromRGB(40, 40, 40),
+        DialogInputLine = Color3.fromRGB(248, 248, 255),
+    
+        Text = Color3.fromRGB(255, 255, 255),
+        SubText = Color3.fromRGB(200, 200, 200),
 	},
 	Darker = {
 		Name = "Darker",
@@ -504,7 +364,6 @@ local Library = {
 	Acrylic = false,
 	Transparency = true,
 	MinimizeKeybind = nil,
-	MinimizerIcon = nil,
 	MinimizeKey = Enum.KeyCode.LeftControl,
 }
 
@@ -592,7 +451,7 @@ end
 
 function Linear:step(state, dt)
 	local position = state.value
-	local velocity = self._velocity
+	local velocity = self._velocity -- Linear motion ignores the state's velocity
 	local goal = self._targetValue
 
 	local dPos = dt * velocity
@@ -647,6 +506,10 @@ function Spring.new(targetValue, options)
 end
 
 function Spring:step(state, dt)
+	-- Copyright 2018 Parker Stebbins (parker@fractality.io)
+	-- github.com/Fraktality/Spring
+	-- Distributed under the MIT license
+
 	local d = self._dampingRatio
 	local f = self._frequency * 2 * math.pi
 	local g = self._targetValue
@@ -658,14 +521,26 @@ function Spring:step(state, dt)
 
 	local p1, v1
 
-	if d == 1 then
+	if d == 1 then -- Critically damped
 		p1 = (offset * (1 + f * dt) + v0 * dt) * decay + g
 		v1 = (v0 * (1 - f * dt) - offset * (f * f * dt)) * decay
-	elseif d < 1 then
+	elseif d < 1 then -- Underdamped
 		local c = math.sqrt(1 - d * d)
 
 		local i = math.cos(f * c * dt)
 		local j = math.sin(f * c * dt)
+
+		-- Damping ratios approaching 1 can cause division by small numbers.
+		-- To fix that, group terms around z=j/c and find an approximation for z.
+		-- Start with the definition of z:
+		--    z = sin(dt*f*c)/c
+		-- Substitute a=dt*f:
+		--    z = sin(a*c)/c
+		-- Take the Maclaurin expansion of z with respect to c:
+		--    z = a - (a^3*c^2)/6 + (a^5*c^4)/120 + O(c^6)
+		--    z â‰ˆ a - (a^3*c^2)/6 + (a^5*c^4)/120
+		-- Rewrite in Horner form:
+		--    z â‰ˆ a + ((a*a)*(c*c)*(c*c)/20 - c*c)*(a*a*a)/6
 
 		local z
 		if c > EPS then
@@ -674,6 +549,13 @@ function Spring:step(state, dt)
 			local a = dt * f
 			z = a + ((a * a) * (c * c) * (c * c) / 20 - c * c) * (a * a * a) / 6
 		end
+
+		-- Frequencies approaching 0 present a similar problem.
+		-- We want an approximation for y as f approaches 0, where:
+		--    y = sin(dt*f*c)/(f*c)
+		-- Substitute b=dt*c:
+		--    y = sin(b*c)/b
+		-- Now reapply the process from z.
 
 		local y
 		if f * c > EPS then
@@ -685,7 +567,7 @@ function Spring:step(state, dt)
 
 		p1 = (offset * (i + d * z) + v0 * y) * decay + g
 		v1 = (v0 * (i - z * d) - offset * (z * f)) * decay
-	else
+	else -- Overdamped
 		local c = math.sqrt(d * d - 1)
 
 		local r1 = -f * (d - c)
@@ -879,6 +761,7 @@ function GroupMotor:step(deltaTime)
 	for _, motor in pairs(self._motors) do
 		local complete = motor:step(deltaTime)
 		if not complete then
+			-- If any of the sub-motors are incomplete, the group motor will not be complete either
 			allMotorsComplete = false
 		end
 	end
@@ -1064,16 +947,19 @@ end
 function Creator.New(Name, Properties, Children)
 	local Object = Instance.new(Name)
 
+	-- Default properties
 	for Name, Value in next, Creator.DefaultProperties[Name] or {} do
 		Object[Name] = Value
 	end
 
+	-- Properties
 	for Name, Value in next, Properties or {} do
 		if Name ~= "ThemeTag" then
 			Object[Name] = Value
 		end
 	end
 
+	-- Children
 	for _, Child in next, Children or {} do
 		Child.Parent = Object
 	end
@@ -1666,7 +1552,7 @@ Components.Section = (function()
 				TextTransparency = 0,
 				FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
 				TextSize = 18,
-				TextXAlignment = "Left",
+				TextXAlignment = "Center",
 				TextYAlignment = "Center",
 				Size = UDim2.new(1, -16, 0, 18),
 				Position = UDim2.fromOffset(0, 2),
@@ -2955,7 +2841,7 @@ Components.Window = (function()
 		end
 
 		local TabModule = Components.Tab:Init(Window)
-		function Window:AddTab(TabConfig)
+		function Window:T(TabConfig)
 			return TabModule:New(TabConfig.Title, TabConfig.Icon, Window.TabHolder)
 		end
 
@@ -3124,7 +3010,6 @@ ElementsTable.Dropdown = (function()
 			Opened = false,
 			Type = "Dropdown",
 			Callback = Config.Callback or function() end,
-			Searchable = Config.Searchable or false
 		}
 
 		if Dropdown.Multi and Config.AllowNull then
@@ -3139,26 +3024,20 @@ ElementsTable.Dropdown = (function()
 		Dropdown.Visible = DropdownFrame.Visible
 		Dropdown.Elements = DropdownFrame
 
-		local DropdownDisplay = New("TextBox", {
+		local DropdownDisplay = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
-			Text = "",
-			PlaceholderText = "Value",
-			PlaceholderColor3 = Color3.fromRGB(240, 240, 240),
+			Text = "Value",
 			TextColor3 = Color3.fromRGB(240, 240, 240),
-			TextSize = 14,
-			AutomaticSize = Enum.AutomaticSize.Y,
-			TextYAlignment = Enum.TextYAlignment.Center,
+			TextSize = 13,
 			TextXAlignment = Enum.TextXAlignment.Left,
-			Size = UDim2.new(1, -40, 0.5, 0),
+			Size = UDim2.new(1, -30, 0, 14),
 			Position = UDim2.new(0, 8, 0.5, 0),
 			AnchorPoint = Vector2.new(0, 0.5),
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1,
 			TextTruncate = Enum.TextTruncate.AtEnd,
-			Interactable = Dropdown.Searchable,
 			ThemeTag = {
 				TextColor3 = "Text",
-				PlaceholderColor3 = "Text"
 			},
 		})
 
@@ -3168,7 +3047,6 @@ ElementsTable.Dropdown = (function()
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -8, 0.5, 0),
 			BackgroundTransparency = 1,
-			Rotation = 180,
 			ThemeTag = {
 				ImageColor3 = "SubText",
 			},
@@ -3261,7 +3139,7 @@ ElementsTable.Dropdown = (function()
 		table.insert(Library.OpenFrames, DropdownHolderCanvas)
 
 		local function RecalculateListPosition()
-			local Add = -40
+			local Add = 0
 			if Camera.ViewportSize.Y - DropdownInner.AbsolutePosition.Y < DropdownHolderCanvas.AbsoluteSize.Y - 5 then
 				Add = DropdownHolderCanvas.AbsoluteSize.Y
 				- 5
@@ -3291,49 +3169,7 @@ ElementsTable.Dropdown = (function()
 		Creator.AddSignal(DropdownInner:GetPropertyChangedSignal("AbsolutePosition"), RecalculateListPosition)
 
 		Creator.AddSignal(DropdownInner.MouseButton1Click, function()
-			if Dropdown.Opened then
-				Dropdown:Close()
-				return
-			end
 			Dropdown:Open()
-		end)
-
-		Creator.AddSignal(DropdownDisplay:GetPropertyChangedSignal("Text"), function()
-			local Text = DropdownDisplay.Text
-			if #Text == 0 then
-				for _, Element in next, DropdownScrollFrame:GetChildren() do
-					if not Element:IsA("UIListLayout") then
-						local Value = Element.ButtonLabel.Text
-						local Similar = Value:lower():match(Text:lower()) or Value:lower() == Text:lower()
-						Element.Visible = true
-					end
-				end
-			end
-			for _, Element in next, DropdownScrollFrame:GetChildren() do
-				if not Element:IsA("UIListLayout") then
-					local Value = Element.ButtonLabel.Text
-					local Similar = Value:lower():match(Text:lower()) or Value:lower() == Text:lower()
-					Element.Visible = Similar and true or false
-				end
-			end
-
-			RecalculateListPosition()
-			RecalculateListSize()
-		end)
-
-		Creator.AddSignal(DropdownDisplay.Focused, function()
-			DropdownDisplay.Text = ""
-		end)
-
-		Creator.AddSignal(DropdownDisplay.FocusLost, function(Enter, Input)
-			if #DropdownDisplay.Text > 0 then
-				local Tick = tick()
-				repeat wait() until tick() - Tick > 5 or DropdownDisplay:IsFocused()
-				if not DropdownDisplay:IsFocused() then
-					DropdownDisplay.Text = ""
-					Dropdown:Display()
-				end
-			end
 		end)
 
 		Creator.AddSignal(UserInputService.InputBegan, function(Input)
@@ -3356,7 +3192,6 @@ ElementsTable.Dropdown = (function()
 		local ScrollFrame = self.ScrollFrame
 		function Dropdown:Open()
 			Dropdown.Opened = true
-			DropdownDisplay.Interactable = Dropdown.Searchable and true or false
 			ScrollFrame.ScrollingEnabled = false
 			DropdownHolderCanvas.Visible = true
 			TweenService:Create(
@@ -3364,29 +3199,13 @@ ElementsTable.Dropdown = (function()
 				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
 				{ Size = UDim2.fromScale(1, 1) }
 			):Play()
-			TweenService:Create(
-				DropdownIco,
-				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-				{ Rotation = 0 }
-			):Play()
-			if Dropdown.Searchable then
-				DropdownDisplay:CaptureFocus()
-			end
 		end
 
 		function Dropdown:Close()
 			Dropdown.Opened = false
 			ScrollFrame.ScrollingEnabled = true
-			DropdownDisplay.Interactable = false
 			DropdownHolderFrame.Size = UDim2.fromScale(1, 0.6)
 			DropdownHolderCanvas.Visible = false
-			TweenService:Create(
-				DropdownIco,
-				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-				{ Rotation = 180 }
-			):Play()
-			DropdownDisplay:ReleaseFocus(false)
-			Dropdown:Display()
 		end
 
 		function Dropdown:Display()
@@ -3404,7 +3223,7 @@ ElementsTable.Dropdown = (function()
 				Str = Dropdown.Value or ""
 			end
 
-			DropdownDisplay.PlaceholderText = (Str == "" and "--" or Str)
+			DropdownDisplay.Text = (Str == "" and "--" or Str)
 		end
 
 		function Dropdown:GetActiveValues()
@@ -3419,15 +3238,6 @@ ElementsTable.Dropdown = (function()
 			else
 				return Dropdown.Value and 1 or 0
 			end
-		end
-
-		function Dropdown:SetActiveValues(Value)
-			Dropdown.Value = Value
-
-			Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-			Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
-
-			Dropdown:BuildDropdownList()
 		end
 
 		function Dropdown:BuildDropdownList()
@@ -3539,33 +3349,33 @@ ElementsTable.Dropdown = (function()
 					SetSelTransparency(Selected and 0 or 1)
 				end
 
-				AddSignal(Button.Activated, function()
-					local Try = not Selected
+				ButtonLabel.InputBegan:Connect(function(Input)
+					if
+						Input.UserInputType == Enum.UserInputType.MouseButton1
+						or Input.UserInputType == Enum.UserInputType.Touch
+					then
+						local Try = not Selected
 
-					if Dropdown:GetActiveValues() == 1 and not Try and not Config.AllowNull then
-					else
-						if Config.Multi then
-							Selected = Try
-							Dropdown.Value[Value] = Selected and true or nil
+						if Dropdown:GetActiveValues() == 1 and not Try and not Config.AllowNull then
 						else
-							Selected = Try
-							Dropdown.Value = Selected and Value or nil
+							if Config.Multi then
+								Selected = Try
+								Dropdown.Value[Value] = Selected and true or nil
+							else
+								Selected = Try
+								Dropdown.Value = Selected and Value or nil
 
-							for _, OtherButton in next, Buttons do
-								OtherButton:UpdateButton()
+								for _, OtherButton in next, Buttons do
+									OtherButton:UpdateButton()
+								end
 							end
-						end
 
-						Table:UpdateButton()
-
-						if Dropdown.Searchable and #DropdownDisplay.Text > 0 then
-
-						else
+							Table:UpdateButton()
 							Dropdown:Display()
-						end
 
-						Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-						Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+							Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
+							Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+						end
 					end
 				end)
 
@@ -4691,7 +4501,6 @@ local Icons = {
 	["lucide-archive"] = "rbxassetid://10709762233",
 	["lucide-archive-restore"] = "rbxassetid://10709762058",
 	["lucide-armchair"] = "rbxassetid://10709762327",
-	["lucide-anvil"] = "rbxassetid://77943964625400",
 	["lucide-arrow-big-down"] = "rbxassetid://10747796644",
 	["lucide-arrow-big-left"] = "rbxassetid://10709762574",
 	["lucide-arrow-big-right"] = "rbxassetid://10709762727",
@@ -5301,7 +5110,6 @@ local Icons = {
 	["lucide-scissors"] = "rbxassetid://10734942778",
 	["lucide-screen-share"] = "rbxassetid://10734943193",
 	["lucide-screen-share-off"] = "rbxassetid://10734942967",
-	["lucide-shell"] = "rbxassetid://83825045910816",
 	["lucide-scroll"] = "rbxassetid://10734943448",
 	["lucide-search"] = "rbxassetid://10734943674",
 	["lucide-send"] = "rbxassetid://10734943902",
@@ -5451,7 +5259,6 @@ local Icons = {
 	["lucide-volume-1"] = "rbxassetid://10747375450",
 	["lucide-volume-2"] = "rbxassetid://10747375679",
 	["lucide-volume-x"] = "rbxassetid://10747375880",
-	["lucide-wheat"] = "rbxassetid://80877624162595",
 	["lucide-wallet"] = "rbxassetid://10747376205",
 	["lucide-wand"] = "rbxassetid://10747376565",
 	["lucide-wand-2"] = "rbxassetid://10747376349",
@@ -5891,6 +5698,8 @@ local InterfaceManager = {} do
 		local Library = self.Library
 		local Settings = InterfaceManager.Settings
 
+		InterfaceManager:LoadSettings()
+
 		local section = tab:AddSection("Interface")
 		local InterfaceTheme = section:AddDropdown("InterfaceTheme", {
 			Title = "Theme",
@@ -5918,11 +5727,11 @@ local InterfaceManager = {} do
 				end
 			})
 		end
-		
+
 		section:AddToggle("TransparentToggle", {
 			Title = "Transparency",
 			Description = "Makes the interface transparent.",
-			Default = Library.Transparency,
+			Default = Settings.Transparency,
 			Callback = function(Value)
 				Library:ToggleTransparency(Value)
 				Settings.Transparency = Value
@@ -5936,8 +5745,6 @@ local InterfaceManager = {} do
 			InterfaceManager:SaveSettings()
 		end)
 		Library.MinimizeKeybind = MenuKeybind
-
-		InterfaceManager:LoadSettings()
 	end
 end
 
@@ -5953,7 +5760,6 @@ function Library:CreateWindow(Config)
 	Library.UseAcrylic = Config.Acrylic or false
 	Library.Acrylic = Config.Acrylic or false
 	Library.Theme = Config.Theme or "Dark"
-	Library.Transparency = Config.Transparency or false
 	if Config.Acrylic then
 		Acrylic.init()
 	end
@@ -5969,135 +5775,6 @@ function Library:CreateWindow(Config)
 	Library.Window = Window
 	InterfaceManager:SetTheme(Config.Theme)
 	Library:SetTheme(Config.Theme)
-
-	local Dragging, DragInput, MousePos, StartPos = false
-
-	local MinimizeButton = New("TextButton", {
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, 0, 1, 0),
-		BorderSizePixel = 0
-	}, {
-		New("UIPadding", {
-			PaddingBottom = UDim.new(0, 2),
-			PaddingLeft = UDim.new(0, 2),
-			PaddingRight = UDim.new(0, 2),
-			PaddingTop = UDim.new(0, 2),
-		}),
-		New("ImageLabel", {
-			Image = Config.MinimizerIcon or "rbxassetid://17071506793",
-			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundTransparency = 1,
-		}, {
-			New("UIAspectRatioConstraint", {
-				AspectRatio = 1,
-				AspectType = Enum.AspectType.FitWithinMaxSize,
-			})
-		})
-	})
-
-	local Minimizer = New("Frame", {
-		Parent = GUI,
-		Size = UDim2.new(0, 32, 0, 32),
-		Position = UDim2.new(0.45, 0, 0.025, 0),
-		BackgroundTransparency = 1,
-		ZIndex = 999999999,
-	},
-	{
-		New("Frame", {
-			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-			Size = UDim2.new(1, 0, 1, 0),
-			BackgroundTransparency = 0.5,
-			BorderSizePixel = 0
-		}, {
-			New("UICorner", {
-				CornerRadius = UDim.new(0.25, 0),
-			}),
-			MinimizeButton
-		})
-	})
-
-	Creator.AddSignal(Minimizer.InputBegan, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			Dragging = true
-			MousePos = Input.Position
-			StartPos = Minimizer.Position
-
-			Input.Changed:Connect(function()
-				if Input.UserInputState == Enum.UserInputState.End then
-					Dragging = false
-				end
-			end)
-		end
-	end)
-
-	Creator.AddSignal(MinimizeButton.InputBegan, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			Dragging = true
-			MousePos = Input.Position
-			StartPos = Minimizer.Position
-
-			Input.Changed:Connect(function()
-				if Input.UserInputState == Enum.UserInputState.End then
-					Dragging = false
-				end
-			end)
-		end
-	end)
-
-	Creator.AddSignal(MinimizeButton.InputChanged, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseMovement
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			DragInput = Input
-		end
-	end)
-	Creator.AddSignal(Minimizer.InputChanged, function(Input)
-		if
-			Input.UserInputType == Enum.UserInputType.MouseMovement
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
-			DragInput = Input
-		end
-	end)
-
-	Creator.AddSignal(UserInputService.InputChanged, function(Input)
-		if Input == DragInput and Dragging then
-			local GuiInset = game:GetService("GuiService"):GetGuiInset()
-			local Delta = Input.Position - MousePos
-			local ViewportSize = workspace.Camera.ViewportSize
-			local CurrentX = StartPos.X.Scale + (Delta.X/ViewportSize.X)
-			local CurrentY = StartPos.Y.Scale + (Delta.Y/ViewportSize.Y)
-
-			if CurrentX<0 or CurrentX > (ViewportSize.X - Minimizer.AbsoluteSize.X)/ViewportSize.X then
-				if CurrentX < 0 then
-					CurrentX = 0
-				else
-					CurrentX = (ViewportSize.X - Minimizer.AbsoluteSize.X)/ViewportSize.X
-				end
-			end
-
-			if CurrentY < 0 or CurrentY > ((ViewportSize.Y + GuiInset.Y) - Minimizer.AbsoluteSize.Y)/(ViewportSize.Y + GuiInset.Y) then
-				if CurrentY < 0 then
-					CurrentY = 0
-				else
-					CurrentY = ((ViewportSize.Y + GuiInset.Y) - Minimizer.AbsoluteSize.Y)/(ViewportSize.Y + GuiInset.Y)
-				end
-			end
-			
-			Minimizer.Position = UDim2.fromScale(CurrentX, CurrentY)
-		end
-	end)
-
-	AddSignal(MinimizeButton.MouseButton1Click, function()
-		Window:Minimize()
-	end)
 
 	return Window
 end
@@ -6149,5 +5826,7 @@ if getgenv then
 else
 	Fluent = Library
 end
+
+local Dragging, DragInput, MousePos, StartPos = false
 
 return Library, SaveManager, InterfaceManager
