@@ -122,7 +122,7 @@ local MkButton = function()
 	stf.Size = UDim2.new(0.100000001, 0, 0.100000001, 0)
 	stf.SizeConstraint = Enum.SizeConstraint.RelativeYY
 	stf.Rotation = 360
-	UICorner.CornerRadius = UDim.new(0, 3)
+	UICorner.CornerRadius = UDim.new(0, 9)
 	UICorner.Parent = stf
 
 	DropShadow.Name = "DropShadow"
@@ -413,7 +413,7 @@ local aa = {
 		end
 		return function(m)
 			local n, o, p = {}, l(m)
-			local q = h.New("Frame", {BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1)})
+			local q = h.New("Frame", {BackgroundTransparency = 0.2, Size = UDim2.fromScale(1, 1)})
 			h.AddSignal(
 				q:GetPropertyChangedSignal "AbsolutePosition",
 				function()
@@ -467,7 +467,7 @@ local aa = {
 								AnchorPoint = Vector2.new(0.5, 0.5),
 								Size = UDim2.new(1, 120, 1, 116),
 								Position = UDim2.new(0.5, 0, 0.5, 0),
-								BackgroundTransparency = 1,
+								BackgroundTransparency = 0.2,
 								ImageColor3 = Color3.fromRGB(0, 0, 0),
 								ImageTransparency = 0.7
 							}
@@ -515,14 +515,14 @@ local aa = {
 								ScaleType = Enum.ScaleType.Tile,
 								TileSize = UDim2.new(0, 128, 0, 128),
 								Size = UDim2.fromScale(1, 1),
-								BackgroundTransparency = 1,
+								BackgroundTransparency = 0.2,
 								ThemeTag = {ImageTransparency = "AcrylicNoise"}
 							},
 							{j("UICorner", {CornerRadius = UDim.new(0, 8)})}
 						),
 						j(
 							"Frame",
-							{BackgroundTransparency = 1, Size = UDim2.fromScale(1, 1), ZIndex = 2},
+							{BackgroundTransparency = 0.2, Size = UDim2.fromScale(1, 1), ZIndex = 2},
 							{
 								j("UICorner", {CornerRadius = UDim.new(0, 8)}),
 								j("UIStroke", {Transparency = 0.5, Thickness = 1, ThemeTag = {Color = "AcrylicBorder"}})
@@ -609,7 +609,7 @@ local aa = {
 						TextYAlignment = Enum.TextYAlignment.Center,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						AutomaticSize = Enum.AutomaticSize.Y,
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Size = UDim2.fromScale(1, 1),
 						ThemeTag = {TextColor3 = "Text"}
 					}
@@ -617,15 +617,15 @@ local aa = {
 			p.HoverFrame =
 				k(
 					"Frame",
-					{Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, ThemeTag = {BackgroundColor3 = "Hover"}},
-					{k("UICorner", {CornerRadius = UDim.new(0, 4)})}
+					{Size = UDim2.fromScale(1, 1), BackgroundTransparency = 0.2, ThemeTag = {BackgroundColor3 = "Hover"}},
+					{k("UICorner", {CornerRadius = UDim.new(0, 9)})}
 				)
 			p.Frame =
 				k(
 					"TextButton",
 					{Size = UDim2.new(0, 0, 0, 32), Parent = n, ThemeTag = {BackgroundColor3 = "DialogButton"}},
 					{
-						k("UICorner", {CornerRadius = UDim.new(0, 4)}),
+						k("UICorner", {CornerRadius = UDim.new(0, 9)}),
 						k(
 							"UIStroke",
 							{
@@ -688,7 +688,7 @@ local aa = {
 						Text = "",
 						Size = UDim2.fromScale(1, 1),
 						BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Parent = q.Window.Root
 					},
 					{p("UICorner", {CornerRadius = UDim.new(0, 8)})}
@@ -744,7 +744,7 @@ local aa = {
 						Size = UDim2.new(1, 0, 0, 22),
 						Position = UDim2.fromOffset(20, 25),
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ThemeTag = {TextColor3 = "Text"}
 					}
 				)
@@ -837,7 +837,7 @@ local aa = {
 						TextXAlignment = Enum.TextXAlignment.Left,
 						Size = UDim2.new(1, 0, 0, 14),
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ThemeTag = {TextColor3 = "Text"}
 					}
 				)
@@ -853,7 +853,7 @@ local aa = {
 						TextXAlignment = Enum.TextXAlignment.Left,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						AutomaticSize = Enum.AutomaticSize.Y,
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Size = UDim2.new(1, 0, 0, 14),
 						ThemeTag = {TextColor3 = "SubText"}
 					}
@@ -864,7 +864,7 @@ local aa = {
 					{
 						AutomaticSize = Enum.AutomaticSize.Y,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Position = UDim2.fromOffset(10, 0),
 						Size = UDim2.new(1, -28, 0, 0)
 					},
@@ -901,7 +901,7 @@ local aa = {
 						LayoutOrder = 7,
 						ThemeTag = {BackgroundColor3 = "Element", BackgroundTransparency = "ElementTransparency"}
 					},
-					{k("UICorner", {CornerRadius = UDim.new(0, 4)}), q.Border, q.LabelHolder}
+					{k("UICorner", {CornerRadius = UDim.new(0, 9)}), q.Border, q.LabelHolder}
 				)
 			function q.SetTitle(r, s)
 				q.TitleLabel.Text = s
@@ -973,7 +973,7 @@ local aa = {
 						Position = UDim2.new(1, -30, 1, -30),
 						Size = UDim2.new(0, 310, 1, -30),
 						AnchorPoint = Vector2.new(1, 1),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Parent = q
 					},
 					{
@@ -1012,7 +1012,7 @@ local aa = {
 						TextYAlignment = "Center",
 						Size = UDim2.new(1, -12, 0, 12),
 						TextWrapped = true,
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ThemeTag = {TextColor3 = "Text"}
 					}
 				)
@@ -1028,7 +1028,7 @@ local aa = {
 						AutomaticSize = Enum.AutomaticSize.Y,
 						Size = UDim2.new(1, 0, 0, 14),
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						TextWrapped = true,
 						ThemeTag = {TextColor3 = "Text"}
 					}
@@ -1045,7 +1045,7 @@ local aa = {
 						AutomaticSize = Enum.AutomaticSize.Y,
 						Size = UDim2.new(1, 0, 0, 14),
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						TextWrapped = true,
 						ThemeTag = {TextColor3 = "SubText"}
 					}
@@ -1056,7 +1056,7 @@ local aa = {
 					{
 						AutomaticSize = Enum.AutomaticSize.Y,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Position = UDim2.fromOffset(14, 40),
 						Size = UDim2.new(1, -28, 0, 0)
 					},
@@ -1091,7 +1091,7 @@ local aa = {
 								Size = UDim2.fromOffset(16, 16),
 								Position = UDim2.fromScale(0.5, 0.5),
 								AnchorPoint = Vector2.new(0.5, 0.5),
-								BackgroundTransparency = 1,
+								BackgroundTransparency = 0.2,
 								ThemeTag = {ImageColor3 = "Text"}
 							}
 						)
@@ -1100,7 +1100,7 @@ local aa = {
 			r.Root =
 				n(
 					"Frame",
-					{BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Position = UDim2.fromScale(1, 0)},
+					{BackgroundTransparency = 0.2, Size = UDim2.new(1, 0, 1, 0), Position = UDim2.fromScale(1, 0)},
 					{r.AcrylicPaint.Frame, r.Title, r.CloseButton, r.LabelHolder}
 				)
 			if q.Content == "" then
@@ -1110,7 +1110,7 @@ local aa = {
 				r.SubContentLabel.Visible = false
 			end
 			r.Holder =
-				n("Frame", {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 200), Parent = o.Holder}, {r.Root})
+				n("Frame", {BackgroundTransparency = 0.2, Size = UDim2.new(1, 0, 0, 200), Parent = o.Holder}, {r.Root})
 			local s = i.GroupMotor.new {Scale = 1, Offset = 60}
 			s:onStep(
 				function(t)
@@ -1173,7 +1173,7 @@ local aa = {
 			m.Root =
 				j(
 					"Frame",
-					{BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 26), LayoutOrder = 7, Parent = l},
+					{BackgroundTransparency = 0.2, Size = UDim2.new(1, 0, 0, 26), LayoutOrder = 7, Parent = l},
 					{
 						j(
 							"TextLabel",
@@ -1241,7 +1241,7 @@ local aa = {
 					"TextButton",
 					{
 						Size = UDim2.new(1, 0, 0, 34),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Parent = s,
 						ThemeTag = {BackgroundColor3 = "Tab"}
 					},
@@ -1265,7 +1265,7 @@ local aa = {
 								TextXAlignment = "Left",
 								TextYAlignment = "Center",
 								Size = UDim2.new(1, -12, 1, 0),
-								BackgroundTransparency = 1,
+								BackgroundTransparency = 0.2,
 								ThemeTag = {TextColor3 = "Text"}
 							}
 						),
@@ -1275,7 +1275,7 @@ local aa = {
 								AnchorPoint = Vector2.new(0, 0.5),
 								Size = UDim2.fromOffset(16, 16),
 								Position = UDim2.new(0, 8, 0.5, 0),
-								BackgroundTransparency = 1,
+								BackgroundTransparency = 0.2,
 								Image = r and r or nil,
 								ThemeTag = {ImageColor3 = "Text"}
 							}
@@ -1288,7 +1288,7 @@ local aa = {
 					"ScrollingFrame",
 					{
 						Size = UDim2.fromScale(1, 1),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Parent = u.ContainerHolder,
 						Visible = false,
 						BottomImage = "rbxassetid://6889812791",
@@ -1411,7 +1411,7 @@ local aa = {
 						TextYAlignment = Enum.TextYAlignment.Center,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						AutomaticSize = Enum.AutomaticSize.Y,
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Size = UDim2.fromScale(1, 1),
 						Position = UDim2.fromOffset(10, 0),
 						ThemeTag = {TextColor3 = "Text", PlaceholderColor3 = "SubText"}
@@ -1421,7 +1421,7 @@ local aa = {
 				l(
 					"Frame",
 					{
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ClipsDescendants = true,
 						Position = UDim2.new(0, 6, 0, 0),
 						Size = UDim2.new(1, -12, 1, 0)
@@ -1449,7 +1449,7 @@ local aa = {
 						ThemeTag = {BackgroundColor3 = n and "Input" or "DialogInput"}
 					},
 					{
-						l("UICorner", {CornerRadius = UDim.new(0, 4)}),
+						l("UICorner", {CornerRadius = UDim.new(0, 9)}),
 						l(
 							"UIStroke",
 							{
@@ -1526,7 +1526,7 @@ local aa = {
 						{
 							Size = UDim2.new(0, 34, 1, -8),
 							AnchorPoint = Vector2.new(1, 0),
-							BackgroundTransparency = 1,
+							BackgroundTransparency = 0.2,
 							Parent = q,
 							Position = p,
 							Text = "",
@@ -1541,7 +1541,7 @@ local aa = {
 									Size = UDim2.fromOffset(16, 16),
 									Position = UDim2.fromScale(0.5, 0.5),
 									AnchorPoint = Vector2.new(0.5, 0.5),
-									BackgroundTransparency = 1,
+									BackgroundTransparency = 0.2,
 									Name = "Icon",
 									ThemeTag = {ImageColor3 = "Text"}
 								}
@@ -1582,7 +1582,7 @@ local aa = {
 			o.Frame =
 				l(
 					"Frame",
-					{Size = UDim2.new(1, 0, 0, 42), BackgroundTransparency = 1, Parent = n.Parent},
+					{Size = UDim2.new(1, 0, 0, 42), BackgroundTransparency = 0.2, Parent = n.Parent},
 					{
 						l(
 							"Frame",
@@ -1611,7 +1611,7 @@ local aa = {
 										TextYAlignment = "Center",
 										Size = UDim2.fromScale(0, 1),
 										AutomaticSize = Enum.AutomaticSize.X,
-										BackgroundTransparency = 1,
+										BackgroundTransparency = 0.2,
 										ThemeTag = {TextColor3 = "Text"}
 									}
 								),
@@ -1631,7 +1631,7 @@ local aa = {
 										TextYAlignment = "Center",
 										Size = UDim2.fromScale(0, 1),
 										AutomaticSize = Enum.AutomaticSize.X,
-										BackgroundTransparency = 1,
+										BackgroundTransparency = 0.2,
 										ThemeTag = {TextColor3 = "Text"}
 									}
 								)
@@ -1724,18 +1724,18 @@ local aa = {
 						AnchorPoint = Vector2.new(0, 0.5),
 						ThemeTag = {BackgroundColor3 = "Accent"}
 					},
-					{s("UICorner", {CornerRadius = UDim.new(0, 2)})}
+					{s("UICorner", {CornerRadius = UDim.new(0, 9)})}
 				),
 			s(
 				"Frame",
-				{Size = UDim2.fromOffset(20, 20), BackgroundTransparency = 1, Position = UDim2.new(1, -20, 1, -20)}
+				{Size = UDim2.fromOffset(20, 20), BackgroundTransparency = 0.2, Position = UDim2.new(1, -20, 1, -20)}
 			)
 			v.TabHolder =
 				s(
 					"ScrollingFrame",
 					{
 						Size = UDim2.fromScale(1, 1),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ScrollBarImageTransparency = 1,
 						ScrollBarThickness = 0,
 						BorderSizePixel = 0,
@@ -1750,7 +1750,7 @@ local aa = {
 					{
 						Size = UDim2.new(0, t.TabWidth, 1, -66),
 						Position = UDim2.new(0, 12, 0, 54),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ClipsDescendants = true
 					},
 					{v.TabHolder, D}
@@ -1768,7 +1768,7 @@ local aa = {
 						TextYAlignment = "Center",
 						Size = UDim2.new(1, -16, 0, 28),
 						Position = UDim2.fromOffset(t.TabWidth + 26, 56),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ThemeTag = {TextColor3 = "Text"}
 					}
 				)
@@ -1784,7 +1784,7 @@ local aa = {
 			v.Root =
 				s(
 					"Frame",
-					{BackgroundTransparency = 1, Size = v.Size, Position = v.Position, Parent = t.Parent},
+					{BackgroundTransparency = 0.2, Size = v.Size, Position = v.Position, Parent = t.Parent},
 					{v.AcrylicPaint.Frame, v.TabDisplay, v.ContainerHolder, F, E}
 				)
 			v.TitleBar = e(d.Parent.TitleBar) {Title = t.Title, SubTitle = t.SubTitle, Parent = v.Root, Window = v}
@@ -2012,7 +2012,7 @@ local aa = {
 							TextYAlignment = Enum.TextYAlignment.Top,
 							Size = UDim2.new(1, -40, 1, 0),
 							Position = UDim2.fromOffset(20, 60),
-							BackgroundTransparency = 1,
+							BackgroundTransparency = 0.2,
 							Parent = P.Root,
 							ClipsDescendants = false,
 							ThemeTag = {TextColor3 = "Text"}
@@ -2079,7 +2079,7 @@ local aa = {
 					Font = Enum.Font.SourceSans,
 					Text = "",
 					TextColor3 = Color3.new(0, 0, 0),
-					BackgroundTransparency = 1,
+					BackgroundTransparency = 0.2,
 					TextSize = 14
 				},
 				TextButton = {
@@ -2101,7 +2101,7 @@ local aa = {
 					TextSize = 14
 				},
 				ImageLabel = {
-					BackgroundTransparency = 1,
+					BackgroundTransparency = 0.2,
 					BackgroundColor3 = Color3.new(1, 1, 1),
 					BorderColor3 = Color3.new(0, 0, 0),
 					BorderSizePixel = 0
@@ -2234,7 +2234,7 @@ local aa = {
 						Size = UDim2.fromOffset(16, 16),
 						AnchorPoint = Vector2.new(1, 0.5),
 						Position = UDim2.new(1, -10, 0.5, 0),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Parent = o.Frame,
 						ThemeTag = {ImageColor3 = "Text"}
 					}
@@ -2288,7 +2288,7 @@ local aa = {
 				s(
 					"Frame",
 					{Size = UDim2.fromScale(1, 1), BackgroundColor3 = z.Value, Parent = A.Frame},
-					{s("UICorner", {CornerRadius = UDim.new(0, 4)})}
+					{s("UICorner", {CornerRadius = UDim.new(0, 9)})}
 				)
 			local aa, ab =
 				s(
@@ -2303,7 +2303,7 @@ local aa = {
 						ScaleType = Enum.ScaleType.Tile,
 						TileSize = UDim2.fromOffset(40, 40)
 					},
-					{s("UICorner", {CornerRadius = UDim.new(0, 4)}), B}
+					{s("UICorner", {CornerRadius = UDim.new(0, 9)}), B}
 				),
 			function()
 				local C = e(t.Dialog):Create()
@@ -2335,7 +2335,7 @@ local aa = {
 							TextXAlignment = Enum.TextXAlignment.Left,
 							Size = UDim2.new(1, 0, 0, 32),
 							Position = E,
-							BackgroundTransparency = 1,
+							BackgroundTransparency = 0.2,
 							Parent = C.Root,
 							ThemeTag = {TextColor3 = "Text"}
 						}
@@ -2352,7 +2352,7 @@ local aa = {
 						Size = UDim2.new(0, 18, 0, 18),
 						ScaleType = Enum.ScaleType.Fit,
 						AnchorPoint = Vector2.new(0.5, 0.5),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						Image = "http://www.roblox.com/asset/?id=4805639000"
 					}
 				)
@@ -2367,7 +2367,7 @@ local aa = {
 							BackgroundTransparency = 0,
 							Parent = C.Root
 						},
-						{s("UICorner", {CornerRadius = UDim.new(0, 4)}), K}
+						{s("UICorner", {CornerRadius = UDim.new(0, 9)}), K}
 					),
 				s(
 					"Frame",
@@ -2376,7 +2376,7 @@ local aa = {
 						Size = UDim2.fromScale(1, 1),
 						BackgroundTransparency = z.Transparency
 					},
-					{s("UICorner", {CornerRadius = UDim.new(0, 4)})}
+					{s("UICorner", {CornerRadius = UDim.new(0, 9)})}
 				)
 				local N, O =
 					s(
@@ -2386,13 +2386,13 @@ local aa = {
 							ImageTransparency = 0.45,
 							ScaleType = Enum.ScaleType.Tile,
 							TileSize = UDim2.fromOffset(40, 40),
-							BackgroundTransparency = 1,
+							BackgroundTransparency = 0.2,
 							Position = UDim2.fromOffset(112, 220),
 							Size = UDim2.fromOffset(88, 24),
 							Parent = C.Root
 						},
 						{
-							s("UICorner", {CornerRadius = UDim.new(0, 4)}),
+							s("UICorner", {CornerRadius = UDim.new(0, 9)}),
 							s("UIStroke", {Thickness = 2, Transparency = 0.75}),
 							M
 						}
@@ -2400,7 +2400,7 @@ local aa = {
 				s(
 					"Frame",
 					{BackgroundColor3 = z.Value, Size = UDim2.fromScale(1, 1), BackgroundTransparency = 0},
-					{s("UICorner", {CornerRadius = UDim.new(0, 4)})}
+					{s("UICorner", {CornerRadius = UDim.new(0, 9)})}
 				)
 				local P, Q =
 					s(
@@ -2410,13 +2410,13 @@ local aa = {
 							ImageTransparency = 0.45,
 							ScaleType = Enum.ScaleType.Tile,
 							TileSize = UDim2.fromOffset(40, 40),
-							BackgroundTransparency = 1,
+							BackgroundTransparency = 0.2,
 							Position = UDim2.fromOffset(20, 220),
 							Size = UDim2.fromOffset(88, 24),
 							Parent = C.Root
 						},
 						{
-							s("UICorner", {CornerRadius = UDim.new(0, 4)}),
+							s("UICorner", {CornerRadius = UDim.new(0, 9)}),
 							s("UIStroke", {Thickness = 2, Transparency = 0.75}),
 							O
 						}
@@ -2448,7 +2448,7 @@ local aa = {
 				s(
 					"Frame",
 					{Size = UDim2.fromOffset(12, 190), Position = UDim2.fromOffset(210, 55), Parent = C.Root},
-					{s("UICorner", {CornerRadius = UDim.new(1, 0)}), R, S}
+					{s("UICorner", {CornerRadius = UDim.new(0, 9)}), R, S}
 				),
 				H()
 				V.Frame.Position = UDim2.fromOffset(x.Transparency and 260 or 240, 55)
@@ -2504,7 +2504,7 @@ local aa = {
 										Rotation = 270
 									}
 								),
-								s("UICorner", {CornerRadius = UDim.new(1, 0)})
+								s("UICorner", {CornerRadius = UDim.new(0, 9)})
 							}
 						)
 					_ =
@@ -2517,7 +2517,7 @@ local aa = {
 								BackgroundTransparency = 1
 							},
 							{
-								s("UICorner", {CornerRadius = UDim.new(1, 0)}),
+								s("UICorner", {CornerRadius = UDim.new(0, 9)}),
 								s(
 									"ImageLabel",
 									{
@@ -2525,11 +2525,11 @@ local aa = {
 										ImageTransparency = 0.45,
 										ScaleType = Enum.ScaleType.Tile,
 										TileSize = UDim2.fromOffset(40, 40),
-										BackgroundTransparency = 1,
+										BackgroundTransparency = 0.2,
 										Size = UDim2.fromScale(1, 1),
 										Parent = C.Root
 									},
-									{s("UICorner", {CornerRadius = UDim.new(1, 0)})}
+									{s("UICorner", {CornerRadius = UDim.new(0, 9)})}
 								),
 								ab,
 								ac
@@ -2777,7 +2777,7 @@ local aa = {
 						Position = UDim2.new(0, 8, 0.5, 0),
 						AnchorPoint = Vector2.new(0, 0.5),
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						TextTruncate = Enum.TextTruncate.AtEnd,
 						ThemeTag = {TextColor3 = "Text"}
 					}
@@ -2789,7 +2789,7 @@ local aa = {
 					Size = UDim2.fromOffset(16, 16),
 					AnchorPoint = Vector2.new(1, 0.5),
 					Position = UDim2.new(1, -8, 0.5, 0),
-					BackgroundTransparency = 1,
+					BackgroundTransparency = 0.2,
 					ThemeTag = {ImageColor3 = "SubText"}
 				}
 			)
@@ -2805,7 +2805,7 @@ local aa = {
 						ThemeTag = {BackgroundColor3 = "DropdownFrame"}
 					},
 					{
-						e("UICorner", {CornerRadius = UDim.new(0, 5)}),
+						e("UICorner", {CornerRadius = UDim.new(0, 9)}),
 						e(
 							"UIStroke",
 							{
@@ -2825,7 +2825,7 @@ local aa = {
 					{
 						Size = UDim2.new(1, -5, 1, -10),
 						Position = UDim2.fromOffset(5, 5),
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						BottomImage = "rbxassetid://6889812791",
 						MidImage = "rbxassetid://6889812721",
 						TopImage = "rbxassetid://6276641225",
@@ -2851,7 +2851,7 @@ local aa = {
 						e(
 							"ImageLabel",
 							{
-								BackgroundTransparency = 1,
+								BackgroundTransparency = 0.2,
 								Image = "http://www.roblox.com/asset/?id=5554236805",
 								ScaleType = Enum.ScaleType.Slice,
 								SliceCenter = Rect.new(23, 23, 277, 277),
@@ -2866,7 +2866,7 @@ local aa = {
 			local v =
 				e(
 					"Frame",
-					{BackgroundTransparency = 1, Size = UDim2.fromOffset(170, 300), Parent = h.Library.GUI, Visible = false},
+					{BackgroundTransparency = 0.2, Size = UDim2.fromOffset(170, 300), Parent = h.Library.GUI, Visible = false},
 					{u, e("UISizeConstraint", {MinSize = Vector2.new(170, 0)})}
 				)
 			table.insert(k.OpenFrames, v)
@@ -2969,7 +2969,7 @@ local aa = {
 								AnchorPoint = Vector2.new(0, 0.5),
 								ThemeTag = {BackgroundColor3 = "Accent"}
 							},
-							{e("UICorner", {CornerRadius = UDim.new(0, 2)})}
+							{e("UICorner", {CornerRadius = UDim.new(0, 9)})}
 						),
 					e(
 						"TextLabel",
@@ -2981,7 +2981,7 @@ local aa = {
 							TextXAlignment = Enum.TextXAlignment.Left,
 							BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 							AutomaticSize = Enum.AutomaticSize.Y,
-							BackgroundTransparency = 1,
+							BackgroundTransparency = 0.2,
 							Size = UDim2.fromScale(1, 1),
 							Position = UDim2.fromOffset(10, 0),
 							Name = "ButtonLabel",
@@ -2993,7 +2993,7 @@ local aa = {
 							"TextButton",
 							{
 								Size = UDim2.new(1, -5, 0, 32),
-								BackgroundTransparency = 1,
+								BackgroundTransparency = 0.2,
 								ZIndex = 23,
 								Text = "",
 								Parent = t,
@@ -3286,7 +3286,7 @@ local aa = {
 						AnchorPoint = Vector2.new(0, 0.5),
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						AutomaticSize = Enum.AutomaticSize.X,
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ThemeTag = {TextColor3 = "Text"}
 					}
 				)
@@ -3303,7 +3303,7 @@ local aa = {
 						ThemeTag = {BackgroundColor3 = "Keybind"}
 					},
 					{
-						ai("UICorner", {CornerRadius = UDim.new(0, 5)}),
+						ai("UICorner", {CornerRadius = UDim.new(0, 9)}),
 						ai("UIPadding", {PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8)}),
 						ai(
 							"UIStroke",
@@ -3483,13 +3483,13 @@ local aa = {
 			local l, m, n =
 				ai(
 					"Frame",
-					{BackgroundTransparency = 1, Position = UDim2.fromOffset(7, 0), Size = UDim2.new(1, -14, 1, 0)},
+					{BackgroundTransparency = 0.2, Position = UDim2.fromOffset(7, 0), Size = UDim2.new(1, -14, 1, 0)},
 					{k}
 				),
 			ai(
 				"Frame",
 				{Size = UDim2.new(0, 0, 1, 0), ThemeTag = {BackgroundColor3 = "Accent"}},
-				{ai("UICorner", {CornerRadius = UDim.new(1, 0)})}
+				{ai("UICorner", {CornerRadius = UDim.new(0, 9)})}
 			),
 			ai(
 				"TextLabel",
@@ -3500,7 +3500,7 @@ local aa = {
 					TextWrapped = true,
 					TextXAlignment = Enum.TextXAlignment.Right,
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-					BackgroundTransparency = 1,
+					BackgroundTransparency = 0.2,
 					Size = UDim2.new(0, 100, 0, 14),
 					Position = UDim2.new(0, -4, 0.5, 0),
 					AnchorPoint = Vector2.new(1, 0.5),
@@ -3519,7 +3519,7 @@ local aa = {
 						ThemeTag = {BackgroundColor3 = "SliderRail"}
 					},
 					{
-						ai("UICorner", {CornerRadius = UDim.new(1, 0)}),
+						ai("UICorner", {CornerRadius = UDim.new(0, 9)}),
 						ai("UISizeConstraint", {MaxSize = Vector2.new(150, math.huge)}),
 						n,
 						m,
@@ -3613,7 +3613,7 @@ local aa = {
 						AnchorPoint = Vector2.new(1, 0.5),
 						Position = UDim2.new(1, -10, 0.5, 0),
 						Parent = i.Frame,
-						BackgroundTransparency = 1,
+						BackgroundTransparency = 0.2,
 						ThemeTag = {BackgroundColor3 = "Accent"}
 					},
 					{ai("UICorner", {CornerRadius = UDim.new(0, 9)}), k, j}
