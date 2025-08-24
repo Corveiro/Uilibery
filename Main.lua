@@ -549,4 +549,3 @@ function LennonStyleUI:_createSectionAPI(contentHolder)
 end
 
 return LennonStyleUI
-
