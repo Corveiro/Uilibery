@@ -1,393 +1,351 @@
+
 --[[
-    ARCADE UI LIBRARY (With Config System + Notification System)
-    Converted by Shadow
+    !! NÃO MODIFICAR ESTE ARQUIVO !!
+    Código protegido contra detecção.
 ]]
 
-local ArcadeUILib = {}
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-local TweenService = game:GetService("TweenService")
-local SoundService = game:GetService("SoundService")
-local LocalPlayer = Players.LocalPlayer
+local _G = _G
+local _1 = game
+local _2 = _1:GetService
+local _3 = "Players"
+local _4 = _2(_1, _3)
+local _5 = _4.LocalPlayer
+local _6 = "HttpService"
+local _7 = _2(_1, _6)
+local _8 = "TweenService"
+local _9 = _2(_1, _8)
+local _10 = "SoundService"
+local _11 = _2(_1, _10)
+local _12 = "CoreGui"
+local _13 = _2(_1, _12)
 
--- ==================== CONFIG SAVE SYSTEM ====================
-local ConfigSystem = {}
-ConfigSystem.ConfigFile = "ArcadeUI_Config.json"
+local _14 = {}
+local _15 = {}
+_15._ = "ArcadeUI_Config.json"
 
--- Default config
-ConfigSystem.DefaultConfig = {}
+_15.__ = {}
 
--- Load config dari file
-function ConfigSystem:Load()
-    if isfile and isfile(self.ConfigFile) then
-        local success, result = pcall(function()
-            local fileContent = readfile(self.ConfigFile)
-            local decoded = HttpService:JSONDecode(fileContent)
-            return decoded
+function _15:_()
+    if isfile and isfile(self._) then
+        local _a, _b = pcall(function()
+            local _c = readfile(self._)
+            local _d = _7:JSONDecode(_c)
+            return _d
         end)
-        
-        if success and result then
-            print("✅ ArcadeUI Config loaded!")
-            return result
+        if _a and _b then
+            return _b
         else
-            warn("⚠️ Failed to load config, using defaults")
-            return self.DefaultConfig
+            return self.__
         end
     else
-        print("📝 No ArcadeUI config file found, creating new one...")
-        return self.DefaultConfig
+        return self.__
     end
 end
 
--- Save config ke file
-function ConfigSystem:Save(config)
-    local success, error = pcall(function()
-        local encoded = HttpService:JSONEncode(config)
-        writefile(self.ConfigFile, encoded)
+function _15:__(_e)
+    local _f, _g = pcall(function()
+        local _h = _7:JSONEncode(_e)
+        writefile(self._, _h)
     end)
-    
-    if success then
-        return true
-    else
-        warn("❌ Failed to save config:", error)
-        return false
-    end
+    return _f
 end
 
--- Update satu setting sahaja
-function ConfigSystem:UpdateSetting(config, key, value)
-    config[key] = value
-    self:Save(config)
+function _15:___(_e, _i, _j)
+    _e[_i] = _j
+    self:__(_e)
 end
 
--- ==================== NOTIFICATION SYSTEM ====================
-local NotificationGui = nil
-local DEFAULT_NOTIFICATION_SOUND_ID = 2027986581 -- ID untuk bunyi 'ding' default
+local _16 = nil
+local _17 = 2027986581
 
--- Function untuk mencipta NotificationGui (dipanggil sekali sahaja)
-local function createNotificationGui()
-    if NotificationGui then return end -- Jika sudah wujud, jangan cipta lagi
-    
-    NotificationGui = Instance.new("ScreenGui")
-    NotificationGui.Name = "ArcadeNotificationGui"
-    NotificationGui.ResetOnSpawn = false
-    NotificationGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    NotificationGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+local function _18()
+    if _16 then return end
+    _16 = Instance.new("ScreenGui")
+    _16.Name = "ArcadeNotificationGui"
+    _16.ResetOnSpawn = false
+    _16.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    _16.Parent = _5:WaitForChild("PlayerGui")
 end
 
--- ==================== UI VARIABLES ====================
-local ScreenGui
-local MainFrame
-local ToggleButton
-local ScrollFrame
-local ListLayout
+local _19, _20, _21, _22, _23
 
--- ==================== CREATE UI ====================
-function ArcadeUILib:CreateUI()
-    -- Load config awal-awal
-    self.Config = ConfigSystem:Load()
+function _14:_24()
+    self._25 = _15:_()
 
-    -- Cleanup
-    if game.CoreGui:FindFirstChild("ArcadeUI") then
-        game.CoreGui:FindFirstChild("ArcadeUI"):Destroy()
+    if _13:FindFirstChild("ArcadeUI") then
+        _13:FindFirstChild("ArcadeUI"):Destroy()
     end
 
-    -- ScreenGui
-    ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "ArcadeUI"
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.Parent = game.CoreGui
+    task.wait(math.random(1, 3) / 10)
 
-    -- Toggle Button
-    ToggleButton = Instance.new("ImageButton")
-    ToggleButton.Size = UDim2.new(0, 60, 0, 60)
-    ToggleButton.Position = UDim2.new(0, 20, 0.5, -30)
-    ToggleButton.BackgroundTransparency = 1
-    ToggleButton.Image = "rbxassetid://121996261654076"
-    ToggleButton.Active = true
-    ToggleButton.Draggable = true
-    ToggleButton.Parent = ScreenGui
+    _19 = Instance.new("ScreenGui")
+    _19.Name = "ArcadeUI"
+    _19.ResetOnSpawn = false
+    _19.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    _19.Parent = _13
 
-    -- Main Frame
-    MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 240, 0, 380)
-    MainFrame.Position = UDim2.new(0.5, -120, 0.5, -190)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-    MainFrame.BackgroundTransparency = 0.1
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Active = true
-    MainFrame.Draggable = true
-    MainFrame.Visible = false
-    MainFrame.Parent = ScreenGui
+    task.wait(0.05)
 
-    -- Styling
-    local mainCorner = Instance.new("UICorner")
-    mainCorner.CornerRadius = UDim.new(0, 15)
-    mainCorner.Parent = MainFrame
+    _21 = Instance.new("ImageButton")
+    _21.Size = UDim2.new(0, 60, 0, 60)
+    _21.Position = UDim2.new(0, 20, 0.5, -30)
+    _21.BackgroundTransparency = 1
+    _21.Image = "rbxassetid://121996261654076"
+    _21.Active = true
+    _21.Draggable = true
+    _21.Parent = _19
 
-    local mainStroke = Instance.new("UIStroke")
-    mainStroke.Color = Color3.fromRGB(255, 50, 50)
-    mainStroke.Thickness = 1
-    mainStroke.Parent = MainFrame
+    task.wait(0.05)
 
-    -- Title Label
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(1, 0, 0, 45)
-    titleLabel.Position = UDim2.new(0, 0, 0, 5)
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Text = "ttk : @N1ghtmare.gg"
-    titleLabel.TextColor3 = Color3.fromRGB(139, 0, 0)
-    titleLabel.TextSize = 16
-    titleLabel.Font = Enum.Font.Arcade
-    titleLabel.Parent = MainFrame
+    _20 = Instance.new("Frame")
+    _20.Size = UDim2.new(0, 240, 0, 380)
+    _20.Position = UDim2.new(0.5, -120, 0.5, -190)
+    _20.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    _20.BackgroundTransparency = 0.1
+    _20.BorderSizePixel = 0
+    _20.Active = true
+    _20.Draggable = true
+    _20.Visible = false
+    _20.Parent = _19
 
-    -- ScrollingFrame
-    ScrollFrame = Instance.new("ScrollingFrame")
-    ScrollFrame.Size = UDim2.new(1, -20, 1, -125)
-    ScrollFrame.Position = UDim2.new(0, 10, 0, 55)
-    ScrollFrame.BackgroundTransparency = 1
-    ScrollFrame.BorderSizePixel = 0
-    ScrollFrame.ScrollBarThickness = 4
-    ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
-    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-    ScrollFrame.Parent = MainFrame
+    local _26 = Instance.new("UICorner")
+    _26.CornerRadius = UDim.new(0, 15)
+    _26.Parent = _20
 
-    -- UIListLayout
-    ListLayout = Instance.new("UIListLayout")
-    ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ListLayout.Padding = UDim.new(0, 10)
-    ListLayout.FillDirection = Enum.FillDirection.Vertical
-    ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    ListLayout.Parent = ScrollFrame
+    local _27 = Instance.new("UIStroke")
+    _27.Color = Color3.fromRGB(255, 50, 50)
+    _27.Thickness = 1
+    _27.Parent = _20
 
-    -- Auto-update canvas size
-    ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y + 10)
+    local _28 = Instance.new("TextLabel")
+    _28.Size = UDim2.new(1, 0, 0, 45)
+    _28.Position = UDim2.new(0, 0, 0, 5)
+    _28.BackgroundTransparency = 1
+    _28.Text = "ttk : @N1ghtmare.gg"
+    _28.TextColor3 = Color3.fromRGB(139, 0, 0)
+    _28.TextSize = 16
+    _28.Font = Enum.Font.Arcade
+    _28.Parent = _20
+
+    task.wait(0.05)
+
+    _22 = Instance.new("ScrollingFrame")
+    _22.Size = UDim2.new(1, -20, 1, -125)
+    _22.Position = UDim2.new(0, 10, 0, 55)
+    _22.BackgroundTransparency = 1
+    _22.BorderSizePixel = 0
+    _22.ScrollBarThickness = 4
+    _22.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
+    _22.CanvasSize = UDim2.new(0, 0, 0, 0)
+    _22.Parent = _20
+
+    _23 = Instance.new("UIListLayout")
+    _23.SortOrder = Enum.SortOrder.LayoutOrder
+    _23.Padding = UDim.new(0, 10)
+    _23.FillDirection = Enum.FillDirection.Vertical
+    _23.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    _23.Parent = _22
+
+    _23:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        _22.CanvasSize = UDim2.new(0, 0, 0, _23.AbsoluteContentSize.Y + 10)
     end)
 
-    -- Social Buttons
-    local divider = Instance.new("Frame")
-    divider.Size = UDim2.new(1, -20, 0, 2)
-    divider.Position = UDim2.new(0, 10, 1, -65)
-    divider.BackgroundTransparency = 1
-    divider.BorderSizePixel = 0
-    divider.Parent = MainFrame
+    local _29 = Instance.new("Frame")
+    _29.Size = UDim2.new(1, -20, 0, 2)
+    _29.Position = UDim2.new(0, 10, 1, -65)
+    _29.BackgroundTransparency = 1
+    _29.BorderSizePixel = 0
+    _29.Parent = _20
 
-    -- TikTok Button
-    local tiktokButton = Instance.new("TextButton")
-    tiktokButton.Size = UDim2.new(0, 100, 0, 32)
-    tiktokButton.Position = UDim2.new(0, 15, 1, -55)
-    tiktokButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    tiktokButton.BorderSizePixel = 0
-    tiktokButton.Text = "  TikTok"
-    tiktokButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tiktokButton.TextSize = 13
-    tiktokButton.Font = Enum.Font.Arcade
-    tiktokButton.Parent = MainFrame
+    local _30 = Instance.new("TextButton")
+    _30.Size = UDim2.new(0, 100, 0, 32)
+    _30.Position = UDim2.new(0, 15, 1, -55)
+    _30.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    _30.BorderSizePixel = 0
+    _30.Text = "  TikTok"
+    _30.TextColor3 = Color3.fromRGB(255, 255, 255)
+    _30.TextSize = 13
+    _30.Font = Enum.Font.Arcade
+    _30.Parent = _20
 
-    local tiktokCorner = Instance.new("UICorner")
-    tiktokCorner.CornerRadius = UDim.new(0, 8)
-    tiktokCorner.Parent = tiktokButton
+    local _31 = Instance.new("UICorner")
+    _31.CornerRadius = UDim.new(0, 8)
+    _31.Parent = _30
 
-    local tiktokIcon = Instance.new("ImageLabel")
-    tiktokIcon.Size = UDim2.new(0, 18, 0, 18)
-    tiktokIcon.Position = UDim2.new(0, 8, 0.5, -9)
-    tiktokIcon.BackgroundTransparency = 1
-    tiktokIcon.Image = "rbxassetid://70531653995908"
-    tiktokIcon.Parent = tiktokButton
+    local _32 = Instance.new("ImageLabel")
+    _32.Size = UDim2.new(0, 18, 0, 18)
+    _32.Position = UDim2.new(0, 8, 0.5, -9)
+    _32.BackgroundTransparency = 1
+    _32.Image = "rbxassetid://70531653995908"
+    _32.Parent = _30
 
-    tiktokButton.MouseButton1Click:Connect(function()
-        setclipboard("https://www.tiktok.com/@n1ghtmare.gg?_r=1&_t=ZS-92UYqNKwMLA")
-        tiktokButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    _30.MouseButton1Click:Connect(function()
+        if setclipboard then
+            setclipboard("https://www.tiktok.com/@n1ghtmare.gg?_r=1&_t=ZS-92UYqNKwMLA")
+        end
+        _30.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         task.wait(0.2)
-        tiktokButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        _30.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     end)
 
-    -- Discord Button
-    local discordButton = Instance.new("TextButton")
-    discordButton.Size = UDim2.new(0, 100, 0, 32)
-    discordButton.Position = UDim2.new(0, 125, 1, -55)
-    discordButton.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-    discordButton.BorderSizePixel = 0
-    discordButton.Text = "  Discord"
-    discordButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    discordButton.TextSize = 13
-    discordButton.Font = Enum.Font.Arcade
-    discordButton.Parent = MainFrame
+    local _33 = Instance.new("TextButton")
+    _33.Size = UDim2.new(0, 100, 0, 32)
+    _33.Position = UDim2.new(0, 125, 1, -55)
+    _33.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+    _33.BorderSizePixel = 0
+    _33.Text = "  Discord"
+    _33.TextColor3 = Color3.fromRGB(255, 255, 255)
+    _33.TextSize = 13
+    _33.Font = Enum.Font.Arcade
+    _33.Parent = _20
 
-    local discordCorner = Instance.new("UICorner")
-    discordCorner.CornerRadius = UDim.new(0, 8)
-    discordCorner.Parent = discordButton
+    local _34 = Instance.new("UICorner")
+    _34.CornerRadius = UDim.new(0, 8)
+    _34.Parent = _33
 
-    local discordIcon = Instance.new("ImageLabel")
-    discordIcon.Size = UDim2.new(0, 16, 0, 16)
-    discordIcon.Position = UDim2.new(0, 9, 0.5, -8)
-    discordIcon.BackgroundTransparency = 1
-    discordIcon.Image = "rbxassetid://131585302403438"
-    discordIcon.Parent = discordButton
+    local _35 = Instance.new("ImageLabel")
+    _35.Size = UDim2.new(0, 16, 0, 16)
+    _35.Position = UDim2.new(0, 9, 0.5, -8)
+    _35.BackgroundTransparency = 1
+    _35.Image = "rbxassetid://131585302403438"
+    _35.Parent = _33
 
-    discordButton.MouseButton1Click:Connect(function()
-        setclipboard("https://discord.gg/V4a7BbH5")
-        discordButton.BackgroundColor3 = Color3.fromRGB(114, 137, 218)
+    _33.MouseButton1Click:Connect(function()
+        if setclipboard then
+            setclipboard("https://discord.gg/V4a7BbH5")
+        end
+        _33.BackgroundColor3 = Color3.fromRGB(114, 137, 218)
         task.wait(0.2)
-        discordButton.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+        _33.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
     end)
 
-    -- Toggle button functionality
-    ToggleButton.MouseButton1Click:Connect(function()
-        MainFrame.Visible = not MainFrame.Visible
+    _21.MouseButton1Click:Connect(function()
+        _20.Visible = not _20.Visible
     end)
 
-    -- Create Notification Gui at the end
-    createNotificationGui()
-
-    print("✅ Arcade UI Created Successfully!")
+    _18()
 end
 
--- Fungsi utama untuk menunjukkan notifikasi
-function ArcadeUILib:Notify(text, soundId)
-    -- Pastikan NotificationGui wujud
-    if not NotificationGui then
-        createNotificationGui()
+function _14:_36(_37, _38)
+    if not _16 then
+        _18()
     end
 
-    local soundToPlay = soundId or DEFAULT_NOTIFICATION_SOUND_ID
-    
-    -- Mainkan bunyi jika ada
-    if soundToPlay then
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://" .. soundToPlay
-        sound.Volume = 0.5
-        sound.Parent = SoundService
-        sound:Play()
-        
-        sound.Ended:Connect(function()
-            sound:Destroy()
+    local _39 = _38 or _17
+
+    if _39 then
+        local _40 = Instance.new("Sound")
+        _40.SoundId = "rbxassetid://" .. _39
+        _40.Volume = 0.5
+        _40.Parent = _11
+        _40:Play()
+        _40.Ended:Connect(function()
+            _40:Destroy()
         end)
     end
-    
-    -- Cipta elemen notifikasi
-    local notifFrame = Instance.new("Frame")
-    notifFrame.Size = UDim2.new(0, 300, 0, 0)
-    notifFrame.Position = UDim2.new(0.5, 0, 0, -100)
-    notifFrame.AnchorPoint = Vector2.new(0.5, 0)
-    notifFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-    notifFrame.BackgroundTransparency = 0.1
-    notifFrame.BorderSizePixel = 0
-    notifFrame.Parent = NotificationGui
-    
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 12)
-    corner.Parent = notifFrame
-    
-    local outline = Instance.new("UIStroke")
-    outline.Color = Color3.fromRGB(255, 50, 50)
-    outline.Thickness = 1.0
-    outline.Parent = notifFrame
-    
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Size = UDim2.new(1, -20, 1, 0)
-    textLabel.Position = UDim2.new(0, 10, 0, 0)
-    textLabel.BackgroundTransparency = 1
-    textLabel.Text = text
-    textLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
-    textLabel.Font = Enum.Font.Arcade
-    textLabel.TextSize = 18
-    textLabel.TextWrapped = true
-    textLabel.TextXAlignment = Enum.TextXAlignment.Center
-    textLabel.TextYAlignment = Enum.TextYAlignment.Center
-    textLabel.Parent = notifFrame
-    
-    -- Animasi
-    local targetHeight = 60
-    local targetYPosition = 20
-    
-    -- Animasi Masuk
-    local tweenInfoIn = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-    local goalIn = { Size = UDim2.new(0, 300, 0, targetHeight), Position = UDim2.new(0.5, 0, 0, targetYPosition) }
-    local tweenIn = TweenService:Create(notifFrame, tweenInfoIn, goalIn)
-    tweenIn:Play()
-    
-    -- Animasi Keluar (dalam coroutine supaya tidak block)
+
+    local _41 = Instance.new("Frame")
+    _41.Size = UDim2.new(0, 300, 0, 0)
+    _41.Position = UDim2.new(0.5, 0, 0, -100)
+    _41.AnchorPoint = Vector2.new(0.5, 0)
+    _41.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    _41.BackgroundTransparency = 0.1
+    _41.BorderSizePixel = 0
+    _41.Parent = _16
+
+    local _42 = Instance.new("UICorner")
+    _42.CornerRadius = UDim.new(0, 12)
+    _42.Parent = _41
+
+    local _43 = Instance.new("UIStroke")
+    _43.Color = Color3.fromRGB(255, 50, 50)
+    _43.Thickness = 1.0
+    _43.Parent = _41
+
+    local _44 = Instance.new("TextLabel")
+    _44.Size = UDim2.new(1, -20, 1, 0)
+    _44.Position = UDim2.new(0, 10, 0, 0)
+    _44.BackgroundTransparency = 1
+    _44.Text = _37
+    _44.TextColor3 = Color3.fromRGB(255, 50, 50)
+    _44.Font = Enum.Font.Arcade
+    _44.TextSize = 18
+    _44.TextWrapped = true
+    _44.TextXAlignment = Enum.TextXAlignment.Center
+    _44.TextYAlignment = Enum.TextYAlignment.Center
+    _44.Parent = _41
+
+    local _45 = 60
+    local _46 = 20
+
+    local _47 = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    local _48 = { Size = UDim2.new(0, 300, 0, _45), Position = UDim2.new(0.5, 0, 0, _46) }
+    local _49 = _9:Create(_41, _47, _48)
+    _49:Play()
+
     task.spawn(function()
-        task.wait(3) -- Tunggu 3 saat
-        
-        local tweenInfoOut = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In)
-        local goalOut = { Size = UDim2.new(0, 300, 0, 0), Position = UDim2.new(0.5, 0, 0, -100) }
-        local tweenOut = TweenService:Create(notifFrame, tweenInfoOut, goalOut)
-        tweenOut:Play()
-        
-        tweenOut.Completed:Connect(function()
-            notifFrame:Destroy()
+        task.wait(3)
+        local _50 = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+        local _51 = { Size = UDim2.new(0, 300, 0, 0), Position = UDim2.new(0.5, 0, 0, -100) }
+        local _52 = _9:Create(_41, _50, _51)
+        _52:Play()
+        _52.Completed:Connect(function()
+            _41:Destroy()
         end)
     end)
 end
 
--- ==================== TOGGLE CREATION FUNCTION ====================
-function ArcadeUILib:AddToggleRow(text1, callback1, text2, callback2)
-    -- Create the row container
-    local rowFrame = Instance.new("Frame")
-    rowFrame.Size = UDim2.new(1, 0, 0, 35)
-    rowFrame.BackgroundTransparency = 1
-    rowFrame.Parent = ScrollFrame
+function _14:_53(_54, _55, _56, _57)
+    local _58 = Instance.new("Frame")
+    _58.Size = UDim2.new(1, 0, 0, 35)
+    _58.BackgroundTransparency = 1
+    _58.Parent = _22
 
-    -- Helper function to create a single toggle
-    local function createSingleToggle(text, callback, position)
-        local configKey = "Arcade_" .. text
-        local toggle = Instance.new("TextButton")
-        toggle.Size = UDim2.new(0, 100, 0, 32)
-        toggle.Position = position
-        toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
-        toggle.BorderSizePixel = 0
-        toggle.Text = text
-        toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-        toggle.TextSize = 13
-        toggle.Font = Enum.Font.Arcade
-        toggle.Parent = rowFrame
+    local function _59(_5a, _5b, _5c)
+        local _5d = "Arcade_" .. _5a
+        local _5e = Instance.new("TextButton")
+        _5e.Size = UDim2.new(0, 100, 0, 32)
+        _5e.Position = _5c
+        _5e.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+        _5e.BorderSizePixel = 0
+        _5e.Text = _5a
+        _5e.TextColor3 = Color3.fromRGB(255, 255, 255)
+        _5e.TextSize = 13
+        _5e.Font = Enum.Font.Arcade
+        _5e.Parent = _58
 
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 8)
-        corner.Parent = toggle
+        local _5f = Instance.new("UICorner")
+        _5f.CornerRadius = UDim.new(0, 8)
+        _5f.Parent = _5e
 
-        local stroke = Instance.new("UIStroke")
-        stroke.Color = Color3.fromRGB(255, 50, 50)
-        stroke.Thickness = 1
-        stroke.Parent = toggle
+        local _60 = Instance.new("UIStroke")
+        _60.Color = Color3.fromRGB(255, 50, 50)
+        _60.Thickness = 1
+        _60.Parent = _5e
 
-        -- Load initial state from config
-        local isToggled = self.Config[configKey] or false
-        if isToggled then
-            toggle.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+        local _61 = self._25[_5d] or false
+        if _61 then
+            _5e.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
         end
 
-        -- Call callback on initial load
-        if callback then callback(isToggled) end
+        if _5b then _5b(_61) end
 
-        toggle.MouseButton1Click:Connect(function()
-            isToggled = not isToggled
-            if isToggled then
-                toggle.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+        _5e.MouseButton1Click:Connect(function()
+            _61 = not _61
+            if _61 then
+                _5e.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
             else
-                toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+                _5e.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
             end
-
-            -- Save state to config
-            ConfigSystem:UpdateSetting(self.Config, configKey, isToggled)
-
-            -- Execute callback
-            if callback then callback(isToggled) end
+            _15:___(self._25, _5d, _61)
+            if _5b then _5b(_61) end
         end)
     end
 
-    -- Create first toggle
-    createSingleToggle(text1, callback1, UDim2.new(0, 5, 0, 0))
-
-    -- Create second toggle if text2 is provided
-    if text2 and callback2 then
-        createSingleToggle(text2, callback2, UDim2.new(0, 115, 0, 0))
+    _59(_54, _55, UDim2.new(0, 5, 0, 0))
+    if _56 and _57 then
+        _59(_56, _57, UDim2.new(0, 115, 0, 0))
     end
 end
 
-return ArcadeUILib
-
+return _14
