@@ -1,3 +1,4 @@
+
 --[[
     NIGHTMARE HUB LIBRARY (MODIFIED VERSION - ARCADE DESIGN)
 ]]
@@ -420,6 +421,15 @@ function NightmareHub:AddToggle(text, callback)
     return toggle
 end
 
+-- Compatibility functions for scripts using the old tab system
+function NightmareHub:AddMainToggle(text, callback) return self:AddToggle(text, callback) end
+function NightmareHub:AddVisualToggle(text, callback) return self:AddToggle(text, callback) end
+function NightmareHub:AddMiscToggle(text, callback) return self:AddToggle(text, callback) end
+
+function NightmareHub:AddMainButton(text, callback) return self:AddButton(text, callback) end
+function NightmareHub:AddVisualButton(text, callback) return self:AddButton(text, callback) end
+function NightmareHub:AddMiscButton(text, callback) return self:AddButton(text, callback) end
+
 function NightmareHub:AddButton(text, callback)
     local button = self:CreateButton(text, callback)
     button.Parent = ScrollFrame
@@ -501,6 +511,11 @@ function NightmareHub:AddServerUtilities()
     self:AddButton("Rejoin Server", function(button)
         TeleportService:Teleport(game.PlaceId, LocalPlayer)
     end)
+end
+
+-- Extra compatibility for M.lua specific calls
+function NightmareHub:AddVisualButton(text, callback)
+    return self:AddButton(text, callback)
 end
 
 return NightmareHub
