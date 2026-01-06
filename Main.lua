@@ -69,8 +69,9 @@ local ToggleButton
 local TabButtons = {}
 local ScrollFrame
 local TabContent = {}
-local CurrentTab = "Main"
+local TabFrames = {}
 local OpenTab = nil
+local CurrentTab = "Main"
 
 -- Button states
 local ButtonStates = {
@@ -239,6 +240,19 @@ function NightmareHub:CreateUI()
     
     -- Initialize tab content
     for _, tabName in ipairs(tabs) do
+        TabFrames[tabName] = Instance.new("Frame")
+        TabFrames[tabName].Name = tabName .. "_Frame"
+        TabFrames[tabName].Size = UDim2.new(1, -10, 0, 0)
+        TabFrames[tabName].BackgroundTransparency = 1
+        TabFrames[tabName].Visible = false
+        TabFrames[tabName].Parent = ScrollFrame
+
+        local _layout = Instance.new("UIListLayout", TabFrames[tabName])
+        _layout.Padding = UDim.new(0, 8)
+        _layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            TabFrames[tabName].Size = UDim2.new(1, -10, 0, _layout.AbsoluteContentSize.Y)
+        end)
+
         TabContent[tabName] = {}
     end
     
@@ -383,7 +397,7 @@ function NightmareHub:AddMainToggle(text, callback)
     local configKey = "Main_" .. text
     local toggle = self:CreateToggleButton(text, configKey, callback)
     table.insert(TabContent["Main"], toggle)
-    toggle.Parent = ScrollFrame
+    toggle.Parent = TabFrames["Main"]
     toggle.Visible = (CurrentTab == "Main")
     return toggle
 end
@@ -392,7 +406,7 @@ function NightmareHub:AddVisualToggle(text, callback)
     local configKey = "Visual_" .. text
     local toggle = self:CreateToggleButton(text, configKey, callback)
     table.insert(TabContent["Visual"], toggle)
-    toggle.Parent = ScrollFrame
+    toggle.Parent = TabFrames["Main"]
     toggle.Visible = (CurrentTab == "Visual")
     return toggle
 end
@@ -401,7 +415,7 @@ function NightmareHub:AddMiscToggle(text, callback)
     local configKey = "Misc_" .. text
     local toggle = self:CreateToggleButton(text, configKey, callback)
     table.insert(TabContent["Misc"], toggle)
-    toggle.Parent = ScrollFrame
+    toggle.Parent = TabFrames["Main"]
     toggle.Visible = (CurrentTab == "Misc")
     return toggle
 end
@@ -1062,52 +1076,6 @@ function NightmareHub:SetupDiscordTab()
 end
 
 -- ==================== TAB SWITCHING ====================
-
-function NightmareHub:ToggleTab(tabName)
-    if OpenTab == tabName then
-        for _, item in ipairs(TabContent[tabName]) do
-            item.Visible = false
-        end
-
-        local data = TabButtons and TabButtons[tabName]
-        if data then
-            data.button.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-            data.button.TextColor3 = Color3.fromRGB(150, 150, 150)
-            data.stroke.Color = Color3.fromRGB(100, 0, 0)
-        end
-
-        OpenTab = nil
-        return
-    end
-
-    if OpenTab and TabContent[OpenTab] then
-        for _, item in ipairs(TabContent[OpenTab]) do
-            item.Visible = false
-        end
-
-        local old = TabButtons and TabButtons[OpenTab]
-        if old then
-            old.button.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
-            old.button.TextColor3 = Color3.fromRGB(150, 150, 150)
-            old.stroke.Color = Color3.fromRGB(100, 0, 0)
-        end
-    end
-
-    for _, item in ipairs(TabContent[tabName]) do
-        item.Visible = true
-    end
-
-    local current = TabButtons and TabButtons[tabName]
-    if current then
-        current.button.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
-        current.button.TextColor3 = Color3.fromRGB(255, 255, 255)
-        current.stroke.Color = Color3.fromRGB(255, 50, 50)
-    end
-
-    OpenTab = tabName
-end
-
-
 function NightmareHub:SwitchTab(tabName)
     CurrentTab = tabName
     
@@ -1139,3 +1107,17 @@ function NightmareHub:SwitchTab(tabName)
 end
 
 return NightmareHub
+
+function NightmareHub:ToggleTab(tabName)
+    if OpenTab and OpenTab ~= tabName then
+        TabFrames[OpenTab].Visible = false
+    end
+
+    if OpenTab == tabName then
+        TabFrames[tabName].Visible = false
+        OpenTab = nil
+    else
+        TabFrames[tabName].Visible = true
+        OpenTab = tabName
+    end
+end
