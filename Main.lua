@@ -1,4 +1,3 @@
-
 --[[
     NIGHTMARE HUB LIBRARY (FINAL DEBUG VERSION + CONFIG SYSTEM)
     REMODELED UI DESIGN v2 — compact + animations + visual polish
@@ -141,7 +140,7 @@ function NightmareHub:CreateUI()
     MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.new(0, 20, 0, 20) -- start tiny for animation
     MainFrame.Position = UDim2.new(0.5, -210, 0.5, -170)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
     MainFrame.BackgroundTransparency = 0.05
     MainFrame.BorderSizePixel = 0
     MainFrame.Active = true
@@ -170,9 +169,7 @@ function NightmareHub:CreateUI()
     mainCorner.Parent = MainFrame
     
     local mainStroke = Instance.new("UIStroke")
-    mainStroke.Color = Color3.fromRGB(255, 40, 40)
-    mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    mainStroke.Thickness = 2.2
+    mainStroke.Color = Color3.fromRGB(255, 50, 50)
     mainStroke.Thickness = 1.6
     mainStroke.Parent = MainFrame
     
@@ -260,8 +257,7 @@ function NightmareHub:CreateUI()
     sideCorner.Parent = sideBar
     
     local sideStroke = Instance.new("UIStroke")
-    sideStroke.Color = Color3.fromRGB(255, 40, 40)
-    sideStroke.Thickness = 1.3
+    sideStroke.Color = Color3.fromRGB(50, 0, 0)
     sideStroke.Thickness = 1
     sideStroke.Parent = sideBar
     
@@ -276,7 +272,7 @@ function NightmareHub:CreateUI()
     local contentFrame = Instance.new("Frame")
     contentFrame.Size = UDim2.new(1, -140, 1, -78)
     contentFrame.Position = UDim2.new(0, 132, 0, 56)
-    contentFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 12)
+    contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
     contentFrame.BorderSizePixel = 0
     contentFrame.Parent = MainFrame
     
@@ -401,23 +397,14 @@ function NightmareHub:CreateUI()
     -- Set default tab
     self:SwitchTab("Main")
     
-    
--- PREMIUM iOS NEON DARK VISUAL UPGRADE
-local LightingService = game:GetService("Lighting")
-local BlurEffect = Instance.new("BlurEffect")
-BlurEffect.Size = 6
-BlurEffect.Name = "NightmareBlurEffect"
-BlurEffect.Enabled = true
-BlurEffect.Parent = LightingService
-
-print("✅ UI Created Successfully! (COMPACT + iOS NEON DARK)")
+    print("✅ UI Created Successfully! (Compact + animations)")
 end
 
 -- ==================== HELPER FUNCTIONS ====================
 function NightmareHub:CreateToggleButton(text, configKey, callback)
     local toggleBtn = Instance.new("TextButton")
     toggleBtn.Size = UDim2.new(1, -10, 0, 34)
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     toggleBtn.BorderSizePixel = 0
     toggleBtn.Text = text
     toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -429,7 +416,7 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
     btnCorner.Parent = toggleBtn
     
     local btnStroke = Instance.new("UIStroke")
-    btnStroke.Color = Color3.fromRGB(255, 70, 70)
+    btnStroke.Color = Color3.fromRGB(255, 50, 50)
     btnStroke.Thickness = 1
     btnStroke.Parent = toggleBtn
 
@@ -472,7 +459,7 @@ end
 function NightmareHub:CreateButton(text, callback)
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(1, -10, 0, 34)
-    button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+    button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     button.BorderSizePixel = 0
     button.Text = text
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -484,7 +471,7 @@ function NightmareHub:CreateButton(text, callback)
     btnCorner.Parent = button
     
     local btnStroke = Instance.new("UIStroke")
-    btnStroke.Color = Color3.fromRGB(255, 70, 70)
+    btnStroke.Color = Color3.fromRGB(255, 50, 50)
     btnStroke.Thickness = 1
     btnStroke.Parent = button
     
@@ -611,7 +598,7 @@ function NightmareHub:SetupDiscordTab()
         button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         task.wait(2)
         button.Text = "Tiktok"
-        button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+        button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     end)
     table.insert(TabContent["Discord"], tiktokBtn)
     tiktokBtn.Parent = ScrollFrame
@@ -625,7 +612,7 @@ function NightmareHub:SetupDiscordTab()
         button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         task.wait(2)
         button.Text = "Discord"
-        button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+        button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     end)
     table.insert(TabContent["Discord"], discordBtn)
     discordBtn.Parent = ScrollFrame
@@ -654,7 +641,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(1.5)
             button.Text = "Join Server"
-            button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
             return
         end
         
@@ -672,7 +659,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(2)
             button.Text = "Join Server"
-            button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
         
         ButtonStates.joinServer = false
@@ -691,13 +678,13 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
             task.wait(2)
             button.Text = "Copy Current Job ID"
-            button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         else
             button.Text = "NO JOB ID!"
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(1)
             button.Text = "Copy Current Job ID"
-            button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
     end)
     table.insert(TabContent["Discord"], copyJobIdBtn)
@@ -783,7 +770,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(2)
             button.Text = "Rejoin Server"
-            button.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
         
         ButtonStates.rejoin = false
