@@ -1,6 +1,6 @@
-
 --[[
     NIGHTMARE HUB LIBRARY (FINAL DEBUG VERSION + CONFIG SYSTEM)
+    REMODELED UI DESIGN (mantidas as cores e a lógica; apenas estilo/posicionamento alterados)
 ]]
 
 local NightmareHub = {}
@@ -94,22 +94,22 @@ function NightmareHub:CreateUI()
     ScreenGui.ResetOnSpawn = false
     ScreenGui.Parent = game.CoreGui
     
-    -- Toggle Button
+    -- Toggle Button (pequeno botão flutuante)
     ToggleButton = Instance.new("ImageButton")
-    ToggleButton.Size = UDim2.new(0, 60, 0, 60)
-    ToggleButton.Position = UDim2.new(0, 20, 0.5, -30)
+    ToggleButton.Size = UDim2.new(0, 56, 0, 56)
+    ToggleButton.Position = UDim2.new(0, 18, 0.5, -28)
     ToggleButton.BackgroundTransparency = 1
     ToggleButton.Image = "rbxassetid://121996261654076"
     ToggleButton.Active = true
     ToggleButton.Draggable = true
     ToggleButton.Parent = ScreenGui
     
-    -- Main Frame
+    -- Main Frame (reposicionado e redesenhado)
     MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 320, 0, 420)
-    MainFrame.Position = UDim2.new(0.5, -160, 0.5, -210)
+    MainFrame.Size = UDim2.new(0, 540, 0, 420) -- mais largura para sidebar + conteúdo
+    MainFrame.Position = UDim2.new(0.5, -270, 0.5, -210)
     MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-    MainFrame.BackgroundTransparency = 0.1
+    MainFrame.BackgroundTransparency = 0.05
     MainFrame.BorderSizePixel = 0
     MainFrame.Active = true
     MainFrame.Draggable = true
@@ -118,7 +118,7 @@ function NightmareHub:CreateUI()
     
     -- Styling
     local mainCorner = Instance.new("UICorner")
-    mainCorner.CornerRadius = UDim.new(0, 15)
+    mainCorner.CornerRadius = UDim.new(0, 18)
     mainCorner.Parent = MainFrame
     
     local mainStroke = Instance.new("UIStroke")
@@ -126,31 +126,58 @@ function NightmareHub:CreateUI()
     mainStroke.Thickness = 2
     mainStroke.Parent = MainFrame
     
-    -- Title
+    -- Left Shadow / Accent (thin accent strip)
+    local accentStrip = Instance.new("Frame")
+    accentStrip.Size = UDim2.new(0, 6, 1, 0)
+    accentStrip.Position = UDim2.new(0, 0, 0, 0)
+    accentStrip.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    accentStrip.BorderSizePixel = 0
+    accentStrip.Parent = MainFrame
+    
+    -- Title area (top)
+    local titleBar = Instance.new("Frame")
+    titleBar.Size = UDim2.new(1, -10, 0, 48)
+    titleBar.Position = UDim2.new(0, 12, 0, 8)
+    titleBar.BackgroundTransparency = 1
+    titleBar.Parent = MainFrame
+    
     local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(1, 0, 0, 45)
-    titleLabel.Position = UDim2.new(0, 0, 0, 5)
+    titleLabel.Size = UDim2.new(1, -60, 1, 0)
+    titleLabel.Position = UDim2.new(0, 0, 0, 0)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "NIGHTMARE HUB"
     titleLabel.TextColor3 = Color3.fromRGB(139, 0, 0)
     titleLabel.TextSize = 20
     titleLabel.Font = Enum.Font.Arcade
-    titleLabel.Parent = MainFrame
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = titleBar
     
-    -- Close Button
+    -- Small subtitle
+    local subtitle = Instance.new("TextLabel")
+    subtitle.Size = UDim2.new(0, 150, 1, 0)
+    subtitle.Position = UDim2.new(1, -150, 0, 0)
+    subtitle.BackgroundTransparency = 1
+    subtitle.Text = "REMIXED"
+    subtitle.TextColor3 = Color3.fromRGB(150, 150, 150)
+    subtitle.TextSize = 12
+    subtitle.Font = Enum.Font.Gotham
+    subtitle.TextXAlignment = Enum.TextXAlignment.Right
+    subtitle.Parent = titleBar
+    
+    -- Close Button (redesigned)
     local closeBtn = Instance.new("TextButton")
-    closeBtn.Size = UDim2.new(0, 30, 0, 30)
-    closeBtn.Position = UDim2.new(1, -35, 0, 10)
+    closeBtn.Size = UDim2.new(0, 34, 0, 34)
+    closeBtn.Position = UDim2.new(1, -44, 0, 8)
     closeBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     closeBtn.BorderSizePixel = 0
     closeBtn.Text = "X"
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    closeBtn.TextSize = 16
+    closeBtn.TextSize = 18
     closeBtn.Font = Enum.Font.Arcade
     closeBtn.Parent = MainFrame
     
     local closeBtnCorner = Instance.new("UICorner")
-    closeBtnCorner.CornerRadius = UDim.new(0, 8)
+    closeBtnCorner.CornerRadius = UDim.new(0, 10)
     closeBtnCorner.Parent = closeBtn
     
     local closeBtnStroke = Instance.new("UIStroke")
@@ -162,29 +189,91 @@ function NightmareHub:CreateUI()
         MainFrame.Visible = false
     end)
     
-    -- Tab Container
-    local tabContainer = Instance.new("Frame")
-    tabContainer.Size = UDim2.new(1, -20, 0, 35)
-    tabContainer.Position = UDim2.new(0, 10, 0, 55)
-    tabContainer.BackgroundTransparency = 1
-    tabContainer.Parent = MainFrame
+    -- Sidebar (vertical tabs)
+    local sideBar = Instance.new("Frame")
+    sideBar.Size = UDim2.new(0, 120, 1, -78)
+    sideBar.Position = UDim2.new(0, 12, 0, 68)
+    sideBar.BackgroundTransparency = 1
+    sideBar.Parent = MainFrame
     
-    -- Tab Buttons
+    local sideCorner = Instance.new("UICorner")
+    sideCorner.CornerRadius = UDim.new(0, 12)
+    sideCorner.Parent = sideBar
+    
+    local sideStroke = Instance.new("UIStroke")
+    sideStroke.Color = Color3.fromRGB(50, 0, 0)
+    sideStroke.Thickness = 1
+    sideStroke.Parent = sideBar
+    
+    -- Vertical layout for sidebar tabs
+    local sideLayout = Instance.new("UIListLayout")
+    sideLayout.Padding = UDim.new(0, 10)
+    sideLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    sideLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    sideLayout.Parent = sideBar
+    
+    -- Content Frame (to the right of the sidebar)
+    local contentFrame = Instance.new("Frame")
+    contentFrame.Size = UDim2.new(1, -156, 1, -78)
+    contentFrame.Position = UDim2.new(0, 140, 0, 68)
+    contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    contentFrame.BorderSizePixel = 0
+    contentFrame.Parent = MainFrame
+    
+    local contentCorner = Instance.new("UICorner")
+    contentCorner.CornerRadius = UDim.new(0, 12)
+    contentCorner.Parent = contentFrame
+    
+    local contentStroke = Instance.new("UIStroke")
+    contentStroke.Color = Color3.fromRGB(60, 0, 0)
+    contentStroke.Thickness = 1
+    contentStroke.Parent = contentFrame
+    
+    -- ScrollingFrame (conteúdo)
+    ScrollFrame = Instance.new("ScrollingFrame")
+    ScrollFrame.Size = UDim2.new(1, -24, 1, -24)
+    ScrollFrame.Position = UDim2.new(0, 12, 0, 12)
+    ScrollFrame.BackgroundTransparency = 1
+    ScrollFrame.BorderSizePixel = 0
+    ScrollFrame.ScrollBarThickness = 6
+    ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
+    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    ScrollFrame.Parent = contentFrame
+    
+    local scrollLayout = Instance.new("UIListLayout")
+    scrollLayout.Padding = UDim.new(0, 10)
+    scrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    scrollLayout.Parent = ScrollFrame
+    
+    scrollLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, scrollLayout.AbsoluteContentSize.Y + 18)
+    end)
+    
+    -- Initialize tab content
     local tabs = {"Main", "Visual", "Misc", "Discord"}
+    for _, tabName in ipairs(tabs) do
+        TabContent[tabName] = {}
+    end
+    
+    -- Create sidebar tab buttons (vertical style) BUT keep TabButtons structure
     for i, tabName in ipairs(tabs) do
         local tabBtn = Instance.new("TextButton")
-        tabBtn.Size = UDim2.new(0, 70, 1, 0)
-        tabBtn.Position = UDim2.new(0, (i-1) * 75, 0, 0)
+        tabBtn.Name = "Tab_" .. tabName
+        tabBtn.Size = UDim2.new(1, -16, 0, 48)
         tabBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
         tabBtn.BorderSizePixel = 0
         tabBtn.Text = tabName
         tabBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
-        tabBtn.TextSize = 12
+        tabBtn.TextSize = 14
         tabBtn.Font = Enum.Font.Arcade
-        tabBtn.Parent = tabContainer
+        tabBtn.Parent = sideBar
+        
+        local iconPadding = Instance.new("UIPadding")
+        iconPadding.PaddingLeft = UDim.new(0, 10)
+        iconPadding.Parent = tabBtn
         
         local tabCorner = Instance.new("UICorner")
-        tabCorner.CornerRadius = UDim.new(0, 8)
+        tabCorner.CornerRadius = UDim.new(0, 10)
         tabCorner.Parent = tabBtn
         
         local tabStroke = Instance.new("UIStroke")
@@ -199,49 +288,7 @@ function NightmareHub:CreateUI()
         end)
     end
     
-    -- Content Frame
-    local contentFrame = Instance.new("Frame")
-    contentFrame.Size = UDim2.new(1, -20, 1, -105)
-    contentFrame.Position = UDim2.new(0, 10, 0, 95)
-    contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-    contentFrame.BorderSizePixel = 0
-    contentFrame.Parent = MainFrame
-    
-    local contentCorner = Instance.new("UICorner")
-    contentCorner.CornerRadius = UDim.new(0, 10)
-    contentCorner.Parent = contentFrame
-    
-    local contentStroke = Instance.new("UIStroke")
-    contentStroke.Color = Color3.fromRGB(60, 0, 0)
-    contentStroke.Thickness = 1
-    contentStroke.Parent = contentFrame
-    
-    -- ScrollingFrame
-    ScrollFrame = Instance.new("ScrollingFrame")
-    ScrollFrame.Size = UDim2.new(1, -10, 1, -10)
-    ScrollFrame.Position = UDim2.new(0, 5, 0, 5)
-    ScrollFrame.BackgroundTransparency = 1
-    ScrollFrame.BorderSizePixel = 0
-    ScrollFrame.ScrollBarThickness = 4
-    ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
-    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-    ScrollFrame.Parent = contentFrame
-    
-    local scrollLayout = Instance.new("UIListLayout")
-    scrollLayout.Padding = UDim.new(0, 8)
-    scrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    scrollLayout.Parent = ScrollFrame
-    
-    scrollLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, scrollLayout.AbsoluteContentSize.Y + 10)
-    end)
-    
-    -- Initialize tab content
-    for _, tabName in ipairs(tabs) do
-        TabContent[tabName] = {}
-    end
-    
-    -- Setup Discord tab content
+    -- Initialize tab content for Discord & others (same as before)
     self:SetupDiscordTab()
     
     -- Toggle button functionality
@@ -254,7 +301,7 @@ function NightmareHub:CreateUI()
     -- Set default tab
     self:SwitchTab("Main")
     
-    print("✅ UI Created Successfully!")
+    print("✅ UI Created Successfully! (Remodeled)")
 end
 
 -- ==================== HELPER FUNCTIONS ====================
