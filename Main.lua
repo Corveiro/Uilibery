@@ -6,6 +6,7 @@
     - Hover nas abas e micro-feedback nos botões
     - Fade/slide-in ao trocar de tab
     Mantive toda a lógica, nomes e funções de criação (não quebrei nada).
+    ADIÇÕES: melhoria visual nas tabs (painel) + componente Dropdown (com persistência opcional).
 ]]
 
 local NightmareHub = {}
@@ -261,12 +262,31 @@ function NightmareHub:CreateUI()
     sideStroke.Thickness = 2 -- mantive 2
     sideStroke.Parent = sideBar
     
+    -- Tabs header (painel look)
+    local tabsHeader = Instance.new("Frame")
+    tabsHeader.Size = UDim2.new(1, 0, 0, 36)
+    tabsHeader.Position = UDim2.new(0, 0, 0, 0)
+    tabsHeader.BackgroundTransparency = 1
+    tabsHeader.Parent = sideBar
+    
+    local headerLabel = Instance.new("TextLabel")
+    headerLabel.Size = UDim2.new(1, -12, 1, 0)
+    headerLabel.Position = UDim2.new(0, 6, 0, 0)
+    headerLabel.BackgroundTransparency = 1
+    headerLabel.Text = "PANEL"
+    headerLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    headerLabel.Font = Enum.Font.GothamBold
+    headerLabel.TextSize = 12
+    headerLabel.TextXAlignment = Enum.TextXAlignment.Left
+    headerLabel.Parent = tabsHeader
+    
     -- Vertical layout for sidebar tabs
     local sideLayout = Instance.new("UIListLayout")
     sideLayout.Padding = UDim.new(0, 8)
     sideLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     sideLayout.SortOrder = Enum.SortOrder.LayoutOrder
     sideLayout.Parent = sideBar
+    sideLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() end)
     
     -- Content Frame (to the right of the sidebar)
     local contentFrame = Instance.new("Frame")
@@ -316,6 +336,7 @@ function NightmareHub:CreateUI()
         local tabBtn = Instance.new("TextButton")
         tabBtn.Name = "Tab_" .. tabName
         tabBtn.Size = UDim2.new(1, -12, 0, 40)
+        tabBtn.LayoutOrder = i
         tabBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0) -- cor original
         tabBtn.BorderSizePixel = 0
         tabBtn.Text = tabName
@@ -332,12 +353,23 @@ function NightmareHub:CreateUI()
         tabCorner.CornerRadius = UDim.new(0, 10)
         tabCorner.Parent = tabBtn
         
+        -- Left indicator inside each tab (appears on selected)
+        local leftIndicator = Instance.new("Frame")
+        leftIndicator.Name = "LeftIndicator"
+        leftIndicator.Size = UDim2.new(0, 6, 1, 0)
+        leftIndicator.Position = UDim2.new(0, -6, 0, 0) -- slightly outside to emulate a strip
+        leftIndicator.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+        leftIndicator.BorderSizePixel = 0
+        leftIndicator.Parent = tabBtn
+        leftIndicator.ZIndex = tabBtn.ZIndex + 1
+        leftIndicator.BackgroundTransparency = 1 -- hidden by default
+        
         local tabStroke = Instance.new("UIStroke")
         tabStroke.Color = Color3.fromRGB(100, 0, 0) -- cor original
         tabStroke.Thickness = 2 -- mantive 2
         tabStroke.Parent = tabBtn
         
-        TabButtons[tabName] = {button = tabBtn, stroke = tabStroke}
+        TabButtons[tabName] = {button = tabBtn, stroke = tabStroke, indicator = leftIndicator}
         
         -- Hover animations for tab buttons
         tabBtn.MouseEnter:Connect(function()
@@ -397,7 +429,7 @@ function NightmareHub:CreateUI()
     -- Set default tab
     self:SwitchTab("Main")
     
-    print("✅ UI Created Successfully! (Compact + animations)")
+    print("✅ UI Created Successfully! (Compact + panel tabs + dropdowns)")
 end
 
 -- ==================== HELPER FUNCTIONS ====================
@@ -552,6 +584,214 @@ function NightmareHub:CreateTextBox(placeholderText)
     end)
     
     return textBox
+end
+
+-- ==================== DROPDOWN COMPONENT ====================
+-- Creates a dropdown; configKey can be nil (no persistence). `options` is array of strings.
+function NightmareHub:CreateDropdown(labelText, options, configKey, defaultIndex, callback)
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(1, -10, 0, 34)
+    container.BackgroundTransparency = 1
+    
+    -- Visible label (optional)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.35, 0, 1, 0)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = labelText or ""
+    label.TextColor3 = Color3.fromRGB(200,200,200)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 13
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = container
+    
+    -- Selection button (shows current selection)
+    local selectBtn = Instance.new("TextButton")
+    selectBtn.Size = UDim2.new(0.65, -4, 1, 0)
+    selectBtn.Position = UDim2.new(0.35, 6, 0, 0)
+    selectBtn.BackgroundColor3 = Color3.fromRGB(80,0,0)
+    selectBtn.BorderSizePixel = 0
+    selectBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    selectBtn.Font = Enum.Font.Gotham
+    selectBtn.TextSize = 13
+    selectBtn.Text = ""
+    selectBtn.Parent = container
+    
+    local selectCorner = Instance.new("UICorner")
+    selectCorner.CornerRadius = UDim.new(0,8)
+    selectCorner.Parent = selectBtn
+    
+    local selectStroke = Instance.new("UIStroke")
+    selectStroke.Color = Color3.fromRGB(255,50,50)
+    selectStroke.Thickness = 2
+    selectStroke.Parent = selectBtn
+    
+    -- Caret / triangle
+    local caret = Instance.new("TextLabel")
+    caret.Size = UDim2.new(0, 18, 0, 18)
+    caret.Position = UDim2.new(1, -22, 0.5, -9)
+    caret.BackgroundTransparency = 1
+    caret.Text = "▾"
+    caret.Font = Enum.Font.Gotham
+    caret.TextSize = 16
+    caret.TextColor3 = Color3.fromRGB(200,200,200)
+    caret.Parent = selectBtn
+    
+    -- Dropdown menu
+    local menu = Instance.new("Frame")
+    menu.Size = UDim2.new(0.65, -4, 0, 0)
+    menu.Position = UDim2.new(0.35, 6, 1, 6)
+    menu.BackgroundColor3 = Color3.fromRGB(25,25,25)
+    menu.BorderSizePixel = 0
+    menu.ClipsDescendants = true
+    menu.Visible = false
+    menu.Parent = container
+    
+    local menuCorner = Instance.new("UICorner")
+    menuCorner.CornerRadius = UDim.new(0,8)
+    menuCorner.Parent = menu
+    
+    local menuStroke = Instance.new("UIStroke")
+    menuStroke.Color = Color3.fromRGB(40,40,40)
+    menuStroke.Thickness = 2
+    menuStroke.Parent = menu
+    
+    local menuLayout = Instance.new("UIListLayout")
+    menuLayout.Padding = UDim.new(0,2)
+    menuLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    menuLayout.Parent = menu
+    
+    -- Persistence: restore last selection if present
+    local selectedIndex = nil
+    if configKey and self.Config[configKey] then
+        for idx, opt in ipairs(options) do
+            if opt == self.Config[configKey] then
+                selectedIndex = idx
+                break
+            end
+        end
+    end
+    if not selectedIndex then
+        selectedIndex = defaultIndex or 1
+    end
+    
+    local function updateSelection(idx)
+        selectedIndex = idx
+        local text = options[idx] or ""
+        selectBtn.Text = " " .. text
+        if configKey then
+            ConfigSystem:UpdateSetting(self.Config, configKey, text)
+        end
+        if callback then
+            pcall(callback, text, idx)
+        end
+    end
+    
+    -- build options
+    for i, opt in ipairs(options) do
+        local optBtn = Instance.new("TextButton")
+        optBtn.Size = UDim2.new(1, -8, 0, 28)
+        optBtn.Position = UDim2.new(0,4,0,0)
+        optBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+        optBtn.BorderSizePixel = 0
+        optBtn.Text = opt
+        optBtn.TextColor3 = Color3.fromRGB(220,220,220)
+        optBtn.Font = Enum.Font.Gotham
+        optBtn.TextSize = 13
+        optBtn.Parent = menu
+        
+        local optCorner = Instance.new("UICorner")
+        optCorner.CornerRadius = UDim.new(0,6)
+        optCorner.Parent = optBtn
+        
+        local optStroke = Instance.new("UIStroke")
+        optStroke.Color = Color3.fromRGB(30,30,30)
+        optStroke.Thickness = 2
+        optStroke.Parent = optBtn
+        
+        optBtn.MouseEnter:Connect(function()
+            TweenProperty(optBtn, {BackgroundColor3 = Color3.fromRGB(60,60,60)}, tweenInfoFast)
+        end)
+        optBtn.MouseLeave:Connect(function()
+            TweenProperty(optBtn, {BackgroundColor3 = Color3.fromRGB(40,40,40)}, tweenInfoFast)
+        end)
+        optBtn.MouseButton1Click:Connect(function()
+            updateSelection(i)
+            -- close menu
+            menu.Visible = false
+            TweenProperty(menu, {Size = UDim2.new(0.65, -4, 0, 0)}, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
+        end)
+    end
+    
+    -- set initial selected text
+    updateSelection(selectedIndex)
+    
+    -- menu toggle
+    local opened = false
+    selectBtn.MouseButton1Click:Connect(function()
+        opened = not opened
+        if opened then
+            menu.Visible = true
+            -- compute target height: number of children * 28 + paddings
+            local count = #options
+            local targetH = count * 30
+            TweenProperty(menu, {Size = UDim2.new(0.65, -4, 0, targetH)}, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
+        else
+            TweenProperty(menu, {Size = UDim2.new(0.65, -4, 0, 0)}, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
+            task.delay(0.12, function() menu.Visible = false end)
+        end
+    end)
+    
+    -- close menu if clicked outside (simple global handler)
+    local function onInputBegan(input)
+        if opened and input.UserInputType == Enum.UserInputType.MouseButton1 then
+            -- If click outside menu and selectBtn, close
+            local mouse = Players.LocalPlayer:GetMouse()
+            local x,y = mouse.X, mouse.Y
+            local absPos = menu.AbsolutePosition
+            local absSize = menu.AbsoluteSize
+            local selAbsPos = selectBtn.AbsolutePosition
+            local selAbsSize = selectBtn.AbsoluteSize
+            local insideMenu = x >= absPos.X and x <= absPos.X + absSize.X and y >= absPos.Y and y <= absPos.Y + absSize.Y
+            local insideSel = x >= selAbsPos.X and x <= selAbsPos.X + selAbsSize.X and y >= selAbsPos.Y and y <= selAbsPos.Y + selAbsSize.Y
+            if not insideMenu and not insideSel then
+                opened = false
+                TweenProperty(menu, {Size = UDim2.new(0.65, -4, 0, 0)}, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
+                task.delay(0.12, function() menu.Visible = false end)
+            end
+        end
+    end
+    -- bind once
+    pcall(function()
+        game:GetService("UserInputService").InputBegan:Connect(onInputBegan)
+    end)
+    
+    return container
+end
+
+-- Convenience AddDropdown per tab (mantendo forma de adicionar elementos)
+function NightmareHub:AddMainDropdown(label, options, configKey, defaultIndex, callback)
+    local dd = self:CreateDropdown(label, options, configKey, defaultIndex, callback)
+    table.insert(TabContent["Main"], dd)
+    dd.Parent = ScrollFrame
+    dd.Visible = (CurrentTab == "Main")
+    return dd
+end
+
+function NightmareHub:AddVisualDropdown(label, options, configKey, defaultIndex, callback)
+    local dd = self:CreateDropdown(label, options, configKey, defaultIndex, callback)
+    table.insert(TabContent["Visual"], dd)
+    dd.Parent = ScrollFrame
+    dd.Visible = (CurrentTab == "Visual")
+    return dd
+end
+
+function NightmareHub:AddMiscDropdown(label, options, configKey, defaultIndex, callback)
+    local dd = self:CreateDropdown(label, options, configKey, defaultIndex, callback)
+    table.insert(TabContent["Misc"], dd)
+    dd.Parent = ScrollFrame
+    dd.Visible = (CurrentTab == "Misc")
+    return dd
 end
 
 -- ==================== DYNAMIC TAB FUNCTIONS ====================
@@ -1242,16 +1482,18 @@ function NightmareHub:SwitchTab(tabName)
     if MainFrame and MainFrame:GetAttribute("Busy") then return end
     CurrentTab = tabName
     
-    -- Update tab button colors & stroke with tween
+    -- Update tab button colors & stroke with tween and indicator
     for name, data in pairs(TabButtons) do
         if name == tabName then
             TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
             TweenProperty(data.button, {TextColor3 = Color3.fromRGB(255,255,255)}, tweenInfoFast)
             TweenProperty(data.stroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
+            TweenProperty(data.indicator, {BackgroundTransparency = 0}, tweenInfoFast)
         else
             TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(40, 0, 0)}, tweenInfoFast)
             TweenProperty(data.button, {TextColor3 = Color3.fromRGB(150,150,150)}, tweenInfoFast)
             TweenProperty(data.stroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenInfoFast)
+            TweenProperty(data.indicator, {BackgroundTransparency = 1}, tweenInfoFast)
         end
     end
     
@@ -1276,8 +1518,8 @@ function NightmareHub:SwitchTab(tabName)
             item.Visible = true
             -- Set initial transparencies to create fade-in
             pcall(function()
-                if item:IsA("TextLabel") or item:IsA("TextButton") or item:IsA("TextBox") then
-                    item.TextTransparency = 1
+                if item:IsA("TextLabel") or item:IsA("TextButton") or item:IsA("TextBox") or item:IsA("Frame") then
+                    item.TextTransparency = item.TextTransparency or 1
                 end
                 item.BackgroundTransparency = 1
             end)
