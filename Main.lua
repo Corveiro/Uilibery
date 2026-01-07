@@ -404,9 +404,11 @@ end
 function NightmareHub:CreateToggleButton(text, configKey, callback)
     local toggleBtn = Instance.new("TextButton")
     toggleBtn.Size = UDim2.new(1, -10, 0, 34)
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+    -- Fundo padrão: cinza
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     toggleBtn.BorderSizePixel = 0
     toggleBtn.Text = text
+    -- Texto padrão: branco
     toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     toggleBtn.TextSize = 14
     toggleBtn.Font = Enum.Font.Arcade
@@ -416,14 +418,17 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
     btnCorner.Parent = toggleBtn
     
     local btnStroke = Instance.new("UIStroke")
-    btnStroke.Color = Color3.fromRGB(255, 50, 50)
-    btnStroke.Thickness = 1
+    -- Borda padrão: branca e fina
+    btnStroke.Color = Color3.fromRGB(255, 255, 255)
+    btnStroke.Thickness = 0.8
     btnStroke.Parent = toggleBtn
 
     -- Muat status awal dari config
     local isToggled = self.Config[configKey] or false
     if isToggled then
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+        -- Quando ativado: texto e borda ficam vermelhas
+        toggleBtn.TextColor3 = Color3.fromRGB(255, 50, 50)
+        btnStroke.Color = Color3.fromRGB(255, 50, 50)
     end
 
     -- Panggil callback sekali pada permulaan untuk memuat fungsi
@@ -432,10 +437,13 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
     toggleBtn.MouseButton1Click:Connect(function()
         isToggled = not isToggled
         
+        -- Mantemos o fundo cinza; apenas alteramos texto e borda conforme pedido
         if isToggled then
-            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
+            TweenProperty(toggleBtn, {TextColor3 = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
+            TweenProperty(btnStroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
         else
-            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenInfoFast)
+            TweenProperty(toggleBtn, {TextColor3 = Color3.fromRGB(255, 255, 255)}, tweenInfoFast)
+            TweenProperty(btnStroke, {Color = Color3.fromRGB(255, 255, 255)}, tweenInfoFast)
         end
         
         -- Simpan status baru ke config
@@ -444,13 +452,18 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
         if callback then callback(isToggled) end
     end)
     
-    -- hover micro feedback
+    -- hover micro feedback: escurecer/levar a tona levemente o fundo, manter borda conforme estado
     toggleBtn.MouseEnter:Connect(function()
-        TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
+        TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(75, 75, 75)}, tweenInfoFast)
     end)
     toggleBtn.MouseLeave:Connect(function()
-        local bg = (self.Config[configKey] and Color3.fromRGB(200,30,30)) or Color3.fromRGB(80,0,0)
+        local bg = Color3.fromRGB(60, 60, 60)
         TweenProperty(toggleBtn, {BackgroundColor3 = bg}, tweenInfoFast)
+        -- garantir que a cor da borda reflete o estado atual
+        local strokeColor = (self.Config[configKey] and Color3.fromRGB(255,50,50)) or Color3.fromRGB(255,255,255)
+        TweenProperty(btnStroke, {Color = strokeColor}, tweenInfoFast)
+        local textColor = (self.Config[configKey] and Color3.fromRGB(255,50,50)) or Color3.fromRGB(255,255,255)
+        TweenProperty(toggleBtn, {TextColor3 = textColor}, tweenInfoFast)
     end)
     
     return toggleBtn
