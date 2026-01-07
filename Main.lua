@@ -1,6 +1,10 @@
 --[[
-    NIGHTMARE HUB LIBRARY (REDESIGNED VISUALS - DARK TRIAD)
-    REMODELED UI DESIGN v3 — dark triad polish + gradients + soft-shadows
+    NIGHTMARE HUB LIBRARY (FINAL DEBUG VERSION + CONFIG SYSTEM)
+    REMODELED UI DESIGN v2 — compact + animations + visual polish
+    - Interface menor
+    - Animações de abrir/fechar (TweenService)
+    - Hover nas abas e micro-feedback nos botões
+    - Fade/slide-in ao trocar de tab
     Mantive toda a lógica, nomes e funções de criação (não quebrei nada).
 ]]
 
@@ -123,20 +127,9 @@ function NightmareHub:CreateUI()
     ToggleButton.Draggable = true
     ToggleButton.Parent = ScreenGui
 
-    -- subtle outline for toggle
-    local toggleOutline = Instance.new("Frame")
-    toggleOutline.Name = "Outline"
-    toggleOutline.Size = UDim2.new(1, 6, 1, 6)
-    toggleOutline.Position = UDim2.new(0, -3, 0, -3)
-    toggleOutline.BackgroundColor3 = Color3.fromRGB(0,0,0)
-    toggleOutline.BackgroundTransparency = 0.6
-    toggleOutline.BorderSizePixel = 0
-    toggleOutline.ZIndex = ToggleButton.ZIndex - 1
-    toggleOutline.Parent = ToggleButton
-
     -- Subtle hover feedback for toggle
     ToggleButton.MouseEnter:Connect(function()
-        TweenProperty(ToggleButton, {Size = UDim2.new(0, 54, 0, 54)}, tweenInfoFast)
+        TweenProperty(ToggleButton, {Size = UDim2.new(0, 52, 0, 52)}, tweenInfoFast)
     end)
     ToggleButton.MouseLeave:Connect(function()
         TweenProperty(ToggleButton, {Size = UDim2.new(0, 48, 0, 48)}, tweenInfoFast)
@@ -147,21 +140,21 @@ function NightmareHub:CreateUI()
     MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.new(0, 20, 0, 20) -- start tiny for animation
     MainFrame.Position = UDim2.new(0.5, -210, 0.5, -170)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 14) -- darker base
-    MainFrame.BackgroundTransparency = 0
+    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    MainFrame.BackgroundTransparency = 0.05
     MainFrame.BorderSizePixel = 0
     MainFrame.Active = true
     MainFrame.Draggable = true
     MainFrame.Visible = false
     MainFrame.Parent = ScreenGui
     
-    -- soft shadow behind main
+    -- Shadow / drop behind main
     local shadow = Instance.new("Frame")
     shadow.Name = "Shadow"
-    shadow.Size = UDim2.new(1, 16, 1, 16)
-    shadow.Position = UDim2.new(0, -8, 0, -8)
+    shadow.Size = UDim2.new(1, 12, 1, 12)
+    shadow.Position = UDim2.new(0, -6, 0, -6)
     shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    shadow.BackgroundTransparency = 0.76
+    shadow.BackgroundTransparency = 0.7
     shadow.ZIndex = MainFrame.ZIndex - 1
     shadow.BorderSizePixel = 0
     shadow.Parent = MainFrame
@@ -172,66 +165,47 @@ function NightmareHub:CreateUI()
     
     -- Styling
     local mainCorner = Instance.new("UICorner")
-    mainCorner.CornerRadius = UDim.new(0, 18)
+    mainCorner.CornerRadius = UDim.new(0, 16)
     mainCorner.Parent = MainFrame
     
     local mainStroke = Instance.new("UIStroke")
-    mainStroke.Color = Color3.fromRGB(190, 40, 40)
-    mainStroke.Thickness = 1.2
-    mainStroke.Transparency = 0.72
+    mainStroke.Color = Color3.fromRGB(255, 50, 50)
+    mainStroke.Thickness = 1.6
     mainStroke.Parent = MainFrame
-
-    -- subtle overlay gradient for depth
-    local mainGradient = Instance.new("UIGradient")
-    mainGradient.Rotation = 90
-    mainGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(18,18,20)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(8,8,10))
-    })
-    mainGradient.Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0, 0),
-        NumberSequenceKeypoint.new(1, 0.06)
-    })
-    mainGradient.Parent = MainFrame
     
-    -- Accent strip (thin) - more polished with gradient
+    -- Accent strip (thin)
     local accentStrip = Instance.new("Frame")
-    accentStrip.Size = UDim2.new(0, 8, 1, 0)
+    accentStrip.Size = UDim2.new(0, 6, 1, 0)
     accentStrip.Position = UDim2.new(0, 0, 0, 0)
-    accentStrip.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+    accentStrip.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
     accentStrip.BorderSizePixel = 0
     accentStrip.Parent = MainFrame
     
     local accentCorner = Instance.new("UICorner")
-    accentCorner.CornerRadius = UDim.new(0, 18)
+    accentCorner.CornerRadius = UDim.new(0, 16)
     accentCorner.Parent = accentStrip
-
-    local accentGrad = Instance.new("UIGradient")
-    accentGrad.Rotation = 90
-    accentGrad.Color = ColorSequence.new(Color3.fromRGB(240,80,80), Color3.fromRGB(160,20,20))
-    accentGrad.Parent = accentStrip
-
+    
     -- Title area (top compact)
     local titleBar = Instance.new("Frame")
-    titleBar.Size = UDim2.new(1, -12, 0, 48)
+    titleBar.Size = UDim2.new(1, -12, 0, 40)
     titleBar.Position = UDim2.new(0, 12, 0, 8)
     titleBar.BackgroundTransparency = 1
     titleBar.Parent = MainFrame
     
     local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(1, -80, 1, 0)
+    titleLabel.Size = UDim2.new(1, -60, 1, 0)
     titleLabel.Position = UDim2.new(0, 0, 0, 0)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "NIGHTMARE HUB"
-    titleLabel.TextColor3 = Color3.fromRGB(200, 40, 40) -- stronger red
+    titleLabel.TextColor3 = Color3.fromRGB(139, 0, 0)
     titleLabel.TextSize = 18
     titleLabel.Font = Enum.Font.Arcade
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.Parent = titleBar
     
     local subtitle = Instance.new("TextLabel")
-    subtitle.Size = UDim2.new(0, 110, 1, 0)
-    subtitle.Position = UDim2.new(1, -110, 0, 0)
+    subtitle.Size = UDim2.new(0, 100, 1, 0)
+    subtitle.Position = UDim2.new(1, -100, 0, 0)
     subtitle.BackgroundTransparency = 1
     subtitle.Text = "COMPACT"
     subtitle.TextColor3 = Color3.fromRGB(150, 150, 150)
@@ -242,31 +216,30 @@ function NightmareHub:CreateUI()
     
     -- Close Button (compact)
     local closeBtn = Instance.new("TextButton")
-    closeBtn.Size = UDim2.new(0, 34, 0, 34)
-    closeBtn.Position = UDim2.new(1, -46, 0, 6)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(22, 10, 10)
+    closeBtn.Size = UDim2.new(0, 30, 0, 30)
+    closeBtn.Position = UDim2.new(1, -40, 0, 6)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     closeBtn.BorderSizePixel = 0
     closeBtn.Text = "X"
-    closeBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     closeBtn.TextSize = 14
     closeBtn.Font = Enum.Font.Arcade
     closeBtn.Parent = MainFrame
     
     local closeBtnCorner = Instance.new("UICorner")
-    closeBtnCorner.CornerRadius = UDim.new(0, 10)
+    closeBtnCorner.CornerRadius = UDim.new(0, 8)
     closeBtnCorner.Parent = closeBtn
     
     local closeBtnStroke = Instance.new("UIStroke")
-    closeBtnStroke.Color = Color3.fromRGB(200, 40, 40)
+    closeBtnStroke.Color = Color3.fromRGB(255, 50, 50)
     closeBtnStroke.Thickness = 1
-    closeBtnStroke.Transparency = 0.3
     closeBtnStroke.Parent = closeBtn
     
     closeBtn.MouseButton1Click:Connect(function()
         -- animated close
         if MainFrame:GetAttribute("Busy") then return end
         MainFrame:SetAttribute("Busy", true)
-        local shrink = TweenProperty(MainFrame, {Size = UDim2.new(0, 20, 0, 20), BackgroundTransparency = 0.9}, tweenInfoSlow)
+        local shrink = TweenProperty(MainFrame, {Size = UDim2.new(0, 20, 0, 20), BackgroundTransparency = 0.6}, tweenInfoSlow)
         if shrink then shrink.Completed:Wait() end
         MainFrame.Visible = false
         MainFrame:SetAttribute("Busy", false)
@@ -274,19 +247,18 @@ function NightmareHub:CreateUI()
     
     -- Sidebar (vertical tabs compact)
     local sideBar = Instance.new("Frame")
-    sideBar.Size = UDim2.new(0, 110, 1, -96)
+    sideBar.Size = UDim2.new(0, 100, 1, -78)
     sideBar.Position = UDim2.new(0, 12, 0, 56)
     sideBar.BackgroundTransparency = 1
     sideBar.Parent = MainFrame
     
     local sideCorner = Instance.new("UICorner")
-    sideCorner.CornerRadius = UDim.new(0, 14)
+    sideCorner.CornerRadius = UDim.new(0, 12)
     sideCorner.Parent = sideBar
     
     local sideStroke = Instance.new("UIStroke")
-    sideStroke.Color = Color3.fromRGB(60, 10, 10)
+    sideStroke.Color = Color3.fromRGB(50, 0, 0)
     sideStroke.Thickness = 1
-    sideStroke.Transparency = 0.8
     sideStroke.Parent = sideBar
     
     -- Vertical layout for sidebar tabs
@@ -298,27 +270,20 @@ function NightmareHub:CreateUI()
     
     -- Content Frame (to the right of the sidebar)
     local contentFrame = Instance.new("Frame")
-    contentFrame.Size = UDim2.new(1, -152, 1, -96)
+    contentFrame.Size = UDim2.new(1, -140, 1, -78)
     contentFrame.Position = UDim2.new(0, 132, 0, 56)
-    contentFrame.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
+    contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
     contentFrame.BorderSizePixel = 0
     contentFrame.Parent = MainFrame
     
     local contentCorner = Instance.new("UICorner")
-    contentCorner.CornerRadius = UDim.new(0, 14)
+    contentCorner.CornerRadius = UDim.new(0, 12)
     contentCorner.Parent = contentFrame
     
     local contentStroke = Instance.new("UIStroke")
-    contentStroke.Color = Color3.fromRGB(50, 10, 10)
+    contentStroke.Color = Color3.fromRGB(60, 0, 0)
     contentStroke.Thickness = 1
-    contentStroke.Transparency = 0.85
     contentStroke.Parent = contentFrame
-    
-    local contentGrad = Instance.new("UIGradient")
-    contentGrad.Rotation = 90
-    contentGrad.Color = ColorSequence.new(Color3.fromRGB(18,18,20), Color3.fromRGB(12,12,14))
-    contentGrad.Transparency = NumberSequence.new(0, 0.06)
-    contentGrad.Parent = contentFrame
     
     -- ScrollingFrame (conteúdo)
     ScrollFrame = Instance.new("ScrollingFrame")
@@ -327,7 +292,7 @@ function NightmareHub:CreateUI()
     ScrollFrame.BackgroundTransparency = 1
     ScrollFrame.BorderSizePixel = 0
     ScrollFrame.ScrollBarThickness = 6
-    ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(200, 50, 50)
+    ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
     ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
     ScrollFrame.Parent = contentFrame
     
@@ -350,40 +315,26 @@ function NightmareHub:CreateUI()
     for i, tabName in ipairs(tabs) do
         local tabBtn = Instance.new("TextButton")
         tabBtn.Name = "Tab_" .. tabName
-        tabBtn.Size = UDim2.new(1, -12, 0, 44)
-        tabBtn.BackgroundColor3 = Color3.fromRGB(18, 8, 8)
+        tabBtn.Size = UDim2.new(1, -12, 0, 40)
+        tabBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
         tabBtn.BorderSizePixel = 0
         tabBtn.Text = tabName
-        tabBtn.TextColor3 = Color3.fromRGB(170, 170, 170)
-        tabBtn.TextSize = 14
+        tabBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+        tabBtn.TextSize = 13
         tabBtn.Font = Enum.Font.Arcade
         tabBtn.Parent = sideBar
         
         local iconPadding = Instance.new("UIPadding")
-        iconPadding.PaddingLeft = UDim.new(0, 36)
+        iconPadding.PaddingLeft = UDim.new(0, 8)
         iconPadding.Parent = tabBtn
-        
-        -- small decorative icon on left
-        local icon = Instance.new("Frame")
-        icon.Name = "Icon"
-        icon.Size = UDim2.new(0, 18, 0, 18)
-        icon.Position = UDim2.new(0, 10, 0.5, -9)
-        icon.BackgroundColor3 = Color3.fromRGB(170, 40, 40)
-        icon.BorderSizePixel = 0
-        icon.Parent = tabBtn
-        
-        local iconCorner = Instance.new("UICorner")
-        iconCorner.CornerRadius = UDim.new(1, 0)
-        iconCorner.Parent = icon
         
         local tabCorner = Instance.new("UICorner")
         tabCorner.CornerRadius = UDim.new(0, 10)
         tabCorner.Parent = tabBtn
         
         local tabStroke = Instance.new("UIStroke")
-        tabStroke.Color = Color3.fromRGB(120, 10, 10)
+        tabStroke.Color = Color3.fromRGB(100, 0, 0)
         tabStroke.Thickness = 1
-        tabStroke.Transparency = 0.7
         tabStroke.Parent = tabBtn
         
         TabButtons[tabName] = {button = tabBtn, stroke = tabStroke}
@@ -392,15 +343,13 @@ function NightmareHub:CreateUI()
         tabBtn.MouseEnter:Connect(function()
             if CurrentTab ~= tabName then
                 TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(120, 15, 15)}, tweenInfoFast)
-                TweenProperty(tabStroke, {Color = Color3.fromRGB(200, 50, 50)}, tweenInfoFast)
-                TweenProperty(icon, {BackgroundColor3 = Color3.fromRGB(200, 50, 50)}, tweenInfoFast)
+                TweenProperty(tabStroke, {Color = Color3.fromRGB(180, 40, 40)}, tweenInfoFast)
             end
         end)
         tabBtn.MouseLeave:Connect(function()
             if CurrentTab ~= tabName then
-                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(18, 8, 8)}, tweenInfoFast)
-                TweenProperty(tabStroke, {Color = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
-                TweenProperty(icon, {BackgroundColor3 = Color3.fromRGB(170, 40, 40)}, tweenInfoFast)
+                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(40, 0, 0)}, tweenInfoFast)
+                TweenProperty(tabStroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenInfoFast)
             end
         end)
         
@@ -419,7 +368,7 @@ function NightmareHub:CreateUI()
         if not MainFrame.Visible then
             MainFrame.Visible = true
             -- expand with tween and subtle bounce
-            TweenProperty(MainFrame, {Size = targetSize, BackgroundTransparency = 0}, TweenInfo.new(0.36, Enum.EasingStyle.Back, Enum.EasingDirection.Out))
+            TweenProperty(MainFrame, {Size = targetSize, BackgroundTransparency = 0.05}, TweenInfo.new(0.36, Enum.EasingStyle.Back, Enum.EasingDirection.Out))
             -- fade in children quickly
             task.delay(0.18, function()
                 for _, items in pairs(TabContent) do
@@ -437,7 +386,7 @@ function NightmareHub:CreateUI()
             task.delay(0.42, function() MainFrame:SetAttribute("Busy", false) end)
         else
             -- shrink and hide after animation
-            TweenProperty(MainFrame, {Size = UDim2.new(0, 20, 0, 20), BackgroundTransparency = 0.9}, tweenInfoSlow)
+            TweenProperty(MainFrame, {Size = UDim2.new(0, 20, 0, 20), BackgroundTransparency = 0.6}, tweenInfoSlow)
             task.delay(0.36, function()
                 MainFrame.Visible = false
                 MainFrame:SetAttribute("Busy", false)
@@ -448,36 +397,28 @@ function NightmareHub:CreateUI()
     -- Set default tab
     self:SwitchTab("Main")
     
-    print("✅ UI Created Successfully! (Dark Triad redesign)")
+    print("✅ UI Created Successfully! (Compact + animations)")
 end
 
 -- ==================== HELPER FUNCTIONS ====================
 function NightmareHub:CreateToggleButton(text, configKey, callback)
     local toggleBtn = Instance.new("TextButton")
-    toggleBtn.Size = UDim2.new(1, -10, 0, 38)
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+    toggleBtn.Size = UDim2.new(1, -10, 0, 34)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     toggleBtn.BorderSizePixel = 0
     toggleBtn.Text = text
-    toggleBtn.TextColor3 = Color3.fromRGB(235, 235, 235)
+    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     toggleBtn.TextSize = 14
     toggleBtn.Font = Enum.Font.Arcade
     
     local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 9)
+    btnCorner.CornerRadius = UDim.new(0, 8)
     btnCorner.Parent = toggleBtn
     
     local btnStroke = Instance.new("UIStroke")
-    btnStroke.Color = Color3.fromRGB(200, 30, 30)
+    btnStroke.Color = Color3.fromRGB(255, 50, 50)
     btnStroke.Thickness = 1
-    btnStroke.Transparency = 0.7
     btnStroke.Parent = toggleBtn
-
-    -- subtle gradient
-    local btnGrad = Instance.new("UIGradient")
-    btnGrad.Rotation = 90
-    btnGrad.Color = ColorSequence.new(Color3.fromRGB(28,12,12), Color3.fromRGB(18,8,8))
-    btnGrad.Transparency = NumberSequence.new(0, 0.06)
-    btnGrad.Parent = toggleBtn
 
     -- Muat status awal dari config
     local isToggled = self.Config[configKey] or false
@@ -494,7 +435,7 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
         if isToggled then
             TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
         else
-            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(22, 8, 8)}, tweenInfoFast)
+            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenInfoFast)
         end
         
         -- Simpan status baru ke config
@@ -508,7 +449,7 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
         TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
     end)
     toggleBtn.MouseLeave:Connect(function()
-        local bg = (self.Config[configKey] and Color3.fromRGB(200,30,30)) or Color3.fromRGB(22,8,8)
+        local bg = (self.Config[configKey] and Color3.fromRGB(200,30,30)) or Color3.fromRGB(80,0,0)
         TweenProperty(toggleBtn, {BackgroundColor3 = bg}, tweenInfoFast)
     end)
     
@@ -517,36 +458,29 @@ end
 
 function NightmareHub:CreateButton(text, callback)
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, -10, 0, 38)
-    button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+    button.Size = UDim2.new(1, -10, 0, 34)
+    button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     button.BorderSizePixel = 0
     button.Text = text
-    button.TextColor3 = Color3.fromRGB(235, 235, 235)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.TextSize = 14
     button.Font = Enum.Font.Arcade
     
     local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 9)
+    btnCorner.CornerRadius = UDim.new(0, 8)
     btnCorner.Parent = button
     
     local btnStroke = Instance.new("UIStroke")
-    btnStroke.Color = Color3.fromRGB(200, 30, 30)
+    btnStroke.Color = Color3.fromRGB(255, 50, 50)
     btnStroke.Thickness = 1
-    btnStroke.Transparency = 0.7
     btnStroke.Parent = button
-
-    local btnGrad = Instance.new("UIGradient")
-    btnGrad.Rotation = 90
-    btnGrad.Color = ColorSequence.new(Color3.fromRGB(28,12,12), Color3.fromRGB(18,8,8))
-    btnGrad.Transparency = NumberSequence.new(0,0.06)
-    btnGrad.Parent = button
     
     button.MouseButton1Click:Connect(function()
         print("🔘 BUTTON CLICKED:", text)
         -- click feedback
         TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(0,100,200)}, tweenInfoFast)
         task.delay(0.12, function()
-            TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(22,8,8)}, tweenInfoFast)
+            TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(80,0,0)}, tweenInfoFast)
         end)
         if callback then 
             callback(button) 
@@ -558,7 +492,7 @@ function NightmareHub:CreateButton(text, callback)
         TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
     end)
     button.MouseLeave:Connect(function()
-        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(22, 8, 8)}, tweenInfoFast)
+        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenInfoFast)
     end)
     
     return button
@@ -569,7 +503,7 @@ function NightmareHub:CreateSection(text)
     section.Size = UDim2.new(1, -10, 0, 22)
     section.BackgroundTransparency = 1
     section.Text = "━━ " .. text .. " ━━"
-    section.TextColor3 = Color3.fromRGB(200, 40, 40)
+    section.TextColor3 = Color3.fromRGB(255, 50, 50)
     section.TextSize = 12
     section.Font = Enum.Font.Arcade
     
@@ -578,13 +512,13 @@ end
 
 function NightmareHub:CreateTextBox(placeholderText)
     local textBox = Instance.new("TextBox")
-    textBox.Size = UDim2.new(1, -10, 0, 36)
-    textBox.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    textBox.Size = UDim2.new(1, -10, 0, 34)
+    textBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     textBox.BorderSizePixel = 0
     textBox.PlaceholderText = placeholderText or ""
     textBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
     textBox.Text = ""
-    textBox.TextColor3 = Color3.fromRGB(235, 235, 235)
+    textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     textBox.TextSize = 14
     textBox.Font = Enum.Font.Arcade
     textBox.ClearTextOnFocus = false
@@ -597,21 +531,20 @@ function NightmareHub:CreateTextBox(placeholderText)
     inputPadding.Parent = textBox
     
     local textBoxCorner = Instance.new("UICorner")
-    textBoxCorner.CornerRadius = UDim.new(0, 10)
+    textBoxCorner.CornerRadius = UDim.new(0, 8)
     textBoxCorner.Parent = textBox
     
     local textBoxStroke = Instance.new("UIStroke")
-    textBoxStroke.Color = Color3.fromRGB(20, 20, 20)
-    textBoxStroke.Thickness = 0.6
-    textBoxStroke.Transparency = 0.7
+    textBoxStroke.Color = Color3.fromRGB(0, 0, 0)
+    textBoxStroke.Thickness = 0.5
     textBoxStroke.Parent = textBox
     
     -- focus highlight
     textBox.Focused:Connect(function()
-        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(36, 36, 36)}, tweenInfoFast)
+        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, tweenInfoFast)
     end)
     textBox.FocusLost:Connect(function()
-        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(24, 24, 24)}, tweenInfoFast)
+        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}, tweenInfoFast)
     end)
     
     return textBox
@@ -665,7 +598,7 @@ function NightmareHub:SetupDiscordTab()
         button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         task.wait(2)
         button.Text = "Tiktok"
-        button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+        button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     end)
     table.insert(TabContent["Discord"], tiktokBtn)
     tiktokBtn.Parent = ScrollFrame
@@ -679,7 +612,7 @@ function NightmareHub:SetupDiscordTab()
         button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         task.wait(2)
         button.Text = "Discord"
-        button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+        button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     end)
     table.insert(TabContent["Discord"], discordBtn)
     discordBtn.Parent = ScrollFrame
@@ -708,7 +641,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(1.5)
             button.Text = "Join Server"
-            button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
             return
         end
         
@@ -726,7 +659,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(2)
             button.Text = "Join Server"
-            button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
         
         ButtonStates.joinServer = false
@@ -745,13 +678,13 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
             task.wait(2)
             button.Text = "Copy Current Job ID"
-            button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         else
             button.Text = "NO JOB ID!"
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(1)
             button.Text = "Copy Current Job ID"
-            button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
     end)
     table.insert(TabContent["Discord"], copyJobIdBtn)
@@ -811,7 +744,7 @@ function NightmareHub:SetupDiscordTab()
             end
             
             btnRef.Text = "Server Hop"
-            btnRef.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+            btnRef.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
             ButtonStates.serverHop = false
         end, button)
     end)
@@ -837,7 +770,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(2)
             button.Text = "Rejoin Server"
-            button.BackgroundColor3 = Color3.fromRGB(22, 8, 8)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
         
         ButtonStates.rejoin = false
@@ -869,29 +802,29 @@ function NightmareHub:SetupDiscordTab()
         
         local dynamicIsland = Instance.new("Frame")
         dynamicIsland.Name = "DynamicIsland"
-        dynamicIsland.Size = UDim2.new(0, 420, 0, 68)
-        dynamicIsland.Position = UDim2.new(0.5, -210, 0, 14)
-        dynamicIsland.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
+        dynamicIsland.Size = UDim2.new(0, 400, 0, 70)
+        dynamicIsland.Position = UDim2.new(0.5, -200, 0, 10)
+        dynamicIsland.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
         dynamicIsland.BorderSizePixel = 0
         dynamicIsland.Parent = diScreenGui
         dynamicIsland.Active = true
         
         local islandCorner = Instance.new("UICorner")
-        islandCorner.CornerRadius = UDim.new(0, 34)
+        islandCorner.CornerRadius = UDim.new(0, 35)
         islandCorner.Parent = dynamicIsland
         
         local islandStroke = Instance.new("UIStroke")
         islandStroke.Color = Color3.fromRGB(40, 40, 40)
         islandStroke.Thickness = 1
-        islandStroke.Transparency = 0.6
+        islandStroke.Transparency = 0.5
         islandStroke.Parent = dynamicIsland
         
         -- Avatar Container
         local avatarContainer = Instance.new("Frame")
         avatarContainer.Name = "AvatarContainer"
-        avatarContainer.Size = UDim2.new(0, 56, 0, 56)
-        avatarContainer.Position = UDim2.new(0, 10, 0.5, -28)
-        avatarContainer.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+        avatarContainer.Size = UDim2.new(0, 55, 0, 55)
+        avatarContainer.Position = UDim2.new(0, 8, 0.5, -27.5)
+        avatarContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         avatarContainer.BorderSizePixel = 0
         avatarContainer.Parent = dynamicIsland
         
@@ -901,8 +834,8 @@ function NightmareHub:SetupDiscordTab()
         
         local avatarImage = Instance.new("ImageLabel")
         avatarImage.Name = "Avatar"
-        avatarImage.Size = UDim2.new(1, -6, 1, -6)
-        avatarImage.Position = UDim2.new(0, 3, 0, 3)
+        avatarImage.Size = UDim2.new(1, -4, 1, -4)
+        avatarImage.Position = UDim2.new(0, 2, 0, 2)
         avatarImage.BackgroundTransparency = 1
         avatarImage.Image = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
         avatarImage.Parent = avatarContainer
@@ -914,18 +847,18 @@ function NightmareHub:SetupDiscordTab()
         -- Info Container
         local infoContainer = Instance.new("Frame")
         infoContainer.Name = "InfoContainer"
-        infoContainer.Size = UDim2.new(1, -280, 1, 0)
-        infoContainer.Position = UDim2.new(0, 80, 0, 0)
+        infoContainer.Size = UDim2.new(1, -260, 1, 0)
+        infoContainer.Position = UDim2.new(0, 70, 0, 0)
         infoContainer.BackgroundTransparency = 1
         infoContainer.Parent = dynamicIsland
         
         local usernameLabel = Instance.new("TextLabel")
         usernameLabel.Name = "Username"
-        usernameLabel.Size = UDim2.new(1, 0, 0, 20)
+        usernameLabel.Size = UDim2.new(1, 0, 0, 18)
         usernameLabel.Position = UDim2.new(0, 0, 0, 8)
         usernameLabel.BackgroundTransparency = 1
         usernameLabel.Text = "@" .. LocalPlayer.Name
-        usernameLabel.TextColor3 = Color3.fromRGB(235, 235, 235)
+        usernameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         usernameLabel.Font = Enum.Font.GothamBold
         usernameLabel.TextSize = 15
         usernameLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -934,17 +867,17 @@ function NightmareHub:SetupDiscordTab()
         -- Stats Container
         local statsContainer = Instance.new("Frame")
         statsContainer.Name = "StatsContainer"
-        statsContainer.Size = UDim2.new(1, 0, 0, 24)
-        statsContainer.Position = UDim2.new(0, 0, 1, -30)
+        statsContainer.Size = UDim2.new(1, 0, 0, 22)
+        statsContainer.Position = UDim2.new(0, 0, 1, -27)
         statsContainer.BackgroundTransparency = 1
         statsContainer.Parent = infoContainer
         
         -- FPS Container
         local fpsContainer = Instance.new("Frame")
         fpsContainer.Name = "FPS"
-        fpsContainer.Size = UDim2.new(0.33, -4, 1, 0)
+        fpsContainer.Size = UDim2.new(0.33, -2, 1, 0)
         fpsContainer.Position = UDim2.new(0, 0, 0, 0)
-        fpsContainer.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+        fpsContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         fpsContainer.BorderSizePixel = 0
         fpsContainer.Parent = statsContainer
         
@@ -957,7 +890,7 @@ function NightmareHub:SetupDiscordTab()
         fpsLabel.Size = UDim2.new(1, 0, 1, 0)
         fpsLabel.BackgroundTransparency = 1
         fpsLabel.Text = "60"
-        fpsLabel.TextColor3 = Color3.fromRGB(0, 220, 0)
+        fpsLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
         fpsLabel.Font = Enum.Font.GothamBold
         fpsLabel.TextSize = 11
         fpsLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -966,9 +899,9 @@ function NightmareHub:SetupDiscordTab()
         -- Ping Container
         local pingContainer = Instance.new("Frame")
         pingContainer.Name = "Ping"
-        pingContainer.Size = UDim2.new(0.33, 2, 1, 0)
-        pingContainer.Position = UDim2.new(0.33, 2, 0, 0)
-        pingContainer.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+        pingContainer.Size = UDim2.new(0.33, 1, 1, 0)
+        pingContainer.Position = UDim2.new(0.33, 1, 0, 0)
+        pingContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         pingContainer.BorderSizePixel = 0
         pingContainer.Parent = statsContainer
         
@@ -981,7 +914,7 @@ function NightmareHub:SetupDiscordTab()
         pingLabel.Size = UDim2.new(1, 0, 1, 0)
         pingLabel.BackgroundTransparency = 1
         pingLabel.Text = "0ms"
-        pingLabel.TextColor3 = Color3.fromRGB(0, 220, 0)
+        pingLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
         pingLabel.Font = Enum.Font.GothamBold
         pingLabel.TextSize = 11
         pingLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -990,9 +923,9 @@ function NightmareHub:SetupDiscordTab()
         -- Time Container
         local timeContainer = Instance.new("Frame")
         timeContainer.Name = "Time"
-        timeContainer.Size = UDim2.new(0.33, 4, 1, 0)
-        timeContainer.Position = UDim2.new(0.66, 6, 0, 0)
-        timeContainer.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+        timeContainer.Size = UDim2.new(0.33, 2, 1, 0)
+        timeContainer.Position = UDim2.new(0.66, 5, 0, 0)
+        timeContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         timeContainer.BorderSizePixel = 0
         timeContainer.Parent = statsContainer
         
@@ -1005,7 +938,7 @@ function NightmareHub:SetupDiscordTab()
         timeLabel.Size = UDim2.new(1, 0, 1, 0)
         timeLabel.BackgroundTransparency = 1
         timeLabel.Text = "00:00"
-        timeLabel.TextColor3 = Color3.fromRGB(235, 235, 235)
+        timeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         timeLabel.Font = Enum.Font.GothamBold
         timeLabel.TextSize = 11
         timeLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -1063,9 +996,9 @@ function NightmareHub:SetupDiscordTab()
                 fpsLabel.Text = tostring(fps)
                 
                 if fps >= 55 then
-                    fpsLabel.TextColor3 = Color3.fromRGB(0, 220, 0)
+                    fpsLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
                 elseif fps >= 30 then
-                    fpsLabel.TextColor3 = Color3.fromRGB(255, 200, 0)
+                    fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
                 else
                     fpsLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
                 end
@@ -1084,9 +1017,9 @@ function NightmareHub:SetupDiscordTab()
                     pingLabel.Text = pingValue .. "ms"
                     
                     if pingValue <= 100 then
-                        pingLabel.TextColor3 = Color3.fromRGB(0, 220, 0)
+                        pingLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
                     elseif pingValue <= 200 then
-                        pingLabel.TextColor3 = Color3.fromRGB(255, 200, 0)
+                        pingLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
                     else
                         pingLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
                     end
@@ -1310,20 +1243,11 @@ function NightmareHub:SwitchTab(tabName)
         if name == tabName then
             TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
             TweenProperty(data.button, {TextColor3 = Color3.fromRGB(255,255,255)}, tweenInfoFast)
-            TweenProperty(data.stroke, {Color = Color3.fromRGB(240, 80, 80)}, tweenInfoFast)
-            -- icon highlight if present
-            pcall(function()
-                local icon = data.button:FindFirstChild("Icon")
-                if icon then TweenProperty(icon, {BackgroundColor3 = Color3.fromRGB(240,80,80)}, tweenInfoFast) end
-            end)
+            TweenProperty(data.stroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
         else
-            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(18, 8, 8)}, tweenInfoFast)
-            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(170,170,170)}, tweenInfoFast)
-            TweenProperty(data.stroke, {Color = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
-            pcall(function()
-                local icon = data.button:FindFirstChild("Icon")
-                if icon then TweenProperty(icon, {BackgroundColor3 = Color3.fromRGB(170,40,40)}, tweenInfoFast) end
-            end)
+            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(40, 0, 0)}, tweenInfoFast)
+            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(150,150,150)}, tweenInfoFast)
+            TweenProperty(data.stroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenInfoFast)
         end
     end
     
