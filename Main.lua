@@ -1,10 +1,6 @@
 --[[
     NIGHTMARE HUB LIBRARY (FINAL DEBUG VERSION + CONFIG SYSTEM)
-    REMODELED UI DESIGN v2 — compact + animations + visual polish
-    - Interface menor
-    - Animações de abrir/fechar (TweenService)
-    - Hover nas abas e micro-feedback nos botões
-    - Fade/slide-in ao trocar de tab
+    REMODELED UI DESIGN v3 — compact + polished visuals + smooth animations + 50% transparent background
     Mantive toda a lógica, nomes e funções de criação (não quebrei nada).
 ]]
 
@@ -52,7 +48,6 @@ function ConfigSystem:Save(config)
     end)
     
     if success then
-        -- print("💾 Config saved!") -- Uncomment untuk debug
         return true
     else
         warn("❌ Failed to save config:", error)
@@ -64,7 +59,6 @@ end
 function ConfigSystem:UpdateSetting(config, key, value)
     config[key] = value
     self:Save(config)
-    -- print("🔄 Updated setting:", key, "=", value) -- Uncomment untuk debug
 end
 
 -- ==================== UI VARIABLES ====================
@@ -83,20 +77,19 @@ local ButtonStates = {
     rejoin = false
 }
 
--- Animation presets
-local tweenInfoFast = TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local tweenInfoMed  = TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-local tweenInfoSlow = TweenInfo.new(0.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+-- Animation presets (smoother)
+local tweenFast   = TweenInfo.new(0.16, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+local tweenMed    = TweenInfo.new(0.28, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local tweenSlow   = TweenInfo.new(0.42, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+local tweenOpen   = TweenInfo.new(0.40, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+local tweenClose  = TweenInfo.new(0.30, Enum.EasingStyle.Circular, Enum.EasingDirection.In)
 
--- Helper to tween Color3 (TweenService needs a goal table)
-local function TweenProperty(instance, props, info)
-    info = info or tweenInfoMed
-    local suc, tween = pcall(function()
-        return TweenService:Create(instance, info, props)
-    end)
-    if suc and tween then
-        tween:Play()
-        return tween
+local function safeTween(instance, props, info)
+    info = info or tweenMed
+    local ok, t = pcall(function() return TweenService:Create(instance, info, props) end)
+    if ok and t then
+        t:Play()
+        return t
     end
     return nil
 end
@@ -116,288 +109,314 @@ function NightmareHub:CreateUI()
     ScreenGui.Name = "NightmareHubUI"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.Parent = game.CoreGui
-    
-    -- Toggle Button (pequeno botão flutuante)
+
+    -- Background overlay (subtle dim when UI open)
+    local overlay = Instance.new("Frame")
+    overlay.Name = "NightmareOverlay"
+    overlay.AnchorPoint = Vector2.new(0.5, 0.5)
+    overlay.Size = UDim2.new(1, 0, 1, 0)
+    overlay.Position = UDim2.new(0.5, 0, 0.5, 0)
+    overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    overlay.BackgroundTransparency = 1 -- hidden by default
+    overlay.ZIndex = 1
+    overlay.BorderSizePixel = 0
+    overlay.Parent = ScreenGui
+
+    -- Toggle Button (floating)
     ToggleButton = Instance.new("ImageButton")
-    ToggleButton.Size = UDim2.new(0, 48, 0, 48)
-    ToggleButton.Position = UDim2.new(0, 18, 0.5, -24)
+    ToggleButton.Size = UDim2.new(0, 46, 0, 46)
+    ToggleButton.Position = UDim2.new(0, 16, 0.5, -24)
     ToggleButton.BackgroundTransparency = 1
     ToggleButton.Image = "rbxassetid://121996261654076"
     ToggleButton.Active = true
     ToggleButton.Draggable = true
+    ToggleButton.ZIndex = 3
     ToggleButton.Parent = ScreenGui
 
-    -- Subtle hover feedback for toggle
+    -- Toggle hover subtle scale
     ToggleButton.MouseEnter:Connect(function()
-        TweenProperty(ToggleButton, {Size = UDim2.new(0, 52, 0, 52)}, tweenInfoFast)
+        safeTween(ToggleButton, {Size = UDim2.new(0, 50, 0, 50)}, tweenFast)
     end)
     ToggleButton.MouseLeave:Connect(function()
-        TweenProperty(ToggleButton, {Size = UDim2.new(0, 48, 0, 48)}, tweenInfoFast)
+        safeTween(ToggleButton, {Size = UDim2.new(0, 46, 0, 46)}, tweenFast)
     end)
     
-    -- Main Frame (COMPACT)
-    local targetSize = UDim2.new(0, 420, 0, 340) -- menor
+    -- Main Frame (compact, semi-transparent ~50%)
+    local targetSize = UDim2.new(0, 380, 0, 300)
     MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 20, 0, 20) -- start tiny for animation
-    MainFrame.Position = UDim2.new(0.5, -210, 0.5, -170)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-    MainFrame.BackgroundTransparency = 0.05
+    MainFrame.Name = "MainFrame"
+    MainFrame.Size = UDim2.new(0, 10, 0, 10) -- start small for open animation
+    MainFrame.Position = UDim2.new(0.5, -190, 0.5, -150)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 14)
+    MainFrame.BackgroundTransparency = 0.5 -- ~50% transparency (darker glass)
     MainFrame.BorderSizePixel = 0
+    MainFrame.ZIndex = 5
     MainFrame.Active = true
     MainFrame.Draggable = true
     MainFrame.Visible = false
     MainFrame.Parent = ScreenGui
-    
-    -- Shadow / drop behind main
+
+    -- drop shadow container (subtle)
     local shadow = Instance.new("Frame")
     shadow.Name = "Shadow"
-    shadow.Size = UDim2.new(1, 12, 1, 12)
-    shadow.Position = UDim2.new(0, -6, 0, -6)
+    shadow.Size = UDim2.new(1, 14, 1, 14)
+    shadow.Position = UDim2.new(0, -7, 0, -7)
     shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    shadow.BackgroundTransparency = 0.7
+    shadow.BackgroundTransparency = 0.75
     shadow.ZIndex = MainFrame.ZIndex - 1
     shadow.BorderSizePixel = 0
     shadow.Parent = MainFrame
-    
-    local shadowCorner = Instance.new("UICorner")
-    shadowCorner.CornerRadius = UDim.new(0, 20)
-    shadowCorner.Parent = shadow
-    
-    -- Styling
-    local mainCorner = Instance.new("UICorner")
-    mainCorner.CornerRadius = UDim.new(0, 16)
-    mainCorner.Parent = MainFrame
-    
-    local mainStroke = Instance.new("UIStroke")
+    local shadowCorner = Instance.new("UICorner", shadow)
+    shadowCorner.CornerRadius = UDim.new(0, 18)
+
+    -- Rounded corners & stroke (thin)
+    local mainCorner = Instance.new("UICorner", MainFrame)
+    mainCorner.CornerRadius = UDim.new(0, 14)
+    local mainStroke = Instance.new("UIStroke", MainFrame)
     mainStroke.Color = Color3.fromRGB(255, 50, 50)
-    mainStroke.Thickness = 1.6
-    mainStroke.Parent = MainFrame
-    
-    -- Accent strip (thin)
-    local accentStrip = Instance.new("Frame")
-    accentStrip.Size = UDim2.new(0, 6, 1, 0)
-    accentStrip.Position = UDim2.new(0, 0, 0, 0)
-    accentStrip.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    accentStrip.BorderSizePixel = 0
-    accentStrip.Parent = MainFrame
-    
-    local accentCorner = Instance.new("UICorner")
-    accentCorner.CornerRadius = UDim.new(0, 16)
-    accentCorner.Parent = accentStrip
-    
-    -- Title area (top compact)
+    mainStroke.Thickness = 1
+
+    -- Inner blurred-like panel (opaque container over the transparent background)
+    local inner = Instance.new("Frame")
+    inner.Name = "Inner"
+    inner.Size = UDim2.new(1, -18, 1, -18)
+    inner.Position = UDim2.new(0, 9, 0, 9)
+    inner.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
+    inner.BackgroundTransparency = 0.08
+    inner.BorderSizePixel = 0
+    inner.ZIndex = MainFrame.ZIndex + 1
+    inner.Parent = MainFrame
+    local innerCorner = Instance.new("UICorner", inner)
+    innerCorner.CornerRadius = UDim.new(0, 12)
+    local innerStroke = Instance.new("UIStroke", inner)
+    innerStroke.Color = Color3.fromRGB(40, 0, 0)
+    innerStroke.Thickness = 1
+
+    -- Title bar (compact)
     local titleBar = Instance.new("Frame")
-    titleBar.Size = UDim2.new(1, -12, 0, 40)
-    titleBar.Position = UDim2.new(0, 12, 0, 8)
+    titleBar.Size = UDim2.new(1, -24, 0, 36)
+    titleBar.Position = UDim2.new(0, 12, 0, 10)
     titleBar.BackgroundTransparency = 1
-    titleBar.Parent = MainFrame
-    
+    titleBar.Parent = inner
+
     local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(1, -60, 1, 0)
+    titleLabel.Size = UDim2.new(1, -80, 1, 0)
     titleLabel.Position = UDim2.new(0, 0, 0, 0)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "NIGHTMARE HUB"
-    titleLabel.TextColor3 = Color3.fromRGB(139, 0, 0)
+    titleLabel.TextColor3 = Color3.fromRGB(200, 60, 60)
     titleLabel.TextSize = 18
     titleLabel.Font = Enum.Font.Arcade
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.ZIndex = inner.ZIndex + 1
     titleLabel.Parent = titleBar
-    
+
     local subtitle = Instance.new("TextLabel")
-    subtitle.Size = UDim2.new(0, 100, 1, 0)
-    subtitle.Position = UDim2.new(1, -100, 0, 0)
+    subtitle.Size = UDim2.new(0, 80, 1, 0)
+    subtitle.Position = UDim2.new(1, -80, 0, 0)
     subtitle.BackgroundTransparency = 1
-    subtitle.Text = "COMPACT"
+    subtitle.Text = "PRIME"
     subtitle.TextColor3 = Color3.fromRGB(150, 150, 150)
     subtitle.TextSize = 11
     subtitle.Font = Enum.Font.Gotham
     subtitle.TextXAlignment = Enum.TextXAlignment.Right
     subtitle.Parent = titleBar
-    
-    -- Close Button (compact)
+
+    -- Close button (small)
     local closeBtn = Instance.new("TextButton")
-    closeBtn.Size = UDim2.new(0, 30, 0, 30)
-    closeBtn.Position = UDim2.new(1, -40, 0, 6)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+    closeBtn.Size = UDim2.new(0, 28, 0, 28)
+    closeBtn.Position = UDim2.new(1, -38, 0, 6)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(70, 0, 0)
     closeBtn.BorderSizePixel = 0
     closeBtn.Text = "X"
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     closeBtn.TextSize = 14
     closeBtn.Font = Enum.Font.Arcade
-    closeBtn.Parent = MainFrame
-    
-    local closeBtnCorner = Instance.new("UICorner")
-    closeBtnCorner.CornerRadius = UDim.new(0, 8)
-    closeBtnCorner.Parent = closeBtn
-    
-    local closeBtnStroke = Instance.new("UIStroke")
-    closeBtnStroke.Color = Color3.fromRGB(255, 50, 50)
-    closeBtnStroke.Thickness = 1
-    closeBtnStroke.Parent = closeBtn
-    
+    closeBtn.Parent = inner
+    local closeCorner = Instance.new("UICorner", closeBtn)
+    closeCorner.CornerRadius = UDim.new(0, 8)
+    local closeStroke = Instance.new("UIStroke", closeBtn)
+    closeStroke.Color = Color3.fromRGB(255, 50, 50)
+    closeStroke.Thickness = 1
+
     closeBtn.MouseButton1Click:Connect(function()
-        -- animated close
         if MainFrame:GetAttribute("Busy") then return end
         MainFrame:SetAttribute("Busy", true)
-        local shrink = TweenProperty(MainFrame, {Size = UDim2.new(0, 20, 0, 20), BackgroundTransparency = 0.6}, tweenInfoSlow)
-        if shrink then shrink.Completed:Wait() end
+        -- hide overlay
+        safeTween(overlay, {BackgroundTransparency = 1}, tweenClose)
+        -- close anim
+        local t = safeTween(MainFrame, {Size = UDim2.new(0, 8, 0, 8), BackgroundTransparency = 0.95}, tweenClose)
+        if t then t.Completed:Wait() end
         MainFrame.Visible = false
         MainFrame:SetAttribute("Busy", false)
     end)
-    
-    -- Sidebar (vertical tabs compact)
+
+    -- Sidebar (left)
     local sideBar = Instance.new("Frame")
-    sideBar.Size = UDim2.new(0, 100, 1, -78)
-    sideBar.Position = UDim2.new(0, 12, 0, 56)
+    sideBar.Size = UDim2.new(0, 96, 1, -80)
+    sideBar.Position = UDim2.new(0, 12, 0, 52)
     sideBar.BackgroundTransparency = 1
-    sideBar.Parent = MainFrame
-    
-    local sideCorner = Instance.new("UICorner")
-    sideCorner.CornerRadius = UDim.new(0, 12)
-    sideCorner.Parent = sideBar
-    
-    local sideStroke = Instance.new("UIStroke")
+    sideBar.BorderSizePixel = 0
+    sideBar.Parent = inner
+
+    local sideCorner = Instance.new("UICorner", sideBar)
+    sideCorner.CornerRadius = UDim.new(0, 10)
+    local sideStroke = Instance.new("UIStroke", sideBar)
     sideStroke.Color = Color3.fromRGB(50, 0, 0)
     sideStroke.Thickness = 1
-    sideStroke.Parent = sideBar
-    
-    -- Vertical layout for sidebar tabs
-    local sideLayout = Instance.new("UIListLayout")
+
+    local sideLayout = Instance.new("UIListLayout", sideBar)
     sideLayout.Padding = UDim.new(0, 8)
     sideLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     sideLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    sideLayout.Parent = sideBar
-    
-    -- Content Frame (to the right of the sidebar)
+
+    -- Indicator bar (animated)
+    local indicator = Instance.new("Frame")
+    indicator.Name = "Indicator"
+    indicator.Size = UDim2.new(0, 6, 0, 40)
+    indicator.Position = UDim2.new(0, 4, 0, 0)
+    indicator.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    indicator.BorderSizePixel = 0
+    indicator.ZIndex = inner.ZIndex + 2
+    indicator.Visible = false
+    indicator.Parent = sideBar
+    local indicatorCorner = Instance.new("UICorner", indicator)
+    indicatorCorner.CornerRadius = UDim.new(0, 6)
+
+    -- Content panel (right)
     local contentFrame = Instance.new("Frame")
-    contentFrame.Size = UDim2.new(1, -140, 1, -78)
-    contentFrame.Position = UDim2.new(0, 132, 0, 56)
-    contentFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+    contentFrame.Size = UDim2.new(1, -136, 1, -80)
+    contentFrame.Position = UDim2.new(0, 120, 0, 52)
+    contentFrame.BackgroundColor3 = Color3.fromRGB(14, 14, 16)
     contentFrame.BorderSizePixel = 0
-    contentFrame.Parent = MainFrame
-    
-    local contentCorner = Instance.new("UICorner")
-    contentCorner.CornerRadius = UDim.new(0, 12)
-    contentCorner.Parent = contentFrame
-    
-    local contentStroke = Instance.new("UIStroke")
-    contentStroke.Color = Color3.fromRGB(60, 0, 0)
+    contentFrame.Parent = inner
+    local contentCorner = Instance.new("UICorner", contentFrame)
+    contentCorner.CornerRadius = UDim.new(0, 10)
+    local contentStroke = Instance.new("UIStroke", contentFrame)
+    contentStroke.Color = Color3.fromRGB(50, 0, 0)
     contentStroke.Thickness = 1
-    contentStroke.Parent = contentFrame
-    
-    -- ScrollingFrame (conteúdo)
+
+    -- ScrollingFrame for content
     ScrollFrame = Instance.new("ScrollingFrame")
-    ScrollFrame.Size = UDim2.new(1, -20, 1, -20)
-    ScrollFrame.Position = UDim2.new(0, 10, 0, 10)
+    ScrollFrame.Size = UDim2.new(1, -18, 1, -18)
+    ScrollFrame.Position = UDim2.new(0, 9, 0, 9)
     ScrollFrame.BackgroundTransparency = 1
     ScrollFrame.BorderSizePixel = 0
     ScrollFrame.ScrollBarThickness = 6
     ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
     ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
     ScrollFrame.Parent = contentFrame
-    
-    local scrollLayout = Instance.new("UIListLayout")
+
+    local scrollLayout = Instance.new("UIListLayout", ScrollFrame)
     scrollLayout.Padding = UDim.new(0, 8)
     scrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    scrollLayout.Parent = ScrollFrame
-    
     scrollLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, scrollLayout.AbsoluteContentSize.Y + 18)
+        ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, scrollLayout.AbsoluteContentSize.Y + 16)
     end)
-    
-    -- Initialize tab content
+
+    -- Initialize tabs
     local tabs = {"Main", "Visual", "Misc", "Discord"}
     for _, tabName in ipairs(tabs) do
         TabContent[tabName] = {}
     end
-    
-    -- Create sidebar tab buttons (vertical style) BUT keep TabButtons structure
+
+    -- Create vertical tab buttons (but keep TabButtons structure)
     for i, tabName in ipairs(tabs) do
         local tabBtn = Instance.new("TextButton")
         tabBtn.Name = "Tab_" .. tabName
         tabBtn.Size = UDim2.new(1, -12, 0, 40)
-        tabBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+        tabBtn.BackgroundColor3 = Color3.fromRGB(36, 0, 0)
         tabBtn.BorderSizePixel = 0
         tabBtn.Text = tabName
-        tabBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+        tabBtn.TextColor3 = Color3.fromRGB(170, 170, 170)
         tabBtn.TextSize = 13
         tabBtn.Font = Enum.Font.Arcade
         tabBtn.Parent = sideBar
-        
-        local iconPadding = Instance.new("UIPadding")
-        iconPadding.PaddingLeft = UDim.new(0, 8)
-        iconPadding.Parent = tabBtn
-        
-        local tabCorner = Instance.new("UICorner")
-        tabCorner.CornerRadius = UDim.new(0, 10)
-        tabCorner.Parent = tabBtn
-        
-        local tabStroke = Instance.new("UIStroke")
+
+        local padding = Instance.new("UIPadding", tabBtn)
+        padding.PaddingLeft = UDim.new(0, 8)
+
+        local tabCorner = Instance.new("UICorner", tabBtn)
+        tabCorner.CornerRadius = UDim.new(0, 8)
+        local tabStroke = Instance.new("UIStroke", tabBtn)
         tabStroke.Color = Color3.fromRGB(100, 0, 0)
         tabStroke.Thickness = 1
-        tabStroke.Parent = tabBtn
-        
+
         TabButtons[tabName] = {button = tabBtn, stroke = tabStroke}
-        
-        -- Hover animations for tab buttons
+
+        -- Hover (gentle color + slight scale)
         tabBtn.MouseEnter:Connect(function()
             if CurrentTab ~= tabName then
-                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(120, 15, 15)}, tweenInfoFast)
-                TweenProperty(tabStroke, {Color = Color3.fromRGB(180, 40, 40)}, tweenInfoFast)
+                safeTween(tabBtn, {BackgroundColor3 = Color3.fromRGB(115, 12, 12)}, tweenFast)
             end
         end)
         tabBtn.MouseLeave:Connect(function()
             if CurrentTab ~= tabName then
-                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(40, 0, 0)}, tweenInfoFast)
-                TweenProperty(tabStroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenInfoFast)
+                safeTween(tabBtn, {BackgroundColor3 = Color3.fromRGB(36, 0, 0)}, tweenFast)
             end
         end)
-        
+
         tabBtn.MouseButton1Click:Connect(function()
             self:SwitchTab(tabName)
         end)
     end
-    
-    -- Initialize tab content for Discord & others (same as before)
+
+    -- Setup Discord tab and others (keeps original logic)
     self:SetupDiscordTab()
-    
-    -- Toggle button functionality (animated open/close)
+
+    -- Toggle button behavior (open/close) with overlay fade
     ToggleButton.MouseButton1Click:Connect(function()
         if MainFrame:GetAttribute("Busy") then return end
         MainFrame:SetAttribute("Busy", true)
         if not MainFrame.Visible then
             MainFrame.Visible = true
-            -- expand with tween and subtle bounce
-            TweenProperty(MainFrame, {Size = targetSize, BackgroundTransparency = 0.05}, TweenInfo.new(0.36, Enum.EasingStyle.Back, Enum.EasingDirection.Out))
-            -- fade in children quickly
+            -- show overlay
+            safeTween(overlay, {BackgroundTransparency = 0.42}, tweenMed)
+            -- expand main smoothly
+            safeTween(MainFrame, {Size = targetSize, BackgroundTransparency = 0.5}, tweenOpen)
+            -- bring indicator visible and place on current tab
+            task.delay(0.06, function()
+                indicator.Visible = true
+                local sel = TabButtons[CurrentTab] and TabButtons[CurrentTab].button
+                if sel then
+                    safeTween(indicator, {Position = UDim2.new(0, 4, 0, sel.Position.Y.Offset)}, tweenMed)
+                    safeTween(indicator, {Size = UDim2.new(0, 6, 0, sel.Size.Y.Offset)}, tweenMed)
+                end
+            end)
+            -- fade in items
             task.delay(0.18, function()
                 for _, items in pairs(TabContent) do
                     for _, item in ipairs(items) do
                         pcall(function()
                             if item:IsA("GuiObject") then
                                 item.BackgroundTransparency = item.BackgroundTransparency or 1
-                                item.TextTransparency = item.TextTransparency or 0
-                                TweenProperty(item, {BackgroundTransparency = 0}, tweenInfoFast)
+                                if item:IsA("TextLabel") or item:IsA("TextButton") or item:IsA("TextBox") then
+                                    item.TextTransparency = 1
+                                end
+                                safeTween(item, {BackgroundTransparency = 0}, tweenFast)
+                                if item:IsA("TextLabel") or item:IsA("TextButton") or item:IsA("TextBox") then
+                                    safeTween(item, {TextTransparency = 0}, tweenFast)
+                                end
                             end
                         end)
                     end
                 end
             end)
-            task.delay(0.42, function() MainFrame:SetAttribute("Busy", false) end)
+            task.delay(0.44, function() MainFrame:SetAttribute("Busy", false) end)
         else
-            -- shrink and hide after animation
-            TweenProperty(MainFrame, {Size = UDim2.new(0, 20, 0, 20), BackgroundTransparency = 0.6}, tweenInfoSlow)
-            task.delay(0.36, function()
-                MainFrame.Visible = false
-                MainFrame:SetAttribute("Busy", false)
-            end)
+            -- close
+            safeTween(overlay, {BackgroundTransparency = 1}, tweenClose)
+            local t = safeTween(MainFrame, {Size = UDim2.new(0, 8, 0, 8), BackgroundTransparency = 0.95}, tweenClose)
+            if t then t.Completed:Wait() end
+            MainFrame.Visible = false
+            MainFrame:SetAttribute("Busy", false)
         end
     end)
-    
-    -- Set default tab
-    self:SwitchTab("Main")
-    
-    print("✅ UI Created Successfully! (Compact + animations)")
+
+    -- default tab
+    self:SwitchTab(CurrentTab)
+
+    print("✅ UI Created Successfully! (v3 polished)")
 end
 
 -- ==================== HELPER FUNCTIONS ====================
@@ -410,15 +429,13 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
     toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     toggleBtn.TextSize = 14
     toggleBtn.Font = Enum.Font.Arcade
-    
-    local btnCorner = Instance.new("UICorner")
+
+    local btnCorner = Instance.new("UICorner", toggleBtn)
     btnCorner.CornerRadius = UDim.new(0, 8)
-    btnCorner.Parent = toggleBtn
     
-    local btnStroke = Instance.new("UIStroke")
+    local btnStroke = Instance.new("UIStroke", toggleBtn)
     btnStroke.Color = Color3.fromRGB(255, 50, 50)
     btnStroke.Thickness = 1
-    btnStroke.Parent = toggleBtn
 
     -- Muat status awal dari config
     local isToggled = self.Config[configKey] or false
@@ -426,33 +443,30 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
         toggleBtn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
     end
 
-    -- Panggil callback sekali pada permulaan untuk memuat fungsi
     if callback then callback(isToggled) end
-    
+
     toggleBtn.MouseButton1Click:Connect(function()
         isToggled = not isToggled
-        
         if isToggled then
-            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
+            safeTween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenFast)
         else
-            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenInfoFast)
+            safeTween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenFast)
         end
-        
-        -- Simpan status baru ke config
         ConfigSystem:UpdateSetting(self.Config, configKey, isToggled)
-        
         if callback then callback(isToggled) end
+        -- click micro-scale
+        safeTween(toggleBtn, {Size = UDim2.new(1, -10, 0, 32)}, tweenFast)
+        task.delay(0.08, function() safeTween(toggleBtn, {Size = UDim2.new(1, -10, 0, 34)}, tweenFast) end)
     end)
-    
-    -- hover micro feedback
+
     toggleBtn.MouseEnter:Connect(function()
-        TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
+        safeTween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenFast)
     end)
     toggleBtn.MouseLeave:Connect(function()
         local bg = (self.Config[configKey] and Color3.fromRGB(200,30,30)) or Color3.fromRGB(80,0,0)
-        TweenProperty(toggleBtn, {BackgroundColor3 = bg}, tweenInfoFast)
+        safeTween(toggleBtn, {BackgroundColor3 = bg}, tweenFast)
     end)
-    
+
     return toggleBtn
 end
 
@@ -465,36 +479,33 @@ function NightmareHub:CreateButton(text, callback)
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.TextSize = 14
     button.Font = Enum.Font.Arcade
-    
-    local btnCorner = Instance.new("UICorner")
+
+    local btnCorner = Instance.new("UICorner", button)
     btnCorner.CornerRadius = UDim.new(0, 8)
-    btnCorner.Parent = button
-    
-    local btnStroke = Instance.new("UIStroke")
+
+    local btnStroke = Instance.new("UIStroke", button)
     btnStroke.Color = Color3.fromRGB(255, 50, 50)
     btnStroke.Thickness = 1
-    btnStroke.Parent = button
-    
+
     button.MouseButton1Click:Connect(function()
         print("🔘 BUTTON CLICKED:", text)
-        -- click feedback
-        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(0,100,200)}, tweenInfoFast)
+        -- click feedback (color + small scale)
+        safeTween(button, {BackgroundColor3 = Color3.fromRGB(0, 100, 200)}, tweenFast)
+        safeTween(button, {Size = UDim2.new(1, -10, 0, 32)}, tweenFast)
         task.delay(0.12, function()
-            TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(80,0,0)}, tweenInfoFast)
+            safeTween(button, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenFast)
+            safeTween(button, {Size = UDim2.new(1, -10, 0, 34)}, tweenFast)
         end)
-        if callback then 
-            callback(button) 
-        end
+        if callback then callback(button) end
     end)
-    
-    -- hover micro feedback
+
     button.MouseEnter:Connect(function()
-        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
+        safeTween(button, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenFast)
     end)
     button.MouseLeave:Connect(function()
-        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenInfoFast)
+        safeTween(button, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenFast)
     end)
-    
+
     return button
 end
 
@@ -506,7 +517,6 @@ function NightmareHub:CreateSection(text)
     section.TextColor3 = Color3.fromRGB(255, 50, 50)
     section.TextSize = 12
     section.Font = Enum.Font.Arcade
-    
     return section
 end
 
@@ -524,29 +534,24 @@ function NightmareHub:CreateTextBox(placeholderText)
     textBox.ClearTextOnFocus = false
     textBox.TextXAlignment = Enum.TextXAlignment.Left
     textBox.TextTruncate = Enum.TextTruncate.AtEnd
-    
-    local inputPadding = Instance.new("UIPadding")
+
+    local inputPadding = Instance.new("UIPadding", textBox)
     inputPadding.PaddingLeft = UDim.new(0, 10)
     inputPadding.PaddingRight = UDim.new(0, 10)
-    inputPadding.Parent = textBox
-    
-    local textBoxCorner = Instance.new("UICorner")
+
+    local textBoxCorner = Instance.new("UICorner", textBox)
     textBoxCorner.CornerRadius = UDim.new(0, 8)
-    textBoxCorner.Parent = textBox
-    
-    local textBoxStroke = Instance.new("UIStroke")
+    local textBoxStroke = Instance.new("UIStroke", textBox)
     textBoxStroke.Color = Color3.fromRGB(0, 0, 0)
     textBoxStroke.Thickness = 0.5
-    textBoxStroke.Parent = textBox
-    
-    -- focus highlight
+
     textBox.Focused:Connect(function()
-        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, tweenInfoFast)
+        safeTween(textBox, {BackgroundColor3 = Color3.fromRGB(56,56,56)}, tweenFast)
     end)
     textBox.FocusLost:Connect(function()
-        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}, tweenInfoFast)
+        safeTween(textBox, {BackgroundColor3 = Color3.fromRGB(40,40,40)}, tweenFast)
     end)
-    
+
     return textBox
 end
 
@@ -1222,7 +1227,7 @@ function NightmareHub:SetupDiscordTab()
     auroraVisualBtn.Visible = false
     print("🔧 DEBUG: Aurora Visual button created and added.")
     
-    -- 🔥 CRITICAL: Force update the CanvasSize
+    -- Force update the CanvasSize
     task.wait(0.1)
     local layout = ScrollFrame:FindFirstChildOfClass("UIListLayout")
     if layout then
@@ -1237,59 +1242,75 @@ end
 function NightmareHub:SwitchTab(tabName)
     if MainFrame and MainFrame:GetAttribute("Busy") then return end
     CurrentTab = tabName
-    
-    -- Update tab button colors & stroke with tween
+
+    -- Update sidebar buttons + indicator
     for name, data in pairs(TabButtons) do
         if name == tabName then
-            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
-            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(255,255,255)}, tweenInfoFast)
-            TweenProperty(data.stroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
+            safeTween(data.button, {BackgroundColor3 = Color3.fromRGB(200, 30, 30), TextColor3 = Color3.fromRGB(255,255,255)}, tweenFast)
+            safeTween(data.stroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenFast)
+            -- move indicator
+            local ind = data.button and data.button.Parent:FindFirstChild("Indicator")
+            -- indicator is stored in parent (we created it on sidebar root)
+            local sidebar = data.button.Parent
+            local indicator = sidebar and sidebar:FindFirstChild("Indicator")
+            if indicator then
+                indicator.Visible = true
+                safeTween(indicator, {Position = UDim2.new(0, 4, 0, data.button.Position.Y.Offset)}, tweenMed)
+                safeTween(indicator, {Size = UDim2.new(0, 6, 0, data.button.Size.Y.Offset)}, tweenMed)
+            end
         else
-            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(40, 0, 0)}, tweenInfoFast)
-            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(150,150,150)}, tweenInfoFast)
-            TweenProperty(data.stroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenInfoFast)
+            safeTween(data.button, {BackgroundColor3 = Color3.fromRGB(36, 0, 0), TextColor3 = Color3.fromRGB(170,170,170)}, tweenFast)
+            safeTween(data.stroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenFast)
         end
     end
-    
-    -- Hide previous content with fade out
+
+    -- Fade out previous content (quick)
     for _, items in pairs(TabContent) do
         for _, item in ipairs(items) do
             if item and item:IsA("GuiObject") then
                 pcall(function()
-                    TweenProperty(item, {BackgroundTransparency = 1}, tweenInfoFast)
+                    safeTween(item, {BackgroundTransparency = 1}, tweenFast)
                     if item:IsA("TextLabel") or item:IsA("TextButton") or item:IsA("TextBox") then
-                        TweenProperty(item, {TextTransparency = 1}, tweenInfoFast)
+                        safeTween(item, {TextTransparency = 1}, tweenFast)
                     end
+                    item.Visible = false
                 end)
-                item.Visible = false
             end
         end
     end
-    
-    -- Show new tab items with fade in + slight stagger
+
+    -- Show new tab items with staggered fade-in + slight pop
     if TabContent[tabName] then
         for i, item in ipairs(TabContent[tabName]) do
             item.Visible = true
-            -- Set initial transparencies to create fade-in
             pcall(function()
                 if item:IsA("TextLabel") or item:IsA("TextButton") or item:IsA("TextBox") then
                     item.TextTransparency = 1
                 end
                 item.BackgroundTransparency = 1
             end)
-            -- staggered fade-in
+            -- stagger
             task.delay(0.06 * (i-1), function()
                 pcall(function()
-                    TweenProperty(item, {BackgroundTransparency = 0}, tweenInfoMed)
+                    safeTween(item, {BackgroundTransparency = 0}, tweenMed)
                     if item:IsA("TextLabel") or item:IsA("TextButton") or item:IsA("TextBox") then
-                        TweenProperty(item, {TextTransparency = 0}, tweenInfoMed)
+                        safeTween(item, {TextTransparency = 0}, tweenMed)
+                    end
+                    -- slight scale/pop via Size (works with UIListLayout)
+                    local ok, originalSize = pcall(function() return item.Size end)
+                    if ok and originalSize then
+                        -- momentarily shrink then restore to create pop
+                        safeTween(item, {Size = UDim2.new(originalSize.X.Scale * 0.995, originalSize.X.Offset, originalSize.Y.Scale, originalSize.Y.Offset)}, tweenFast)
+                        task.delay(0.10, function()
+                            safeTween(item, {Size = originalSize}, tweenFast)
+                        end)
                     end
                 end)
             end)
         end
-        -- reset scroll top smoothly
+        -- scroll to top smoothly
         pcall(function()
-            TweenProperty(ScrollFrame, {CanvasPosition = Vector2.new(0,0)}, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
+            safeTween(ScrollFrame, {CanvasPosition = Vector2.new(0,0)}, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out))
         end)
     end
 end
