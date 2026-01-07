@@ -169,8 +169,8 @@ function NightmareHub:CreateUI()
     mainCorner.Parent = MainFrame
     
     local mainStroke = Instance.new("UIStroke")
-    mainStroke.Color = Color3.fromRGB(255, 50, 50)
-    mainStroke.Thickness = 1.6
+    mainStroke.Color = Color3.fromRGB(255, 50, 50) -- cor original
+    mainStroke.Thickness = 2 -- mantive espessura 2 conforme pedido
     mainStroke.Parent = MainFrame
     
     -- Accent strip (thin)
@@ -197,9 +197,9 @@ function NightmareHub:CreateUI()
     titleLabel.Position = UDim2.new(0, 0, 0, 0)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "NIGHTMARE HUB"
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.TextColor3 = Color3.fromRGB(139, 0, 0) -- cor original
     titleLabel.TextSize = 18
-    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.Font = Enum.Font.GothamBold -- mantido GothamBold
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.Parent = titleBar
     
@@ -208,7 +208,7 @@ function NightmareHub:CreateUI()
     subtitle.Position = UDim2.new(1, -100, 0, 0)
     subtitle.BackgroundTransparency = 1
     subtitle.Text = "COMPACT"
-    subtitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+    subtitle.TextColor3 = Color3.fromRGB(150, 150, 150)
     subtitle.TextSize = 11
     subtitle.Font = Enum.Font.Gotham
     subtitle.TextXAlignment = Enum.TextXAlignment.Right
@@ -218,7 +218,7 @@ function NightmareHub:CreateUI()
     local closeBtn = Instance.new("TextButton")
     closeBtn.Size = UDim2.new(0, 30, 0, 30)
     closeBtn.Position = UDim2.new(1, -40, 0, 6)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0) -- cor original
     closeBtn.BorderSizePixel = 0
     closeBtn.Text = "X"
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -231,8 +231,8 @@ function NightmareHub:CreateUI()
     closeBtnCorner.Parent = closeBtn
     
     local closeBtnStroke = Instance.new("UIStroke")
-    closeBtnStroke.Color = Color3.fromRGB(255, 255, 255)
-    closeBtnStroke.Thickness = 2
+    closeBtnStroke.Color = Color3.fromRGB(255, 50, 50) -- original
+    closeBtnStroke.Thickness = 2 -- mantive 2
     closeBtnStroke.Parent = closeBtn
     
     closeBtn.MouseButton1Click:Connect(function()
@@ -257,8 +257,8 @@ function NightmareHub:CreateUI()
     sideCorner.Parent = sideBar
     
     local sideStroke = Instance.new("UIStroke")
-    sideStroke.Color = Color3.fromRGB(50, 50, 50)
-    sideStroke.Thickness = 1
+    sideStroke.Color = Color3.fromRGB(50, 0, 0)
+    sideStroke.Thickness = 2 -- mantive 2
     sideStroke.Parent = sideBar
     
     -- Vertical layout for sidebar tabs
@@ -282,7 +282,7 @@ function NightmareHub:CreateUI()
     
     local contentStroke = Instance.new("UIStroke")
     contentStroke.Color = Color3.fromRGB(60, 0, 0)
-    contentStroke.Thickness = 1
+    contentStroke.Thickness = 2
     contentStroke.Parent = contentFrame
     
     -- ScrollingFrame (conteúdo)
@@ -316,13 +316,12 @@ function NightmareHub:CreateUI()
         local tabBtn = Instance.new("TextButton")
         tabBtn.Name = "Tab_" .. tabName
         tabBtn.Size = UDim2.new(1, -12, 0, 40)
-        -- Fundo igual ao toggle (cinza)
-        tabBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        tabBtn.BackgroundColor3 = Color3.fromRGB(40, 0, 0) -- cor original
         tabBtn.BorderSizePixel = 0
         tabBtn.Text = tabName
-        tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tabBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
         tabBtn.TextSize = 13
-        tabBtn.Font = Enum.Font.Gotham
+        tabBtn.Font = Enum.Font.Gotham -- mantive Gotham
         tabBtn.Parent = sideBar
         
         local iconPadding = Instance.new("UIPadding")
@@ -334,9 +333,8 @@ function NightmareHub:CreateUI()
         tabCorner.Parent = tabBtn
         
         local tabStroke = Instance.new("UIStroke")
-        -- Borda padrão branca e espessura 2
-        tabStroke.Color = Color3.fromRGB(255, 255, 255)
-        tabStroke.Thickness = 2
+        tabStroke.Color = Color3.fromRGB(100, 0, 0) -- cor original
+        tabStroke.Thickness = 2 -- mantive 2
         tabStroke.Parent = tabBtn
         
         TabButtons[tabName] = {button = tabBtn, stroke = tabStroke}
@@ -344,14 +342,14 @@ function NightmareHub:CreateUI()
         -- Hover animations for tab buttons
         tabBtn.MouseEnter:Connect(function()
             if CurrentTab ~= tabName then
-                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(75, 75, 75)}, tweenInfoFast)
-                TweenProperty(tabStroke, {Color = Color3.fromRGB(255, 255, 255)}, tweenInfoFast)
+                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(120, 15, 15)}, tweenInfoFast)
+                TweenProperty(tabStroke, {Color = Color3.fromRGB(180, 40, 40)}, tweenInfoFast)
             end
         end)
         tabBtn.MouseLeave:Connect(function()
             if CurrentTab ~= tabName then
-                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, tweenInfoFast)
-                TweenProperty(tabStroke, {Color = Color3.fromRGB(255, 255, 255)}, tweenInfoFast)
+                TweenProperty(tabBtn, {BackgroundColor3 = Color3.fromRGB(40, 0, 0)}, tweenInfoFast)
+                TweenProperty(tabStroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenInfoFast)
             end
         end)
         
@@ -406,31 +404,26 @@ end
 function NightmareHub:CreateToggleButton(text, configKey, callback)
     local toggleBtn = Instance.new("TextButton")
     toggleBtn.Size = UDim2.new(1, -10, 0, 34)
-    -- Fundo padrão: cinza (igual solicitado)
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 0) -- cor original
     toggleBtn.BorderSizePixel = 0
     toggleBtn.Text = text
-    -- Texto padrão: branco
-    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255) -- padrão branco
     toggleBtn.TextSize = 14
-    toggleBtn.Font = Enum.Font.Gotham
+    toggleBtn.Font = Enum.Font.Gotham -- mantive Gotham
     
     local btnCorner = Instance.new("UICorner")
     btnCorner.CornerRadius = UDim.new(0, 8)
     btnCorner.Parent = toggleBtn
     
     local btnStroke = Instance.new("UIStroke")
-    -- Borda padrão: branca e espessura 2
-    btnStroke.Color = Color3.fromRGB(255, 255, 255)
-    btnStroke.Thickness = 2
+    btnStroke.Color = Color3.fromRGB(255, 50, 50) -- cor original
+    btnStroke.Thickness = 2 -- solicitado
     btnStroke.Parent = toggleBtn
 
     -- Muat status awal dari config
     local isToggled = self.Config[configKey] or false
     if isToggled then
-        -- Quando ativado: texto e borda ficam vermelhas
-        toggleBtn.TextColor3 = Color3.fromRGB(255, 50, 50)
-        btnStroke.Color = Color3.fromRGB(255, 50, 50)
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
     end
 
     -- Panggil callback sekali pada permulaan untuk memuat fungsi
@@ -439,13 +432,13 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
     toggleBtn.MouseButton1Click:Connect(function()
         isToggled = not isToggled
         
-        -- Mantemos o fundo cinza; apenas alteramos texto e borda conforme pedido
         if isToggled then
-            TweenProperty(toggleBtn, {TextColor3 = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
+            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
             TweenProperty(btnStroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
+            -- when activated keep text white as original behavior (original only changed bg)
         else
-            TweenProperty(toggleBtn, {TextColor3 = Color3.fromRGB(255, 255, 255)}, tweenInfoFast)
-            TweenProperty(btnStroke, {Color = Color3.fromRGB(255, 255, 255)}, tweenInfoFast)
+            TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenInfoFast)
+            TweenProperty(btnStroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
         end
         
         -- Simpan status baru ke config
@@ -454,18 +447,14 @@ function NightmareHub:CreateToggleButton(text, configKey, callback)
         if callback then callback(isToggled) end
     end)
     
-    -- hover micro feedback: escurecer/levar a tona levemente o fundo, manter borda conforme estado
+    -- hover micro feedback
     toggleBtn.MouseEnter:Connect(function()
-        TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(75, 75, 75)}, tweenInfoFast)
+        TweenProperty(toggleBtn, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
     end)
     toggleBtn.MouseLeave:Connect(function()
-        local bg = Color3.fromRGB(60, 60, 60)
+        local bg = (self.Config[configKey] and Color3.fromRGB(200,30,30)) or Color3.fromRGB(80,0,0)
         TweenProperty(toggleBtn, {BackgroundColor3 = bg}, tweenInfoFast)
-        -- garantir que a cor da borda reflete o estado atual
-        local strokeColor = (self.Config[configKey] and Color3.fromRGB(255,50,50)) or Color3.fromRGB(255,255,255)
-        TweenProperty(btnStroke, {Color = strokeColor}, tweenInfoFast)
-        local textColor = (self.Config[configKey] and Color3.fromRGB(255,50,50)) or Color3.fromRGB(255,255,255)
-        TweenProperty(toggleBtn, {TextColor3 = textColor}, tweenInfoFast)
+        TweenProperty(btnStroke, {Color = Color3.fromRGB(255,50,50)}, tweenInfoFast)
     end)
     
     return toggleBtn
@@ -474,29 +463,28 @@ end
 function NightmareHub:CreateButton(text, callback)
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(1, -10, 0, 34)
-    -- Fundo igual ao toggle
-    button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    button.BackgroundColor3 = Color3.fromRGB(80, 0, 0) -- cor original
     button.BorderSizePixel = 0
     button.Text = text
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.TextSize = 14
-    button.Font = Enum.Font.Gotham
+    button.Font = Enum.Font.Gotham -- mantive Gotham
     
     local btnCorner = Instance.new("UICorner")
     btnCorner.CornerRadius = UDim.new(0, 8)
     btnCorner.Parent = button
     
     local btnStroke = Instance.new("UIStroke")
-    btnStroke.Color = Color3.fromRGB(255, 255, 255)
-    btnStroke.Thickness = 2
+    btnStroke.Color = Color3.fromRGB(255, 50, 50) -- cor original
+    btnStroke.Thickness = 2 -- solicitado
     btnStroke.Parent = button
     
     button.MouseButton1Click:Connect(function()
         print("🔘 BUTTON CLICKED:", text)
         -- click feedback
-        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(75,100,120)}, tweenInfoFast)
+        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(0,100,200)}, tweenInfoFast)
         task.delay(0.12, function()
-            TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(60,60,60)}, tweenInfoFast)
+            TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(80,0,0)}, tweenInfoFast)
         end)
         if callback then 
             callback(button) 
@@ -505,10 +493,10 @@ function NightmareHub:CreateButton(text, callback)
     
     -- hover micro feedback
     button.MouseEnter:Connect(function()
-        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(75, 75, 75)}, tweenInfoFast)
+        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(120, 10, 10)}, tweenInfoFast)
     end)
     button.MouseLeave:Connect(function()
-        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, tweenInfoFast)
+        TweenProperty(button, {BackgroundColor3 = Color3.fromRGB(80, 0, 0)}, tweenInfoFast)
     end)
     
     return button
@@ -519,9 +507,9 @@ function NightmareHub:CreateSection(text)
     section.Size = UDim2.new(1, -10, 0, 22)
     section.BackgroundTransparency = 1
     section.Text = "━━ " .. text .. " ━━"
-    section.TextColor3 = Color3.fromRGB(255, 255, 255)
+    section.TextColor3 = Color3.fromRGB(255, 50, 50) -- cor original
     section.TextSize = 12
-    section.Font = Enum.Font.GothamBold
+    section.Font = Enum.Font.GothamBold -- mantive GothamBold
     
     return section
 end
@@ -529,15 +517,14 @@ end
 function NightmareHub:CreateTextBox(placeholderText)
     local textBox = Instance.new("TextBox")
     textBox.Size = UDim2.new(1, -10, 0, 34)
-    -- Fundo igual ao toggle
-    textBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    textBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- cor original
     textBox.BorderSizePixel = 0
     textBox.PlaceholderText = placeholderText or ""
-    textBox.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
+    textBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
     textBox.Text = ""
     textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     textBox.TextSize = 14
-    textBox.Font = Enum.Font.Gotham
+    textBox.Font = Enum.Font.Gotham -- mantive Gotham
     textBox.ClearTextOnFocus = false
     textBox.TextXAlignment = Enum.TextXAlignment.Left
     textBox.TextTruncate = Enum.TextTruncate.AtEnd
@@ -552,16 +539,16 @@ function NightmareHub:CreateTextBox(placeholderText)
     textBoxCorner.Parent = textBox
     
     local textBoxStroke = Instance.new("UIStroke")
-    textBoxStroke.Color = Color3.fromRGB(255, 255, 255)
-    textBoxStroke.Thickness = 2
+    textBoxStroke.Color = Color3.fromRGB(0, 0, 0) -- cor original
+    textBoxStroke.Thickness = 2 -- mantive 2
     textBoxStroke.Parent = textBox
     
     -- focus highlight
     textBox.Focused:Connect(function()
-        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(75, 75, 75)}, tweenInfoFast)
+        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, tweenInfoFast)
     end)
     textBox.FocusLost:Connect(function()
-        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, tweenInfoFast)
+        TweenProperty(textBox, {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}, tweenInfoFast)
     end)
     
     return textBox
@@ -615,7 +602,7 @@ function NightmareHub:SetupDiscordTab()
         button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         task.wait(2)
         button.Text = "Tiktok"
-        button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     end)
     table.insert(TabContent["Discord"], tiktokBtn)
     tiktokBtn.Parent = ScrollFrame
@@ -629,7 +616,7 @@ function NightmareHub:SetupDiscordTab()
         button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         task.wait(2)
         button.Text = "Discord"
-        button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
     end)
     table.insert(TabContent["Discord"], discordBtn)
     discordBtn.Parent = ScrollFrame
@@ -658,7 +645,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(1.5)
             button.Text = "Join Server"
-            button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
             return
         end
         
@@ -676,7 +663,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(2)
             button.Text = "Join Server"
-            button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
         
         ButtonStates.joinServer = false
@@ -695,13 +682,13 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
             task.wait(2)
             button.Text = "Copy Current Job ID"
-            button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         else
             button.Text = "NO JOB ID!"
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(1)
             button.Text = "Copy Current Job ID"
-            button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
     end)
     table.insert(TabContent["Discord"], copyJobIdBtn)
@@ -761,7 +748,7 @@ function NightmareHub:SetupDiscordTab()
             end
             
             btnRef.Text = "Server Hop"
-            btnRef.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            btnRef.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
             ButtonStates.serverHop = false
         end, button)
     end)
@@ -787,7 +774,7 @@ function NightmareHub:SetupDiscordTab()
             button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
             task.wait(2)
             button.Text = "Rejoin Server"
-            button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            button.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
         end
         
         ButtonStates.rejoin = false
@@ -832,7 +819,7 @@ function NightmareHub:SetupDiscordTab()
         
         local islandStroke = Instance.new("UIStroke")
         islandStroke.Color = Color3.fromRGB(40, 40, 40)
-        islandStroke.Thickness = 1
+        islandStroke.Thickness = 2
         islandStroke.Transparency = 0.5
         islandStroke.Parent = dynamicIsland
         
@@ -1258,15 +1245,13 @@ function NightmareHub:SwitchTab(tabName)
     -- Update tab button colors & stroke with tween
     for name, data in pairs(TabButtons) do
         if name == tabName then
-            -- Aba selecionada: texto vermelho, borda vermelha, fundo um pouco mais escuro
-            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(75, 75, 75)}, tweenInfoFast)
-            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(255,50,50)}, tweenInfoFast)
+            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(200, 30, 30)}, tweenInfoFast)
+            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(255,255,255)}, tweenInfoFast)
             TweenProperty(data.stroke, {Color = Color3.fromRGB(255, 50, 50)}, tweenInfoFast)
         else
-            -- Aba inativa: fundo cinza, texto branco, borda branca
-            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, tweenInfoFast)
-            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(255,255,255)}, tweenInfoFast)
-            TweenProperty(data.stroke, {Color = Color3.fromRGB(255, 255, 255)}, tweenInfoFast)
+            TweenProperty(data.button, {BackgroundColor3 = Color3.fromRGB(40, 0, 0)}, tweenInfoFast)
+            TweenProperty(data.button, {TextColor3 = Color3.fromRGB(150,150,150)}, tweenInfoFast)
+            TweenProperty(data.stroke, {Color = Color3.fromRGB(100, 0, 0)}, tweenInfoFast)
         end
     end
     
