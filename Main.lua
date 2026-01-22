@@ -1492,14 +1492,18 @@ function Library:NewWindow(ConfigWindow)
 				
 					Check.Name = "Check"
 					Check.Parent = ToggleCheck
-					Check.AnchorPoint = Vector2.new(0, 0.5)
+					-- Centralized label inside the switch for consistent visual
+					Check.AnchorPoint = Vector2.new(0.5, 0.5)
 					Check.BackgroundTransparency = 1
 					Check.Font = Enum.Font.GothamBold
-					Check.TextSize = 9
+					Check.TextSize = 11
 					Check.TextColor3 = Color3.fromRGB(255, 255, 255)
 					Check.Text = "OFF"
-					Check.Position = UDim2.new(0, 3, 0.5, 0)
-					Check.Size = UDim2.new(0, 30, 0, 16)
+					-- Center the text in the switch and give slight horizontal padding
+					Check.Position = UDim2.new(0.5, 0, 0.5, 0)
+					Check.Size = UDim2.new(1, -6, 1, 0)
+					Check.TextXAlignment = Enum.TextXAlignment.Center
+					Check.TextYAlignment = Enum.TextYAlignment.Center
     
 
 				UICorner_8.CornerRadius = UDim.new(1, 0)
@@ -1567,18 +1571,17 @@ function Library:NewWindow(ConfigWindow)
 						ToggleCheck.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 						Check.Text = "ON"
-							Check.Position = UDim2.new(0, 18, 0.5, 0)
-
-						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
+						-- Make text fully visible when ON
+						Library:TweenInstance(Check, 0.2, "TextTransparency", 0)
 
 					else
 
 						ToggleCheck.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(200, 200, 200))
+						-- Slightly faded text when OFF
+						Library:TweenInstance(Check, 0.2, "TextTransparency", 0.5)
 
 						Check.Text = "OFF"
-							Check.Position = UDim2.new(0, 3, 0.5, 0)
 
 					end
 
