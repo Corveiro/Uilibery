@@ -178,8 +178,7 @@ function Library:NewWindow(ConfigWindow)
 
 	local Icon_3 = Instance.new("ImageLabel")
 
-	local UIStroke = Instance.new("UIStroke")
-
+	
 	local TabFrame = Instance.new("Frame")
 
 	local Line_2 = Instance.new("Frame")
@@ -290,18 +289,13 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.Image = ""
 
-		Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+		Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 		Main.BackgroundTransparency = 0
 
 	end
 
 	UICorner.Parent = Main
-
-		local MainGradient = Instance.new("UIGradient")
-		MainGradient.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 25, 25)), ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 15, 15))})
-		MainGradient.Rotation = 45
-		MainGradient.Parent = Main
 
 	Top.Name = "Top"
 
@@ -321,7 +315,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Line.Parent = Top
 
-	Line.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+	Line.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Line.BackgroundTransparency = 0.500
 
@@ -367,7 +361,7 @@ function Library:NewWindow(ConfigWindow)
 
 	LogoHub.Parent = Left
 
-	LogoHub.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+	LogoHub.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	LogoHub.BackgroundTransparency = 1.000
 
@@ -433,11 +427,11 @@ function Library:NewWindow(ConfigWindow)
 
 	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-	UIListLayout.Padding = UDim.new(0, 6)
+	UIListLayout.Padding = UDim.new(0, 2)
 
 	UIPadding.Parent = Frame
 
-	UIPadding.PaddingTop = UDim.new(0, 10)
+	UIPadding.PaddingTop = UDim.new(0, 2)
 
 	Minize.Name = "Minize"
 
@@ -467,7 +461,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+	Icon.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Icon.BackgroundTransparency = 1.000
 
@@ -513,7 +507,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_2.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon_2.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+	Icon_2.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Icon_2.BackgroundTransparency = 1.000
 
@@ -569,7 +563,7 @@ function Library:NewWindow(ConfigWindow)
 
 		tat_["Position"] = UDim2.new(0.5, 0, 0.5, 0);
 
-		tat_["BorderColor3"] = Color3.fromRGB(120, 0, 0);
+		tat_["BorderColor3"] = Color3.fromRGB(200, 0, 0);
 
 		tat_["Name"] = [[Tat]];
 
@@ -581,7 +575,7 @@ function Library:NewWindow(ConfigWindow)
 
 		local suacc = Instance.new("UICorner", tat_);
 
-		suacc["CornerRadius"] = UDim.new(0, 5);
+		suacc["CornerRadius"] = UDim.new(0, 2);
 
 		local suacc2 = Instance.new("TextLabel", tat_);
 
@@ -685,7 +679,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_3.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon_3.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+	Icon_3.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Icon_3.BackgroundTransparency = 1.000
 
@@ -703,12 +697,9 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_3.ImageRectSize = Vector2.new(96, 96)
 
-	UIStroke.Color = Color3.fromRGB(120, 0, 0)
-
-	UIStroke.Transparency = 0.5
-
-	UIStroke.Parent = Main
-
+	
+	
+	
 	TabFrame.Name = "TabFrame"
 
 	TabFrame.Parent = Main
@@ -729,7 +720,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Line_2.Parent = TabFrame
 
-	Line_2.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+	Line_2.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Line_2.BackgroundTransparency = 0.500
 
@@ -757,7 +748,7 @@ function Library:NewWindow(ConfigWindow)
 
 	SearchFrame.Size = UDim2.new(1, -14, 0, 30)
 
-	UICorner_2.CornerRadius = UDim.new(0, 3)
+	UICorner_2.CornerRadius = UDim.new(0, 2)
 
 	UICorner_2.Parent = SearchFrame
 
@@ -767,7 +758,7 @@ function Library:NewWindow(ConfigWindow)
 
 	IconSearch.AnchorPoint = Vector2.new(0, 0.5)
 
-	IconSearch.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+	IconSearch.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	IconSearch.BackgroundTransparency = 1.000
 
@@ -835,13 +826,13 @@ function Library:NewWindow(ConfigWindow)
 
 	UIPadding_2.Parent = ScrollingTab
 
-	UIPadding_2.PaddingBottom = UDim.new(0, 3)
+	UIPadding_2.PaddingBottom = UDim.new(0, 2)
 
 	UIPadding_2.PaddingLeft = UDim.new(0, 7)
 
 	UIPadding_2.PaddingRight = UDim.new(0, 7)
 
-	UIPadding_2.PaddingTop = UDim.new(0, 3)
+	UIPadding_2.PaddingTop = UDim.new(0, 2)
 
 	UIListLayout_2.Parent = ScrollingTab
 
@@ -1043,7 +1034,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Choose_2.Parent = TabDisable
 
-		Choose_2.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+		Choose_2.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 		Choose_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1081,7 +1072,7 @@ function Library:NewWindow(ConfigWindow)
 
 		IconRound.Parent = TabIcon
 
-		IconRound.CornerRadius = UDim.new(0, 4)
+		IconRound.CornerRadius = UDim.new(0, 2)
 
 		
 
@@ -1265,8 +1256,7 @@ function Library:NewWindow(ConfigWindow)
 
 			local UICorner_5 = Instance.new("UICorner")
 
-			local UIStroke_2 = Instance.new("UIStroke")
-
+			
 			local NameSection = Instance.new("Frame")
 
 			local Title = Instance.new("TextLabel")
@@ -1297,18 +1287,14 @@ function Library:NewWindow(ConfigWindow)
 
 			Section.Size = UDim2.new(1, 0, 0, 55)
 
-			UICorner_5.CornerRadius = UDim.new(0, 4)
+			UICorner_5.CornerRadius = UDim.new(0, 2)
 
 			UICorner_5.Parent = Section
 
-			UIStroke_2.Color = Color3.fromRGB(100, 100, 100)
-
-			UIStroke_2.Thickness = 2
-
-			UIStroke_2.Transparency = 0.9200000166893005
-
-			UIStroke_2.Parent = Section
-
+			
+			
+			
+			
 			NameSection.Name = "NameSection"
 
 			NameSection.Parent = Section
@@ -1359,7 +1345,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Line_3.Size = UDim2.new(1, 0, 0, 2)
 
-			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(24, 24, 25)), ColorSequenceKeypoint.new(0.52, Color3.fromRGB(120, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(24, 24, 25)) }
+			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(24, 24, 25)), ColorSequenceKeypoint.new(0.52, Color3.fromRGB(200, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(24, 24, 25)) }
 
 			UIGradient.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.53), NumberSequenceKeypoint.new(0.51, 0.00), NumberSequenceKeypoint.new(1.00, 0.51) }
 
@@ -1431,7 +1417,7 @@ function Library:NewWindow(ConfigWindow)
 
 				local UICorner_7 = Instance.new("UICorner")
 
-				local Check = Instance.new("Frame")
+				local Check = Instance.new("TextLabel")
 
 				local UICorner_8 = Instance.new("UICorner")
 
@@ -1451,9 +1437,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Toggle.BorderSizePixel = 0
 
-				Toggle.Size = UDim2.new(1, 0, 0, 35)
+				Toggle.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_6.CornerRadius = UDim.new(0, 3)
+				UICorner_6.CornerRadius = UDim.new(0, 2)
 
 				UICorner_6.Parent = Toggle
 
@@ -1489,7 +1475,7 @@ function Library:NewWindow(ConfigWindow)
 
 				ToggleCheck.AnchorPoint = Vector2.new(0, 0.5)
 
-				ToggleCheck.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+				ToggleCheck.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 
 				ToggleCheck.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1497,16 +1483,11 @@ function Library:NewWindow(ConfigWindow)
 
 				ToggleCheck.Position = UDim2.new(1, -50, 0.5, 0)
 
-				ToggleCheck.Size = UDim2.new(0, 40, 0, 22)
+				ToggleCheck.Size = UDim2.new(0, 38, 0, 16)
 
-				UICorner_7.CornerRadius = UDim.new(1, 0)
+				UICorner_7.CornerRadius = UDim.new(0, 2)
 
 				UICorner_7.Parent = ToggleCheck
-
-					local ToggleStroke = Instance.new("UIStroke", ToggleCheck)
-					ToggleStroke.Color = Color3.fromRGB(255, 255, 255)
-					ToggleStroke.Transparency = 0.8
-					ToggleStroke.Thickness = 1
 
 				Check.Name = "Check"
 
@@ -1514,7 +1495,10 @@ function Library:NewWindow(ConfigWindow)
 
 				Check.AnchorPoint = Vector2.new(0, 0.5)
 
-				Check.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Check.BackgroundTransparency = 1
+					Check.Font = Enum.Font.GothamBold
+					Check.TextSize = 9
+					Check.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Check.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1586,19 +1570,21 @@ function Library:NewWindow(ConfigWindow)
 
 					if Boolean then
 
-						Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(200, 0, 0))
+						ToggleCheck.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
-						Library:TweenInstance(Check, 0.3, "Position", UDim2.new(0, 22, 0.5, 0))
+						Check.Text = "ON"
+							Check.Position = UDim2.new(0, 22, 0.5, 0)
 
 						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
 
 					else
 
-						Library:TweenInstance(ToggleCheck, 0.3, "BackgroundColor3", Color3.fromRGB(60, 60, 60))
+						ToggleCheck.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
 						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(200, 200, 200))
 
-						Library:TweenInstance(Check, 0.3, "Position", UDim2.new(0, 3, 0.5, 0))
+						Check.Text = "OFF"
+							Check.Position = UDim2.new(0, 3, 0.5, 0)
 
 					end
 
@@ -1656,9 +1642,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Button.BorderSizePixel = 0
 
-				Button.Size = UDim2.new(1, 0, 0, 35)
+				Button.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_9.CornerRadius = UDim.new(0, 3)
+				UICorner_9.CornerRadius = UDim.new(0, 2)
 
 				UICorner_9.Parent = Button
 
@@ -1710,27 +1696,6 @@ function Library:NewWindow(ConfigWindow)
 
 				Button_Click.TextSize = 14.000
 
-					local ButtonStroke = Instance.new("UIStroke", Button)
-					ButtonStroke.Color = Color3.fromRGB(120, 0, 0)
-					ButtonStroke.Transparency = 0.8
-					ButtonStroke.Thickness = 1
-					ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-					Button.MouseEnter:Connect(function()
-						Library:TweenInstance(Button, 0.2, "BackgroundTransparency", 0.9)
-						Library:TweenInstance(ButtonStroke, 0.2, "Transparency", 0.4)
-					end)
-					Button.MouseLeave:Connect(function()
-						Library:TweenInstance(Button, 0.2, "BackgroundTransparency", 0.95)
-						Library:TweenInstance(ButtonStroke, 0.2, "Transparency", 0.8)
-					end)
-					Button_Click.MouseButton1Down:Connect(function()
-						Library:TweenInstance(Button, 0.1, "BackgroundTransparency", 0.8)
-					end)
-					Button_Click.MouseButton1Up:Connect(function()
-						Library:TweenInstance(Button, 0.1, "BackgroundTransparency", 0.9)
-					end)
-
 				Content_2.Name = "Content"
 
 				Content_2.Parent = Button
@@ -1763,7 +1728,7 @@ function Library:NewWindow(ConfigWindow)
 
 				ImageLabel.AnchorPoint = Vector2.new(0, 0.5)
 
-				ImageLabel.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+				ImageLabel.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 				ImageLabel.BackgroundTransparency = 1.000
 
@@ -1833,8 +1798,7 @@ function Library:NewWindow(ConfigWindow)
 
 				local DropdownList = Instance.new("Frame")
 
-				local UIStroke_3 = Instance.new("UIStroke")
-
+				
 				local UICorner_24 = Instance.new("UICorner")
 
 				local Topbar = Instance.new("Frame")
@@ -1845,8 +1809,7 @@ function Library:NewWindow(ConfigWindow)
 
 				local UICorner_25 = Instance.new("UICorner")
 
-				local UIStroke_4 = Instance.new("UIStroke")
-
+				
 				local IconSearch_2 = Instance.new("ImageLabel")
 
 				local TextBox = Instance.new("TextBox")
@@ -1875,9 +1838,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Dropdown.BorderSizePixel = 0
 
-				Dropdown.Size = UDim2.new(1, 0, 0, 35)
+				Dropdown.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_19.CornerRadius = UDim.new(0, 3)
+				UICorner_19.CornerRadius = UDim.new(0, 2)
 
 				UICorner_19.Parent = Dropdown
 
@@ -1941,7 +1904,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Selects.AnchorPoint = Vector2.new(0, 0.5)
 
-				Selects.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+				Selects.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 				Selects.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1949,9 +1912,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Selects.Position = UDim2.new(1, -90, 0.5, 0)
 
-				Selects.Size = UDim2.new(0, 80, 0, 25)
+				Selects.Size = UDim2.new(0, 80, 0, 18)
 
-				UICorner_20.CornerRadius = UDim.new(0, 5)
+				UICorner_20.CornerRadius = UDim.new(0, 2)
 
 				UICorner_20.Parent = Selects
 
@@ -2047,13 +2010,10 @@ function Library:NewWindow(ConfigWindow)
 
 				DropdownList.Visible = false
 
-				UIStroke_3.Color = Color3.fromRGB(100, 100, 100)
-
-				UIStroke_3.Transparency = 0.5
-
-				UIStroke_3.Parent = DropdownList
-
-				UICorner_24.CornerRadius = UDim.new(0, 5)
+				
+				
+				
+				UICorner_24.CornerRadius = UDim.new(0, 2)
 
 				UICorner_24.Parent = DropdownList
 
@@ -2103,7 +2063,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SearchFrame_2.Parent = Topbar
 
-				SearchFrame_2.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+				SearchFrame_2.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 				SearchFrame_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2113,16 +2073,13 @@ function Library:NewWindow(ConfigWindow)
 
 				SearchFrame_2.Size = UDim2.new(0, 100, 0, 30)
 
-				UICorner_25.CornerRadius = UDim.new(0, 5)
+				UICorner_25.CornerRadius = UDim.new(0, 2)
 
 				UICorner_25.Parent = SearchFrame_2
 
-				UIStroke_4.Color = Color3.fromRGB(100, 100, 100)
-
-				UIStroke_4.Transparency = 0.7400000095367432
-
-				UIStroke_4.Parent = SearchFrame_2
-
+				
+				
+				
 				IconSearch_2.Name = "IconSearch"
 
 				IconSearch_2.Parent = SearchFrame_2
@@ -2231,7 +2188,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Library:UpdateScrolling(Real_List, UIListLayout_5)
 
-				UICorner_26.CornerRadius = UDim.new(0, 5)
+				UICorner_26.CornerRadius = UDim.new(0, 2)
 
 				UICorner_26.Parent = Real_List
 
@@ -2239,7 +2196,7 @@ function Library:NewWindow(ConfigWindow)
 
 				UIListLayout_5.SortOrder = Enum.SortOrder.LayoutOrder
 
-				UIListLayout_5.Padding = UDim.new(0, 5)
+				UIListLayout_5.Padding = UDim.new(0, 2)
 
 				UIPadding_5.Parent = Real_List
 
@@ -2379,9 +2336,9 @@ function Library:NewWindow(ConfigWindow)
 
 					Option2.BorderSizePixel = 0
 
-					Option2.Size = UDim2.new(1, 0, 0, 35)
+					Option2.Size = UDim2.new(1, 0, 0, 26)
 
-					UICorner_28.CornerRadius = UDim.new(0, 4)
+					UICorner_28.CornerRadius = UDim.new(0, 2)
 
 					UICorner_28.Parent = Option2
 
@@ -2431,7 +2388,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Title_12.TextTransparency = 0.500
 
-					UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(120, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
+					UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(200, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
 
 					UIGradient_3.Rotation = 0.9900000095367432
 
@@ -2569,9 +2526,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Input.BorderSizePixel = 0
 
-				Input.Size = UDim2.new(1, 0, 0, 35)
+				Input.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_17.CornerRadius = UDim.new(0, 3)
+				UICorner_17.CornerRadius = UDim.new(0, 2)
 
 				UICorner_17.Parent = Input
 
@@ -2647,7 +2604,7 @@ function Library:NewWindow(ConfigWindow)
 
 				TextboxFrame.Size = UDim2.new(0, 130, 0, 28)
 
-				UICorner_18.CornerRadius = UDim.new(0, 3)
+				UICorner_18.CornerRadius = UDim.new(0, 2)
 
 				UICorner_18.Parent = TextboxFrame
 
@@ -2767,9 +2724,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Slider.BorderSizePixel = 0
 
-				Slider.Size = UDim2.new(1, 0, 0, 35)
+				Slider.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_10.CornerRadius = UDim.new(0, 3)
+				UICorner_10.CornerRadius = UDim.new(0, 2)
 
 				UICorner_10.Parent = Slider
 
@@ -2835,7 +2792,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderFrame.AnchorPoint = Vector2.new(0, 0.5)
 
-				SliderFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+				SliderFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 				SliderFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2853,7 +2810,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderDraggable.Parent = SliderFrame
 
-				SliderDraggable.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+				SliderDraggable.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 				SliderDraggable.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2861,7 +2818,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderDraggable.Size = UDim2.new(0, 20, 1, 0)
 
-				UICorner_12.CornerRadius = UDim.new(1, 0)
+				UICorner_12.CornerRadius = UDim.new(0, 2)
 
 				UICorner_12.Parent = SliderDraggable
 
@@ -3109,7 +3066,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Paragraph.Size = UDim2.new(1, 0, 0, 45)
 
-				UICorner_16.CornerRadius = UDim.new(0, 3)
+				UICorner_16.CornerRadius = UDim.new(0, 2)
 
 				UICorner_16.Parent = Paragraph
 
@@ -3197,7 +3154,7 @@ function Library:NewWindow(ConfigWindow)
 				-- Ajuste para a sua UI: SectionList é o pai
 				DiscordCard.Name = "DiscordCard"
 				DiscordCard.Parent = SectionList 
-				DiscordCard.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Cor ajustada para combinar com o tema escuro
+				DiscordCard.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Cor ajustada para combinar com o tema escuro
 				DiscordCard.BackgroundTransparency = 0.4
 				DiscordCard.BorderSizePixel = 0
 				DiscordCard.Size = UDim2.new(1, 0, 0, 65)
@@ -3241,7 +3198,7 @@ function Library:NewWindow(ConfigWindow)
 				JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 				JoinBtn.TextSize = 13
 
-				BtnCorner.CornerRadius = UDim.new(0, 4)
+				BtnCorner.CornerRadius = UDim.new(0, 2)
 				BtnCorner.Parent = JoinBtn
 
 				JoinBtn.MouseButton1Click:Connect(function()
