@@ -289,7 +289,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.Image = ""
 
-		Main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+		Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 		Main.BackgroundTransparency = 0
 
@@ -315,7 +315,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Line.Parent = Top
 
-	Line.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+	Line.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Line.BackgroundTransparency = 0.500
 
@@ -361,7 +361,7 @@ function Library:NewWindow(ConfigWindow)
 
 	LogoHub.Parent = Left
 
-	LogoHub.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+	LogoHub.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	LogoHub.BackgroundTransparency = 1.000
 
@@ -427,7 +427,7 @@ function Library:NewWindow(ConfigWindow)
 
 	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-	UIListLayout.Padding = UDim.new(0, 1)
+	UIListLayout.Padding = UDim.new(0, 2)
 
 	UIPadding.Parent = Frame
 
@@ -461,7 +461,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+	Icon.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Icon.BackgroundTransparency = 1.000
 
@@ -507,7 +507,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_2.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon_2.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+	Icon_2.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Icon_2.BackgroundTransparency = 1.000
 
@@ -563,18 +563,19 @@ function Library:NewWindow(ConfigWindow)
 
 		tat_["Position"] = UDim2.new(0.5, 0, 0.5, 0);
 
-		tat_["BorderColor3"] = Color3.fromRGB(220, 0, 0);
+		tat_["BorderColor3"] = Color3.fromRGB(200, 0, 0);
 
 		tat_["Name"] = [[Tat]];
 
-		local suacc = Instance.new("
+		local suacc = Instance.new("UIStroke", tat_);
+
 		suacc["Transparency"] = 0.5;
 
 		suacc["Color"] = Color3.fromRGB(101, 101, 101);
 
 		local suacc = Instance.new("UICorner", tat_);
 
-		suacc["CornerRadius"] = UDim.new(0, 1);
+		suacc["CornerRadius"] = UDim.new(0, 2);
 
 		local suacc2 = Instance.new("TextLabel", tat_);
 
@@ -626,7 +627,8 @@ function Library:NewWindow(ConfigWindow)
 
 		local thuaaa = Instance.new("UICorner", btnyes);
 
-		local thuaaa = Instance.new("
+		local thuaaa = Instance.new("UIStroke", btnyes);
+
 		thuaaa["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
 
 		thuaaa["Color"] = Color3.fromRGB(39, 39, 39);
@@ -663,7 +665,8 @@ function Library:NewWindow(ConfigWindow)
 
 		local thuaa = Instance.new("UICorner", btnno);
 
-		local thuaa = Instance.new("
+		local thuaa = Instance.new("UIStroke", btnno);
+
 		thuaa["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
 
 		thuaa["Color"] = Color3.fromRGB(39, 39, 39);
@@ -676,7 +679,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_3.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon_3.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+	Icon_3.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Icon_3.BackgroundTransparency = 1.000
 
@@ -717,7 +720,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Line_2.Parent = TabFrame
 
-	Line_2.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+	Line_2.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	Line_2.BackgroundTransparency = 0.500
 
@@ -745,7 +748,7 @@ function Library:NewWindow(ConfigWindow)
 
 	SearchFrame.Size = UDim2.new(1, -14, 0, 30)
 
-	UICorner_2.CornerRadius = UDim.new(0, 1)
+	UICorner_2.CornerRadius = UDim.new(0, 2)
 
 	UICorner_2.Parent = SearchFrame
 
@@ -755,7 +758,7 @@ function Library:NewWindow(ConfigWindow)
 
 	IconSearch.AnchorPoint = Vector2.new(0, 0.5)
 
-	IconSearch.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+	IconSearch.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 	IconSearch.BackgroundTransparency = 1.000
 
@@ -823,13 +826,13 @@ function Library:NewWindow(ConfigWindow)
 
 	UIPadding_2.Parent = ScrollingTab
 
-	UIPadding_2.PaddingBottom = UDim.new(0, 1)
+	UIPadding_2.PaddingBottom = UDim.new(0, 2)
 
 	UIPadding_2.PaddingLeft = UDim.new(0, 7)
 
 	UIPadding_2.PaddingRight = UDim.new(0, 7)
 
-	UIPadding_2.PaddingTop = UDim.new(0, 1)
+	UIPadding_2.PaddingTop = UDim.new(0, 2)
 
 	UIListLayout_2.Parent = ScrollingTab
 
@@ -1031,7 +1034,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Choose_2.Parent = TabDisable
 
-		Choose_2.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+		Choose_2.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 		Choose_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1069,7 +1072,7 @@ function Library:NewWindow(ConfigWindow)
 
 		IconRound.Parent = TabIcon
 
-		IconRound.CornerRadius = UDim.new(0, 1)
+		IconRound.CornerRadius = UDim.new(0, 2)
 
 		
 
@@ -1260,7 +1263,8 @@ function Library:NewWindow(ConfigWindow)
 
 			local Line_3 = Instance.new("Frame")
 
-			
+			local UIGradient = Instance.new("UIGradient")
+
 			local SectionList = Instance.new("Frame")
 
 			local UIPadding_4 = Instance.new("UIPadding")
@@ -1283,7 +1287,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Section.Size = UDim2.new(1, 0, 0, 55)
 
-			UICorner_5.CornerRadius = UDim.new(0, 1)
+			UICorner_5.CornerRadius = UDim.new(0, 2)
 
 			UICorner_5.Parent = Section
 
@@ -1341,9 +1345,12 @@ function Library:NewWindow(ConfigWindow)
 
 			Line_3.Size = UDim2.new(1, 0, 0, 2)
 
-			
-			
-			
+			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(24, 24, 25)), ColorSequenceKeypoint.new(0.52, Color3.fromRGB(200, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(24, 24, 25)) }
+
+			UIGradient.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.53), NumberSequenceKeypoint.new(0.51, 0.00), NumberSequenceKeypoint.new(1.00, 0.51) }
+
+			UIGradient.Parent = Line_3
+
 			SectionList.Name = "SectionList"
 
 			SectionList.Parent = Section
@@ -1406,30 +1413,93 @@ function Library:NewWindow(ConfigWindow)
 
 				local Title_2 = Instance.new("TextLabel")
 
-				
+				local ToggleCheck = Instance.new("Frame")
 
-				
-				
-				
-				
-				
-				
-				UICorner_7.CornerRadius = UDim.new(1, 0)
+				local UICorner_7 = Instance.new("UICorner")
+
+				local Check = Instance.new("TextLabel")
+
+				local UICorner_8 = Instance.new("UICorner")
+
+				local Toggle_Click = Instance.new("TextButton")
+
+				local Content = Instance.new("TextLabel")
+
+				Toggle.Name = "Toggle"
+
+				Toggle.Parent = SectionList
+
+				Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+				Toggle.BackgroundTransparency = 0.950
+
+				Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+
+				Toggle.BorderSizePixel = 0
+
+				Toggle.Size = UDim2.new(1, 0, 0, 26)
+
+				UICorner_6.CornerRadius = UDim.new(0, 2)
+
+				UICorner_6.Parent = Toggle
+
+				Title_2.Name = "Title"
+
+				Title_2.Parent = Toggle
+
+				Title_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+				Title_2.BackgroundTransparency = 1.000
+
+				Title_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+
+				Title_2.BorderSizePixel = 0
+
+				Title_2.Position = UDim2.new(0, 10, 0, 0)
+
+				Title_2.Size = UDim2.new(1, -60, 1, 0)
+
+				Title_2.Font = Enum.Font.GothamBold
+
+				Title_2.Text = cftoggle.Title
+
+				Title_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+				Title_2.TextSize = 13.000
+
+				Title_2.TextXAlignment = Enum.TextXAlignment.Left
+
+				ToggleCheck.Name = "ToggleCheck"
+
+				ToggleCheck.Parent = Toggle
+
+				ToggleCheck.AnchorPoint = Vector2.new(0, 0.5)
+
+				ToggleCheck.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+
+				ToggleCheck.BorderColor3 = Color3.fromRGB(0, 0, 0)
+
+				ToggleCheck.BorderSizePixel = 0
+
+				ToggleCheck.Position = UDim2.new(1, -50, 0.5, 0)
+
+				ToggleCheck.Size = UDim2.new(0, 38, 0, 16)
+
+				UICorner_7.CornerRadius = UDim.new(0, 2)
 
 				UICorner_7.Parent = ToggleCheck
 
 				
-Check.Name = "Check"
-Check.Parent = Toggle
-Check.AnchorPoint = Vector2.new(1, 0.5)
-Check.BackgroundTransparency = 1
-Check.Font = Enum.Font.GothamBold
-Check.TextSize = 10
-Check.TextColor3 = Color3.fromRGB(100, 100, 100)
-Check.Text = "OFF"
-Check.Position = UDim2.new(1, -10, 0.5, 0)
-Check.Size = UDim2.new(0, 30, 1, 0)
-Check.TextXAlignment = Enum.TextXAlignment.Right
+					Check.Name = "Check"
+					Check.Parent = ToggleCheck
+					Check.AnchorPoint = Vector2.new(0, 0.5)
+					Check.BackgroundTransparency = 1
+					Check.Font = Enum.Font.GothamBold
+					Check.TextSize = 9
+					Check.TextColor3 = Color3.fromRGB(255, 255, 255)
+					Check.Text = "OFF"
+					Check.Position = UDim2.new(0, 3, 0.5, 0)
+					Check.Size = UDim2.new(0, 30, 0, 16)
     
 
 				UICorner_8.CornerRadius = UDim.new(1, 0)
@@ -1494,21 +1564,21 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 					if Boolean then
 
-						Library:TweenInstance(ToggleCheck, 0.3, "BackgroundColor3", Color3.fromRGB(220, 0, 0))
+						ToggleCheck.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 						Check.Text = "ON"
-							Check.TextColor3 = Color3.fromRGB(220, 0, 0)
+							Check.Position = UDim2.new(0, 18, 0.5, 0)
 
 						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
 
 					else
 
-						Library:TweenInstance(ToggleCheck, 0.3, "BackgroundColor3", Color3.fromRGB(60, 60, 60))
+						ToggleCheck.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
 						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(200, 200, 200))
 
 						Check.Text = "OFF"
-							Check.TextColor3 = Color3.fromRGB(100, 100, 100)
+							Check.Position = UDim2.new(0, 3, 0.5, 0)
 
 					end
 
@@ -1566,9 +1636,9 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				Button.BorderSizePixel = 0
 
-				Button.Size = UDim2.new(1, 0, 0, 24)
+				Button.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_9.CornerRadius = UDim.new(0, 1)
+				UICorner_9.CornerRadius = UDim.new(0, 2)
 
 				UICorner_9.Parent = Button
 
@@ -1652,7 +1722,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				ImageLabel.AnchorPoint = Vector2.new(0, 0.5)
 
-				ImageLabel.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+				ImageLabel.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 				ImageLabel.BackgroundTransparency = 1.000
 
@@ -1762,9 +1832,9 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				Dropdown.BorderSizePixel = 0
 
-				Dropdown.Size = UDim2.new(1, 0, 0, 24)
+				Dropdown.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_19.CornerRadius = UDim.new(0, 1)
+				UICorner_19.CornerRadius = UDim.new(0, 2)
 
 				UICorner_19.Parent = Dropdown
 
@@ -1828,7 +1898,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				Selects.AnchorPoint = Vector2.new(0, 0.5)
 
-				Selects.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+				Selects.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 				Selects.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1838,7 +1908,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				Selects.Size = UDim2.new(0, 80, 0, 25)
 
-				UICorner_20.CornerRadius = UDim.new(0, 1)
+				UICorner_20.CornerRadius = UDim.new(0, 2)
 
 				UICorner_20.Parent = Selects
 
@@ -1937,7 +2007,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 				
 				
 				
-				UICorner_24.CornerRadius = UDim.new(0, 1)
+				UICorner_24.CornerRadius = UDim.new(0, 2)
 
 				UICorner_24.Parent = DropdownList
 
@@ -1987,7 +2057,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				SearchFrame_2.Parent = Topbar
 
-				SearchFrame_2.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+				SearchFrame_2.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 				SearchFrame_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1997,7 +2067,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				SearchFrame_2.Size = UDim2.new(0, 100, 0, 30)
 
-				UICorner_25.CornerRadius = UDim.new(0, 1)
+				UICorner_25.CornerRadius = UDim.new(0, 2)
 
 				UICorner_25.Parent = SearchFrame_2
 
@@ -2112,7 +2182,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				Library:UpdateScrolling(Real_List, UIListLayout_5)
 
-				UICorner_26.CornerRadius = UDim.new(0, 1)
+				UICorner_26.CornerRadius = UDim.new(0, 2)
 
 				UICorner_26.Parent = Real_List
 
@@ -2120,7 +2190,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 				UIListLayout_5.SortOrder = Enum.SortOrder.LayoutOrder
 
-				UIListLayout_5.Padding = UDim.new(0, 1)
+				UIListLayout_5.Padding = UDim.new(0, 2)
 
 				UIPadding_5.Parent = Real_List
 
@@ -2212,7 +2282,7 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 							else
 
-								v.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+								v.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 								if v:FindFirstChild("Indicator") then v.Indicator.Visible = false end
 
 								Library:TweenInstance(v.Title, 0.3, "TextTransparency", 0.5)
@@ -2247,12 +2317,13 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 					local Title_12 = Instance.new("TextLabel")
 
-					
+					local UIGradient_3 = Instance.new("UIGradient")
+
 					Option2.Name = "Option 2"
 
 					Option2.Parent = Real_List
 
-					Option2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+					Option2.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
 					Option2.BackgroundTransparency = 0
 
@@ -2260,9 +2331,9 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 					Option2.BorderSizePixel = 0
 
-					Option2.Size = UDim2.new(1, 0, 0, 24)
+					Option2.Size = UDim2.new(1, 0, 0, 26)
 
-					UICorner_28.CornerRadius = UDim.new(0, 1)
+					UICorner_28.CornerRadius = UDim.new(0, 2)
 
 					UICorner_28.Parent = Option2
 
@@ -2312,17 +2383,21 @@ Check.TextXAlignment = Enum.TextXAlignment.Right
 
 					Title_12.TextTransparency = 0.500
 
-					
-					
-					
-					
-local Indicator = Instance.new("Frame", Option2)
-Indicator.Name = "Indicator"
-Indicator.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
-Indicator.BorderSizePixel = 0
-Indicator.Position = UDim2.new(0, 0, 0, 0)
-Indicator.Size = UDim2.new(0, 2, 1, 0)
-Indicator.Visible = false
+					UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(200, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
+
+					UIGradient_3.Rotation = 0.9900000095367432
+
+					UIGradient_3.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.50), NumberSequenceKeypoint.new(0.50, 0.49), NumberSequenceKeypoint.new(1.00, 0.44) }
+
+					UIGradient_3.Parent = Option2
+
+						local Indicator = Instance.new("Frame", Option2)
+						Indicator.Name = "Indicator"
+						Indicator.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+						Indicator.BorderSizePixel = 0
+						Indicator.Position = UDim2.new(0, 0, 0, 0)
+						Indicator.Size = UDim2.new(0, 2, 1, 0)
+						Indicator.Visible = false
     
 
 					Option2_Click.Activated:Connect(function()
@@ -2455,9 +2530,9 @@ Indicator.Visible = false
 
 				Input.BorderSizePixel = 0
 
-				Input.Size = UDim2.new(1, 0, 0, 24)
+				Input.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_17.CornerRadius = UDim.new(0, 1)
+				UICorner_17.CornerRadius = UDim.new(0, 2)
 
 				UICorner_17.Parent = Input
 
@@ -2533,7 +2608,7 @@ Indicator.Visible = false
 
 				TextboxFrame.Size = UDim2.new(0, 130, 0, 28)
 
-				UICorner_18.CornerRadius = UDim.new(0, 1)
+				UICorner_18.CornerRadius = UDim.new(0, 2)
 
 				UICorner_18.Parent = TextboxFrame
 
@@ -2653,9 +2728,9 @@ Indicator.Visible = false
 
 				Slider.BorderSizePixel = 0
 
-				Slider.Size = UDim2.new(1, 0, 0, 24)
+				Slider.Size = UDim2.new(1, 0, 0, 26)
 
-				UICorner_10.CornerRadius = UDim.new(0, 1)
+				UICorner_10.CornerRadius = UDim.new(0, 2)
 
 				UICorner_10.Parent = Slider
 
@@ -2721,7 +2796,7 @@ Indicator.Visible = false
 
 				SliderFrame.AnchorPoint = Vector2.new(0, 0.5)
 
-				SliderFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+				SliderFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
 				SliderFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2739,7 +2814,7 @@ Indicator.Visible = false
 
 				SliderDraggable.Parent = SliderFrame
 
-				SliderDraggable.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+				SliderDraggable.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 				SliderDraggable.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2995,7 +3070,7 @@ Indicator.Visible = false
 
 				Paragraph.Size = UDim2.new(1, 0, 0, 45)
 
-				UICorner_16.CornerRadius = UDim.new(0, 1)
+				UICorner_16.CornerRadius = UDim.new(0, 2)
 
 				UICorner_16.Parent = Paragraph
 
@@ -3083,7 +3158,7 @@ Indicator.Visible = false
 				-- Ajuste para a sua UI: SectionList é o pai
 				DiscordCard.Name = "DiscordCard"
 				DiscordCard.Parent = SectionList 
-				DiscordCard.BackgroundColor3 = Color3.fromRGB(18, 18, 18) -- Cor ajustada para combinar com o tema escuro
+				DiscordCard.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Cor ajustada para combinar com o tema escuro
 				DiscordCard.BackgroundTransparency = 0.4
 				DiscordCard.BorderSizePixel = 0
 				DiscordCard.Size = UDim2.new(1, 0, 0, 65)
@@ -3127,7 +3202,7 @@ Indicator.Visible = false
 				JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 				JoinBtn.TextSize = 13
 
-				BtnCorner.CornerRadius = UDim.new(0, 1)
+				BtnCorner.CornerRadius = UDim.new(0, 2)
 				BtnCorner.Parent = JoinBtn
 
 				JoinBtn.MouseButton1Click:Connect(function()
@@ -3194,7 +3269,8 @@ Indicator.Visible = false
 
 	G2L["3"]["CornerRadius"] = UDim.new(1, 0);
 
-	G2L["4"] = Instance.new("
+	G2L["4"] = Instance.new("UIStroke", G2L["2"]);
+
 	G2L["4"]["Thickness"] = 2;
 
 	G2L["4"]["Color"] = Color3.fromRGB(255, 255, 255);
