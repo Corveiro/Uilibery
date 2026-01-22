@@ -1,25 +1,22 @@
--- Minimalist iOS-like redesign of the original UI library
--- Notes:
--- - API and element-adding functions (Tab, SectionFunc:AddToggle/AddButton/etc.) kept intact.
--- - Design updated: soft rounded corners, light translucent panels, subtle shadows, iOS blue accent.
--- - Toggle keeps ON/OFF system, but visual styling improved and made more minimal.
--- - Kept original logic/flow; only visual properties and a few small layout improvements changed.
+-- Minimalist iOS-inspired premium redesign (dark minimal: black, red, white, gray)
+-- Nota: Mantive a API e a forma de adicionar elementos (Tab, SectionFunc:AddToggle/AddButton/etc.)
+-- Apenas o design, layout e algumas pequenas lógicas de posição/estética foram modificadas.
 
 local Library = {}
 
--- Global theme for the iOS-like redesign
+-- Global theme for the premium dark redesign (restricted palette: black, red, white, gray)
 local Theme = {
-    Background        = Color3.fromRGB(245, 246, 250), -- very light background
-    Panel             = Color3.fromRGB(255, 255, 255), -- panels
-    Accent            = Color3.fromRGB(10, 132, 255),  -- iOS blue
-    TextPrimary       = Color3.fromRGB(28, 28, 30),    -- primary text (dark)
-    TextSecondary     = Color3.fromRGB(99, 99, 102),   -- secondary text (muted)
-    Muted             = Color3.fromRGB(229, 229, 234), -- subtle elements / off toggles
+    Background        = Color3.fromRGB(18, 18, 20),   -- deep background (near black)
+    Panel             = Color3.fromRGB(28, 28, 30),   -- panel / container dark
+    Accent            = Color3.fromRGB(255, 59, 48),  -- premium red accent (iOS red)
+    TextPrimary       = Color3.fromRGB(242, 242, 245),-- primary text (near white)
+    TextSecondary     = Color3.fromRGB(160, 160, 165),-- muted text (gray)
+    Muted             = Color3.fromRGB(42, 42, 45),   -- subtle-muted background for toggles etc.
     ShadowColor       = Color3.fromRGB(0, 0, 0),
     Transparent       = 1,
 }
 
--- small helper to create consistent UICorner radii
+-- small helper to create consistent UICorner radii (use pixel radius)
 local function setCorner(uicorner, radius)
     if uicorner then
         uicorner.CornerRadius = UDim.new(0, radius)
@@ -34,16 +31,16 @@ end
 
 function Library:UpdateContent(Content, Title, Object)
 	if Content.Text ~= "" then
-		Title.Position = UDim2.new(0, 10, 0, 7)
-		Title.Size = UDim2.new(1, -60, 0, 16)
-		local MaxY = math.max(Content.TextBounds.Y + 15, 45)
+		Title.Position = UDim2.new(0, 12, 0, 8)
+		Title.Size = UDim2.new(1, -80, 0, 18)
+		local MaxY = math.max(Content.TextBounds.Y + 16, 46)
 		Object.Size = UDim2.new(1, 0, 0, MaxY)
 	end
 end
 
 function Library:UpdateScrolling(Scroll, List)
 	List:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-		Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 15)
+		Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 12)
 	end)
 end
 
@@ -157,7 +154,7 @@ function Library:NewWindow(ConfigWindow)
 	DropShadowHolder.BackgroundTransparency = 1.000
 	DropShadowHolder.BorderSizePixel = 0
 	DropShadowHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
-	DropShadowHolder.Size = UDim2.new(0, 560, 0, 360)
+	DropShadowHolder.Size = UDim2.new(0, 640, 0, 420)
 	DropShadowHolder.ZIndex = 0
 
 	DropShadow.Name = "DropShadow"
@@ -166,11 +163,11 @@ function Library:NewWindow(ConfigWindow)
 	DropShadow.BackgroundTransparency = 1.000
 	DropShadow.BorderSizePixel = 0
 	DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
-	DropShadow.Size = UDim2.new(1, 50, 1, 50)
+	DropShadow.Size = UDim2.new(1, 60, 1, 60)
 	DropShadow.ZIndex = 0
-	DropShadow.Image = "rbxassetid://6015897843" -- subtle shadow asset
+	DropShadow.Image = "rbxassetid://6015897843"
 	DropShadow.ImageColor3 = Theme.ShadowColor
-	DropShadow.ImageTransparency = 0.7
+	DropShadow.ImageTransparency = 0.75
 	DropShadow.ScaleType = Enum.ScaleType.Slice
 	DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
 
@@ -178,18 +175,20 @@ function Library:NewWindow(ConfigWindow)
 	Main.Parent = DropShadowHolder
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-	Main.Size = UDim2.new(0, 560, 0, 360)
+	Main.Size = UDim2.new(0, 640, 0, 420)
 	Main.BorderSizePixel = 0
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.ClipsDescendants = true
 
-	-- iOS-like frosted panel: subtle white with slight transparency
+	-- dark frosted panel look with subtle border
 	Main.Image = ""
 	Main.BackgroundColor3 = Theme.Panel
-	Main.BackgroundTransparency = 0.02
+	Main.BackgroundTransparency = 0.03
+	Main.BorderSizePixel = 1
+	Main.BorderColor3 = Color3.fromRGB(40, 40, 45)
 
 	UICorner.Parent = Main
-	setCorner(UICorner, 14)
+	setCorner(UICorner, 10)
 
 	-- Top bar (title area)
 	Top.Name = "Top"
@@ -198,11 +197,11 @@ function Library:NewWindow(ConfigWindow)
 	Top.BackgroundTransparency = 1.000
 	Top.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Top.BorderSizePixel = 0
-	Top.Size = UDim2.new(1, 0, 0, 56)
+	Top.Size = UDim2.new(1, 0, 0, 60)
 
 	Line.Name = "Line"
 	Line.Parent = Top
-	Line.BackgroundColor3 = Theme.Muted
+	Line.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
 	Line.BackgroundTransparency = 0.85
 	Line.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Line.BorderSizePixel = 0
@@ -218,29 +217,29 @@ function Library:NewWindow(ConfigWindow)
 	NameHub.BackgroundTransparency = 1.000
 	NameHub.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	NameHub.BorderSizePixel = 0
-	NameHub.Position = UDim2.new(0, 64, 0, 16)
-	NameHub.Size = UDim2.new(0, 420, 0, 24)
+	NameHub.Position = UDim2.new(0, 76, 0, 18)
+	NameHub.Size = UDim2.new(0, 440, 0, 24)
 	NameHub.Font = Enum.Font.GothamBold
 	NameHub.Text = ConfigWindow.Title
 	NameHub.TextColor3 = Theme.TextPrimary
-	NameHub.TextSize = 15.000
+	NameHub.TextSize = 16.000
 	NameHub.TextXAlignment = Enum.TextXAlignment.Left
 
 	LogoHub.Name = "LogoHub"
 	LogoHub.Parent = Left
 	LogoHub.BackgroundTransparency = 1.000
 	LogoHub.BorderSizePixel = 0
-	LogoHub.Position = UDim2.new(0, 18, 0, 13)
-	LogoHub.Size = UDim2.new(0, 34, 0, 34)
+	LogoHub.Position = UDim2.new(0, 20, 0, 14)
+	LogoHub.Size = UDim2.new(0, 40, 0, 40)
 	LogoHub.Image = "rbxassetid://123256573634"
-	LogoHub.ImageColor3 = Theme.Accent
+	LogoHub.ImageColor3 = Theme.TextPrimary
 
 	Desc.Name = "Desc"
 	Desc.Parent = Left
 	Desc.BackgroundTransparency = 1.000
 	Desc.BorderSizePixel = 0
-	Desc.Position = UDim2.new(0, 64, 0, 36)
-	Desc.Size = UDim2.new(0, 420, 0, 14)
+	Desc.Position = UDim2.new(0, 76, 0, 38)
+	Desc.Size = UDim2.new(0, 440, 0, 14)
 	Desc.Font = Enum.Font.Gotham
 	Desc.Text = ConfigWindow.Description
 	Desc.TextColor3 = Theme.TextSecondary
@@ -256,30 +255,30 @@ function Library:NewWindow(ConfigWindow)
 	Frame.BackgroundTransparency = 1.000
 	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Frame.BorderSizePixel = 0
-	Frame.Position = UDim2.new(1, -132, 0, 0)
-	Frame.Size = UDim2.new(0, 132, 1, 0)
+	Frame.Position = UDim2.new(1, -160, 0, 0)
+	Frame.Size = UDim2.new(0, 160, 1, 0)
 
 	UIListLayout.Parent = Frame
 	UIListLayout.FillDirection = Enum.FillDirection.Horizontal
 	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	UIListLayout.Padding = UDim.new(0, 8)
+	UIListLayout.Padding = UDim.new(0, 10)
 
 	UIPadding.Parent = Frame
-	UIPadding.PaddingTop = UDim.new(0, 8)
+	UIPadding.PaddingTop = UDim.new(0, 10)
 
-	-- minimize / maximize / close buttons: iOS minimal circular style
+	-- minimize / maximize / close buttons: pill-style, less round
 	Minize.Name = "Minize"
 	Minize.Parent = Frame
 	Minize.Active = false
 	Minize.AnchorPoint = Vector2.new(0, 0.5)
-	Minize.BackgroundColor3 = Theme.Panel
-	Minize.BackgroundTransparency = 0.02
+	Minize.BackgroundColor3 = Theme.Muted
+	Minize.BackgroundTransparency = 0
 	Minize.BorderSizePixel = 0
 	Minize.Selectable = false
-	Minize.Size = UDim2.new(0, 32, 0, 32)
+	Minize.Size = UDim2.new(0, 36, 0, 28)
 	Minize.Text = ""
-	local minCorner = Instance.new("UICorner", Minize); minCorner.CornerRadius = UDim.new(1, 0)
-	local minStroke = Instance.new("UIStroke", Minize); minStroke.Color = Color3.new(1,1,1); minStroke.Transparency = 0.9; minStroke.Thickness = 0.5
+	local minCorner = Instance.new("UICorner", Minize); setCorner(minCorner, 7)
+	local minStroke = Instance.new("UIStroke", Minize); minStroke.Color = Color3.fromRGB(60,60,64); minStroke.Transparency = 0.7; minStroke.Thickness = 1
 
 	Icon.Name = "Icon"
 	Icon.Parent = Minize
@@ -294,14 +293,14 @@ function Library:NewWindow(ConfigWindow)
 	Large.Parent = Frame
 	Large.Active = false
 	Large.AnchorPoint = Vector2.new(0, 0.5)
-	Large.BackgroundColor3 = Theme.Panel
-	Large.BackgroundTransparency = 0.02
+	Large.BackgroundColor3 = Theme.Muted
+	Large.BackgroundTransparency = 0
 	Large.BorderSizePixel = 0
 	Large.Selectable = false
-	Large.Size = UDim2.new(0, 32, 0, 32)
+	Large.Size = UDim2.new(0, 36, 0, 28)
 	Large.Text = ""
-	local largeCorner = Instance.new("UICorner", Large); largeCorner.CornerRadius = UDim.new(1, 0)
-	local largeStroke = Instance.new("UIStroke", Large); largeStroke.Color = Color3.new(1,1,1); largeStroke.Transparency = 0.9; largeStroke.Thickness = 0.5
+	local largeCorner = Instance.new("UICorner", Large); setCorner(largeCorner, 7)
+	local largeStroke = Instance.new("UIStroke", Large); largeStroke.Color = Color3.fromRGB(60,60,64); largeStroke.Transparency = 0.7; largeStroke.Thickness = 1
 
 	Icon_2.Name = "Icon"
 	Icon_2.Parent = Large
@@ -316,31 +315,31 @@ function Library:NewWindow(ConfigWindow)
 	Close.Parent = Frame
 	Close.Active = false
 	Close.AnchorPoint = Vector2.new(0, 0.5)
-	Close.BackgroundColor3 = Theme.Panel
-	Close.BackgroundTransparency = 0.02
+	Close.BackgroundColor3 = Theme.Accent
+	Close.BackgroundTransparency = 0
 	Close.BorderSizePixel = 0
 	Close.Selectable = false
-	Close.Size = UDim2.new(0, 32, 0, 32)
+	Close.Size = UDim2.new(0, 36, 0, 28)
 	Close.Text = ""
-	local closeCorner = Instance.new("UICorner", Close); closeCorner.CornerRadius = UDim.new(1, 0)
-	local closeStroke = Instance.new("UIStroke", Close); closeStroke.Color = Color3.new(1,1,1); closeStroke.Transparency = 0.9; closeStroke.Thickness = 0.5
+	local closeCorner = Instance.new("UICorner", Close); setCorner(closeCorner, 7)
+	local closeStroke = Instance.new("UIStroke", Close); closeStroke.Color = Color3.fromRGB(40,40,40); closeStroke.Transparency = 0.6; closeStroke.Thickness = 1
 
-	-- Close confirmation (kept functionally same, with cleaner visuals)
+	-- Close confirmation (clean visuals)
 	Close.MouseButton1Down:Connect(function()
 		DropdownZone.Visible = true
 		local tat_ = Instance.new("Frame", DropdownZone);
 		tat_["BorderSizePixel"] = 0;
 		tat_["BackgroundColor3"] = Theme.Panel;
 		tat_["AnchorPoint"] = Vector2.new(0.5, 0.5);
-		tat_["Size"] = UDim2.new(0, 380, 0, 140);
+		tat_["Size"] = UDim2.new(0, 420, 0, 140);
 		tat_["Position"] = UDim2.new(0.5, 0, 0.5, 0);
-		tat_["BorderColor3"] = Color3.fromRGB(200, 200, 200);
+		tat_["BorderColor3"] = Color3.fromRGB(30, 30, 30);
 		tat_["Name"] = [[ConfirmExit]];
 		local suacc = Instance.new("UIStroke", tat_);
-		suacc["Transparency"] = 0.9;
-		suacc["Color"] = Color3.fromRGB(220,220,220);
+		suacc["Transparency"] = 0.85;
+		suacc["Color"] = Color3.fromRGB(20,20,20);
 		local suaccC = Instance.new("UICorner", tat_);
-		suaccC["CornerRadius"] = UDim.new(0, 10);
+		setCorner(suaccC, 8);
 		local suacc2 = Instance.new("TextLabel", tat_);
 		suacc2["BorderSizePixel"] = 0;
 		suacc2["TextSize"] = 18;
@@ -348,10 +347,10 @@ function Library:NewWindow(ConfigWindow)
 		suacc2["FontFace"] = Font.new([[rbxasset://fonts/families/Ubuntu.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal);
 		suacc2["TextColor3"] = Theme.TextPrimary;
 		suacc2["BackgroundTransparency"] = 1;
-		suacc2["Size"] = UDim2.new(0, 380, 0, 50);
+		suacc2["Size"] = UDim2.new(0, 420, 0, 54);
 		suacc2["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 		suacc2["Text"] = [[Are you sure]];
-		suacc2.Position = UDim2.new(0, 0, 0, 10);
+		suacc2.Position = UDim2.new(0, 0, 0, 12);
 
 		local btnyes = Instance.new("TextButton", tat_);
 		btnyes["BorderSizePixel"] = 0;
@@ -360,14 +359,14 @@ function Library:NewWindow(ConfigWindow)
 		btnyes["BackgroundColor3"] = Theme.Accent;
 		btnyes["FontFace"] = Font.new([[rbxasset://fonts/families/Ubuntu.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal);
 		btnyes["AnchorPoint"] = Vector2.new(0, 1);
-		btnyes["Size"] = UDim2.new(0, 140, 0, 40);
+		btnyes["Size"] = UDim2.new(0, 140, 0, 38);
 		btnyes["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 		btnyes["Text"] = [[Yes]];
-		btnyes["Position"] = UDim2.new(0, 40, 1, -20);
-		local thuaaa = Instance.new("UICorner", btnyes);
+		btnyes["Position"] = UDim2.new(0, 44, 1, -22);
+		local thuaaa = Instance.new("UICorner", btnyes); setCorner(thuaaa, 8);
 		local thuaaa2 = Instance.new("UIStroke", btnyes);
 		thuaaa2["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
-		thuaaa2["Color"] = Color3.fromRGB(39, 39, 39);
+		thuaaa2["Color"] = Color3.fromRGB(30, 30, 30);
 
 		btnyes.MouseButton1Down:Connect(function()
 			TeddyUI_Premium:Destroy()
@@ -380,14 +379,14 @@ function Library:NewWindow(ConfigWindow)
 		btnno["BackgroundColor3"] = Theme.Muted;
 		btnno["FontFace"] = Font.new([[rbxasset://fonts/families/Ubuntu.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal);
 		btnno["AnchorPoint"] = Vector2.new(1, 1);
-		btnno["Size"] = UDim2.new(0, 140, 0, 40);
+		btnno["Size"] = UDim2.new(0, 140, 0, 38);
 		btnno["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 		btnno["Text"] = [[No]];
-		btnno["Position"] = UDim2.new(1, -40, 1, -20);
-		local thuaa = Instance.new("UICorner", btnno);
+		btnno["Position"] = UDim2.new(1, -44, 1, -22);
+		local thuaa = Instance.new("UICorner", btnno); setCorner(thuaa, 8);
 		local thuaa2 = Instance.new("UIStroke", btnno);
 		thuaa2["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
-		thuaa2["Color"] = Color3.fromRGB(39, 39, 39);
+		thuaa2["Color"] = Color3.fromRGB(30, 30, 30);
 
 		btnno.MouseButton1Down:Connect(function()
 			tat_:Destroy()
@@ -403,25 +402,25 @@ function Library:NewWindow(ConfigWindow)
 	Icon_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Icon_3.BorderSizePixel = 0
 	Icon_3.Position = UDim2.new(0.5, 0, 0.5, 0)
-	Icon_3.Size = UDim2.new(0, 16, 0, 16)
+	Icon_3.Size = UDim2.new(0, 14, 0, 14)
 	Icon_3.Image = "rbxassetid://105957381820378"
 	Icon_3.ImageRectOffset = Vector2.new(480, 0)
 	Icon_3.ImageRectSize = Vector2.new(96, 96)
-	Icon_3.ImageColor3 = Theme.TextSecondary
+	Icon_3.ImageColor3 = Color3.fromRGB(255,255,255)
 
-	-- Tab column
+	-- Tab column (wider, elements more substantial)
 	TabFrame.Name = "TabFrame"
 	TabFrame.Parent = Main
 	TabFrame.BackgroundColor3 = Theme.Panel
 	TabFrame.BackgroundTransparency = 1.000
 	TabFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	TabFrame.BorderSizePixel = 0
-	TabFrame.Position = UDim2.new(0, 0, 0, 56)
-	TabFrame.Size = UDim2.new(0, 150, 1, -56)
+	TabFrame.Position = UDim2.new(0, 0, 0, 60)
+	TabFrame.Size = UDim2.new(0, 180, 1, -60)
 
 	Line_2.Name = "Line"
 	Line_2.Parent = TabFrame
-	Line_2.BackgroundColor3 = Theme.Muted
+	Line_2.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
 	Line_2.BackgroundTransparency = 0.85
 	Line_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Line_2.BorderSizePixel = 0
@@ -432,18 +431,18 @@ function Library:NewWindow(ConfigWindow)
 	SearchFrame.Parent = TabFrame
 	SearchFrame.BackgroundColor3 = Theme.Panel
 	SearchFrame.BackgroundTransparency = 0.02
-	SearchFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	SearchFrame.BorderColor3 = Color3.fromRGB(40, 40, 45)
 	SearchFrame.BorderSizePixel = 0
-	SearchFrame.Position = UDim2.new(0, 12, 0, 12)
-	SearchFrame.Size = UDim2.new(1, -24, 0, 36)
-	UICorner_2.CornerRadius = UDim.new(0, 10)
+	SearchFrame.Position = UDim2.new(0, 14, 0, 12)
+	SearchFrame.Size = UDim2.new(1, -28, 0, 40)
+	UICorner_2.CornerRadius = UDim.new(0, 8)
 	UICorner_2.Parent = SearchFrame
 
 	IconSearch.Name = "IconSearch"
 	IconSearch.Parent = SearchFrame
 	IconSearch.AnchorPoint = Vector2.new(0, 0.5)
 	IconSearch.BackgroundTransparency = 1.000
-	IconSearch.Position = UDim2.new(0, 14, 0.5, 0)
+	IconSearch.Position = UDim2.new(0, 16, 0.5, 0)
 	IconSearch.Size = UDim2.new(0, 16, 0, 16)
 	IconSearch.Image = "rbxassetid://71309835376233"
 	IconSearch.ImageColor3 = Theme.TextSecondary
@@ -452,10 +451,10 @@ function Library:NewWindow(ConfigWindow)
 	SearchBox.Parent = SearchFrame
 	SearchBox.BackgroundTransparency = 1.000
 	SearchBox.BorderSizePixel = 0
-	SearchBox.Position = UDim2.new(0, 36, 0, 0)
-	SearchBox.Size = UDim2.new(1, -40, 1, 0)
+	SearchBox.Position = UDim2.new(0, 44, 0, 0)
+	SearchBox.Size = UDim2.new(1, -52, 1, 0)
 	SearchBox.Font = Enum.Font.Gotham
-	SearchBox.PlaceholderText = "Search"
+	SearchBox.PlaceholderText = "Buscar"
 	SearchBox.Text = ""
 	SearchBox.TextColor3 = Theme.TextPrimary
 	SearchBox.TextSize = 13.000
@@ -465,18 +464,19 @@ function Library:NewWindow(ConfigWindow)
 	ScrollingTab.Parent = TabFrame
 	ScrollingTab.BackgroundTransparency = 1.000
 	ScrollingTab.BorderSizePixel = 0
-	ScrollingTab.Position = UDim2.new(0, 0, 0, 60)
+	ScrollingTab.Position = UDim2.new(0, 0, 0, 68)
 	ScrollingTab.Selectable = false
-	ScrollingTab.Size = UDim2.new(1, 0, 1, -60)
-	ScrollingTab.ScrollBarThickness = 0
+	ScrollingTab.Size = UDim2.new(1, 0, 1, -68)
+	ScrollingTab.ScrollBarThickness = 6
+	ScrollingTab.ScrollBarImageColor3 = Color3.fromRGB(60,60,60)
 
 	self:UpdateScrolling(ScrollingTab, UIListLayout_2)
 
 	UIPadding_2.Parent = ScrollingTab
-	UIPadding_2.PaddingBottom = UDim.new(0, 8)
-	UIPadding_2.PaddingLeft = UDim.new(0, 10)
-	UIPadding_2.PaddingRight = UDim.new(0, 10)
-	UIPadding_2.PaddingTop = UDim.new(0, 4)
+	UIPadding_2.PaddingBottom = UDim.new(0, 12)
+	UIPadding_2.PaddingLeft = UDim.new(0, 12)
+	UIPadding_2.PaddingRight = UDim.new(0, 12)
+	UIPadding_2.PaddingTop = UDim.new(0, 6)
 
 	UIListLayout_2.Parent = ScrollingTab
 	UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
@@ -486,15 +486,15 @@ function Library:NewWindow(ConfigWindow)
 	LayoutFrame.Name = "LayoutFrame"
 	LayoutFrame.Parent = Main
 	LayoutFrame.BackgroundTransparency = 1.000
-	LayoutFrame.Position = UDim2.new(0, 150, 0, 56)
-	LayoutFrame.Size = UDim2.new(1, -150, 1, -56)
+	LayoutFrame.Position = UDim2.new(0, 180, 0, 60)
+	LayoutFrame.Size = UDim2.new(1, -180, 1, -60)
 	LayoutFrame.ClipsDescendants = true
 
 	RealLayout.Name = "RealLayout"
 	RealLayout.Parent = LayoutFrame
 	RealLayout.BackgroundTransparency = 1.000
-	RealLayout.Position = UDim2.new(0, 0, 0, 40)
-	RealLayout.Size = UDim2.new(1, 0, 1, -40)
+	RealLayout.Position = UDim2.new(0, 0, 0, 46)
+	RealLayout.Size = UDim2.new(1, 0, 1, -46)
 
 	LayoutList.Name = "Layout List"
 	LayoutList.Parent = RealLayout
@@ -526,21 +526,21 @@ function Library:NewWindow(ConfigWindow)
 	UIPageLayout.Parent = LayoutList
 	UIPageLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	UIPageLayout.EasingStyle = Enum.EasingStyle.Quad
-	UIPageLayout.TweenTime = 0.300
+	UIPageLayout.TweenTime = 0.28
 
 	LayoutName.Name = "LayoutName"
 	LayoutName.Parent = LayoutFrame
 	LayoutName.BackgroundTransparency = 1.000
-	LayoutName.Size = UDim2.new(1, 0, 0, 40)
+	LayoutName.Size = UDim2.new(1, 0, 0, 46)
 
 	TextLabel.Parent = LayoutName
 	TextLabel.BackgroundTransparency = 1.000
-	TextLabel.Position = UDim2.new(0, 14, 0, 0)
-	TextLabel.Size = UDim2.new(1, -20, 1, 0)
+	TextLabel.Position = UDim2.new(0, 18, 0, 0)
+	TextLabel.Size = UDim2.new(1, -36, 1, 0)
 	TextLabel.Font = Enum.Font.GothamBold
 	TextLabel.Text = ""
 	TextLabel.TextColor3 = Theme.TextPrimary
-	TextLabel.TextSize = 14.000
+	TextLabel.TextSize = 15.000
 	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 	DropdownZone.Name = "DropdownZone"
@@ -574,15 +574,15 @@ function Library:NewWindow(ConfigWindow)
 		TabDisable.BackgroundTransparency = 1.000
 		TabDisable.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		TabDisable.BorderSizePixel = 0
-		TabDisable.Size = UDim2.new(1, 0, 0, 36)
+		TabDisable.Size = UDim2.new(1, 0, 0, 42)
 
 		Choose_2.Name = "Choose"
 		Choose_2.Parent = TabDisable
 		Choose_2.BackgroundColor3 = Theme.Accent
 		Choose_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		Choose_2.BorderSizePixel = 0
-		Choose_2.Position = UDim2.new(0, 10, 0, 8)
-		Choose_2.Size = UDim2.new(0, 4, 0, 20)
+		Choose_2.Position = UDim2.new(0, 12, 0, 10)
+		Choose_2.Size = UDim2.new(0, 4, 0, 22)
 		Choose_2.Visible = false
 		setCorner(UICorner_4, 3)
 		UICorner_4.Parent = Choose_2
@@ -590,34 +590,34 @@ function Library:NewWindow(ConfigWindow)
 		TabIcon.Name = "TabIcon"
 		TabIcon.Parent = TabDisable
 		TabIcon.BackgroundTransparency = 1.000
-		TabIcon.Position = UDim2.new(0, 14, 0.5, 0)
+		TabIcon.Position = UDim2.new(0, 18, 0.5, 0)
 		TabIcon.AnchorPoint = Vector2.new(0, 0.5)
-		TabIcon.Size = UDim2.new(0, 16, 0, 16)
+		TabIcon.Size = UDim2.new(0, 18, 0, 18)
 		TabIcon.ImageColor3 = Theme.TextPrimary
 		IconRound.Parent = TabIcon
-		setCorner(IconRound, 4)
+		setCorner(IconRound, 5)
 
-		local NamePosX = 20
+		local NamePosX = 28
 		if iconid and tostring(iconid) ~= "" then
 			TabIcon.Image = iconid
 			TabIcon.Visible = true
-			NamePosX = 40
+			NamePosX = 46
 		else
 			TabIcon.Image = ""
 			TabIcon.Visible = false
-			NamePosX = 20
+			NamePosX = 28
 		end
 
 		NameTab_2.Name = "NameTab"
 		NameTab_2.Parent = TabDisable
 		NameTab_2.BackgroundTransparency = 1.000
-		NameTab_2.Position = UDim2.new(0, NamePosX, 0, 6)
+		NameTab_2.Position = UDim2.new(0, NamePosX, 0, 10)
 		NameTab_2.Size = UDim2.new(1, -NamePosX, 1, 0)
 		NameTab_2.Font = Enum.Font.Gotham
 		NameTab_2.Text = t
 		NameTab_2.TextColor3 = Theme.TextPrimary
-		NameTab_2.TextSize = 13.000
-		NameTab_2.TextTransparency = 0.4
+		NameTab_2.TextSize = 14.000
+		NameTab_2.TextTransparency = 0.5
 		NameTab_2.TextXAlignment = Enum.TextXAlignment.Left
 
 		Click_Tab_2.Name = "Click_Tab"
@@ -639,19 +639,20 @@ function Library:NewWindow(ConfigWindow)
 		Layout.Selectable = false
 		Layout.Size = UDim2.new(1, 0, 1, 0)
 		Layout.CanvasSize = UDim2.new(0, 0, 1, 0)
-		Layout.ScrollBarThickness = 0
+		Layout.ScrollBarThickness = 6
+		Layout.ScrollBarImageColor3 = Color3.fromRGB(60,60,60)
 		Layout.LayoutOrder = AllLayouts
 
 		Library:UpdateScrolling(Layout, UIListLayout_3)
 
 		UIPadding_3.Parent = Layout
-		UIPadding_3.PaddingBottom = UDim.new(0, 7)
-		UIPadding_3.PaddingLeft = UDim.new(0, 10)
-		UIPadding_3.PaddingRight = UDim.new(0, 10)
+		UIPadding_3.PaddingBottom = UDim.new(0, 12)
+		UIPadding_3.PaddingLeft = UDim.new(0, 12)
+		UIPadding_3.PaddingRight = UDim.new(0, 12)
 
 		UIListLayout_3.Parent = Layout
 		UIListLayout_3.SortOrder = Enum.SortOrder.LayoutOrder
-		UIListLayout_3.Padding = UDim.new(0, 8)
+		UIListLayout_3.Padding = UDim.new(0, 10)
 
 		if AllLayouts == 0 then
 			NameTab_2.TextTransparency = 0
@@ -671,16 +672,16 @@ function Library:NewWindow(ConfigWindow)
 			TextLabel.Text = t
 			for i, v in next, ScrollingTab:GetChildren() do
 				if v:IsA("Frame") then
-					Library:TweenInstance(v.NameTab, 0.25, "TextTransparency", 0.4)
+					Library:TweenInstance(v.NameTab, 0.22, "TextTransparency", 0.5)
 					if v:FindFirstChild("TabIcon") then
-						Library:TweenInstance(v.TabIcon, 0.25, "ImageTransparency", 0.6)
+						Library:TweenInstance(v.TabIcon, 0.22, "ImageTransparency", 0.6)
 					end
 					v.Choose.Visible = false
 				end
 			end
-			Library:TweenInstance(NameTab_2, 0.2, "TextTransparency", 0)
+			Library:TweenInstance(NameTab_2, 0.18, "TextTransparency", 0)
 			if TabIcon.Visible then
-				Library:TweenInstance(TabIcon, 0.2, "ImageTransparency", 0)
+				Library:TweenInstance(TabIcon, 0.18, "ImageTransparency", 0)
 			end
 			UIPageLayout:JumpToIndex(Layout.LayoutOrder)
 			Choose_2.Visible = true
@@ -703,11 +704,11 @@ function Library:NewWindow(ConfigWindow)
 
 			Section.Name = "Section"
 			Section.Parent = Layout
-			Section.BackgroundTransparency = 0.95
+			Section.BackgroundTransparency = 0.96
 			Section.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			Section.BorderSizePixel = 0
 			Section.Position = UDim2.new(1.36775815, 0, 0.545454562, 0)
-			Section.Size = UDim2.new(1, 0, 0, 55)
+			Section.Size = UDim2.new(1, 0, 0, 60)
 			UICorner_5.Parent = Section
 			setCorner(UICorner_5, 8)
 
@@ -715,7 +716,7 @@ function Library:NewWindow(ConfigWindow)
 			NameSection.Parent = Section
 			NameSection.BackgroundTransparency = 1.000
 			NameSection.BorderSizePixel = 0
-			NameSection.Size = UDim2.new(1, 0, 0, 30)
+			NameSection.Size = UDim2.new(1, 0, 0, 34)
 
 			Title.Name = "Title"
 			Title.Parent = NameSection
@@ -724,35 +725,35 @@ function Library:NewWindow(ConfigWindow)
 			Title.Font = Enum.Font.GothamBold
 			Title.Text = RealNameSection
 			Title.TextColor3 = Theme.TextPrimary
-			Title.TextSize = 14.000
+			Title.TextSize = 15.000
 
 			Line_3.Name = "Line"
 			Line_3.Parent = NameSection
-			Line_3.BackgroundColor3 = Theme.Muted
+			Line_3.BackgroundColor3 = Color3.fromRGB(48,48,52)
 			Line_3.BorderSizePixel = 0
 			Line_3.Position = UDim2.new(0, 0, 1, -2)
 			Line_3.Size = UDim2.new(1, 0, 0, 2)
-			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Theme.Muted), ColorSequenceKeypoint.new(1.00, Theme.Accent) }
-			UIGradient.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.6), NumberSequenceKeypoint.new(1.00, 0.6) }
+			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(48,48,52)), ColorSequenceKeypoint.new(1.00, Theme.Accent) }
+			UIGradient.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.6), NumberSequenceKeypoint.new(1.00, 0.75) }
 			UIGradient.Parent = Line_3
 
 			SectionList.Name = "SectionList"
 			SectionList.Parent = Section
 			SectionList.BackgroundTransparency = 1.000
 			SectionList.BorderSizePixel = 0
-			SectionList.Position = UDim2.new(0, 0, 0, 35)
-			SectionList.Size = UDim2.new(1, 0, 1, -35)
+			SectionList.Position = UDim2.new(0, 0, 0, 40)
+			SectionList.Size = UDim2.new(1, 0, 1, -40)
 			UIPadding_4.Parent = SectionList
-			UIPadding_4.PaddingBottom = UDim.new(0, 8)
-			UIPadding_4.PaddingLeft = UDim.new(0, 8)
-			UIPadding_4.PaddingRight = UDim.new(0, 8)
-			UIPadding_4.PaddingTop = UDim.new(0, 8)
+			UIPadding_4.PaddingBottom = UDim.new(0, 12)
+			UIPadding_4.PaddingLeft = UDim.new(0, 10)
+			UIPadding_4.PaddingRight = UDim.new(0, 10)
+			UIPadding_4.PaddingTop = UDim.new(0, 10)
 
 			UIListLayout_4.Parent = SectionList
 			UIListLayout_4.SortOrder = Enum.SortOrder.LayoutOrder
-			UIListLayout_4.Padding = UDim.new(0, 6)
+			UIListLayout_4.Padding = UDim.new(0, 10)
 			UIListLayout_4:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-				Section.Size = UDim2.new(1, 0, 0, UIListLayout_4.AbsoluteContentSize.Y + 55)
+				Section.Size = UDim2.new(1, 0, 0, UIListLayout_4.AbsoluteContentSize.Y + 50)
 			end)
 
 			local SectionFunc = {}
@@ -777,9 +778,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Toggle.Name = "Toggle"
 				Toggle.Parent = SectionList
-				Toggle.BackgroundTransparency = 0.95
+				Toggle.BackgroundTransparency = 0.96
 				Toggle.BorderSizePixel = 0
-				Toggle.Size = UDim2.new(1, 0, 0, 34)
+				Toggle.Size = UDim2.new(1, 0, 0, 42)
 
 				UICorner_6.Parent = Toggle
 				setCorner(UICorner_6, 8)
@@ -787,24 +788,38 @@ function Library:NewWindow(ConfigWindow)
 				Title_2.Name = "Title"
 				Title_2.Parent = Toggle
 				Title_2.BackgroundTransparency = 1.000
-				Title_2.Position = UDim2.new(0, 10, 0, 6)
-				Title_2.Size = UDim2.new(1, -80, 0, 18)
+				Title_2.Position = UDim2.new(0, 12, 0, 8)
+				Title_2.Size = UDim2.new(1, -110, 0, 20)
 				Title_2.Font = Enum.Font.GothamBold
 				Title_2.Text = cftoggle.Title
 				Title_2.TextColor3 = Theme.TextPrimary
-				Title_2.TextSize = 13.000
+				Title_2.TextSize = 14.000
 				Title_2.TextXAlignment = Enum.TextXAlignment.Left
 
+				-- Toggle stylized: pill with moving knob + ON/OFF label (kept)
 				ToggleCheck.Name = "ToggleCheck"
 				ToggleCheck.Parent = Toggle
 				ToggleCheck.AnchorPoint = Vector2.new(0, 0.5)
 				ToggleCheck.BackgroundColor3 = Theme.Muted
 				ToggleCheck.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				ToggleCheck.BorderSizePixel = 0
-				ToggleCheck.Position = UDim2.new(1, -58, 0.5, 0)
-				ToggleCheck.Size = UDim2.new(0, 46, 0, 26)
-				UICorner_7.CornerRadius = UDim.new(1, 0)
+				ToggleCheck.Position = UDim2.new(1, -86, 0.5, 0)
+				ToggleCheck.Size = UDim2.new(0, 70, 0, 28)
 				UICorner_7.Parent = ToggleCheck
+				setCorner(UICorner_7, 8)
+
+				-- Knob (visual indicator) - not fully circular to avoid overly rounded look
+				local Knob = Instance.new("Frame")
+				local KnobCorner = Instance.new("UICorner")
+				Knob.Name = "Knob"
+				Knob.Parent = ToggleCheck
+				Knob.BackgroundColor3 = Theme.Panel
+				Knob.Size = UDim2.new(0, 24, 0, 22)
+				Knob.Position = UDim2.new(0, 4, 0.5, 0)
+				Knob.AnchorPoint = Vector2.new(0, 0.5)
+				Knob.BorderSizePixel = 0
+				KnobCorner.Parent = Knob
+				setCorner(KnobCorner, 6)
 
 				Check.Name = "Check"
 				Check.Parent = ToggleCheck
@@ -812,10 +827,10 @@ function Library:NewWindow(ConfigWindow)
 				Check.BackgroundTransparency = 1
 				Check.Font = Enum.Font.GothamBold
 				Check.TextSize = 12
-				Check.TextColor3 = Theme.Panel
+				Check.TextColor3 = Theme.TextPrimary
 				Check.Text = "OFF"
-				Check.Position = UDim2.new(0.5, 0, 0.5, 0)
-				Check.Size = UDim2.new(1, -6, 1, 0)
+				Check.Position = UDim2.new(0.5, 8, 0.5, 0)
+				Check.Size = UDim2.new(0.64, 0, 1, 0)
 				Check.TextXAlignment = Enum.TextXAlignment.Center
 				Check.TextYAlignment = Enum.TextYAlignment.Center
 				UICorner_8.Parent = Check
@@ -834,8 +849,8 @@ function Library:NewWindow(ConfigWindow)
 				Content.Name = "Content"
 				Content.Parent = Toggle
 				Content.BackgroundTransparency = 1.000
-				Content.Position = UDim2.new(0, 10, 0, 28)
-				Content.Size = UDim2.new(1, -60, 1, 0)
+				Content.Position = UDim2.new(0, 12, 0, 30)
+				Content.Size = UDim2.new(1, -80, 1, 0)
 				Content.Font = Enum.Font.Gotham
 				Content.Text = cftoggle.Description
 				Content.TextColor3 = Theme.TextSecondary
@@ -849,15 +864,19 @@ function Library:NewWindow(ConfigWindow)
 
 				function ToggleFunc:Set(Boolean)
 					if Boolean then
-						-- ON: accent rounded pill
+						-- ON: accent background, knob to right, ON text
 						ToggleCheck.BackgroundColor3 = Theme.Accent
 						Check.Text = "ON"
-						Library:TweenInstance(Check, 0.18, "TextTransparency", 0)
+						Check.TextColor3 = Theme.Panel
+						Library:TweenInstance(Check, 0.16, "TextTransparency", 0)
+						Library:TweenInstance(Knob, 0.18, "Position", UDim2.new(1, -28, 0.5, 0))
 					else
-						-- OFF: muted pill
+						-- OFF: muted pill, knob left, OFF text
 						ToggleCheck.BackgroundColor3 = Theme.Muted
-						Library:TweenInstance(Check, 0.18, "TextTransparency", 0.6)
+						Library:TweenInstance(Check, 0.16, "TextTransparency", 0.6)
 						Check.Text = "OFF"
+						Check.TextColor3 = Theme.TextPrimary
+						Library:TweenInstance(Knob, 0.18, "Position", UDim2.new(0, 4, 0.5, 0))
 					end
 
 					self.Value = Boolean
@@ -887,21 +906,21 @@ function Library:NewWindow(ConfigWindow)
 
 				Button.Name = "Button"
 				Button.Parent = SectionList
-				Button.BackgroundTransparency = 0.95
+				Button.BackgroundTransparency = 0.96
 				Button.BorderSizePixel = 0
-				Button.Size = UDim2.new(1, 0, 0, 34)
+				Button.Size = UDim2.new(1, 0, 0, 42)
 				UICorner_9.Parent = Button
 				setCorner(UICorner_9, 8)
 
 				Title_3.Name = "Title"
 				Title_3.Parent = Button
 				Title_3.BackgroundTransparency = 1.000
-				Title_3.Position = UDim2.new(0, 10, 0, 6)
-				Title_3.Size = UDim2.new(1, -80, 0, 18)
+				Title_3.Position = UDim2.new(0, 12, 0, 8)
+				Title_3.Size = UDim2.new(1, -140, 0, 20)
 				Title_3.Font = Enum.Font.GothamBold
 				Title_3.Text = cfbutton.Title
 				Title_3.TextColor3 = Theme.TextPrimary
-				Title_3.TextSize = 13.000
+				Title_3.TextSize = 14.000
 				Title_3.TextXAlignment = Enum.TextXAlignment.Left
 
 				Button_Click.Name = "Button_Click"
@@ -915,8 +934,8 @@ function Library:NewWindow(ConfigWindow)
 				Content_2.Name = "Content"
 				Content_2.Parent = Button
 				Content_2.BackgroundTransparency = 1.000
-				Content_2.Position = UDim2.new(0, 10, 0, 28)
-				Content_2.Size = UDim2.new(1, -60, 1, 0)
+				Content_2.Position = UDim2.new(0, 12, 0, 30)
+				Content_2.Size = UDim2.new(1, -100, 1, 0)
 				Content_2.Font = Enum.Font.Gotham
 				Content_2.Text = cfbutton.Description
 				Content_2.TextColor3 = Theme.TextSecondary
@@ -927,7 +946,7 @@ function Library:NewWindow(ConfigWindow)
 				ImageLabel.Parent = Button
 				ImageLabel.AnchorPoint = Vector2.new(0, 0.5)
 				ImageLabel.BackgroundTransparency = 1.000
-				ImageLabel.Position = UDim2.new(1, -36, 0.5, 0)
+				ImageLabel.Position = UDim2.new(1, -48, 0.5, 0)
 				ImageLabel.Size = UDim2.new(0, 20, 0, 20)
 				ImageLabel.Image = "rbxassetid://85905776508942"
 				ImageLabel.ImageColor3 = Theme.TextSecondary
@@ -935,9 +954,9 @@ function Library:NewWindow(ConfigWindow)
 				Library:UpdateContent(Content_2, Title_3, Button)
 
 				Button_Click.Activated:Connect(function()
-					Button.BackgroundTransparency = 0.98
+					Button.BackgroundTransparency = 0.94
 					cfbutton.Callback()
-					Library:TweenInstance(Button, 0.18, "BackgroundTransparency", 0.95)
+					Library:TweenInstance(Button, 0.18, "BackgroundTransparency", 0.96)
 				end)
 			end
 
@@ -979,28 +998,28 @@ function Library:NewWindow(ConfigWindow)
 
 				Dropdown.Name = "Dropdown"
 				Dropdown.Parent = SectionList
-				Dropdown.BackgroundTransparency = 0.95
+				Dropdown.BackgroundTransparency = 0.96
 				Dropdown.BorderSizePixel = 0
-				Dropdown.Size = UDim2.new(1, 0, 0, 34)
+				Dropdown.Size = UDim2.new(1, 0, 0, 42)
 				UICorner_19.Parent = Dropdown
 				setCorner(UICorner_19, 8)
 
 				Title_8.Name = "Title"
 				Title_8.Parent = Dropdown
 				Title_8.BackgroundTransparency = 1.000
-				Title_8.Position = UDim2.new(0, 10, 0, 6)
-				Title_8.Size = UDim2.new(1, -90, 0, 18)
+				Title_8.Position = UDim2.new(0, 12, 0, 8)
+				Title_8.Size = UDim2.new(1, -160, 0, 20)
 				Title_8.Font = Enum.Font.GothamBold
 				Title_8.Text = cfdropdown.Title
 				Title_8.TextColor3 = Theme.TextPrimary
-				Title_8.TextSize = 13.000
+				Title_8.TextSize = 14.000
 				Title_8.TextXAlignment = Enum.TextXAlignment.Left
 
 				Content_6.Name = "Content"
 				Content_6.Parent = Dropdown
 				Content_6.BackgroundTransparency = 1.000
-				Content_6.Position = UDim2.new(0, 10, 0, 28)
-				Content_6.Size = UDim2.new(1, -90, 1, 0)
+				Content_6.Position = UDim2.new(0, 12, 0, 30)
+				Content_6.Size = UDim2.new(1, -160, 1, 0)
 				Content_6.Font = Enum.Font.Gotham
 				Content_6.Text = cfdropdown.Description
 				Content_6.TextColor3 = Theme.TextSecondary
@@ -1012,26 +1031,26 @@ function Library:NewWindow(ConfigWindow)
 				Selects.Parent = Dropdown
 				Selects.AnchorPoint = Vector2.new(0, 0.5)
 				Selects.BackgroundColor3 = Theme.Panel
-				Selects.BorderColor3 = Color3.fromRGB(0, 0, 0)
+				Selects.BorderColor3 = Color3.fromRGB(40, 40, 45)
 				Selects.BorderSizePixel = 0
-				Selects.Position = UDim2.new(1, -98, 0.5, 0)
-				Selects.Size = UDim2.new(0, 82, 0, 28)
-				UICorner_20.CornerRadius = UDim.new(0, 8)
+				Selects.Position = UDim2.new(1, -118, 0.5, 0)
+				Selects.Size = UDim2.new(0, 108, 0, 32)
+				UICorner_20.CornerRadius = UDim.new(0, 7)
 				UICorner_20.Parent = Selects
 
 				SelectText.Name = "SelectText"
 				SelectText.Parent = Selects
 				SelectText.BackgroundTransparency = 1.000
-				SelectText.Position = UDim2.new(0, 10, 0, 0)
-				SelectText.Size = UDim2.new(1, -26, 1, 0)
+				SelectText.Position = UDim2.new(0, 12, 0, 0)
+				SelectText.Size = UDim2.new(1, -36, 1, 0)
 				SelectText.Font = Enum.Font.Gotham
 				SelectText.Text = ""
 				SelectText.TextColor3 = Theme.TextPrimary
-				SelectText.TextScaled = true
-				SelectText.TextSize = 12.000
-				SelectText.TextWrapped = true
+				SelectText.TextScaled = false
+				SelectText.TextSize = 13.000
+				SelectText.TextWrapped = false
 				UITextSizeConstraint.Parent = SelectText
-				UITextSizeConstraint.MaxTextSize = 12
+				UITextSizeConstraint.MaxTextSize = 13
 
 				Drop_Click.Name = "Drop_Click"
 				Drop_Click.Parent = Selects
@@ -1044,21 +1063,21 @@ function Library:NewWindow(ConfigWindow)
 				ImageLabel_2.Parent = Selects
 				ImageLabel_2.AnchorPoint = Vector2.new(0, 0.5)
 				ImageLabel_2.BackgroundTransparency = 1.000
-				ImageLabel_2.Position = UDim2.new(1, -22, 0.5, 0)
+				ImageLabel_2.Position = UDim2.new(1, -26, 0.5, 0)
 				ImageLabel_2.Size = UDim2.new(0, 14, 0, 14)
 				ImageLabel_2.Image = "rbxassetid://80845745785361"
 				ImageLabel_2.ImageColor3 = Theme.TextSecondary
 
 				Library:UpdateContent(Content_6, Title_8, Dropdown)
 
-				-- dropdown popup (keeps behavior but cleaned visuals)
+				-- dropdown popup (wider, premium modal with subtle header)
 				DropdownList.Name = "DropdownList"
 				DropdownList.Parent = DropdownZone
 				DropdownList.AnchorPoint = Vector2.new(0.5, 0.5)
-				DropdownList.BackgroundColor3 = Color3.fromRGB(250, 250, 250)
+				DropdownList.BackgroundColor3 = Theme.Panel
 				DropdownList.BorderSizePixel = 0
 				DropdownList.Position = UDim2.new(0.5, 0, 0.5, 0)
-				DropdownList.Size = UDim2.new(0, 380, 0, 260)
+				DropdownList.Size = UDim2.new(0, 520, 0, 360)
 				DropdownList.Visible = false
 				UICorner_24.Parent = DropdownList
 				setCorner(UICorner_24, 10)
@@ -1067,33 +1086,33 @@ function Library:NewWindow(ConfigWindow)
 				Topbar.Parent = DropdownList
 				Topbar.BackgroundTransparency = 1.000
 				Topbar.BorderSizePixel = 0
-				Topbar.Size = UDim2.new(1, 0, 0, 48)
+				Topbar.Size = UDim2.new(1, 0, 0, 56)
 
 				Title_10.Name = "Title"
 				Title_10.Parent = Topbar
 				Title_10.BackgroundTransparency = 1.000
-				Title_10.Position = UDim2.new(0, 16, 0, 8)
-				Title_10.Size = UDim2.new(1, -200, 1, -5)
+				Title_10.Position = UDim2.new(0, 20, 0, 12)
+				Title_10.Size = UDim2.new(1, -240, 1, -8)
 				Title_10.Font = Enum.Font.GothamBold
 				Title_10.Text = cfdropdown.Title
 				Title_10.TextColor3 = Theme.TextPrimary
-				Title_10.TextSize = 14.000
+				Title_10.TextSize = 16.000
 				Title_10.TextXAlignment = Enum.TextXAlignment.Left
 
 				SearchFrame_2.Name = "SearchFrame"
 				SearchFrame_2.Parent = Topbar
-				SearchFrame_2.BackgroundColor3 = Theme.Panel
+				SearchFrame_2.BackgroundColor3 = Theme.Muted
 				SearchFrame_2.BorderSizePixel = 0
-				SearchFrame_2.Position = UDim2.new(1, -160, 0, 8)
-				SearchFrame_2.Size = UDim2.new(0, 140, 0, 32)
-				UICorner_25.CornerRadius = UDim.new(0, 8)
+				SearchFrame_2.Position = UDim2.new(1, -220, 0, 12)
+				SearchFrame_2.Size = UDim2.new(0, 200, 0, 32)
+				UICorner_25.CornerRadius = UDim.new(0, 7)
 				UICorner_25.Parent = SearchFrame_2
 
 				IconSearch_2.Name = "IconSearch"
 				IconSearch_2.Parent = SearchFrame_2
 				IconSearch_2.AnchorPoint = Vector2.new(0, 0.5)
 				IconSearch_2.BackgroundTransparency = 1.000
-				IconSearch_2.Position = UDim2.new(0, 10, 0.5, 0)
+				IconSearch_2.Position = UDim2.new(0, 12, 0.5, 0)
 				IconSearch_2.Size = UDim2.new(0, 14, 0, 14)
 				IconSearch_2.Image = "rbxassetid://71309835376233"
 				IconSearch_2.ImageColor3 = Theme.TextSecondary
@@ -1101,20 +1120,20 @@ function Library:NewWindow(ConfigWindow)
 				TextBox.Parent = SearchFrame_2
 				TextBox.BackgroundTransparency = 1.000
 				TextBox.BorderSizePixel = 0
-				TextBox.Position = UDim2.new(0, 34, 0, 0)
-				TextBox.Size = UDim2.new(1, -40, 1, 0)
+				TextBox.Position = UDim2.new(0, 36, 0, 0)
+				TextBox.Size = UDim2.new(1, -44, 1, 0)
 				TextBox.Font = Enum.Font.Gotham
-				TextBox.PlaceholderText = "Search..."
+				TextBox.PlaceholderText = "Pesquisar..."
 				TextBox.Text = ""
 				TextBox.TextColor3 = Theme.TextPrimary
-				TextBox.TextSize = 12.000
+				TextBox.TextSize = 13.000
 				TextBox.TextXAlignment = Enum.TextXAlignment.Left
 
 				Click_Dropdown.Name = "Click_Dropdown"
 				Click_Dropdown.Parent = Topbar
 				Click_Dropdown.BackgroundTransparency = 1.000
-				Click_Dropdown.Position = UDim2.new(1, -42, 0, 8)
-				Click_Dropdown.Size = UDim2.new(0, 32, 0, 32)
+				Click_Dropdown.Position = UDim2.new(1, -54, 0, 12)
+				Click_Dropdown.Size = UDim2.new(0, 36, 0, 32)
 				Click_Dropdown.Text = ""
 
 				Icon_4.Name = "Icon"
@@ -1128,24 +1147,24 @@ function Library:NewWindow(ConfigWindow)
 
 				Real_List.Name = "Real_List"
 				Real_List.Parent = DropdownList
-				Real_List.BackgroundColor3 = Color3.fromRGB(245, 245, 247)
+				Real_List.BackgroundColor3 = Color3.fromRGB(23,23,25)
 				Real_List.BorderSizePixel = 0
-				Real_List.Position = UDim2.new(0, 12, 0, 54)
+				Real_List.Position = UDim2.new(0, 12, 0, 70)
 				Real_List.Selectable = false
-				Real_List.ScrollBarThickness = 0
-				Real_List.Size = UDim2.new(1, -24, 1, -66)
+				Real_List.ScrollBarThickness = 6
+				Real_List.Size = UDim2.new(1, -24, 1, -82)
 				Library:UpdateScrolling(Real_List, UIListLayout_5)
 				UICorner_26.Parent = Real_List
 				setCorner(UICorner_26, 8)
 
 				UIListLayout_5.Parent = Real_List
 				UIListLayout_5.SortOrder = Enum.SortOrder.LayoutOrder
-				UIListLayout_5.Padding = UDim.new(0, 6)
+				UIListLayout_5.Padding = UDim.new(0, 8)
 
 				UIPadding_5.Parent = Real_List
 				UIPadding_5.PaddingBottom = UDim.new(0, 8)
-				UIPadding_5.PaddingLeft = UDim.new(0, 8)
-				UIPadding_5.PaddingRight = UDim.new(0, 8)
+				UIPadding_5.PaddingLeft = UDim.new(0, 12)
+				UIPadding_5.PaddingRight = UDim.new(0, 12)
 				UIPadding_5.PaddingTop = UDim.new(0, 8)
 
 				local UICorner_29 = Instance.new("UICorner")
@@ -1154,13 +1173,14 @@ function Library:NewWindow(ConfigWindow)
 				Drop_Click.Activated:Connect(function()
 					DropdownZone.Visible = true
 					DropdownList.Visible = true
-					Library:TweenInstance(DropdownZone, 0.28, "BackgroundTransparency", 0.5)
+					Library:TweenInstance(DropdownZone, 0.26, "BackgroundTransparency", 0.55)
 				end)
 
 				Click_Dropdown.Activated:Connect(function()
+					Library:TweenInstance(DropdownZone, 0.26, "BackgroundTransparency", 1)
+					Library:TweenInstance(DropdownList, 0.20, "BackgroundTransparency", 1)
+					wait(0.26)
 					DropdownList.Visible = false
-					Library:TweenInstance(DropdownZone, 0.28, "BackgroundTransparency", 1)
-					wait(0.28)
 					DropdownZone.Visible = false
 				end)
 
@@ -1194,7 +1214,7 @@ function Library:NewWindow(ConfigWindow)
 								Library:TweenInstance(v.Title, 0.22, "TextTransparency", 0)
 								if v:FindFirstChild("Indicator") then v.Indicator.Visible = true end
 							else
-								v.BackgroundColor3 = Color3.fromRGB(245, 245, 247)
+								v.BackgroundColor3 = Color3.fromRGB(23,23,25)
 								if v:FindFirstChild("Indicator") then v.Indicator.Visible = false end
 								Library:TweenInstance(v.Title, 0.22, "TextTransparency", 0.6)
 							end
@@ -1203,7 +1223,7 @@ function Library:NewWindow(ConfigWindow)
 
 					local DropValueStr = table.concat(DropFunc.Value, ", ")
 					if DropValueStr == "" then
-						SelectText.Text = "None"
+						SelectText.Text = "Nenhum"
 						SelectText.TextColor3 = Theme.TextSecondary
 					else
 						SelectText.Text = DropValueStr
@@ -1220,9 +1240,9 @@ function Library:NewWindow(ConfigWindow)
 
 					Option2.Name = "Option 2"
 					Option2.Parent = Real_List
-					Option2.BackgroundColor3 = Color3.fromRGB(245, 245, 247)
+					Option2.BackgroundColor3 = Color3.fromRGB(28,28,30)
 					Option2.BorderSizePixel = 0
-					Option2.Size = UDim2.new(1, 0, 0, 36)
+					Option2.Size = UDim2.new(1, 0, 0, 40)
 					UICorner_28.Parent = Option2
 					setCorner(UICorner_28, 8)
 
@@ -1239,12 +1259,12 @@ function Library:NewWindow(ConfigWindow)
 					Title_12.Font = Enum.Font.Gotham
 					Title_12.Text = v
 					Title_12.TextColor3 = Theme.TextPrimary
-					Title_12.TextSize = 13.000
+					Title_12.TextSize = 14.000
 					Title_12.TextTransparency = 0.6
 
-					UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(250,250,250)), ColorSequenceKeypoint.new(1.00, Theme.Accent) }
+					UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(28,28,30)), ColorSequenceKeypoint.new(1.00, Theme.Accent) }
 					UIGradient_3.Rotation = 0.99
-					UIGradient_3.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.7), NumberSequenceKeypoint.new(1.00, 0.7) }
+					UIGradient_3.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.8), NumberSequenceKeypoint.new(1.00, 0.85) }
 					UIGradient_3.Parent = Option2
 
 					local Indicator = Instance.new("Frame", Option2)
@@ -1254,7 +1274,7 @@ function Library:NewWindow(ConfigWindow)
 					Indicator.Position = UDim2.new(0, 0, 0, 0)
 					Indicator.Size = UDim2.new(0, 4, 1, 0)
 					Indicator.Visible = false
-					local indCorner = Instance.new("UICorner", Indicator); indCorner.CornerRadius = UDim.new(0, 2)
+					local indCorner = Instance.new("UICorner", Indicator); setCorner(indCorner, 3)
 
 					Option2_Click.Activated:Connect(function()
 						local currentVal = Title_12.Text
@@ -1330,28 +1350,28 @@ function Library:NewWindow(ConfigWindow)
 
 				Input.Name = "Input"
 				Input.Parent = SectionList
-				Input.BackgroundTransparency = 0.95
+				Input.BackgroundTransparency = 0.96
 				Input.BorderSizePixel = 0
-				Input.Size = UDim2.new(1, 0, 0, 34)
+				Input.Size = UDim2.new(1, 0, 0, 42)
 				UICorner_17.Parent = Input
 				setCorner(UICorner_17, 8)
 
 				Title_7.Name = "Title"
 				Title_7.Parent = Input
 				Title_7.BackgroundTransparency = 1.000
-				Title_7.Position = UDim2.new(0, 10, 0, 6)
-				Title_7.Size = UDim2.new(1, -80, 0, 18)
+				Title_7.Position = UDim2.new(0, 12, 0, 8)
+				Title_7.Size = UDim2.new(1, -220, 0, 20)
 				Title_7.Font = Enum.Font.GothamBold
 				Title_7.Text = cftextbox.Title
 				Title_7.TextColor3 = Theme.TextPrimary
-				Title_7.TextSize = 13.000
+				Title_7.TextSize = 14.000
 				Title_7.TextXAlignment = Enum.TextXAlignment.Left
 
 				Content_5.Name = "Content"
 				Content_5.Parent = Input
 				Content_5.BackgroundTransparency = 1.000
-				Content_5.Position = UDim2.new(0, 10, 0, 28)
-				Content_5.Size = UDim2.new(1, -160, 1, 0)
+				Content_5.Position = UDim2.new(0, 12, 0, 30)
+				Content_5.Size = UDim2.new(1, -240, 1, 0)
 				Content_5.Font = Enum.Font.Gotham
 				Content_5.Text = cftextbox.Description
 				Content_5.TextColor3 = Theme.TextSecondary
@@ -1364,11 +1384,11 @@ function Library:NewWindow(ConfigWindow)
 				TextboxFrame.Name = "TextboxFrame"
 				TextboxFrame.Parent = Input
 				TextboxFrame.AnchorPoint = Vector2.new(0, 0.5)
-				TextboxFrame.BackgroundColor3 = Theme.Panel
-				TextboxFrame.BorderColor3 = Color3.fromRGB(230, 230, 230)
+				TextboxFrame.BackgroundColor3 = Theme.Muted
+				TextboxFrame.BorderColor3 = Color3.fromRGB(40, 40, 45)
 				TextboxFrame.BorderSizePixel = 0
-				TextboxFrame.Position = UDim2.new(1, -180, 0.5, 0)
-				TextboxFrame.Size = UDim2.new(0, 160, 0, 30)
+				TextboxFrame.Position = UDim2.new(1, -228, 0.5, 0)
+				TextboxFrame.Size = UDim2.new(0, 208, 0, 32)
 				UICorner_18.Parent = TextboxFrame
 				setCorner(UICorner_18, 8)
 
@@ -1376,8 +1396,8 @@ function Library:NewWindow(ConfigWindow)
 				RealTextBox.Parent = TextboxFrame
 				RealTextBox.BackgroundTransparency = 1.000
 				RealTextBox.BorderSizePixel = 0
-				RealTextBox.Position = UDim2.new(0, 38, 0, 0)
-				RealTextBox.Size = UDim2.new(1, -40, 1, 0)
+				RealTextBox.Position = UDim2.new(0, 40, 0, 0)
+				RealTextBox.Size = UDim2.new(1, -44, 1, 0)
 				RealTextBox.Font = Enum.Font.Gotham
 				RealTextBox.PlaceholderText = cftextbox.PlaceHolder
 				RealTextBox.Text = cftextbox.Default
@@ -1427,9 +1447,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Slider.Name = "Slider"
 				Slider.Parent = SectionList
-				Slider.BackgroundTransparency = 0.95
+				Slider.BackgroundTransparency = 0.96
 				Slider.BorderSizePixel = 0
-				Slider.Size = UDim2.new(1, 0, 0, 34)
+				Slider.Size = UDim2.new(1, 0, 0, 42)
 
 				UICorner_10.Parent = Slider
 				setCorner(UICorner_10, 8)
@@ -1437,19 +1457,19 @@ function Library:NewWindow(ConfigWindow)
 				Title_4.Name = "Title"
 				Title_4.Parent = Slider
 				Title_4.BackgroundTransparency = 1.000
-				Title_4.Position = UDim2.new(0, 10, 0, 6)
-				Title_4.Size = UDim2.new(1, -200, 0, 18)
+				Title_4.Position = UDim2.new(0, 12, 0, 8)
+				Title_4.Size = UDim2.new(1, -260, 0, 20)
 				Title_4.Font = Enum.Font.GothamBold
 				Title_4.Text = cfslider.Title
 				Title_4.TextColor3 = Theme.TextPrimary
-				Title_4.TextSize = 13.000
+				Title_4.TextSize = 14.000
 				Title_4.TextXAlignment = Enum.TextXAlignment.Left
 
 				Content_3.Name = "Content"
 				Content_3.Parent = Slider
 				Content_3.BackgroundTransparency = 1.000
-				Content_3.Position = UDim2.new(0, 10, 0, 28)
-				Content_3.Size = UDim2.new(1, -160, 1, 0)
+				Content_3.Position = UDim2.new(0, 12, 0, 30)
+				Content_3.Size = UDim2.new(1, -260, 1, 0)
 				Content_3.Font = Enum.Font.Gotham
 				Content_3.Text = cfslider.Description
 				Content_3.TextColor3 = Theme.TextSecondary
@@ -1464,8 +1484,8 @@ function Library:NewWindow(ConfigWindow)
 				SliderFrame.AnchorPoint = Vector2.new(0, 0.5)
 				SliderFrame.BackgroundColor3 = Theme.Muted
 				SliderFrame.BorderSizePixel = 0
-				SliderFrame.Position = UDim2.new(1, -180, 0.5, 0)
-				SliderFrame.Size = UDim2.new(0, 160, 0, 8)
+				SliderFrame.Position = UDim2.new(1, -260, 0.5, 0)
+				SliderFrame.Size = UDim2.new(0, 220, 0, 8)
 				UICorner_11.Parent = SliderFrame
 				UICorner_11.CornerRadius = UDim.new(1, 0)
 
@@ -1473,29 +1493,29 @@ function Library:NewWindow(ConfigWindow)
 				SliderDraggable.Parent = SliderFrame
 				SliderDraggable.BackgroundColor3 = Theme.Accent
 				SliderDraggable.BorderSizePixel = 0
-				SliderDraggable.Size = UDim2.new(0, 20, 1, 0)
+				SliderDraggable.Size = UDim2.new(0, 28, 1, 0)
 				UICorner_12.Parent = SliderDraggable
-				UICorner_12.CornerRadius = UDim.new(1, 0)
+				UICorner_12.CornerRadius = UDim.new(0, 8)
 
 				Circle.Name = "Circle"
 				Circle.Parent = SliderDraggable
-				Circle.AnchorPoint = Vector2.new(0, 0.5)
+				Circle.AnchorPoint = Vector2.new(0.5, 0.5)
 				Circle.BackgroundColor3 = Theme.Panel
 				Circle.BorderSizePixel = 0
-				Circle.Position = UDim2.new(1, -8, 0.5, 0)
-				Circle.Size = UDim2.new(0, 14, 0, 14)
+				Circle.Position = UDim2.new(1, -14, 0.5, 0)
+				Circle.Size = UDim2.new(0, 18, 0, 18)
 				UICorner_13.Parent = Circle
-				setCorner(UICorner_13, 14)
+				setCorner(UICorner_13, 6)
 
 				SliderValue.Name = "SliderValue"
 				SliderValue.Parent = Slider
 				SliderValue.AnchorPoint = Vector2.new(0, 0.5)
-				SliderValue.BackgroundColor3 = Theme.Panel
+				SliderValue.BackgroundColor3 = Theme.Muted
 				SliderValue.BorderSizePixel = 0
-				SliderValue.Position = UDim2.new(1, -220, 0.5, 0)
-				SliderValue.Size = UDim2.new(0, 44, 0, 22)
+				SliderValue.Position = UDim2.new(1, -294, 0.5, 0)
+				SliderValue.Size = UDim2.new(0, 58, 0, 26)
 				SliderValue.Font = Enum.Font.Gotham
-				SliderValue.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
+				SliderValue.PlaceholderColor3 = Color3.fromRGB(140, 140, 145)
 				SliderValue.PlaceholderText = "..."
 				SliderValue.Text = ""
 				SliderValue.TextColor3 = Theme.TextPrimary
@@ -1581,8 +1601,8 @@ function Library:NewWindow(ConfigWindow)
 				Title_5.Name = "Title"
 				Title_5.Parent = Seperator
 				Title_5.BackgroundTransparency = 1.000
-				Title_5.Position = UDim2.new(0, 10, 0, 0)
-				Title_5.Size = UDim2.new(1, -10, 1, 0)
+				Title_5.Position = UDim2.new(0, 12, 0, 0)
+				Title_5.Size = UDim2.new(1, -12, 1, 0)
 				Title_5.Font = Enum.Font.Gotham
 				Title_5.Text = args
 				Title_5.TextColor3 = Theme.TextSecondary
@@ -1604,32 +1624,32 @@ function Library:NewWindow(ConfigWindow)
 
 				Paragraph.Name = "Paragraph"
 				Paragraph.Parent = SectionList
-				Paragraph.BackgroundTransparency = 0.95
+				Paragraph.BackgroundTransparency = 0.96
 				Paragraph.BorderSizePixel = 0
-				Paragraph.Size = UDim2.new(1, 0, 0, 56)
+				Paragraph.Size = UDim2.new(1, 0, 0, 72)
 				UICorner_16.Parent = Paragraph
 				setCorner(UICorner_16, 8)
 
 				Title_6.Name = "Title"
 				Title_6.Parent = Paragraph
 				Title_6.BackgroundTransparency = 1.000
-				Title_6.Position = UDim2.new(0, 10, 0, 8)
-				Title_6.Size = UDim2.new(1, -60, 0, 18)
+				Title_6.Position = UDim2.new(0, 12, 0, 10)
+				Title_6.Size = UDim2.new(1, -20, 0, 20)
 				Title_6.Font = Enum.Font.GothamBold
 				Title_6.Text = cfpara.Title
 				Title_6.TextColor3 = Theme.TextPrimary
-				Title_6.TextSize = 13.000
+				Title_6.TextSize = 14.000
 				Title_6.TextXAlignment = Enum.TextXAlignment.Left
 
 				Content_4.Name = "Content"
 				Content_4.Parent = Paragraph
 				Content_4.BackgroundTransparency = 1.000
-				Content_4.Position = UDim2.new(0, 10, 0, 28)
-				Content_4.Size = UDim2.new(1, -10, 1, 0)
+				Content_4.Position = UDim2.new(0, 12, 0, 34)
+				Content_4.Size = UDim2.new(1, -20, 1, -34)
 				Content_4.Font = Enum.Font.Gotham
 				Content_4.Text = cfpara.Content
 				Content_4.TextColor3 = Theme.TextSecondary
-				Content_4.TextSize = 12.000
+				Content_4.TextSize = 13.000
 				Content_4.TextXAlignment = Enum.TextXAlignment.Left
 				Content_4.TextYAlignment = Enum.TextYAlignment.Top
 
@@ -1657,46 +1677,46 @@ function Library:NewWindow(ConfigWindow)
 
 				DiscordCard.Name = "DiscordCard"
 				DiscordCard.Parent = SectionList 
-				DiscordCard.BackgroundColor3 = Theme.Panel
-				DiscordCard.BackgroundTransparency = 0.02
+				DiscordCard.BackgroundColor3 = Theme.Muted
+				DiscordCard.BackgroundTransparency = 0
 				DiscordCard.BorderSizePixel = 0
-				DiscordCard.Size = UDim2.new(1, 0, 0, 70)
+				DiscordCard.Size = UDim2.new(1, 0, 0, 74)
 
-				UICorner.CornerRadius = UDim.new(0, 10)
+				UICorner.CornerRadius = UDim.new(0, 8)
 				UICorner.Parent = DiscordCard
 
 				Icon.Parent = DiscordCard
 				Icon.BackgroundTransparency = 1
-				Icon.Position = UDim2.new(0, 12, 0, 12)
-				Icon.Size = UDim2.new(0, 46, 0, 46)
+				Icon.Position = UDim2.new(0, 14, 0, 12)
+				Icon.Size = UDim2.new(0, 48, 0, 48)
 				Icon.Image = "rbxassetid://123256573634"
-				Icon.ImageColor3 = Theme.Accent
+				Icon.ImageColor3 = Theme.TextPrimary
 
 				Title.Parent = DiscordCard
 				Title.BackgroundTransparency = 1
-				Title.Position = UDim2.new(0, 72, 0, 18)
-				Title.Size = UDim2.new(1, -170, 0, 20)
+				Title.Position = UDim2.new(0, 78, 0, 16)
+				Title.Size = UDim2.new(1, -220, 0, 22)
 				Title.Font = Enum.Font.GothamBold
 				Title.Text = DiscordTitle or "Community"
 				Title.TextColor3 = Theme.TextPrimary
-				Title.TextSize = 14
+				Title.TextSize = 15
 				Title.TextXAlignment = Enum.TextXAlignment.Left
 
 				SubTitle.Parent = DiscordCard
 				SubTitle.BackgroundTransparency = 1
-				SubTitle.Position = UDim2.new(0, 72, 0, 38)
-				SubTitle.Size = UDim2.new(1, -170, 0, 16)
+				SubTitle.Position = UDim2.new(0, 78, 0, 36)
+				SubTitle.Size = UDim2.new(1, -220, 0, 16)
 				SubTitle.Font = Enum.Font.Gotham
 				SubTitle.Text = "Click to join the server"
 				SubTitle.TextColor3 = Theme.TextSecondary
-				SubTitle.TextSize = 12
+				SubTitle.TextSize = 13
 				SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
 				JoinBtn.Name = "JoinBtn"
 				JoinBtn.Parent = DiscordCard
 				JoinBtn.BackgroundColor3 = Theme.Accent
-				JoinBtn.Position = UDim2.new(1, -92, 0, 20)
-				JoinBtn.Size = UDim2.new(0, 72, 0, 30)
+				JoinBtn.Position = UDim2.new(1, -110, 0, 20)
+				JoinBtn.Size = UDim2.new(0, 86, 0, 36)
 				JoinBtn.Font = Enum.Font.GothamBold
 				JoinBtn.Text = "Join"
 				JoinBtn.TextColor3 = Color3.fromRGB(255,255,255)
@@ -1746,15 +1766,15 @@ function Library:NewWindow(ConfigWindow)
 	self:MakeDraggable(G2L["2"],G2L["2"])
 	G2L["2"]["BackgroundColor3"] = Theme.Panel;
 	G2L["2"]["Image"] = [[rbxassetid://101817370702077]];
-	G2L["2"]["Size"] = UDim2.new(0, 52, 0, 52);
+	G2L["2"]["Size"] = UDim2.new(0, 58, 0, 58);
 	G2L["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 	G2L["2"]["AnchorPoint"] = Vector2.new(0, 0)
 	G2L["2"]["Position"] = UDim2.new(0, 30, 0, 30)
 	G2L["3"] = Instance.new("UICorner", G2L["2"]);
-	G2L["3"]["CornerRadius"] = UDim.new(1, 0);
+	setCorner(G2L["3"], 8)
 	G2L["4"] = Instance.new("UIStroke", G2L["2"]);
 	G2L["4"]["Thickness"] = 1.5;
-	G2L["4"]["Color"] = Color3.fromRGB(235, 235, 235);
+	G2L["4"]["Color"] = Color3.fromRGB(50, 50, 54);
 
 	G2L["2"].MouseButton1Click:Connect(function()
 		TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled
