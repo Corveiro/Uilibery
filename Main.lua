@@ -1489,24 +1489,18 @@ function Library:NewWindow(ConfigWindow)
 
 				UICorner_7.Parent = ToggleCheck
 
-				Check.Name = "Check"
-
-				Check.Parent = ToggleCheck
-
-				Check.AnchorPoint = Vector2.new(0, 0.5)
-
-				Check.BackgroundTransparency = 1
+				
+					Check.Name = "Check"
+					Check.Parent = ToggleCheck
+					Check.AnchorPoint = Vector2.new(0, 0.5)
+					Check.BackgroundTransparency = 1
 					Check.Font = Enum.Font.GothamBold
 					Check.TextSize = 9
 					Check.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-				Check.BorderColor3 = Color3.fromRGB(0, 0, 0)
-
-				Check.BorderSizePixel = 0
-
-				Check.Position = UDim2.new(0, 3, 0.5, 0)
-
-				Check.Size = UDim2.new(0, 16, 0, 16)
+					Check.Text = "OFF"
+					Check.Position = UDim2.new(0, 3, 0.5, 0)
+					Check.Size = UDim2.new(0, 30, 0, 16)
+    
 
 				UICorner_8.CornerRadius = UDim.new(1, 0)
 
@@ -1573,7 +1567,7 @@ function Library:NewWindow(ConfigWindow)
 						ToggleCheck.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 
 						Check.Text = "ON"
-							Check.Position = UDim2.new(0, 22, 0.5, 0)
+							Check.Position = UDim2.new(0, 18, 0.5, 0)
 
 						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
 
@@ -1912,7 +1906,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Selects.Position = UDim2.new(1, -90, 0.5, 0)
 
-				Selects.Size = UDim2.new(0, 80, 0, 18)
+				Selects.Size = UDim2.new(0, 80, 0, 25)
 
 				UICorner_20.CornerRadius = UDim.new(0, 2)
 
@@ -2288,7 +2282,8 @@ function Library:NewWindow(ConfigWindow)
 
 							else
 
-								Library:TweenInstance(v, 0.3, "BackgroundTransparency", 0.98)
+								v.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+								if v:FindFirstChild("Indicator") then v.Indicator.Visible = false end
 
 								Library:TweenInstance(v.Title, 0.3, "TextTransparency", 0.5)
 
@@ -2328,9 +2323,9 @@ function Library:NewWindow(ConfigWindow)
 
 					Option2.Parent = Real_List
 
-					Option2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+					Option2.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-					Option2.BackgroundTransparency = 0.980
+					Option2.BackgroundTransparency = 0
 
 					Option2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2395,6 +2390,15 @@ function Library:NewWindow(ConfigWindow)
 					UIGradient_3.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.50), NumberSequenceKeypoint.new(0.50, 0.49), NumberSequenceKeypoint.new(1.00, 0.44) }
 
 					UIGradient_3.Parent = Option2
+
+						local Indicator = Instance.new("Frame", Option2)
+						Indicator.Name = "Indicator"
+						Indicator.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+						Indicator.BorderSizePixel = 0
+						Indicator.Position = UDim2.new(0, 0, 0, 0)
+						Indicator.Size = UDim2.new(0, 2, 1, 0)
+						Indicator.Visible = false
+    
 
 					Option2_Click.Activated:Connect(function()
 
@@ -2818,7 +2822,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderDraggable.Size = UDim2.new(0, 20, 1, 0)
 
-				UICorner_12.CornerRadius = UDim.new(0, 2)
+				UICorner_12.CornerRadius = UDim.new(1, 0)
 
 				UICorner_12.Parent = SliderDraggable
 
