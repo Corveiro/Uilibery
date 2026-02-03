@@ -505,11 +505,11 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_2.Position = UDim2.new(0.5, 0, 0.5, 0)
 
-	Icon_2.Size = UDim2.new(0, 20, 0, 20)
+	Icon_2.Size = UDim2.new(0, 18, 0, 18)
 
 	Icon_2.Image = "rbxassetid://136452605242985"
 
-	Icon_2.ImageRectOffset = Vector2.new(384, 672)
+	Icon_2.ImageRectOffset = Vector2.new(580, 194)
 
 	Icon_2.ImageRectSize = Vector2.new(96, 96)
 
@@ -988,6 +988,8 @@ function Library:NewWindow(ConfigWindow)
 	self:MakeDraggable(Top, DropShadowHolder)
 
 	local AllLayouts = 0
+
+	local WindowFunc = {}
 
 	function WindowFunc:NewTab(t, iconid)
 
