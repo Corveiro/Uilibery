@@ -313,20 +313,14 @@ function Library:NewWindow(ConfigWindow)
 	Top.Size = UDim2.new(1, 0, 0, 50)
 
 	Line.Name = "Line"
-
-	Line.Parent = Top
-
-	Line.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
-
-	Line.BackgroundTransparency = 0.500
-
-	Line.BorderColor3 = Color3.fromRGB(0, 0, 0)
-
-	Line.BorderSizePixel = 0
-
-	Line.Position = UDim2.new(0, 0, 1, -1)
-
-	Line.Size = UDim2.new(1, 0, 0, 1)
+Line.Parent = Top
+Line.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+Line.BackgroundTransparency = 1.000
+Line.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Line.BorderSizePixel = 0
+Line.Position = UDim2.new(0, 0, 1, -1)
+Line.Size = UDim2.new(1, 0, 0, 1)
+Line.Visible = false
 
 	Left.Name = "Left"
 
@@ -700,7 +694,7 @@ function Library:NewWindow(ConfigWindow)
 
 	UIStroke.Color = Color3.fromRGB(180, 180, 180)
 
-	UIStroke.Transparency = 0.5
+	UIStroke.Transparency = 1.0
 
 	UIStroke.Parent = Main
 
@@ -721,20 +715,14 @@ function Library:NewWindow(ConfigWindow)
 	TabFrame.Size = UDim2.new(0, 144, 1, -50)
 
 	Line_2.Name = "Line"
-
-	Line_2.Parent = TabFrame
-
-	Line_2.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
-
-	Line_2.BackgroundTransparency = 0.500
-
-	Line_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
-
-	Line_2.BorderSizePixel = 0
-
-	Line_2.Position = UDim2.new(1, -1, 0, 0)
-
-	Line_2.Size = UDim2.new(0, 1, 1, 0)
+Line_2.Parent = TabFrame
+Line_2.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+Line_2.BackgroundTransparency = 1.000
+Line_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Line_2.BorderSizePixel = 0
+Line_2.Position = UDim2.new(1, -1, 0, 0)
+Line_2.Size = UDim2.new(0, 1, 1, 0)
+Line_2.Visible = false
 
 	SearchFrame.Name = "SearchFrame"
 
