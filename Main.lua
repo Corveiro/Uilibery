@@ -352,7 +352,7 @@ function Library:NewWindow(ConfigWindow)
 
 	NameHub.Text = ConfigWindow.Title
 
-	NameHub.TextColor3 = Color3.fromRGB(30, 30, 30)
+	NameHub.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 	NameHub.TextSize = 14.000
 
@@ -588,7 +588,7 @@ function Library:NewWindow(ConfigWindow)
 
 		suacc2["FontFace"] = Font.new([[rbxasset://fonts/families/Ubuntu.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal);
 
-		suacc2["TextColor3"] = Color3.fromRGB(30, 30, 30);
+		suacc2["TextColor3"] = Color3.fromRGB(255, 255, 255);
 
 		suacc2["BackgroundTransparency"] = 1;
 
@@ -604,7 +604,7 @@ function Library:NewWindow(ConfigWindow)
 
 		btnyes["TextSize"] = 25;
 
-		btnyes["TextColor3"] = Color3.fromRGB(30, 30, 30);
+		btnyes["TextColor3"] = Color3.fromRGB(255, 255, 255);
 
 		btnyes["BackgroundColor3"] = Color3.fromRGB(5, 5, 5);
 
@@ -640,7 +640,7 @@ function Library:NewWindow(ConfigWindow)
 
 		btnno["TextSize"] = 25;
 
-		btnno["TextColor3"] = Color3.fromRGB(30, 30, 30);
+		btnno["TextColor3"] = Color3.fromRGB(255, 255, 255);
 
 		btnno["BackgroundColor3"] = Color3.fromRGB(5, 5, 5);
 
@@ -800,7 +800,7 @@ function Library:NewWindow(ConfigWindow)
 
 	SearchBox.Text = ""
 
-	SearchBox.TextColor3 = Color3.fromRGB(30, 30, 30)
+	SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 	SearchBox.TextSize = 13.000
 
@@ -968,7 +968,7 @@ function Library:NewWindow(ConfigWindow)
 
 	TextLabel.Text = ""
 
-	TextLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 	TextLabel.TextSize = 13.000
 
@@ -1070,7 +1070,7 @@ function Library:NewWindow(ConfigWindow)
 
 		TabIcon.Size = UDim2.new(0, 14, 0, 14) 
 
-		TabIcon.ImageColor3 = Color3.fromRGB(30, 30, 30)
+		TabIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
 
 		
 
@@ -1120,7 +1120,7 @@ function Library:NewWindow(ConfigWindow)
 
 		NameTab_2.Text = t
 
-		NameTab_2.TextColor3 = Color3.fromRGB(30, 30, 30)
+		NameTab_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 		NameTab_2.TextSize = 12.000
 
@@ -1336,7 +1336,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Title.Text = RealNameSection
 
-			Title.TextColor3 = Color3.fromRGB(30, 30, 30)
+			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 			Title.TextSize = 14.000
 
@@ -1472,7 +1472,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_2.Text = cftoggle.Title
 
-				Title_2.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_2.TextSize = 13.000
 
@@ -1672,7 +1672,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_3.Text = cfbutton.Title
 
-				Title_3.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_3.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_3.TextSize = 13.000
 
@@ -1870,7 +1870,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_8.Text = cfdropdown.Title
 
-				Title_8.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_8.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_8.TextSize = 13.000
 
@@ -1944,7 +1944,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SelectText.Text = ""
 
-				SelectText.TextColor3 = Color3.fromRGB(30, 30, 30)
+				SelectText.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				SelectText.TextScaled = true
 
@@ -2060,7 +2060,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_10.Text = cfdropdown.Title
 
-				Title_10.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_10.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_10.TextSize = 14.000
 
@@ -2132,7 +2132,7 @@ function Library:NewWindow(ConfigWindow)
 
 				TextBox.Text = ""
 
-				TextBox.TextColor3 = Color3.fromRGB(30, 30, 30)
+				TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				TextBox.TextSize = 12.000
 
@@ -2394,7 +2394,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Title_12.Text = v
 
-					Title_12.TextColor3 = Color3.fromRGB(30, 30, 30)
+					Title_12.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 					Title_12.TextSize = 13.000
 
@@ -2564,7 +2564,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_7.Text = cftextbox.Title
 
-				Title_7.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_7.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_7.TextSize = 13.000
 
@@ -2642,7 +2642,7 @@ function Library:NewWindow(ConfigWindow)
 
 				RealTextBox.Text = cftextbox.Default
 
-				RealTextBox.TextColor3 = Color3.fromRGB(30, 30, 30)
+				RealTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				RealTextBox.TextSize = 12.000
 
@@ -2762,7 +2762,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_4.Text = cfslider.Title
 
-				Title_4.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_4.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_4.TextSize = 13.000
 
@@ -2878,7 +2878,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderValue.Text = ""
 
-				SliderValue.TextColor3 = Color3.fromRGB(30, 30, 30)
+				SliderValue.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				SliderValue.TextSize = 11.000
 
@@ -3036,7 +3036,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_5.Text = args
 
-				Title_5.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_5.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_5.TextSize = 13.000
 
@@ -3102,7 +3102,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_6.Text = cfpara.Title
 
-				Title_6.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title_6.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 				Title_6.TextSize = 13.000
 
@@ -3186,7 +3186,7 @@ function Library:NewWindow(ConfigWindow)
 				Title.Size = UDim2.new(1, -140, 0, 20)
 				Title.Font = Enum.Font.GothamBold
 				Title.Text = DiscordTitle or "Night Mystic"
-				Title.TextColor3 = Color3.fromRGB(30, 30, 30)
+				Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 				Title.TextSize = 14
 				Title.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -3207,7 +3207,7 @@ function Library:NewWindow(ConfigWindow)
 				JoinBtn.Size = UDim2.new(0, 65, 0, 30)
 				JoinBtn.Font = Enum.Font.GothamBold
 				JoinBtn.Text = "Join"
-				JoinBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
+				JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 				JoinBtn.TextSize = 13
 
 				BtnCorner.CornerRadius = UDim.new(0, 4)
