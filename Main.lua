@@ -130,9 +130,9 @@ function Library:NewWindow(ConfigWindow)
 
 	local ConfigWindow = self:MakeConfig({
 
-		Title = "SYNTRAX Hub",
+		Title = "me from all evil, amen. Hub",
 
-		Description = "By Thais",
+		Description = "By quebrador de cama box",
 
 	}, ConfigWindow or {})
 
@@ -282,7 +282,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		Main.BackgroundTransparency = 0
+		Main.BackgroundTransparency = 0.7
 
 		Main.ScaleType = Enum.ScaleType.Crop
 
@@ -304,7 +304,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Top.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Top.BackgroundTransparency = 1.000
+	Top.BackgroundTransparency = 0.5
 
 	Top.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -332,7 +332,7 @@ Line.Visible = false
 
 	NameHub.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	NameHub.BackgroundTransparency = 1.000
+	NameHub.BackgroundTransparency = 0.7
 
 	NameHub.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -406,7 +406,7 @@ Line.Visible = false
 
 	Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Frame.BackgroundTransparency = 1.000
+	Frame.BackgroundTransparency = 0.7
 
 	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -438,7 +438,7 @@ Line.Visible = false
 
 	Minize.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Minize.BackgroundTransparency = 1.000
+	Minize.BackgroundTransparency = 0.7
 
 	Minize.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -484,7 +484,7 @@ Line.Visible = false
 
 	Large.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Large.BackgroundTransparency = 1.000
+	Large.BackgroundTransparency = 0.7
 
 	Large.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -530,7 +530,7 @@ Line.Visible = false
 
 	Close.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Close.BackgroundTransparency = 1.000
+	Close.BackgroundTransparency = 0.7
 
 	Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -704,7 +704,7 @@ Line.Visible = false
 
 	TabFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	TabFrame.BackgroundTransparency = 1.000
+	TabFrame.BackgroundTransparency = 0.7
 
 	TabFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -770,7 +770,7 @@ Line_2.Visible = false
 
 	SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	SearchBox.BackgroundTransparency = 1.000
+	SearchBox.BackgroundTransparency = 0.7
 
 	SearchBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -800,7 +800,7 @@ Line_2.Visible = false
 
 	ScrollingTab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	ScrollingTab.BackgroundTransparency = 1.000
+	ScrollingTab.BackgroundTransparency = 0.7
 
 	ScrollingTab.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -838,7 +838,7 @@ Line_2.Visible = false
 
 	LayoutFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	LayoutFrame.BackgroundTransparency = 1.000
+	LayoutFrame.BackgroundTransparency = 0.7
 
 	LayoutFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -856,7 +856,7 @@ Line_2.Visible = false
 
 	RealLayout.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	RealLayout.BackgroundTransparency = 1.000
+	RealLayout.BackgroundTransparency = 0.7
 
 	RealLayout.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -930,7 +930,7 @@ Line_2.Visible = false
 
 	LayoutName.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	LayoutName.BackgroundTransparency = 1.000
+	LayoutName.BackgroundTransparency = 0.7
 
 	LayoutName.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -942,7 +942,7 @@ Line_2.Visible = false
 
 	TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	TextLabel.BackgroundTransparency = 1.000
+	TextLabel.BackgroundTransparency = 0.7
 
 	TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1014,7 +1014,7 @@ Line_2.Visible = false
 
 		TabDisable.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		TabDisable.BackgroundTransparency = 1.000
+		TabDisable.BackgroundTransparency = 0.7
 
 		TabDisable.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1050,7 +1050,7 @@ Line_2.Visible = false
 
 		TabIcon.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		TabIcon.BackgroundTransparency = 1.000
+		TabIcon.BackgroundTransparency = 0.7
 
 		TabIcon.Position = UDim2.new(0, 12, 0.5, 0)
 
@@ -1094,7 +1094,7 @@ Line_2.Visible = false
 
 		NameTab_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		NameTab_2.BackgroundTransparency = 1.000
+		NameTab_2.BackgroundTransparency = 0.7
 
 		NameTab_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1122,7 +1122,7 @@ Line_2.Visible = false
 
 		Click_Tab_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		Click_Tab_2.BackgroundTransparency = 1.000
+		Click_Tab_2.BackgroundTransparency = 0.7
 
 		Click_Tab_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1144,7 +1144,7 @@ Line_2.Visible = false
 
 		Layout.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		Layout.BackgroundTransparency = 1.000
+		Layout.BackgroundTransparency = 0.7
 
 		Layout.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1286,7 +1286,7 @@ Line_2.Visible = false
 
 	NameSection.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	NameSection.BackgroundTransparency = 1.000
+	NameSection.BackgroundTransparency = 0.7
 
 	NameSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1300,7 +1300,7 @@ Line_2.Visible = false
 
 	Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Title.BackgroundTransparency = 1.000
+	Title.BackgroundTransparency = 0.7
 
 	Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1338,7 +1338,7 @@ Line_2.Visible = false
 
 	SectionList.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	SectionList.BackgroundTransparency = 1.000
+	SectionList.BackgroundTransparency = 0.7
 
 	SectionList.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1428,7 +1428,7 @@ Line_2.Visible = false
 
 	Title_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Title_2.BackgroundTransparency = 1.000
+	Title_2.BackgroundTransparency = 0.7
 
 	Title_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1484,7 +1484,7 @@ Line_2.Visible = false
 
 	Toggle_Click.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Toggle_Click.BackgroundTransparency = 1.000
+	Toggle_Click.BackgroundTransparency = 0.7
 
 	Toggle_Click.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1506,7 +1506,7 @@ Line_2.Visible = false
 
 	Content.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Content.BackgroundTransparency = 1.000
+	Content.BackgroundTransparency = 0.7
 
 	Content.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1618,7 +1618,7 @@ end
 
 	Title_3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Title_3.BackgroundTransparency = 1.000
+	Title_3.BackgroundTransparency = 0.7
 
 	Title_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1664,7 +1664,7 @@ end
 
 	Button_Click.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Button_Click.BackgroundTransparency = 1.000
+	Button_Click.BackgroundTransparency = 0.7
 
 	Button_Click.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1686,7 +1686,7 @@ end
 
 	Content_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Content_2.BackgroundTransparency = 1.000
+	Content_2.BackgroundTransparency = 0.7
 
 	Content_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1820,7 +1820,7 @@ end
 
 	Title_8.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Title_8.BackgroundTransparency = 1.000
+	Title_8.BackgroundTransparency = 0.7
 
 	Title_8.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1846,7 +1846,7 @@ end
 
 	Content_6.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Content_6.BackgroundTransparency = 1.000
+	Content_6.BackgroundTransparency = 0.7
 
 	Content_6.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1892,7 +1892,7 @@ end
 
 	SelectText.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	SelectText.BackgroundTransparency = 1.000
+	SelectText.BackgroundTransparency = 0.7
 
 	SelectText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1922,7 +1922,7 @@ end
 
 	ImageLabel_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	ImageLabel_2.BackgroundTransparency = 1.000
+	ImageLabel_2.BackgroundTransparency = 0.7
 
 	ImageLabel_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1942,7 +1942,7 @@ end
 
 	Drop_Click.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Drop_Click.BackgroundTransparency = 1.000
+	Drop_Click.BackgroundTransparency = 0.7
 
 	Drop_Click.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1994,7 +1994,7 @@ end
 
 	Topbar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Topbar.BackgroundTransparency = 1.000
+	Topbar.BackgroundTransparency = 0.7
 
 	Topbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2008,7 +2008,7 @@ end
 
 	Title_10.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Title_10.BackgroundTransparency = 1.000
+	Title_10.BackgroundTransparency = 0.7
 
 	Title_10.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2062,7 +2062,7 @@ end
 
 	IconSearch_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	IconSearch_2.BackgroundTransparency = 1.000
+	IconSearch_2.BackgroundTransparency = 0.7
 
 	IconSearch_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2078,7 +2078,7 @@ end
 
 	TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	TextBox.BackgroundTransparency = 1.000
+	TextBox.BackgroundTransparency = 0.7
 
 	TextBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2106,7 +2106,7 @@ end
 
 	Click_Dropdown.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Click_Dropdown.BackgroundTransparency = 1.000
+	Click_Dropdown.BackgroundTransparency = 0.7
 
 	Click_Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2126,7 +2126,7 @@ end
 
 	Icon_4.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	Icon_4.BackgroundTransparency = 1.000
+	Icon_4.BackgroundTransparency = 0.7
 
 	Icon_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2322,7 +2322,7 @@ end
 
 		Option2_Click.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		Option2_Click.BackgroundTransparency = 1.000
+		Option2_Click.BackgroundTransparency = 0.7
 
 		Option2_Click.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2344,7 +2344,7 @@ end
 
 		Title_12.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		Title_12.BackgroundTransparency = 1.000
+		Title_12.BackgroundTransparency = 0.7
 
 		Title_12.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2521,7 +2521,7 @@ end
 
 				Title_7.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Title_7.BackgroundTransparency = 1.000
+				Title_7.BackgroundTransparency = 0.7
 
 				Title_7.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2547,7 +2547,7 @@ end
 
 				Content_5.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Content_5.BackgroundTransparency = 1.000
+				Content_5.BackgroundTransparency = 0.7
 
 				Content_5.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2597,7 +2597,7 @@ end
 
 				RealTextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				RealTextBox.BackgroundTransparency = 1.000
+				RealTextBox.BackgroundTransparency = 0.7
 
 				RealTextBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2627,7 +2627,7 @@ end
 
 				WritingIcon.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				WritingIcon.BackgroundTransparency = 1.000
+				WritingIcon.BackgroundTransparency = 0.7
 
 				WritingIcon.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2719,7 +2719,7 @@ end
 
 				Title_4.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Title_4.BackgroundTransparency = 1.000
+				Title_4.BackgroundTransparency = 0.7
 
 				Title_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2745,7 +2745,7 @@ end
 
 				Content_3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Content_3.BackgroundTransparency = 1.000
+				Content_3.BackgroundTransparency = 0.7
 
 				Content_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2979,7 +2979,7 @@ end
 
 				Seperator.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Seperator.BackgroundTransparency = 1.000
+				Seperator.BackgroundTransparency = 0.7
 
 				Seperator.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2993,7 +2993,7 @@ end
 
 				Title_5.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Title_5.BackgroundTransparency = 1.000
+				Title_5.BackgroundTransparency = 0.7
 
 				Title_5.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -3059,7 +3059,7 @@ end
 
 				Title_6.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Title_6.BackgroundTransparency = 1.000
+				Title_6.BackgroundTransparency = 0.7
 
 				Title_6.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -3085,7 +3085,7 @@ end
 
 				Content_4.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Content_4.BackgroundTransparency = 1.000
+				Content_4.BackgroundTransparency = 0.7
 
 				Content_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
