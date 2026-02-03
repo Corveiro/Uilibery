@@ -1426,9 +1426,7 @@ function Library:NewWindow(ConfigWindow)
 
 	local UICorner_7 = Instance.new("UICorner")
 
-	local Check = Instance.new("Frame")
-
-	local UICorner_8 = Instance.new("UICorner")
+	local UIStroke = Instance.new("UIStroke")
 
 	local Toggle_Click = Instance.new("TextButton")
 
@@ -1438,7 +1436,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Toggle.Parent = SectionList
 
-	Toggle.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Toggle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
 	Toggle.BackgroundTransparency = 0
 
@@ -1448,7 +1446,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Toggle.Size = UDim2.new(1, 0, 0, 35)
 
-	UICorner_6.CornerRadius = UDim.new(0, 3)
+	UICorner_6.CornerRadius = UDim.new(0, 4)
 
 	UICorner_6.Parent = Toggle
 
@@ -1466,9 +1464,9 @@ function Library:NewWindow(ConfigWindow)
 
 	Title_2.Position = UDim2.new(0, 10, 0, 0)
 
-	Title_2.Size = UDim2.new(1, -60, 1, 0)
+	Title_2.Size = UDim2.new(1, -40, 1, 0)
 
-	Title_2.Font = Enum.Font.GothamBold
+	Title_2.Font = Enum.Font.Gotham
 
 	Title_2.Text = cftoggle.Title
 
@@ -1482,43 +1480,31 @@ function Library:NewWindow(ConfigWindow)
 
 	ToggleCheck.Parent = Toggle
 
-	ToggleCheck.AnchorPoint = Vector2.new(0, 0.5)
+	ToggleCheck.AnchorPoint = Vector2.new(1, 0.5)
 
-	ToggleCheck.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	ToggleCheck.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
 	ToggleCheck.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
 	ToggleCheck.BorderSizePixel = 0
 
-	ToggleCheck.Position = UDim2.new(1, -35, 0.5, 0)
+	ToggleCheck.Position = UDim2.new(1, -10, 0.5, 0)
 
-	ToggleCheck.Size = UDim2.new(0, 22, 0, 22)
+	ToggleCheck.Size = UDim2.new(0, 20, 0, 20)
 
 	UICorner_7.CornerRadius = UDim.new(0, 3)
 
 	UICorner_7.Parent = ToggleCheck
 
-	Check.Name = "Check"
+	UIStroke.Name = "UIStroke"
 
-	Check.Parent = ToggleCheck
+	UIStroke.Parent = ToggleCheck
 
-	Check.AnchorPoint = Vector2.new(0.5, 0.5)
+	UIStroke.Color = Color3.fromRGB(60, 60, 60)
 
-	Check.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	UIStroke.Thickness = 2
 
-	Check.BorderColor3 = Color3.fromRGB(0, 0, 0)
-
-	Check.BorderSizePixel = 0
-
-	Check.Position = UDim2.new(0.5, 0, 0.5, 0)
-
-	Check.Size = UDim2.new(0, 0, 0, 0)
-
-	Check.BackgroundTransparency = 0
-
-	UICorner_8.CornerRadius = UDim.new(0, 2)
-
-	UICorner_8.Parent = Check
+	UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 	Toggle_Click.Name = "Toggle_Click"
 
@@ -1556,15 +1542,15 @@ function Library:NewWindow(ConfigWindow)
 
 	Content.Position = UDim2.new(0, 10, 0, 22)
 
-	Content.Size = UDim2.new(1, -60, 1, 0)
+	Content.Size = UDim2.new(1, -40, 1, 0)
 
-	Content.Font = Enum.Font.GothamBold
+	Content.Font = Enum.Font.Gotham
 
 	Content.Text = cftoggle.Description
 
-	Content.TextColor3 = Color3.fromRGB(100, 100, 100)
+	Content.TextColor3 = Color3.fromRGB(120, 120, 120)
 
-	Content.TextSize = 12.000
+	Content.TextSize = 11.000
 
 	Content.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1578,19 +1564,15 @@ function Library:NewWindow(ConfigWindow)
 
 		if Boolean then
 
-			Library:TweenInstance(ToggleCheck, 0.3, "BackgroundColor3", Color3.fromRGB(255, 220, 0))
+			Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 215, 0))
 
-			Library:TweenInstance(Check, 0.3, "Size", UDim2.new(0, 14, 0, 14))
-
-			Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(30, 30, 30))
+			Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(255, 215, 0))
 
 		else
 
-			Library:TweenInstance(ToggleCheck, 0.3, "BackgroundColor3", Color3.fromRGB(60, 60, 60))
+			Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(15, 15, 15))
 
-			Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
-
-			Library:TweenInstance(Check, 0.3, "Size", UDim2.new(0, 0, 0, 0))
+			Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(60, 60, 60))
 
 		end
 
@@ -1607,6 +1589,8 @@ function Library:NewWindow(ConfigWindow)
 		ToggleFunc:Set(not ToggleFunc.Value)
 
 	end)
+
+	return ToggleFunc
 
 end
 
