@@ -280,7 +280,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.Image = "rbxassetid://" .. tostring(_G.ThemeID)
 
-		Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Main.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 		Main.BackgroundTransparency = 0
 
@@ -290,7 +290,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.Image = ""
 
-		Main.BackgroundColor3 = Color3.fromRGB(18,18,22)
+		Main.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
 
 		Main.BackgroundTransparency = 0
 
@@ -302,7 +302,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Top.Parent = Main
 
-	Top.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Top.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	Top.BackgroundTransparency = 1.000
 
@@ -316,7 +316,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Line.Parent = Top
 
-	Line.BackgroundColor3 = Color3.fromRGB(255,60,120)
+	Line.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 	Line.BackgroundTransparency = 0.500
 
@@ -336,7 +336,7 @@ function Library:NewWindow(ConfigWindow)
 
 	NameHub.Parent = Left
 
-	NameHub.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	NameHub.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	NameHub.BackgroundTransparency = 1.000
 
@@ -352,7 +352,7 @@ function Library:NewWindow(ConfigWindow)
 
 	NameHub.Text = ConfigWindow.Title
 
-	NameHub.TextColor3 = Color3.fromRGB(235,235,235)
+	NameHub.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 	NameHub.TextSize = 14.000
 
@@ -362,7 +362,7 @@ function Library:NewWindow(ConfigWindow)
 
 	LogoHub.Parent = Left
 
-	LogoHub.BackgroundColor3 = Color3.fromRGB(255,60,120)
+	LogoHub.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 	LogoHub.BackgroundTransparency = 1.000
 
@@ -380,7 +380,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Desc.Parent = Left
 
-	Desc.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Desc.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	Desc.BackgroundTransparency = 1.000
 
@@ -396,7 +396,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Desc.Text = ConfigWindow.Description
 
-	Desc.TextColor3 = Color3.fromRGB(160,160,170)
+	Desc.TextColor3 = Color3.fromRGB(100, 100, 100)
 
 	Desc.TextSize = 12.000
 
@@ -410,7 +410,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Frame.Parent = Right
 
-	Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Frame.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	Frame.BackgroundTransparency = 1.000
 
@@ -442,7 +442,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Minize.AnchorPoint = Vector2.new(0, 0.5)
 
-	Minize.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Minize.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	Minize.BackgroundTransparency = 1.000
 
@@ -462,7 +462,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon.BackgroundColor3 = Color3.fromRGB(255,60,120)
+	Icon.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 	Icon.BackgroundTransparency = 1.000
 
@@ -488,7 +488,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Large.AnchorPoint = Vector2.new(0, 0.5)
 
-	Large.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Large.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	Large.BackgroundTransparency = 1.000
 
@@ -508,7 +508,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_2.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon_2.BackgroundColor3 = Color3.fromRGB(255,60,120)
+	Icon_2.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 	Icon_2.BackgroundTransparency = 1.000
 
@@ -534,7 +534,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Close.AnchorPoint = Vector2.new(0, 0.5)
 
-	Close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Close.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	Close.BackgroundTransparency = 1.000
 
@@ -564,7 +564,7 @@ function Library:NewWindow(ConfigWindow)
 
 		tat_["Position"] = UDim2.new(0.5, 0, 0.5, 0);
 
-		tat_["BorderColor3"] = Color3.fromRGB(255,60,120);
+		tat_["BorderColor3"] = Color3.fromRGB(160, 160, 160);
 
 		tat_["Name"] = [[Tat]];
 
@@ -584,11 +584,11 @@ function Library:NewWindow(ConfigWindow)
 
 		suacc2["TextSize"] = 20;
 
-		suacc2["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+		suacc2["BackgroundColor3"] = Color3.fromRGB(220, 220, 220);
 
 		suacc2["FontFace"] = Font.new([[rbxasset://fonts/families/Ubuntu.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal);
 
-		suacc2["TextColor3"] = Color3.fromRGB(255, 255, 255);
+		suacc2["TextColor3"] = Color3.fromRGB(220, 220, 220);
 
 		suacc2["BackgroundTransparency"] = 1;
 
@@ -604,7 +604,7 @@ function Library:NewWindow(ConfigWindow)
 
 		btnyes["TextSize"] = 25;
 
-		btnyes["TextColor3"] = Color3.fromRGB(255, 255, 255);
+		btnyes["TextColor3"] = Color3.fromRGB(220, 220, 220);
 
 		btnyes["BackgroundColor3"] = Color3.fromRGB(5, 5, 5);
 
@@ -640,7 +640,7 @@ function Library:NewWindow(ConfigWindow)
 
 		btnno["TextSize"] = 25;
 
-		btnno["TextColor3"] = Color3.fromRGB(255, 255, 255);
+		btnno["TextColor3"] = Color3.fromRGB(220, 220, 220);
 
 		btnno["BackgroundColor3"] = Color3.fromRGB(5, 5, 5);
 
@@ -680,7 +680,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_3.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Icon_3.BackgroundColor3 = Color3.fromRGB(255,60,120)
+	Icon_3.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 	Icon_3.BackgroundTransparency = 1.000
 
@@ -698,7 +698,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Icon_3.ImageRectSize = Vector2.new(96, 96)
 
-	UIStroke.Color = Color3.fromRGB(255,60,120)
+	UIStroke.Color = Color3.fromRGB(160, 160, 160)
 
 	UIStroke.Transparency = 0.5
 
@@ -708,7 +708,7 @@ function Library:NewWindow(ConfigWindow)
 
 	TabFrame.Parent = Main
 
-	TabFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TabFrame.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	TabFrame.BackgroundTransparency = 1.000
 
@@ -724,7 +724,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Line_2.Parent = TabFrame
 
-	Line_2.BackgroundColor3 = Color3.fromRGB(255,60,120)
+	Line_2.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 	Line_2.BackgroundTransparency = 0.500
 
@@ -740,9 +740,9 @@ function Library:NewWindow(ConfigWindow)
 
 	SearchFrame.Parent = TabFrame
 
-	SearchFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	SearchFrame.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-	SearchFrame.BackgroundTransparency = 0.2
+	SearchFrame.BackgroundTransparency = 0.950
 
 	SearchFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -752,7 +752,7 @@ function Library:NewWindow(ConfigWindow)
 
 	SearchFrame.Size = UDim2.new(1, -14, 0, 30)
 
-	UICorner_2.CornerRadius = UDim.new(0, 10)
+	UICorner_2.CornerRadius = UDim.new(0, 3)
 
 	UICorner_2.Parent = SearchFrame
 
@@ -762,7 +762,7 @@ function Library:NewWindow(ConfigWindow)
 
 	IconSearch.AnchorPoint = Vector2.new(0, 0.5)
 
-	IconSearch.BackgroundColor3 = Color3.fromRGB(255,60,120)
+	IconSearch.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 	IconSearch.BackgroundTransparency = 1.000
 
@@ -780,7 +780,7 @@ function Library:NewWindow(ConfigWindow)
 
 	SearchBox.Parent = SearchFrame
 
-	SearchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	SearchBox.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	SearchBox.BackgroundTransparency = 1.000
 
@@ -800,7 +800,7 @@ function Library:NewWindow(ConfigWindow)
 
 	SearchBox.Text = ""
 
-	SearchBox.TextColor3 = Color3.fromRGB(235,235,235)
+	SearchBox.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 	SearchBox.TextSize = 13.000
 
@@ -810,7 +810,7 @@ function Library:NewWindow(ConfigWindow)
 
 	ScrollingTab.Parent = TabFrame
 
-	ScrollingTab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ScrollingTab.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	ScrollingTab.BackgroundTransparency = 1.000
 
@@ -848,7 +848,7 @@ function Library:NewWindow(ConfigWindow)
 
 	LayoutFrame.Parent = Main
 
-	LayoutFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	LayoutFrame.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	LayoutFrame.BackgroundTransparency = 1.000
 
@@ -866,7 +866,7 @@ function Library:NewWindow(ConfigWindow)
 
 	RealLayout.Parent = LayoutFrame
 
-	RealLayout.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	RealLayout.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	RealLayout.BackgroundTransparency = 1.000
 
@@ -940,7 +940,7 @@ function Library:NewWindow(ConfigWindow)
 
 	LayoutName.Parent = LayoutFrame
 
-	LayoutName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	LayoutName.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	LayoutName.BackgroundTransparency = 1.000
 
@@ -952,7 +952,7 @@ function Library:NewWindow(ConfigWindow)
 
 	TextLabel.Parent = LayoutName
 
-	TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TextLabel.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	TextLabel.BackgroundTransparency = 1.000
 
@@ -968,7 +968,7 @@ function Library:NewWindow(ConfigWindow)
 
 	TextLabel.Text = ""
 
-	TextLabel.TextColor3 = Color3.fromRGB(235,235,235)
+	TextLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 	TextLabel.TextSize = 13.000
 
@@ -1024,7 +1024,7 @@ function Library:NewWindow(ConfigWindow)
 
 		TabDisable.Parent = ScrollingTab
 
-		TabDisable.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TabDisable.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 		TabDisable.BackgroundTransparency = 1.000
 
@@ -1038,7 +1038,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Choose_2.Parent = TabDisable
 
-		Choose_2.BackgroundColor3 = Color3.fromRGB(255,60,120)
+		Choose_2.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 		Choose_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1060,7 +1060,7 @@ function Library:NewWindow(ConfigWindow)
 
 		TabIcon.Parent = TabDisable
 
-		TabIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TabIcon.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 		TabIcon.BackgroundTransparency = 1.000
 
@@ -1070,13 +1070,13 @@ function Library:NewWindow(ConfigWindow)
 
 		TabIcon.Size = UDim2.new(0, 14, 0, 14) 
 
-		TabIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		TabIcon.ImageColor3 = Color3.fromRGB(220, 220, 220)
 
 		
 
 		IconRound.Parent = TabIcon
 
-		IconRound.CornerRadius = UDim.new(0, 12)
+		IconRound.CornerRadius = UDim.new(0, 4)
 
 		
 
@@ -1104,7 +1104,7 @@ function Library:NewWindow(ConfigWindow)
 
 		NameTab_2.Parent = TabDisable
 
-		NameTab_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NameTab_2.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 		NameTab_2.BackgroundTransparency = 1.000
 
@@ -1120,7 +1120,7 @@ function Library:NewWindow(ConfigWindow)
 
 		NameTab_2.Text = t
 
-		NameTab_2.TextColor3 = Color3.fromRGB(235,235,235)
+		NameTab_2.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 		NameTab_2.TextSize = 12.000
 
@@ -1132,7 +1132,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Click_Tab_2.Parent = TabDisable
 
-		Click_Tab_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Click_Tab_2.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 		Click_Tab_2.BackgroundTransparency = 1.000
 
@@ -1154,7 +1154,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Layout.Parent = LayoutList
 
-		Layout.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Layout.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 		Layout.BackgroundTransparency = 1.000
 
@@ -1280,9 +1280,9 @@ function Library:NewWindow(ConfigWindow)
 
 			Section.Parent = Layout
 
-			Section.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Section.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-			Section.BackgroundTransparency = 0.1
+			Section.BackgroundTransparency = 0.980
 
 			Section.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1292,7 +1292,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Section.Size = UDim2.new(1, 0, 0, 55)
 
-			UICorner_5.CornerRadius = UDim.new(0, 12)
+			UICorner_5.CornerRadius = UDim.new(0, 4)
 
 			UICorner_5.Parent = Section
 
@@ -1308,7 +1308,7 @@ function Library:NewWindow(ConfigWindow)
 
 			NameSection.Parent = Section
 
-			NameSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			NameSection.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 			NameSection.BackgroundTransparency = 1.000
 
@@ -1322,7 +1322,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Title.Parent = NameSection
 
-			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 			Title.BackgroundTransparency = 1.000
 
@@ -1336,7 +1336,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Title.Text = RealNameSection
 
-			Title.TextColor3 = Color3.fromRGB(235,235,235)
+			Title.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 			Title.TextSize = 14.000
 
@@ -1344,7 +1344,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Line_3.Parent = NameSection
 
-			Line_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Line_3.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 			Line_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1354,7 +1354,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Line_3.Size = UDim2.new(1, 0, 0, 2)
 
-			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(24, 24, 25)), ColorSequenceKeypoint.new(0.52, Color3.fromRGB(255,60,120)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(24, 24, 25)) }
+			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(24, 24, 25)), ColorSequenceKeypoint.new(0.52, Color3.fromRGB(160, 160, 160)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(24, 24, 25)) }
 
 			UIGradient.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.53), NumberSequenceKeypoint.new(0.51, 0.00), NumberSequenceKeypoint.new(1.00, 0.51) }
 
@@ -1364,7 +1364,7 @@ function Library:NewWindow(ConfigWindow)
 
 			SectionList.Parent = Section
 
-			SectionList.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			SectionList.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 			SectionList.BackgroundTransparency = 1.000
 
@@ -1438,9 +1438,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Toggle.Parent = SectionList
 
-				Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Toggle.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-				Toggle.BackgroundTransparency = 0.2
+				Toggle.BackgroundTransparency = 0.950
 
 				Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1448,7 +1448,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Toggle.Size = UDim2.new(1, 0, 0, 35)
 
-				UICorner_6.CornerRadius = UDim.new(0, 10)
+				UICorner_6.CornerRadius = UDim.new(0, 3)
 
 				UICorner_6.Parent = Toggle
 
@@ -1456,7 +1456,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_2.Parent = Toggle
 
-				Title_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_2.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_2.BackgroundTransparency = 1.000
 
@@ -1472,7 +1472,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_2.Text = cftoggle.Title
 
-				Title_2.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_2.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_2.TextSize = 13.000
 
@@ -1522,7 +1522,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Toggle_Click.Parent = Toggle
 
-				Toggle_Click.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Toggle_Click.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Toggle_Click.BackgroundTransparency = 1.000
 
@@ -1544,7 +1544,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content.Parent = Toggle
 
-				Content.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Content.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Content.BackgroundTransparency = 1.000
 
@@ -1560,7 +1560,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content.Text = cftoggle.Description
 
-				Content.TextColor3 = Color3.fromRGB(160,160,170)
+				Content.TextColor3 = Color3.fromRGB(100, 100, 100)
 
 				Content.TextSize = 12.000
 
@@ -1576,11 +1576,11 @@ function Library:NewWindow(ConfigWindow)
 
 					if Boolean then
 
-						Library:TweenInstance(ToggleCheck, 0.3, "BackgroundColor3", Color3.fromRGB(255,60,120))
+						Library:TweenInstance(ToggleCheck, 0.3, "BackgroundColor3", Color3.fromRGB(160, 160, 160))
 
 						Library:TweenInstance(Check, 0.3, "Position", UDim2.new(0, 22, 0.5, 0))
 
-						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
+						Library:TweenInstance(Check, 0.3, "BackgroundColor3", Color3.fromRGB(220, 220, 220))
 
 					else
 
@@ -1638,9 +1638,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Button.Parent = SectionList
 
-				Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Button.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-				Button.BackgroundTransparency = 0.2
+				Button.BackgroundTransparency = 0.950
 
 				Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1648,7 +1648,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Button.Size = UDim2.new(1, 0, 0, 35)
 
-				UICorner_9.CornerRadius = UDim.new(0, 10)
+				UICorner_9.CornerRadius = UDim.new(0, 3)
 
 				UICorner_9.Parent = Button
 
@@ -1656,7 +1656,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_3.Parent = Button
 
-				Title_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_3.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_3.BackgroundTransparency = 1.000
 
@@ -1672,7 +1672,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_3.Text = cfbutton.Title
 
-				Title_3.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_3.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_3.TextSize = 13.000
 
@@ -1682,7 +1682,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Button_Click.Parent = Button
 
-				Button_Click.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Button_Click.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Button_Click.BackgroundTransparency = 1.000
 
@@ -1704,7 +1704,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_2.Parent = Button
 
-				Content_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Content_2.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Content_2.BackgroundTransparency = 1.000
 
@@ -1720,7 +1720,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_2.Text = cfbutton.Description
 
-				Content_2.TextColor3 = Color3.fromRGB(160,160,170)
+				Content_2.TextColor3 = Color3.fromRGB(100, 100, 100)
 
 				Content_2.TextSize = 12.000
 
@@ -1732,7 +1732,7 @@ function Library:NewWindow(ConfigWindow)
 
 				ImageLabel.AnchorPoint = Vector2.new(0, 0.5)
 
-				ImageLabel.BackgroundColor3 = Color3.fromRGB(255,60,120)
+				ImageLabel.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 				ImageLabel.BackgroundTransparency = 1.000
 
@@ -1836,9 +1836,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Dropdown.Parent = SectionList
 
-				Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Dropdown.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-				Dropdown.BackgroundTransparency = 0.2
+				Dropdown.BackgroundTransparency = 0.950
 
 				Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1846,7 +1846,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Dropdown.Size = UDim2.new(1, 0, 0, 35)
 
-				UICorner_19.CornerRadius = UDim.new(0, 10)
+				UICorner_19.CornerRadius = UDim.new(0, 3)
 
 				UICorner_19.Parent = Dropdown
 
@@ -1854,7 +1854,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_8.Parent = Dropdown
 
-				Title_8.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_8.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_8.BackgroundTransparency = 1.000
 
@@ -1870,7 +1870,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_8.Text = cfdropdown.Title
 
-				Title_8.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_8.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_8.TextSize = 13.000
 
@@ -1880,7 +1880,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_6.Parent = Dropdown
 
-				Content_6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Content_6.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Content_6.BackgroundTransparency = 1.000
 
@@ -1896,7 +1896,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_6.Text = cfdropdown.Description
 
-				Content_6.TextColor3 = Color3.fromRGB(160,160,170)
+				Content_6.TextColor3 = Color3.fromRGB(100, 100, 100)
 
 				Content_6.TextSize = 12.000
 
@@ -1910,7 +1910,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Selects.AnchorPoint = Vector2.new(0, 0.5)
 
-				Selects.BackgroundColor3 = Color3.fromRGB(18,18,22)
+				Selects.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
 
 				Selects.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1920,7 +1920,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Selects.Size = UDim2.new(0, 80, 0, 25)
 
-				UICorner_20.CornerRadius = UDim.new(0, 12)
+				UICorner_20.CornerRadius = UDim.new(0, 5)
 
 				UICorner_20.Parent = Selects
 
@@ -1928,7 +1928,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SelectText.Parent = Selects
 
-				SelectText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				SelectText.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				SelectText.BackgroundTransparency = 1.000
 
@@ -1944,7 +1944,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SelectText.Text = ""
 
-				SelectText.TextColor3 = Color3.fromRGB(235,235,235)
+				SelectText.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				SelectText.TextScaled = true
 
@@ -1960,7 +1960,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Drop_Click.Parent = Selects
 
-				Drop_Click.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Drop_Click.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Drop_Click.BackgroundTransparency = 1.000
 
@@ -1982,7 +1982,7 @@ function Library:NewWindow(ConfigWindow)
 
 				ImageLabel_2.AnchorPoint = Vector2.new(0, 0.5)
 
-				ImageLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				ImageLabel_2.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				ImageLabel_2.BackgroundTransparency = 1.000
 
@@ -2022,7 +2022,7 @@ function Library:NewWindow(ConfigWindow)
 
 				UIStroke_3.Parent = DropdownList
 
-				UICorner_24.CornerRadius = UDim.new(0, 12)
+				UICorner_24.CornerRadius = UDim.new(0, 5)
 
 				UICorner_24.Parent = DropdownList
 
@@ -2030,7 +2030,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Topbar.Parent = DropdownList
 
-				Topbar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Topbar.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Topbar.BackgroundTransparency = 1.000
 
@@ -2044,7 +2044,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_10.Parent = Topbar
 
-				Title_10.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_10.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_10.BackgroundTransparency = 1.000
 
@@ -2060,7 +2060,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_10.Text = cfdropdown.Title
 
-				Title_10.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_10.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_10.TextSize = 14.000
 
@@ -2082,7 +2082,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SearchFrame_2.Size = UDim2.new(0, 100, 0, 30)
 
-				UICorner_25.CornerRadius = UDim.new(0, 12)
+				UICorner_25.CornerRadius = UDim.new(0, 5)
 
 				UICorner_25.Parent = SearchFrame_2
 
@@ -2098,7 +2098,7 @@ function Library:NewWindow(ConfigWindow)
 
 				IconSearch_2.AnchorPoint = Vector2.new(0, 0.5)
 
-				IconSearch_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				IconSearch_2.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				IconSearch_2.BackgroundTransparency = 1.000
 
@@ -2114,7 +2114,7 @@ function Library:NewWindow(ConfigWindow)
 
 				TextBox.Parent = SearchFrame_2
 
-				TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				TextBox.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				TextBox.BackgroundTransparency = 1.000
 
@@ -2132,7 +2132,7 @@ function Library:NewWindow(ConfigWindow)
 
 				TextBox.Text = ""
 
-				TextBox.TextColor3 = Color3.fromRGB(235,235,235)
+				TextBox.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				TextBox.TextSize = 12.000
 
@@ -2142,7 +2142,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Click_Dropdown.Parent = Topbar
 
-				Click_Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Click_Dropdown.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Click_Dropdown.BackgroundTransparency = 1.000
 
@@ -2162,7 +2162,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Icon_4.AnchorPoint = Vector2.new(0.5, 0.5)
 
-				Icon_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Icon_4.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Icon_4.BackgroundTransparency = 1.000
 
@@ -2200,7 +2200,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Library:UpdateScrolling(Real_List, UIListLayout_5)
 
-				UICorner_26.CornerRadius = UDim.new(0, 12)
+				UICorner_26.CornerRadius = UDim.new(0, 5)
 
 				UICorner_26.Parent = Real_List
 
@@ -2340,9 +2340,9 @@ function Library:NewWindow(ConfigWindow)
 
 					Option2.Parent = Real_List
 
-					Option2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+					Option2.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-					Option2.BackgroundTransparency = 0.1
+					Option2.BackgroundTransparency = 0.980
 
 					Option2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2350,7 +2350,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Option2.Size = UDim2.new(1, 0, 0, 35)
 
-					UICorner_28.CornerRadius = UDim.new(0, 12)
+					UICorner_28.CornerRadius = UDim.new(0, 4)
 
 					UICorner_28.Parent = Option2
 
@@ -2358,7 +2358,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Option2_Click.Parent = Option2
 
-					Option2_Click.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+					Option2_Click.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 					Option2_Click.BackgroundTransparency = 1.000
 
@@ -2380,7 +2380,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Title_12.Parent = Option2
 
-					Title_12.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+					Title_12.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 					Title_12.BackgroundTransparency = 1.000
 
@@ -2394,13 +2394,13 @@ function Library:NewWindow(ConfigWindow)
 
 					Title_12.Text = v
 
-					Title_12.TextColor3 = Color3.fromRGB(235,235,235)
+					Title_12.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 					Title_12.TextSize = 13.000
 
 					Title_12.TextTransparency = 0.500
 
-					UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(255,60,120)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
+					UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(160, 160, 160)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
 
 					UIGradient_3.Rotation = 0.9900000095367432
 
@@ -2530,9 +2530,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Input.Parent = SectionList
 
-				Input.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Input.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-				Input.BackgroundTransparency = 0.2
+				Input.BackgroundTransparency = 0.950
 
 				Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2540,7 +2540,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Input.Size = UDim2.new(1, 0, 0, 35)
 
-				UICorner_17.CornerRadius = UDim.new(0, 10)
+				UICorner_17.CornerRadius = UDim.new(0, 3)
 
 				UICorner_17.Parent = Input
 
@@ -2548,7 +2548,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_7.Parent = Input
 
-				Title_7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_7.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_7.BackgroundTransparency = 1.000
 
@@ -2564,7 +2564,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_7.Text = cftextbox.Title
 
-				Title_7.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_7.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_7.TextSize = 13.000
 
@@ -2574,7 +2574,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_5.Parent = Input
 
-				Content_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Content_5.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Content_5.BackgroundTransparency = 1.000
 
@@ -2590,7 +2590,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_5.Text = cftextbox.Description
 
-				Content_5.TextColor3 = Color3.fromRGB(160,160,170)
+				Content_5.TextColor3 = Color3.fromRGB(100, 100, 100)
 
 				Content_5.TextSize = 12.000
 
@@ -2606,7 +2606,7 @@ function Library:NewWindow(ConfigWindow)
 
 				TextboxFrame.AnchorPoint = Vector2.new(0, 0.5)
 
-				TextboxFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+				TextboxFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
 
 				TextboxFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2616,7 +2616,7 @@ function Library:NewWindow(ConfigWindow)
 
 				TextboxFrame.Size = UDim2.new(0, 130, 0, 28)
 
-				UICorner_18.CornerRadius = UDim.new(0, 10)
+				UICorner_18.CornerRadius = UDim.new(0, 3)
 
 				UICorner_18.Parent = TextboxFrame
 
@@ -2624,7 +2624,7 @@ function Library:NewWindow(ConfigWindow)
 
 				RealTextBox.Parent = TextboxFrame
 
-				RealTextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				RealTextBox.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				RealTextBox.BackgroundTransparency = 1.000
 
@@ -2642,7 +2642,7 @@ function Library:NewWindow(ConfigWindow)
 
 				RealTextBox.Text = cftextbox.Default
 
-				RealTextBox.TextColor3 = Color3.fromRGB(235,235,235)
+				RealTextBox.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				RealTextBox.TextSize = 12.000
 
@@ -2654,7 +2654,7 @@ function Library:NewWindow(ConfigWindow)
 
 				WritingIcon.AnchorPoint = Vector2.new(0, 0.5)
 
-				WritingIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				WritingIcon.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				WritingIcon.BackgroundTransparency = 1.000
 
@@ -2728,9 +2728,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Slider.Parent = SectionList
 
-				Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Slider.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-				Slider.BackgroundTransparency = 0.2
+				Slider.BackgroundTransparency = 0.950
 
 				Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2738,7 +2738,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Slider.Size = UDim2.new(1, 0, 0, 35)
 
-				UICorner_10.CornerRadius = UDim.new(0, 10)
+				UICorner_10.CornerRadius = UDim.new(0, 3)
 
 				UICorner_10.Parent = Slider
 
@@ -2746,7 +2746,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_4.Parent = Slider
 
-				Title_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_4.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_4.BackgroundTransparency = 1.000
 
@@ -2762,7 +2762,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_4.Text = cfslider.Title
 
-				Title_4.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_4.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_4.TextSize = 13.000
 
@@ -2772,7 +2772,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_3.Parent = Slider
 
-				Content_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Content_3.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Content_3.BackgroundTransparency = 1.000
 
@@ -2788,7 +2788,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_3.Text = cfslider.Description
 
-				Content_3.TextColor3 = Color3.fromRGB(160,160,170)
+				Content_3.TextColor3 = Color3.fromRGB(100, 100, 100)
 
 				Content_3.TextSize = 12.000
 
@@ -2804,7 +2804,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderFrame.AnchorPoint = Vector2.new(0, 0.5)
 
-				SliderFrame.BackgroundColor3 = Color3.fromRGB(18,18,22)
+				SliderFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
 
 				SliderFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2822,7 +2822,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderDraggable.Parent = SliderFrame
 
-				SliderDraggable.BackgroundColor3 = Color3.fromRGB(255,60,120)
+				SliderDraggable.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
 
 				SliderDraggable.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2840,7 +2840,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Circle.AnchorPoint = Vector2.new(0, 0.100000001)
 
-				Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Circle.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Circle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2860,7 +2860,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderValue.AnchorPoint = Vector2.new(0, 0.5)
 
-				SliderValue.BackgroundColor3 = Color3.fromRGB(178, 0, 254)
+				SliderValue.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 
 				SliderValue.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2878,7 +2878,7 @@ function Library:NewWindow(ConfigWindow)
 
 				SliderValue.Text = ""
 
-				SliderValue.TextColor3 = Color3.fromRGB(235,235,235)
+				SliderValue.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				SliderValue.TextSize = 11.000
 
@@ -3006,7 +3006,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Seperator.Parent = SectionList
 
-				Seperator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Seperator.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Seperator.BackgroundTransparency = 1.000
 
@@ -3020,7 +3020,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_5.Parent = Seperator
 
-				Title_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_5.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_5.BackgroundTransparency = 1.000
 
@@ -3036,7 +3036,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_5.Text = args
 
-				Title_5.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_5.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_5.TextSize = 13.000
 
@@ -3068,9 +3068,9 @@ function Library:NewWindow(ConfigWindow)
 
 				Paragraph.Parent = SectionList
 
-				Paragraph.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Paragraph.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
-				Paragraph.BackgroundTransparency = 0.2
+				Paragraph.BackgroundTransparency = 0.950
 
 				Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -3078,7 +3078,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Paragraph.Size = UDim2.new(1, 0, 0, 45)
 
-				UICorner_16.CornerRadius = UDim.new(0, 10)
+				UICorner_16.CornerRadius = UDim.new(0, 3)
 
 				UICorner_16.Parent = Paragraph
 
@@ -3086,7 +3086,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_6.Parent = Paragraph
 
-				Title_6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title_6.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_6.BackgroundTransparency = 1.000
 
@@ -3102,7 +3102,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Title_6.Text = cfpara.Title
 
-				Title_6.TextColor3 = Color3.fromRGB(235,235,235)
+				Title_6.TextColor3 = Color3.fromRGB(220, 220, 220)
 
 				Title_6.TextSize = 13.000
 
@@ -3112,7 +3112,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_4.Parent = Paragraph
 
-				Content_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Content_4.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 				Content_4.BackgroundTransparency = 1.000
 
@@ -3128,7 +3128,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Content_4.Text = cfpara.Content
 
-				Content_4.TextColor3 = Color3.fromRGB(160,160,170)
+				Content_4.TextColor3 = Color3.fromRGB(100, 100, 100)
 
 				Content_4.TextSize = 12.000
 
@@ -3166,7 +3166,7 @@ function Library:NewWindow(ConfigWindow)
 				-- Ajuste para a sua UI: SectionList é o pai
 				DiscordCard.Name = "DiscordCard"
 				DiscordCard.Parent = SectionList 
-				DiscordCard.BackgroundColor3 = Color3.fromRGB(18,18,22) -- Cor ajustada para combinar com o tema escuro
+				DiscordCard.BackgroundColor3 = Color3.fromRGB(22, 22, 22) -- Cor ajustada para combinar com o tema escuro
 				DiscordCard.BackgroundTransparency = 0.4
 				DiscordCard.BorderSizePixel = 0
 				DiscordCard.Size = UDim2.new(1, 0, 0, 65)
@@ -3186,7 +3186,7 @@ function Library:NewWindow(ConfigWindow)
 				Title.Size = UDim2.new(1, -140, 0, 20)
 				Title.Font = Enum.Font.GothamBold
 				Title.Text = DiscordTitle or "Night Mystic"
-				Title.TextColor3 = Color3.fromRGB(235,235,235)
+				Title.TextColor3 = Color3.fromRGB(220, 220, 220)
 				Title.TextSize = 14
 				Title.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -3207,10 +3207,10 @@ function Library:NewWindow(ConfigWindow)
 				JoinBtn.Size = UDim2.new(0, 65, 0, 30)
 				JoinBtn.Font = Enum.Font.GothamBold
 				JoinBtn.Text = "Join"
-				JoinBtn.TextColor3 = Color3.fromRGB(235,235,235)
+				JoinBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
 				JoinBtn.TextSize = 13
 
-				BtnCorner.CornerRadius = UDim.new(0, 12)
+				BtnCorner.CornerRadius = UDim.new(0, 4)
 				BtnCorner.Parent = JoinBtn
 
 				JoinBtn.MouseButton1Click:Connect(function()
@@ -3261,7 +3261,7 @@ function Library:NewWindow(ConfigWindow)
 
 	self:MakeDraggable(G2L["2"],G2L["2"])
 
-	G2L["2"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+	G2L["2"]["BackgroundColor3"] = Color3.fromRGB(220, 220, 220);
 
 	G2L["2"]["Image"] = [[rbxassetid://101817370702077]];
 
@@ -3281,7 +3281,7 @@ function Library:NewWindow(ConfigWindow)
 
 	G2L["4"]["Thickness"] = 2;
 
-	G2L["4"]["Color"] = Color3.fromRGB(255, 255, 255);
+	G2L["4"]["Color"] = Color3.fromRGB(220, 220, 220);
 
 	G2L["2"].MouseButton1Click:Connect(function()
 
