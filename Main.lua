@@ -1256,149 +1256,133 @@ function Library:NewWindow(ConfigWindow)
 
 		function TabFunc:AddSection(RealNameSection)
 
-			local Section = Instance.new("Frame")
+	local Section = Instance.new("Frame")
 
-			local UICorner_5 = Instance.new("UICorner")
+	local UICorner_5 = Instance.new("UICorner")
 
-			local UIStroke_2 = Instance.new("UIStroke")
+	local NameSection = Instance.new("Frame")
 
-			local NameSection = Instance.new("Frame")
+	local Title = Instance.new("TextLabel")
 
-			local Title = Instance.new("TextLabel")
+	local Line_3 = Instance.new("Frame")
 
-			local Line_3 = Instance.new("Frame")
+	local SectionList = Instance.new("Frame")
 
-			local UIGradient = Instance.new("UIGradient")
+	local UIPadding_4 = Instance.new("UIPadding")
 
-			local SectionList = Instance.new("Frame")
+	local UIListLayout_4 = Instance.new("UIListLayout")
 
-			local UIPadding_4 = Instance.new("UIPadding")
+	Section.Name = "Section"
 
-			local UIListLayout_4 = Instance.new("UIListLayout")
+	Section.Parent = Layout
 
-			Section.Name = "Section"
+	Section.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 
-			Section.Parent = Layout
+	Section.BackgroundTransparency = 0
 
-			Section.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Section.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-			Section.BackgroundTransparency = 0.980
+	Section.BorderSizePixel = 0
 
-			Section.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Section.Position = UDim2.new(1.36775815, 0, 0.545454562, 0)
 
-			Section.BorderSizePixel = 0
+	Section.Size = UDim2.new(1, 0, 0, 55)
 
-			Section.Position = UDim2.new(1.36775815, 0, 0.545454562, 0)
+	UICorner_5.CornerRadius = UDim.new(0, 6)
 
-			Section.Size = UDim2.new(1, 0, 0, 55)
+	UICorner_5.Parent = Section
 
-			UICorner_5.CornerRadius = UDim.new(0, 4)
+	NameSection.Name = "NameSection"
 
-			UICorner_5.Parent = Section
+	NameSection.Parent = Section
 
-			UIStroke_2.Color = Color3.fromRGB(100, 100, 100)
+	NameSection.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-			UIStroke_2.Thickness = 2
+	NameSection.BackgroundTransparency = 1.000
 
-			UIStroke_2.Transparency = 0.9200000166893005
+	NameSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-			UIStroke_2.Parent = Section
+	NameSection.BorderSizePixel = 0
 
-			NameSection.Name = "NameSection"
+	NameSection.Size = UDim2.new(1, 0, 0, 35)
 
-			NameSection.Parent = Section
+	Title.Name = "Title"
 
-			NameSection.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Title.Parent = NameSection
 
-			NameSection.BackgroundTransparency = 1.000
+	Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-			NameSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Title.BackgroundTransparency = 1.000
 
-			NameSection.BorderSizePixel = 0
+	Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-			NameSection.Size = UDim2.new(1, 0, 0, 30)
+	Title.BorderSizePixel = 0
 
-			Title.Name = "Title"
+	Title.Position = UDim2.new(0, 0, 0, 5)
 
-			Title.Parent = NameSection
+	Title.Size = UDim2.new(1, 0, 1, -5)
 
-			Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Title.Font = Enum.Font.GothamBold
 
-			Title.BackgroundTransparency = 1.000
+	Title.Text = RealNameSection
 
-			Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-			Title.BorderSizePixel = 0
+	Title.TextSize = 15.000
 
-			Title.Size = UDim2.new(1, 0, 1, 0)
+	Line_3.Name = "Line"
 
-			Title.Font = Enum.Font.GothamBold
+	Line_3.Parent = NameSection
 
-			Title.Text = RealNameSection
+	Line_3.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 
-			Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Line_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-			Title.TextSize = 14.000
+	Line_3.BorderSizePixel = 0
 
-			Line_3.Name = "Line"
+	Line_3.Position = UDim2.new(0, 0, 1, -1)
 
-			Line_3.Parent = NameSection
+	Line_3.Size = UDim2.new(1, 0, 0, 1)
 
-			Line_3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	SectionList.Name = "SectionList"
 
-			Line_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	SectionList.Parent = Section
 
-			Line_3.BorderSizePixel = 0
+	SectionList.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-			Line_3.Position = UDim2.new(0, 0, 1, -2)
+	SectionList.BackgroundTransparency = 1.000
 
-			Line_3.Size = UDim2.new(1, 0, 0, 2)
+	SectionList.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-			UIGradient.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(24, 24, 25)), ColorSequenceKeypoint.new(0.52, Color3.fromRGB(180, 180, 180)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(24, 24, 25)) }
+	SectionList.BorderSizePixel = 0
 
-			UIGradient.Transparency = NumberSequence.new { NumberSequenceKeypoint.new(0.00, 0.53), NumberSequenceKeypoint.new(0.51, 0.00), NumberSequenceKeypoint.new(1.00, 0.51) }
+	SectionList.Position = UDim2.new(0, 0, 0, 35)
 
-			UIGradient.Parent = Line_3
+	SectionList.Size = UDim2.new(1, 0, 1, -35)
 
-			SectionList.Name = "SectionList"
+	UIPadding_4.Parent = SectionList
 
-			SectionList.Parent = Section
+	UIPadding_4.PaddingBottom = UDim.new(0, 8)
 
-			SectionList.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	UIPadding_4.PaddingLeft = UDim.new(0, 8)
 
-			SectionList.BackgroundTransparency = 1.000
+	UIPadding_4.PaddingRight = UDim.new(0, 8)
 
-			SectionList.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	UIPadding_4.PaddingTop = UDim.new(0, 8)
 
-			SectionList.BorderSizePixel = 0
+	UIListLayout_4.Parent = SectionList
 
-			SectionList.Position = UDim2.new(0, 0, 0, 35)
+	UIListLayout_4.SortOrder = Enum.SortOrder.LayoutOrder
 
-			SectionList.Size = UDim2.new(1, 0, 1, -35)
+	UIListLayout_4.Padding = UDim.new(0, 5)
 
-			UIPadding_4.Parent = SectionList
+	UIListLayout_4:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 
-			UIPadding_4.PaddingBottom = UDim.new(0, 7)
+		Section.Size = UDim2.new(1, 0, 0, UIListLayout_4.AbsoluteContentSize.Y + 55)
 
-			UIPadding_4.PaddingLeft = UDim.new(0, 7)
+	end)
 
-			UIPadding_4.PaddingRight = UDim.new(0, 7)
-
-			UIPadding_4.PaddingTop = UDim.new(0, 7)
-
-			UIListLayout_4.Parent = SectionList
-
-			UIListLayout_4.SortOrder = Enum.SortOrder.LayoutOrder
-
-			UIListLayout_4.Padding = UDim.new(0, 6)
-
-			UIListLayout_4:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-
-				Section.Size = UDim2.new(1, 0, 0, UIListLayout_4.AbsoluteContentSize.Y + 55)
-
-			end)
-
-			local SectionFunc = {}
+	local SectionFunc = {}
 
 			function SectionFunc:AddToggle(cftoggle)
 
