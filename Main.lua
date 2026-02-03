@@ -1596,155 +1596,161 @@ end
 
 			function SectionFunc:AddButton(cfbutton)
 
-				local cfbutton = Library:MakeConfig({
+	local cfbutton = Library:MakeConfig({
 
-					Title = "Button < Missing Title >",
+		Title = "Button < Missing Title >",
 
-					Description = "",
+		Description = "",
 
-					Callback = function()
+		Callback = function()
 
-					end
+		end
 
-				}, cfbutton or {})
+	}, cfbutton or {})
 
-				local Button = Instance.new("Frame")
+	local Button = Instance.new("Frame")
 
-				local UICorner_9 = Instance.new("UICorner")
+	local UICorner_9 = Instance.new("UICorner")
 
-				local Title_3 = Instance.new("TextLabel")
+	local Title_3 = Instance.new("TextLabel")
 
-				local Button_Click = Instance.new("TextButton")
+	local ButtonFrame = Instance.new("Frame")
 
-				local Content_2 = Instance.new("TextLabel")
+	local UICorner_Button = Instance.new("UICorner")
 
-				local ImageLabel = Instance.new("ImageLabel")
+	local Button_Click = Instance.new("TextButton")
 
-				Button.Name = "Button"
+	local Content_2 = Instance.new("TextLabel")
 
-				Button.Parent = SectionList
+	Button.Name = "Button"
 
-				Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Button.Parent = SectionList
 
-				Button.BackgroundTransparency = 0
+	Button.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-				Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Button.BackgroundTransparency = 0
 
-				Button.BorderSizePixel = 0
+	Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-				Button.Size = UDim2.new(1, 0, 0, 35)
+	Button.BorderSizePixel = 0
 
-				UICorner_9.CornerRadius = UDim.new(0, 3)
+	Button.Size = UDim2.new(1, 0, 0, 35)
 
-				UICorner_9.Parent = Button
+	UICorner_9.CornerRadius = UDim.new(0, 5)
 
-				Title_3.Name = "Title"
+	UICorner_9.Parent = Button
 
-				Title_3.Parent = Button
+	Title_3.Name = "Title"
 
-				Title_3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Title_3.Parent = Button
 
-				Title_3.BackgroundTransparency = 1.000
+	Title_3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Title_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Title_3.BackgroundTransparency = 1.000
 
-				Title_3.BorderSizePixel = 0
+	Title_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-				Title_3.Position = UDim2.new(0, 10, 0, 0)
+	Title_3.BorderSizePixel = 0
 
-				Title_3.Size = UDim2.new(1, -60, 1, 0)
+	Title_3.Position = UDim2.new(0, 10, 0, 0)
 
-				Title_3.Font = Enum.Font.GothamBold
+	Title_3.Size = UDim2.new(1, -100, 1, 0)
 
-				Title_3.Text = cfbutton.Title
+	Title_3.Font = Enum.Font.GothamBold
 
-				Title_3.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title_3.Text = cfbutton.Title
 
-				Title_3.TextSize = 13.000
+	Title_3.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-				Title_3.TextXAlignment = Enum.TextXAlignment.Left
+	Title_3.TextSize = 13.000
 
-				Button_Click.Name = "Button_Click"
+	Title_3.TextXAlignment = Enum.TextXAlignment.Left
 
-				Button_Click.Parent = Button
+	ButtonFrame.Name = "ButtonFrame"
 
-				Button_Click.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	ButtonFrame.Parent = Button
 
-				Button_Click.BackgroundTransparency = 1.000
+	ButtonFrame.AnchorPoint = Vector2.new(1, 0.5)
 
-				Button_Click.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	ButtonFrame.BackgroundColor3 = Color3.fromRGB(200, 170, 80)
 
-				Button_Click.BorderSizePixel = 0
+	ButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-				Button_Click.Size = UDim2.new(1, 0, 1, 0)
+	ButtonFrame.BorderSizePixel = 0
 
-				Button_Click.Font = Enum.Font.SourceSans
+	ButtonFrame.Position = UDim2.new(1, -10, 0.5, 0)
 
-				Button_Click.Text = ""
+	ButtonFrame.Size = UDim2.new(0, 70, 0, 22)
 
-				Button_Click.TextColor3 = Color3.fromRGB(0, 0, 0)
+	UICorner_Button.CornerRadius = UDim.new(0, 11)
 
-				Button_Click.TextSize = 14.000
+	UICorner_Button.Parent = ButtonFrame
 
-				Content_2.Name = "Content"
+	Button_Click.Name = "Button_Click"
 
-				Content_2.Parent = Button
+	Button_Click.Parent = ButtonFrame
 
-				Content_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Button_Click.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Content_2.BackgroundTransparency = 1.000
+	Button_Click.BackgroundTransparency = 1.000
 
-				Content_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Button_Click.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-				Content_2.BorderSizePixel = 0
+	Button_Click.BorderSizePixel = 0
 
-				Content_2.Position = UDim2.new(0, 10, 0, 22)
+	Button_Click.Size = UDim2.new(1, 0, 1, 0)
 
-				Content_2.Size = UDim2.new(1, -60, 1, 0)
+	Button_Click.Font = Enum.Font.GothamBold
 
-				Content_2.Font = Enum.Font.GothamBold
+	Button_Click.Text = "Click"
 
-				Content_2.Text = cfbutton.Description
+	Button_Click.TextColor3 = Color3.fromRGB(0, 0, 0)
 
-				Content_2.TextColor3 = Color3.fromRGB(100, 100, 100)
+	Button_Click.TextSize = 12.000
 
-				Content_2.TextSize = 12.000
+	Content_2.Name = "Content"
 
-				Content_2.TextXAlignment = Enum.TextXAlignment.Left
+	Content_2.Parent = Button
 
-				Content_2.TextYAlignment = Enum.TextYAlignment.Top
+	Content_2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				ImageLabel.Parent = Button
+	Content_2.BackgroundTransparency = 1.000
 
-				ImageLabel.AnchorPoint = Vector2.new(0, 0.5)
+	Content_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
-				ImageLabel.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+	Content_2.BorderSizePixel = 0
 
-				ImageLabel.BackgroundTransparency = 1.000
+	Content_2.Position = UDim2.new(0, 10, 0, 22)
 
-				ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Content_2.Size = UDim2.new(1, -100, 1, 0)
 
-				ImageLabel.BorderSizePixel = 0
+	Content_2.Font = Enum.Font.Gotham
 
-				ImageLabel.Position = UDim2.new(1, -35, 0.5, 0)
+	Content_2.Text = cfbutton.Description
 
-				ImageLabel.Size = UDim2.new(0, 24, 0, 24)
+	Content_2.TextColor3 = Color3.fromRGB(100, 100, 100)
 
-				ImageLabel.Image = "rbxassetid://85905776508942"
+	Content_2.TextSize = 11.000
 
-				Library:UpdateContent(Content_2, Title_3, Button)
+	Content_2.TextXAlignment = Enum.TextXAlignment.Left
 
-				Button_Click.Activated:Connect(function()
+	Content_2.TextYAlignment = Enum.TextYAlignment.Top
 
-					Button.BackgroundTransparency = 0.970
+	Library:UpdateContent(Content_2, Title_3, Button)
 
-					cfbutton.Callback()
+	Button_Click.Activated:Connect(function()
 
-					Library:TweenInstance(Button, 0.2, "BackgroundTransparency", 0.950)
+		Library:TweenInstance(ButtonFrame, 0.1, "BackgroundColor3", Color3.fromRGB(220, 190, 100))
 
-				end)
+		cfbutton.Callback()
 
-			end
+		wait(0.1)
+
+		Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(200, 170, 80))
+
+	end)
+
+end
 
 			function SectionFunc:AddDropdown(cfdropdown)
 
