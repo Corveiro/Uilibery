@@ -1,5 +1,17 @@
 local Library = {}
 
+--// Premium Dark Yellow Theme (Redesign)
+local THEME = {
+    Background = Color3.fromRGB(18,18,18),
+    Background2 = Color3.fromRGB(24,24,24),
+    Stroke = Color3.fromRGB(255,210,74),
+    Text = Color3.fromRGB(235,235,235),
+    SubText = Color3.fromRGB(160,160,160),
+    Accent = Color3.fromRGB(255,210,74),
+    AnimFast = 0.12
+}
+
+
 function Library:TweenInstance(Instance, Time, OldValue, NewValue)
 
 	local rz_Tween = game:GetService("TweenService"):Create(Instance, TweenInfo.new(Time, Enum.EasingStyle.Quad), { [OldValue] = NewValue })	rz_Tween:Play()	return rz_Tween
