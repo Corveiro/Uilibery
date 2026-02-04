@@ -282,7 +282,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
-		Main.BackgroundTransparency = 0.7.7
+		Main.BackgroundTransparency = 0.6
 
 		Main.ScaleType = Enum.ScaleType.Crop
 
@@ -292,7 +292,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
 
-		Main.BackgroundTransparency = 0.7
+		Main.BackgroundTransparency = 0
 
 	end
 
@@ -730,7 +730,7 @@ Line_2.Visible = false
 
 	SearchFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-	SearchFrame.BackgroundTransparency = 0.7
+	SearchFrame.BackgroundTransparency = 0
 
 	SearchFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1266,7 +1266,7 @@ Line_2.Visible = false
 
 	Section.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 
-	Section.BackgroundTransparency = 0.7
+	Section.BackgroundTransparency = 0
 
 	Section.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1410,7 +1410,7 @@ Line_2.Visible = false
 
 	Toggle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
-	Toggle.BackgroundTransparency = 0.7
+	Toggle.BackgroundTransparency = 0.2
 
 	Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1600,7 +1600,7 @@ end
 
 	Button.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-	Button.BackgroundTransparency = 0.7
+	Button.BackgroundTransparency = 0.2
 
 	Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1802,7 +1802,7 @@ end
 
 	Dropdown.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-	Dropdown.BackgroundTransparency = 0.7
+	Dropdown.BackgroundTransparency = 0.2
 
 	Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2304,7 +2304,7 @@ end
 
 		Option2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		Option2.BackgroundTransparency = 0.7.980
+		Option2.BackgroundTransparency = 0.2
 
 		Option2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2503,7 +2503,7 @@ end
 
 				Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Input.BackgroundTransparency = 0.7
+				Input.BackgroundTransparency = 0.2
 
 				Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2701,7 +2701,7 @@ end
 
 				Slider.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Slider.BackgroundTransparency = 0.7
+				Slider.BackgroundTransparency = 0.2
 
 				Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -3041,7 +3041,7 @@ end
 
 				Paragraph.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Paragraph.BackgroundTransparency = 0.7
+				Paragraph.BackgroundTransparency = 0.2
 
 				Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -3138,7 +3138,7 @@ end
 				DiscordCard.Name = "DiscordCard"
 				DiscordCard.Parent = SectionList 
 				DiscordCard.BackgroundColor3 = Color3.fromRGB(22, 22, 22) -- Cor ajustada para combinar com o tema escuro
-				DiscordCard.BackgroundTransparency = 0.7.4
+				DiscordCard.BackgroundTransparency = 0.4
 				DiscordCard.BorderSizePixel = 0
 				DiscordCard.Size = UDim2.new(1, 0, 0, 65)
 
