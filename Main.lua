@@ -280,9 +280,9 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.Image = "rbxassetid://" .. tostring(_G.ThemeID)
 
-		Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+		Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-		Main.BackgroundTransparency = 0.6
+		Main.BackgroundTransparency = 0
 
 		Main.ScaleType = Enum.ScaleType.Crop
 
@@ -290,7 +290,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.Image = ""
 
-		Main.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+		Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
 		Main.BackgroundTransparency = 0
 
@@ -1410,7 +1410,7 @@ Line_2.Visible = false
 
 	Toggle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
-	Toggle.BackgroundTransparency = 0.2
+	Toggle.BackgroundTransparency = 0
 
 	Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1600,7 +1600,7 @@ end
 
 	Button.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-	Button.BackgroundTransparency = 0.2
+	Button.BackgroundTransparency = 0
 
 	Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1802,7 +1802,7 @@ end
 
 	Dropdown.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-	Dropdown.BackgroundTransparency = 0.2
+	Dropdown.BackgroundTransparency = 0
 
 	Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2304,7 +2304,7 @@ end
 
 		Option2.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-		Option2.BackgroundTransparency = 0.2
+		Option2.BackgroundTransparency = 0.980
 
 		Option2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2503,7 +2503,7 @@ end
 
 				Input.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Input.BackgroundTransparency = 0.2
+				Input.BackgroundTransparency = 0
 
 				Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2701,7 +2701,7 @@ end
 
 				Slider.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Slider.BackgroundTransparency = 0.2
+				Slider.BackgroundTransparency = 0
 
 				Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -3041,7 +3041,7 @@ end
 
 				Paragraph.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
-				Paragraph.BackgroundTransparency = 0.2
+				Paragraph.BackgroundTransparency = 0
 
 				Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
