@@ -348,7 +348,7 @@ Line.Visible = false
 
 	NameHub.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	NameHub.TextSize = 14.000
+	NameHub.TextSize = 16.000
 
 	NameHub.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -392,7 +392,7 @@ Line.Visible = false
 
 	Desc.TextColor3 = Color3.fromRGB(100, 100, 100)
 
-	Desc.TextSize = 12.000
+	Desc.TextSize = 13.000
 
 	Desc.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -728,7 +728,7 @@ Line_2.Visible = false
 
 	SearchFrame.Parent = TabFrame
 
-	SearchFrame.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+	SearchFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
 	SearchFrame.BackgroundTransparency = 0.5
 
@@ -790,7 +790,7 @@ Line_2.Visible = false
 
 	SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	SearchBox.TextSize = 13.000
+	SearchBox.TextSize = 14.000
 
 	SearchBox.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -958,7 +958,7 @@ Line_2.Visible = false
 
 	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	TextLabel.TextSize = 13.000
+	TextLabel.TextSize = 14.000
 
 	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1110,7 +1110,7 @@ Line_2.Visible = false
 
 		NameTab_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-		NameTab_2.TextSize = 12.000
+		NameTab_2.TextSize = 13.000
 
 		NameTab_2.TextTransparency = 0.300
 
@@ -1136,7 +1136,7 @@ Line_2.Visible = false
 
 		Click_Tab_2.TextColor3 = Color3.fromRGB(0, 0, 0)
 
-		Click_Tab_2.TextSize = 14.000
+		Click_Tab_2.TextSize = 16.000
 
 		Layout.Name = "Layout"
 
@@ -1408,7 +1408,7 @@ Line_2.Visible = false
 
 	Toggle.Parent = SectionList
 
-	Toggle.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+	Toggle.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
 	Toggle.BackgroundTransparency = 0.5
 
@@ -1444,7 +1444,7 @@ Line_2.Visible = false
 
 	Title_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	Title_2.TextSize = 13.000
+	Title_2.TextSize = 14.000
 
 	Title_2.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1498,7 +1498,7 @@ Line_2.Visible = false
 
 	Toggle_Click.TextColor3 = Color3.fromRGB(0, 0, 0)
 
-	Toggle_Click.TextSize = 14.000
+	Toggle_Click.TextSize = 16.000
 
 	Content.Name = "Content"
 
@@ -1522,7 +1522,7 @@ Line_2.Visible = false
 
 	Content.TextColor3 = Color3.fromRGB(120, 120, 120)
 
-	Content.TextSize = 11.000
+	Content.TextSize = 13.000
 
 	Content.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1634,7 +1634,7 @@ end
 
 	Title_3.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	Title_3.TextSize = 13.000
+	Title_3.TextSize = 14.000
 
 	Title_3.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1678,7 +1678,7 @@ end
 
 	Button_Click.TextColor3 = Color3.fromRGB(0, 0, 0)
 
-	Button_Click.TextSize = 12.000
+	Button_Click.TextSize = 13.000
 
 	Content_2.Name = "Content"
 
@@ -1702,7 +1702,7 @@ end
 
 	Content_2.TextColor3 = Color3.fromRGB(100, 100, 100)
 
-	Content_2.TextSize = 11.000
+	Content_2.TextSize = 13.000
 
 	Content_2.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1836,7 +1836,7 @@ end
 
 	Title_8.TextColor3 = Color3.fromRGB(180, 180, 180)
 
-	Title_8.TextSize = 13.000
+	Title_8.TextSize = 14.000
 
 	Title_8.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1862,7 +1862,7 @@ end
 
 	Content_6.TextColor3 = Color3.fromRGB(100, 100, 100)
 
-	Content_6.TextSize = 11.000
+	Content_6.TextSize = 13.000
 
 	Content_6.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1908,7 +1908,7 @@ end
 
 	SelectText.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	SelectText.TextSize = 13.000
+	SelectText.TextSize = 14.000
 
 	SelectText.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1956,7 +1956,7 @@ end
 
 	Drop_Click.TextColor3 = Color3.fromRGB(0, 0, 0)
 
-	Drop_Click.TextSize = 14.000
+	Drop_Click.TextSize = 16.000
 
 	Library:UpdateContent(Content_6, Title_8, Dropdown)
 
@@ -2024,7 +2024,7 @@ end
 
 	Title_10.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	Title_10.TextSize = 14.000
+	Title_10.TextSize = 16.000
 
 	Title_10.TextWrapped = true
 
@@ -2096,7 +2096,7 @@ end
 
 	TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-	TextBox.TextSize = 12.000
+	TextBox.TextSize = 13.000
 
 	TextBox.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -2336,7 +2336,7 @@ end
 
 		Option2_Click.TextColor3 = Color3.fromRGB(0, 0, 0)
 
-		Option2_Click.TextSize = 14.000
+		Option2_Click.TextSize = 16.000
 
 		Title_12.Name = "Title"
 
@@ -2358,7 +2358,7 @@ end
 
 		Title_12.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-		Title_12.TextSize = 13.000
+		Title_12.TextSize = 14.000
 
 		Title_12.TextTransparency = 0.500
 
@@ -2501,7 +2501,7 @@ end
 
 				Input.Parent = SectionList
 
-				Input.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+				Input.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
 				Input.BackgroundTransparency = 0.5
 
@@ -2537,7 +2537,7 @@ end
 
 				Title_7.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-				Title_7.TextSize = 13.000
+				Title_7.TextSize = 14.000
 
 				Title_7.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -2563,7 +2563,7 @@ end
 
 				Content_5.TextColor3 = Color3.fromRGB(100, 100, 100)
 
-				Content_5.TextSize = 12.000
+				Content_5.TextSize = 13.000
 
 				Content_5.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -2615,7 +2615,7 @@ end
 
 				RealTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-				RealTextBox.TextSize = 12.000
+				RealTextBox.TextSize = 13.000
 
 				RealTextBox.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -2699,7 +2699,7 @@ end
 
 				Slider.Parent = SectionList
 
-				Slider.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+				Slider.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
 				Slider.BackgroundTransparency = 0.5
 
@@ -2735,7 +2735,7 @@ end
 
 				Title_4.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-				Title_4.TextSize = 13.000
+				Title_4.TextSize = 14.000
 
 				Title_4.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -2761,7 +2761,7 @@ end
 
 				Content_3.TextColor3 = Color3.fromRGB(100, 100, 100)
 
-				Content_3.TextSize = 12.000
+				Content_3.TextSize = 13.000
 
 				Content_3.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -2851,7 +2851,7 @@ end
 
 				SliderValue.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-				SliderValue.TextSize = 11.000
+				SliderValue.TextSize = 13.000
 
 				UICorner_14.CornerRadius = UDim.new(0, 2)
 
@@ -3009,7 +3009,7 @@ end
 
 				Title_5.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-				Title_5.TextSize = 13.000
+				Title_5.TextSize = 14.000
 
 				Title_5.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -3039,7 +3039,7 @@ end
 
 				Paragraph.Parent = SectionList
 
-				Paragraph.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+				Paragraph.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
 				Paragraph.BackgroundTransparency = 0.5
 
@@ -3075,7 +3075,7 @@ end
 
 				Title_6.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-				Title_6.TextSize = 13.000
+				Title_6.TextSize = 14.000
 
 				Title_6.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -3101,7 +3101,7 @@ end
 
 				Content_4.TextColor3 = Color3.fromRGB(100, 100, 100)
 
-				Content_4.TextSize = 12.000
+				Content_4.TextSize = 13.000
 
 				Content_4.TextXAlignment = Enum.TextXAlignment.Left
 
