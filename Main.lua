@@ -282,7 +282,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
-		Main.BackgroundTransparency = 0.5
+		Main.BackgroundTransparency = 0.8
 
 		Main.ScaleType = Enum.ScaleType.Crop
 
@@ -292,7 +292,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 
-		Main.BackgroundTransparency = 0.2
+		Main.BackgroundTransparency = 0.8
 
 	end
 
@@ -728,7 +728,7 @@ Line_2.Visible = false
 
 	SearchFrame.Parent = TabFrame
 
-	SearchFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	SearchFrame.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 
 	SearchFrame.BackgroundTransparency = 0.5
 
@@ -1408,7 +1408,7 @@ Line_2.Visible = false
 
 	Toggle.Parent = SectionList
 
-	Toggle.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	Toggle.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 
 	Toggle.BackgroundTransparency = 0.5
 
@@ -2501,7 +2501,7 @@ end
 
 				Input.Parent = SectionList
 
-				Input.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+				Input.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 
 				Input.BackgroundTransparency = 0.5
 
@@ -2521,7 +2521,7 @@ end
 
 				Title_7.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
-				Title_7.BackgroundTransparency = 1.000
+				Title_7.BackgroundTransparency = 0.5
 
 				Title_7.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2699,7 +2699,7 @@ end
 
 				Slider.Parent = SectionList
 
-				Slider.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+				Slider.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 
 				Slider.BackgroundTransparency = 0.5
 
@@ -3039,7 +3039,7 @@ end
 
 				Paragraph.Parent = SectionList
 
-				Paragraph.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+				Paragraph.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 
 				Paragraph.BackgroundTransparency = 0.5
 
@@ -3232,7 +3232,7 @@ end
 
 	self:MakeDraggable(G2L["2"],G2L["2"])
 
-	G2L["2"]["BackgroundColor3"] = Color3.fromRGB(20, 20, 20);
+	G2L["2"]["BackgroundColor3"] = Color3.fromRGB(70, 70, 70);
 
 	G2L["2"]["Image"] = [[rbxassetid://101817370702077]];
 
