@@ -96,6 +96,35 @@ getgenv().UIToggled = false
 
 local currcolor = {}
 local Library = {};
+-- [[ LEGACY COMPATIBILITY HELPERS ]]
+function Library:MakeConfig(Config, NewConfig)
+    for i, v in next, Config do
+        if not NewConfig[i] then
+            NewConfig[i] = v
+        end
+    end
+    return NewConfig
+end
+
+function Library:TweenInstance(Instance, Time, OldValue, NewValue)
+    game:GetService("TweenService"):Create(Instance, TweenInfo.new(Time, Enum.EasingStyle.Quad), { [OldValue] = NewValue }):Play()
+end
+
+function Library:UpdateContent(Content, Title, Object)
+    if Content.Text ~= "" then
+        Title.Position = UDim2.new(0, 10, 0, 7)
+        Title.Size = UDim2.new(1, -60, 0, 16)
+        local MaxY = math.max(Content.TextBounds.Y + 15, 45)
+        Object.Size = UDim2.new(1, 0, 0, MaxY)
+    end
+end
+
+function Library:UpdateScrolling(Scroll, List)
+    List:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 15)
+    end)
+end
+
 local Library_Function = {}
 local TweenService = game:GetService('TweenService')
 local uis = game:GetService("UserInputService")
@@ -562,7 +591,19 @@ function Library:CreateWindow(Setting)
 	Concacontainer.Parent = MainContainer
 	Concacontainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	Concacontainer.BackgroundTransparency = 1.000
-	Concacontainer.ClipsDescendants = true
+	Concacontainer.ClipsDescend
+
+function Library:NewWindow(ConfigWindow)
+    local ConfigWindow = self:MakeConfig({
+        Title = "SYNTRAX Hub",
+        Description = "By Thais",
+    }, ConfigWindow or {})
+    return self:CreateWindow({
+        Title = ConfigWindow.Title,
+        Desc = ConfigWindow.Description
+    })
+end
+ants = true
 	Concacontainer.Position = UDim2.new(0, 0, 0, 30)
 	Concacontainer.Size = UDim2.new(1, 0, 1, -30)
 	
@@ -974,7 +1015,120 @@ function Library:CreateWindow(Setting)
 			Section.Size = UDim2.new(1, -5, 0, 30)
 			Section.BackgroundColor3 = getgenv().UIColor["Background 3 Color"]
 			Section.BackgroundTransparency = getgenv().UIColor["Background 1 Transparency"]
-			Section.ClipsDescendants = true
+			Section.ClipsDescend
+
+function pageFunction:AddSection(sectionName)
+local Section = self:CreateSection(sectionName)
+local SectionWrapper = {}
+
+function SectionWrapper:AddToggle(config)
+config = Library:MakeConfig({
+Title = "Toggle",
+Description = "",
+Default = false,
+Callback = function() end
+}, config or {})
+
+local toggle = Section:AddToggle("ID_" .. config.Title, {
+Text = config.Title,
+Desc = config.Description,
+Default = config.Default,
+Callback = config.Callback
+})
+
+local ToggleWrapper = { Value = config.Default }
+function ToggleWrapper:Set(bool)
+self.Value = bool
+if toggle and toggle.SetStage then toggle.SetStage(bool) end
+end
+return ToggleWrapper
+end
+
+function SectionWrapper:AddButton(config)
+config = Library:MakeConfig({
+Title = "Button",
+Description = "",
+Callback = function() end
+}, config or {})
+
+return Section:AddButton({
+Text = config.Title,
+Func = config.Callback
+})
+end
+
+function SectionWrapper:AddDropdown(config)
+config = Library:MakeConfig({
+Title = "Dropdown",
+Description = "",
+Values = {},
+Default = nil,
+Multi = false,
+Callback = function() end
+}, config or {})
+
+local dropdown = Section:AddDropdown("ID_" .. config.Title, {
+Text = config.Title,
+Values = config.Values,
+Default = config.Default,
+Multi = config.Multi,
+Callback = config.Callback
+})
+
+local DropWrapper = { Value = config.Default }
+function DropWrapper:Set(val) end
+function DropWrapper:Refresh(newList) end
+function DropWrapper:Clear() end
+return DropWrapper
+end
+
+function SectionWrapper:AddSlider(config)
+config = Library:MakeConfig({
+Title = "Slider",
+Description = "",
+Min = 0,
+Max = 100,
+Default = 50,
+Callback = function() end
+}, config or {})
+
+return Section:AddSlider({
+Text = config.Title,
+Min = config.Min,
+Max = config.Max,
+Default = config.Default,
+Callback = config.Callback
+})
+end
+
+function SectionWrapper:AddInput(config)
+config = Library:MakeConfig({
+Title = "Input",
+Description = "",
+PlaceHolder = "",
+Default = "",
+Callback = function() end
+}, config or {})
+
+return Section:AddInput("ID_" .. config.Title, {
+Text = config.Title,
+Placeholder = config.PlaceHolder,
+Default = config.Default,
+Callback = config.Callback
+})
+end
+
+function SectionWrapper:AddLabel(text)
+return Section:AddLabel(text)
+end
+
+function SectionWrapper:AddSeperator(text)
+return Section:AddLabel("--- " .. (text or "") .. " ---")
+end
+
+return SectionWrapper
+end
+ants = true
 			UICorner.CornerRadius = UDim.new(0, 4)
 			UICorner.Parent = Section
 			Topsec.Name = "Topsec"
@@ -2537,10 +2691,31 @@ function Library:CreateWindow(Setting)
 		end
         local pagefunc = {}
         function pagefunc:AddLeftGroupbox(name)
-            return pageFunction:CreateSection(name)
+            
+function pageFunction:AddLeftGroupbox(name)
+return self:AddSection(name)
+end
+function pageFunction:AddRightGroupbox(name)
+return self:AddSection(name)
+end
+
+			return pageFunction
+
+function Main_Function:T(name, icon)
+return self:AddTab(name)
+end
+:CreateSection(name)
         end
         function pagefunc:AddRightGroupbox(name)
-            return pageFunction:CreateSection(name)
+            
+function pageFunction:AddLeftGroupbox(name)
+return self:AddSection(name)
+end
+function pageFunction:AddRightGroupbox(name)
+return self:AddSection(name)
+end
+
+			return pageFunction:CreateSection(name)
         end
 		return pagefunc
 
