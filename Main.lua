@@ -1536,9 +1536,9 @@ Line_2.Visible = false
 
 		if Boolean then
 
-			Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 215, 0))
+			Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 215, 255))
 
-			Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(255, 215, 0))
+			Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(255, 215, 255))
 
 		else
 
@@ -1644,7 +1644,7 @@ end
 
 	ButtonFrame.AnchorPoint = Vector2.new(1, 0.5)
 
-	ButtonFrame.BackgroundColor3 = Color3.fromRGB(200, 170, 80)
+	ButtonFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 
 	ButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
