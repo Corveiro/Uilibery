@@ -1632,7 +1632,7 @@ end
 
 	Title_3.Text = cfbutton.Title
 
-	Title_3.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title_3.TextColor3 = Color3.fromRGB(0, 0, 0)
 
 	Title_3.TextSize = 14.000
 
@@ -1644,7 +1644,7 @@ end
 
 	ButtonFrame.AnchorPoint = Vector2.new(1, 0.5)
 
-	ButtonFrame.BackgroundColor3 = Color3.fromRGB(200, 170, 80)
+	ButtonFrame.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 
 	ButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
