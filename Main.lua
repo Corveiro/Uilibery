@@ -344,7 +344,7 @@ function Library:NewWindow(ConfigWindow)
 	Line.BorderSizePixel = 0
 	Line.Position = UDim2.new(0, 0, 1, -1)
 	Line.Size = UDim2.new(1, 0, 0, 1)
-	Line.Visible = true
+		Line.Visible = false
 
 	Left.Name = "Left"
 
@@ -362,9 +362,9 @@ function Library:NewWindow(ConfigWindow)
 
 	NameHub.BorderSizePixel = 0
 
-	NameHub.Position = UDim2.new(0, 60, 0, 10)
+		NameHub.Position = UDim2.new(0, 60, 0, 8)
 
-	NameHub.Size = UDim2.new(1, -180, 0, 20)
+		NameHub.Size = UDim2.new(1, -180, 0, 18)
 
 	NameHub.Font = Enum.Font.GothamBold
 
@@ -388,9 +388,9 @@ function Library:NewWindow(ConfigWindow)
 
 	LogoHub.BorderSizePixel = 0
 
-	LogoHub.Position = UDim2.new(0, 10, 0, 5)
+		LogoHub.Position = UDim2.new(0, 15, 0, 8)
 
-	LogoHub.Size = UDim2.new(0, 40, 0, 35)
+		LogoHub.Size = UDim2.new(0, 35, 0, 30)
 
 	LogoHub.Image = "rbxassetid://123256573634"
 
@@ -406,9 +406,9 @@ function Library:NewWindow(ConfigWindow)
 
 	Desc.BorderSizePixel = 0
 
-	Desc.Position = UDim2.new(0, 60, 0, 27)
+		Desc.Position = UDim2.new(0, 60, 0, 24)
 
-	Desc.Size = UDim2.new(1, -180, 0, 15)
+		Desc.Size = UDim2.new(1, -180, 0, 14)
 
 	Desc.Font = Enum.Font.GothamBold
 
@@ -734,9 +734,9 @@ function Library:NewWindow(ConfigWindow)
 
 	TabFrame.BorderSizePixel = 0
 
-		TabFrame.Position = UDim2.new(0, 150, 0, 10)
+		TabFrame.Position = UDim2.new(0, 0, 0, 50)
 
-		TabFrame.Size = UDim2.new(1, -160, 0, 35)
+		TabFrame.Size = UDim2.new(1, 0, 0, 35)
 
 	Line_2.Name = "Line"
 	Line_2.Parent = TabFrame
@@ -746,7 +746,7 @@ function Library:NewWindow(ConfigWindow)
 	Line_2.BorderSizePixel = 0
 	Line_2.Position = UDim2.new(1, -1, 0, 0)
 	Line_2.Size = UDim2.new(0, 1, 1, 0)
-	Line_2.Visible = true
+		Line_2.Visible = false
 
 		SearchFrame.Name = "SearchFrame"
 		SearchFrame.Visible = false
@@ -835,7 +835,7 @@ function Library:NewWindow(ConfigWindow)
 
 		ScrollingTab.Size = UDim2.new(1, 0, 1, 0)
 
-		ScrollingTab.FillDirection = Enum.FillDirection.Horizontal
+		-- ScrollingTab.FillDirection = Enum.FillDirection.Horizontal
 
 	ScrollingTab.ScrollBarThickness = 0
 
@@ -869,9 +869,9 @@ function Library:NewWindow(ConfigWindow)
 
 	LayoutFrame.BorderSizePixel = 0
 
-		LayoutFrame.Position = UDim2.new(0, 10, 0, 60)
+		LayoutFrame.Position = UDim2.new(0, 10, 0, 90)
 
-		LayoutFrame.Size = UDim2.new(1, -20, 1, -70)
+		LayoutFrame.Size = UDim2.new(1, -20, 1, -100)
 
 	LayoutFrame.ClipsDescendants = true
 
@@ -1044,7 +1044,7 @@ function Library:NewWindow(ConfigWindow)
 
 		TabDisable.BorderSizePixel = 0
 
-			TabDisable.Size = UDim2.new(0, 80, 1, 0)
+			TabDisable.Size = UDim2.new(0, 100, 1, 0)
 
 		Choose_2.Name = "Choose"
 
@@ -1056,9 +1056,9 @@ function Library:NewWindow(ConfigWindow)
 
 		Choose_2.BorderSizePixel = 0
 
-			Choose_2.Position = UDim2.new(0, 0, 1, -2)
+			Choose_2.Position = UDim2.new(0, 10, 1, -2)
 
-			Choose_2.Size = UDim2.new(1, 0, 0, 2)
+			Choose_2.Size = UDim2.new(1, -20, 0, 2)
 
 		Choose_2.Visible = false
 
@@ -1130,7 +1130,7 @@ function Library:NewWindow(ConfigWindow)
 
 			NameTab_2.TextSize = 14.000
 
-			NameTab_2.TextTransparency = 0.400
+			NameTab_2.TextTransparency = 0.500
 
 			NameTab_2.TextXAlignment = Enum.TextXAlignment.Center
 
@@ -1282,15 +1282,15 @@ function Library:NewWindow(ConfigWindow)
 
 		Section.Parent = Layout
 
-			Section.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+			Section.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-			Section.BackgroundTransparency = 0.3
+			Section.BackgroundTransparency = 0.2
 
 		Section.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
 		Section.BorderSizePixel = 0
 
-		Section.Position = UDim2.new(1.36775815, 0, 0.545454562, 0)
+			Section.Position = UDim2.new(0, 0, 0, 0)
 
 		Section.Size = UDim2.new(1, 0, 0, 55)
 
@@ -1302,9 +1302,9 @@ function Library:NewWindow(ConfigWindow)
 
 		NameSection.Parent = Section
 
-		NameSection.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+			NameSection.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
-		NameSection.BackgroundTransparency = 1.000
+			NameSection.BackgroundTransparency = 0.95
 
 		NameSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1383,6 +1383,10 @@ function Library:NewWindow(ConfigWindow)
 		UIListLayout_2.FillDirection = Enum.FillDirection.Horizontal
 
 		UIListLayout_2.Padding = UDim.new(0, 15)
+
+		UIListLayout_2.VerticalAlignment = Enum.VerticalAlignment.Center
+
+		UIListLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
 		UIListLayout_4:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 
@@ -1563,13 +1567,15 @@ function Library:NewWindow(ConfigWindow)
 
 		function ToggleFunc:Set(Boolean)
 
-				if Boolean then
-					Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 0, 0))
-					Library:TweenInstance(ToggleCircle, 0.2, "Position", UDim2.new(1, -16, 0.5, 0))
-				else
-					Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(20, 20, 20))
-					Library:TweenInstance(ToggleCircle, 0.2, "Position", UDim2.new(0, 2, 0.5, 0))
-				end
+					if Boolean then
+						Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 0, 0))
+						Library:TweenInstance(ToggleCircle, 0.2, "Position", UDim2.new(1, -16, 0.5, 0))
+						Library:TweenInstance(ToggleCircle, 0.2, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
+					else
+						Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(30, 30, 30))
+						Library:TweenInstance(ToggleCircle, 0.2, "Position", UDim2.new(0, 2, 0.5, 0))
+						Library:TweenInstance(ToggleCircle, 0.2, "BackgroundColor3", Color3.fromRGB(150, 150, 150))
+					end
 
 			self.Value = Boolean
 
@@ -1677,9 +1683,9 @@ function Library:NewWindow(ConfigWindow)
 
 		ButtonFrame.BorderSizePixel = 0
 
-		ButtonFrame.Position = UDim2.new(1, -10, 0.5, 0)
+			ButtonFrame.Position = UDim2.new(1, -10, 0.5, 0)
 
-		ButtonFrame.Size = UDim2.new(0, 70, 0, 22)
+			ButtonFrame.Size = UDim2.new(0, 60, 0, 20)
 
 		UICorner_Button.CornerRadius = UDim.new(0, 8)
 
@@ -1701,11 +1707,11 @@ function Library:NewWindow(ConfigWindow)
 
 		Button_Click.Font = Enum.Font.GothamBold
 
-		Button_Click.Text = "Click"
+			Button_Click.Text = "EXECUTE"
 
 			Button_Click.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-		Button_Click.TextSize = 13.000
+			Button_Click.TextSize = 11.000
 
 		Content_2.Name = "Content"
 
@@ -2802,7 +2808,7 @@ function Library:NewWindow(ConfigWindow)
 
 					SliderFrame.AnchorPoint = Vector2.new(0, 0.5)
 
-					SliderFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+						SliderFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 
 					SliderFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2850,7 +2856,7 @@ function Library:NewWindow(ConfigWindow)
 
 						Circle.Size = UDim2.new(0, 10, 0, 10)
 
-						Circle.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+						Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 
 						UICorner_13.CornerRadius = UDim.new(1, 0)
 
