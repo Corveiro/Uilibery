@@ -734,9 +734,9 @@ function Library:NewWindow(ConfigWindow)
 
 	TabFrame.BorderSizePixel = 0
 
-	TabFrame.Position = UDim2.new(0, 10, 0, 60)
+		TabFrame.Position = UDim2.new(0, 150, 0, 10)
 
-	TabFrame.Size = UDim2.new(0, 130, 1, -70)
+		TabFrame.Size = UDim2.new(1, -160, 0, 35)
 
 	Line_2.Name = "Line"
 	Line_2.Parent = TabFrame
@@ -748,7 +748,8 @@ function Library:NewWindow(ConfigWindow)
 	Line_2.Size = UDim2.new(0, 1, 1, 0)
 	Line_2.Visible = true
 
-	SearchFrame.Name = "SearchFrame"
+		SearchFrame.Name = "SearchFrame"
+		SearchFrame.Visible = false
 
 	SearchFrame.Parent = TabFrame
 
@@ -828,11 +829,13 @@ function Library:NewWindow(ConfigWindow)
 
 	ScrollingTab.BorderSizePixel = 0
 
-	ScrollingTab.Position = UDim2.new(0, 0, 0, 50)
+		ScrollingTab.Position = UDim2.new(0, 0, 0, 0)
 
 	ScrollingTab.Selectable = false
 
-	ScrollingTab.Size = UDim2.new(1, 0, 1, -50)
+		ScrollingTab.Size = UDim2.new(1, 0, 1, 0)
+
+		ScrollingTab.FillDirection = Enum.FillDirection.Horizontal
 
 	ScrollingTab.ScrollBarThickness = 0
 
@@ -866,9 +869,9 @@ function Library:NewWindow(ConfigWindow)
 
 	LayoutFrame.BorderSizePixel = 0
 
-	LayoutFrame.Position = UDim2.new(0, 150, 0, 60)
+		LayoutFrame.Position = UDim2.new(0, 10, 0, 60)
 
-	LayoutFrame.Size = UDim2.new(1, -160, 1, -70)
+		LayoutFrame.Size = UDim2.new(1, -20, 1, -70)
 
 	LayoutFrame.ClipsDescendants = true
 
@@ -942,9 +945,9 @@ function Library:NewWindow(ConfigWindow)
 
 	UIPageLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-	UIPageLayout.EasingStyle = Enum.EasingStyle.Quad
+		UIPageLayout.EasingStyle = Enum.EasingStyle.Linear
 
-	UIPageLayout.TweenTime = 0.300
+		UIPageLayout.TweenTime = 0.000
 
 	LayoutName.Name = "LayoutName"
 
@@ -1041,7 +1044,7 @@ function Library:NewWindow(ConfigWindow)
 
 		TabDisable.BorderSizePixel = 0
 
-		TabDisable.Size = UDim2.new(1, 0, 0, 25)
+			TabDisable.Size = UDim2.new(0, 80, 1, 0)
 
 		Choose_2.Name = "Choose"
 
@@ -1053,9 +1056,9 @@ function Library:NewWindow(ConfigWindow)
 
 		Choose_2.BorderSizePixel = 0
 
-		Choose_2.Position = UDim2.new(0, 0, 0, 5)
+			Choose_2.Position = UDim2.new(0, 0, 1, -2)
 
-		Choose_2.Size = UDim2.new(0, 4, 0, 15)
+			Choose_2.Size = UDim2.new(1, 0, 0, 2)
 
 		Choose_2.Visible = false
 
@@ -1115,21 +1118,21 @@ function Library:NewWindow(ConfigWindow)
 
 		NameTab_2.BorderSizePixel = 0
 
-		NameTab_2.Position = UDim2.new(0, NamePosX, 0, 0)
+			NameTab_2.Position = UDim2.new(0, 0, 0, 0)
 
-		NameTab_2.Size = UDim2.new(1, -NamePosX, 1, 0)
+			NameTab_2.Size = UDim2.new(1, 0, 1, 0)
 
-		NameTab_2.Font = Enum.Font.GothamBold
+			NameTab_2.Font = Enum.Font.GothamBold
 
-		NameTab_2.Text = t
+			NameTab_2.Text = t
 
-		NameTab_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+			NameTab_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-		NameTab_2.TextSize = 13.000
+			NameTab_2.TextSize = 14.000
 
-		NameTab_2.TextTransparency = 0.300
+			NameTab_2.TextTransparency = 0.400
 
-		NameTab_2.TextXAlignment = Enum.TextXAlignment.Left
+			NameTab_2.TextXAlignment = Enum.TextXAlignment.Center
 
 		Click_Tab_2.Name = "Click_Tab"
 
@@ -1225,13 +1228,13 @@ function Library:NewWindow(ConfigWindow)
 
 				if v:IsA("Frame") then
 
-					Library:TweenInstance(v.NameTab, 0.3, "TextTransparency", 0.3)
+				v.NameTab.TextTransparency = 0.4
 
-					if v:FindFirstChild("TabIcon") then
+						if v:FindFirstChild("TabIcon") then
 
-						Library:TweenInstance(v.TabIcon, 0.3, "ImageTransparency", 0.5)
+							v.TabIcon.ImageTransparency = 0.5
 
-					end
+						end
 
 					v.Choose.Visible = false
 
@@ -1239,13 +1242,13 @@ function Library:NewWindow(ConfigWindow)
 
 			end
 
-			Library:TweenInstance(NameTab_2, 0.2, "TextTransparency", 0)
+				NameTab_2.TextTransparency = 0
 
-			if TabIcon.Visible then
+				if TabIcon.Visible then
 
-				Library:TweenInstance(TabIcon, 0.2, "ImageTransparency", 0)
+					TabIcon.ImageTransparency = 0
 
-			end
+				end
 
 			UIPageLayout:JumpToIndex(Layout.LayoutOrder)
 
@@ -1375,9 +1378,11 @@ function Library:NewWindow(ConfigWindow)
 
 		UIListLayout_4.Parent = SectionList
 
-		UIListLayout_4.SortOrder = Enum.SortOrder.LayoutOrder
+		UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
 
-		UIListLayout_4.Padding = UDim.new(0, 5)
+		UIListLayout_2.FillDirection = Enum.FillDirection.Horizontal
+
+		UIListLayout_2.Padding = UDim.new(0, 15)
 
 		UIListLayout_4:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 
@@ -1477,9 +1482,9 @@ function Library:NewWindow(ConfigWindow)
 
 		ToggleCheck.Position = UDim2.new(1, -10, 0.5, 0)
 
-		ToggleCheck.Size = UDim2.new(0, 20, 0, 20)
+			ToggleCheck.Size = UDim2.new(0, 35, 0, 18)
 
-		UICorner_7.CornerRadius = UDim.new(0, 8)
+			UICorner_7.CornerRadius = UDim.new(1, 0)
 
 		UICorner_7.Parent = ToggleCheck
 
@@ -1487,11 +1492,22 @@ function Library:NewWindow(ConfigWindow)
 
 		UIStroke.Parent = ToggleCheck
 
-		UIStroke.Color = Color3.fromRGB(60, 60, 60)
+			UIStroke.Color = Color3.fromRGB(40, 40, 40)
 
-		UIStroke.Thickness = 2
+			UIStroke.Thickness = 1
 
-		UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+			local ToggleCircle = Instance.new("Frame")
+			local UICorner_Circle = Instance.new("UICorner")
+			ToggleCircle.Name = "ToggleCircle"
+			ToggleCircle.Parent = ToggleCheck
+			ToggleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			ToggleCircle.Size = UDim2.new(0, 14, 0, 14)
+			ToggleCircle.Position = UDim2.new(0, 2, 0.5, 0)
+			ToggleCircle.AnchorPoint = Vector2.new(0, 0.5)
+			UICorner_Circle.CornerRadius = UDim.new(1, 0)
+			UICorner_Circle.Parent = ToggleCircle
 
 		Toggle_Click.Name = "Toggle_Click"
 
@@ -1547,19 +1563,13 @@ function Library:NewWindow(ConfigWindow)
 
 		function ToggleFunc:Set(Boolean)
 
-			if Boolean then
-
-				Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 0, 0))
-
-				Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(255, 0, 0))
-
-			else
-
-				Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(15, 15, 15))
-
-				Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(60, 60, 60))
-
-			end
+				if Boolean then
+					Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 0, 0))
+					Library:TweenInstance(ToggleCircle, 0.2, "Position", UDim2.new(1, -16, 0.5, 0))
+				else
+					Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(20, 20, 20))
+					Library:TweenInstance(ToggleCircle, 0.2, "Position", UDim2.new(0, 2, 0.5, 0))
+				end
 
 			self.Value = Boolean
 
@@ -1569,11 +1579,15 @@ function Library:NewWindow(ConfigWindow)
 
 		ToggleFunc:Set(ToggleFunc.Value)
 
-		Toggle_Click.Activated:Connect(function()
-
-			ToggleFunc:Set(not ToggleFunc.Value)
-
-		end)
+			Toggle_Click.MouseEnter:Connect(function()
+				Library:TweenInstance(Toggle, 0.2, "BackgroundTransparency", 0.1)
+			end)
+			Toggle_Click.MouseLeave:Connect(function()
+				Library:TweenInstance(Toggle, 0.2, "BackgroundTransparency", 0.3)
+			end)
+			Toggle_Click.Activated:Connect(function()
+				ToggleFunc:Set(not ToggleFunc.Value)
+			end)
 
 		return ToggleFunc
 
@@ -1723,17 +1737,18 @@ function Library:NewWindow(ConfigWindow)
 
 		Library:UpdateContent(Content_2, Title_3, Button)
 
-		Button_Click.Activated:Connect(function()
-
+			Button_Click.MouseEnter:Connect(function()
+				Library:TweenInstance(Button, 0.2, "BackgroundTransparency", 0.1)
+			end)
+			Button_Click.MouseLeave:Connect(function()
+				Library:TweenInstance(Button, 0.2, "BackgroundTransparency", 0.3)
+			end)
+			Button_Click.Activated:Connect(function()
 				Library:TweenInstance(ButtonFrame, 0.1, "BackgroundColor3", Color3.fromRGB(200, 0, 0))
-
 				cfbutton.Callback()
-
 				wait(0.1)
-
 				Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(255, 0, 0))
-
-		end)
+			end)
 
 	end
 
@@ -1885,7 +1900,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Selects.Parent = Dropdown
 
-			Selects.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+			Selects.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
 		Selects.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1895,7 +1910,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Selects.Size = UDim2.new(1, -20, 0, 25)
 
-			UICorner_20.CornerRadius = UDim.new(0, 10)
+			UICorner_20.CornerRadius = UDim.new(0, 4)
 
 		UICorner_20.Parent = Selects
 
@@ -2315,7 +2330,7 @@ function Library:NewWindow(ConfigWindow)
 
 				Option2.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
-			Option2.BackgroundTransparency = 0.980
+				Option2.BackgroundTransparency = 1.000
 
 			Option2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2371,7 +2386,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Title_12.TextSize = 14.000
 
-			Title_12.TextTransparency = 0.500
+				Title_12.TextTransparency = 0.400
 
 				UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
 
@@ -2795,9 +2810,9 @@ function Library:NewWindow(ConfigWindow)
 
 					SliderFrame.Position = UDim2.new(1, -110, 0.5, 0)
 
-					SliderFrame.Size = UDim2.new(0, 100, 0, 8)
+						SliderFrame.Size = UDim2.new(0, 100, 0, 4)
 
-					UICorner_11.CornerRadius = UDim.new(0, 8)
+						UICorner_11.CornerRadius = UDim.new(1, 0)
 
 					UICorner_11.Parent = SliderFrame
 
@@ -2811,9 +2826,9 @@ function Library:NewWindow(ConfigWindow)
 
 					SliderDraggable.BorderSizePixel = 0
 
-					SliderDraggable.Size = UDim2.new(0, 20, 1, 0)
+						SliderDraggable.Size = UDim2.new(0, 0, 1, 0)
 
-					UICorner_12.CornerRadius = UDim.new(0, 8)
+						UICorner_12.CornerRadius = UDim.new(1, 0)
 
 					UICorner_12.Parent = SliderDraggable
 
@@ -2829,11 +2844,15 @@ function Library:NewWindow(ConfigWindow)
 
 					Circle.BorderSizePixel = 0
 
-					Circle.Position = UDim2.new(1, -6, 0, 0)
+						Circle.Position = UDim2.new(1, -6, 0.5, 0)
 
-					Circle.Size = UDim2.new(0, 12, 0, 12)
+						Circle.AnchorPoint = Vector2.new(0, 0.5)
 
-					UICorner_13.CornerRadius = UDim.new(0, 8)
+						Circle.Size = UDim2.new(0, 10, 0, 10)
+
+						Circle.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+
+						UICorner_13.CornerRadius = UDim.new(1, 0)
 
 					UICorner_13.Parent = Circle
 
