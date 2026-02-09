@@ -316,8 +316,8 @@ function Library:NewWindow(ConfigWindow)
 
 	Main.ClipsDescendants = true
 
-	Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
-	Main.BackgroundTransparency = 0.1
+	Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Main.BackgroundTransparency = 0
 	Main.Image = ""
 
 	UICorner.Parent = Main
@@ -326,7 +326,7 @@ function Library:NewWindow(ConfigWindow)
 
 	Top.Parent = Main
 
-	Top.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	Top.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 
 	Top.BackgroundTransparency = 1.000
 
@@ -338,13 +338,13 @@ function Library:NewWindow(ConfigWindow)
 
 	Line.Name = "Line"
 	Line.Parent = Top
-	Line.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
-	Line.BackgroundTransparency = 1.000
+	Line.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+	Line.BackgroundTransparency = 0.8
 	Line.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Line.BorderSizePixel = 0
 	Line.Position = UDim2.new(0, 0, 1, -1)
 	Line.Size = UDim2.new(1, 0, 0, 1)
-	Line.Visible = false
+	Line.Visible = true
 
 	Left.Name = "Left"
 
@@ -726,9 +726,9 @@ function Library:NewWindow(ConfigWindow)
 
 	TabFrame.Parent = Main
 
-	TabFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	TabFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
-	TabFrame.BackgroundTransparency = 0.5
+	TabFrame.BackgroundTransparency = 0.3
 
 	TabFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -740,21 +740,21 @@ function Library:NewWindow(ConfigWindow)
 
 	Line_2.Name = "Line"
 	Line_2.Parent = TabFrame
-	Line_2.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
-	Line_2.BackgroundTransparency = 1.000
+	Line_2.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+	Line_2.BackgroundTransparency = 0.9
 	Line_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Line_2.BorderSizePixel = 0
 	Line_2.Position = UDim2.new(1, -1, 0, 0)
 	Line_2.Size = UDim2.new(0, 1, 1, 0)
-	Line_2.Visible = false
+	Line_2.Visible = true
 
 	SearchFrame.Name = "SearchFrame"
 
 	SearchFrame.Parent = TabFrame
 
-	SearchFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+	SearchFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 
-	SearchFrame.BackgroundTransparency = 0.5
+	SearchFrame.BackgroundTransparency = 0.2
 
 	SearchFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1047,7 +1047,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Choose_2.Parent = TabDisable
 
-		Choose_2.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+			Choose_2.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
 		Choose_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1077,7 +1077,7 @@ function Library:NewWindow(ConfigWindow)
 
 		TabIcon.Size = UDim2.new(0, 14, 0, 14) 
 
-		TabIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+			TabIcon.ImageColor3 = Color3.fromRGB(255, 0, 0)
 
 		IconRound.Parent = TabIcon
 
@@ -1279,9 +1279,9 @@ function Library:NewWindow(ConfigWindow)
 
 		Section.Parent = Layout
 
-		Section.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+			Section.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 
-		Section.BackgroundTransparency = 0.5
+			Section.BackgroundTransparency = 0.3
 
 		Section.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1291,7 +1291,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Section.Size = UDim2.new(1, 0, 0, 55)
 
-		UICorner_5.CornerRadius = UDim.new(0, 6)
+			UICorner_5.CornerRadius = UDim.new(0, 10)
 
 		UICorner_5.Parent = Section
 
@@ -1329,15 +1329,15 @@ function Library:NewWindow(ConfigWindow)
 
 		Title.Text = RealNameSection
 
-		Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+			Title.TextColor3 = Color3.fromRGB(255, 0, 0)
 
-		Title.TextSize = 15.000
+			Title.TextSize = 16.000
 
 		Line_3.Name = "Line"
 
 		Line_3.Parent = NameSection
 
-		Line_3.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+			Line_3.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
 		Line_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1423,9 +1423,9 @@ function Library:NewWindow(ConfigWindow)
 
 		Toggle.Parent = SectionList
 
-		Toggle.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+			Toggle.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 
-		Toggle.BackgroundTransparency = 0.5
+			Toggle.BackgroundTransparency = 0.3
 
 		Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1433,7 +1433,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Toggle.Size = UDim2.new(1, 0, 0, 35)
 
-		UICorner_6.CornerRadius = UDim.new(0, 8)
+			UICorner_6.CornerRadius = UDim.new(0, 10)
 
 		UICorner_6.Parent = Toggle
 
@@ -1549,9 +1549,9 @@ function Library:NewWindow(ConfigWindow)
 
 			if Boolean then
 
-				Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 215, 255))
+				Library:TweenInstance(ToggleCheck, 0.2, "BackgroundColor3", Color3.fromRGB(255, 0, 0))
 
-				Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(255, 215, 255))
+				Library:TweenInstance(UIStroke, 0.2, "Color", Color3.fromRGB(255, 0, 0))
 
 			else
 
@@ -1611,9 +1611,9 @@ function Library:NewWindow(ConfigWindow)
 
 		Button.Parent = SectionList
 
-		Button.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+			Button.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 
-		Button.BackgroundTransparency = 0.5
+			Button.BackgroundTransparency = 0.3
 
 		Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1621,7 +1621,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Button.Size = UDim2.new(1, 0, 0, 35)
 
-		UICorner_9.CornerRadius = UDim.new(0, 8)
+			UICorner_9.CornerRadius = UDim.new(0, 10)
 
 		UICorner_9.Parent = Button
 
@@ -1657,7 +1657,7 @@ function Library:NewWindow(ConfigWindow)
 
 		ButtonFrame.AnchorPoint = Vector2.new(1, 0.5)
 
-		ButtonFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			ButtonFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
 		ButtonFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1689,7 +1689,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Button_Click.Text = "Click"
 
-		Button_Click.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Button_Click.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 		Button_Click.TextSize = 13.000
 
@@ -1725,13 +1725,13 @@ function Library:NewWindow(ConfigWindow)
 
 		Button_Click.Activated:Connect(function()
 
-			Library:TweenInstance(ButtonFrame, 0.1, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
+				Library:TweenInstance(ButtonFrame, 0.1, "BackgroundColor3", Color3.fromRGB(200, 0, 0))
 
-			cfbutton.Callback()
+				cfbutton.Callback()
 
-			wait(0.1)
+				wait(0.1)
 
-			Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(255, 255, 255))
+				Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(255, 0, 0))
 
 		end)
 
@@ -1813,9 +1813,9 @@ function Library:NewWindow(ConfigWindow)
 
 		Dropdown.Parent = SectionList
 
-		Dropdown.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+			Dropdown.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 
-		Dropdown.BackgroundTransparency = 0.5
+			Dropdown.BackgroundTransparency = 0.3
 
 		Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1823,7 +1823,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Dropdown.Size = UDim2.new(1, 0, 0, 60)
 
-		UICorner_19.CornerRadius = UDim.new(0, 8)
+			UICorner_19.CornerRadius = UDim.new(0, 10)
 
 		UICorner_19.Parent = Dropdown
 
@@ -1885,7 +1885,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Selects.Parent = Dropdown
 
-		Selects.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+			Selects.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
 		Selects.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -1895,7 +1895,7 @@ function Library:NewWindow(ConfigWindow)
 
 		Selects.Size = UDim2.new(1, -20, 0, 25)
 
-		UICorner_20.CornerRadius = UDim.new(0, 8)
+			UICorner_20.CornerRadius = UDim.new(0, 10)
 
 		UICorner_20.Parent = Selects
 
@@ -2313,7 +2313,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Option2.Parent = Real_List
 
-			Option2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+				Option2.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
 			Option2.BackgroundTransparency = 0.980
 
@@ -2323,7 +2323,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Option2.Size = UDim2.new(1, 0, 0, 35)
 
-			UICorner_28.CornerRadius = UDim.new(0, 8)
+				UICorner_28.CornerRadius = UDim.new(0, 10)
 
 			UICorner_28.Parent = Option2
 
@@ -2373,7 +2373,7 @@ function Library:NewWindow(ConfigWindow)
 
 			Title_12.TextTransparency = 0.500
 
-			UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(180, 180, 180)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
+				UIGradient_3.Color = ColorSequence.new { ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), ColorSequenceKeypoint.new(0.51, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) }
 
 			UIGradient_3.Rotation = 0.9900000095367432
 
@@ -2513,9 +2513,9 @@ function Library:NewWindow(ConfigWindow)
 
 					Input.Parent = SectionList
 
-					Input.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+				Input.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 
-					Input.BackgroundTransparency = 0.5
+				Input.BackgroundTransparency = 0.3
 
 					Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2523,7 +2523,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Input.Size = UDim2.new(1, 0, 0, 35)
 
-					UICorner_17.CornerRadius = UDim.new(0, 8)
+					UICorner_17.CornerRadius = UDim.new(0, 10)
 
 					UICorner_17.Parent = Input
 
@@ -2589,7 +2589,7 @@ function Library:NewWindow(ConfigWindow)
 
 					TextboxFrame.AnchorPoint = Vector2.new(0, 0.5)
 
-					TextboxFrame.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+					TextboxFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
 					TextboxFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2599,7 +2599,7 @@ function Library:NewWindow(ConfigWindow)
 
 					TextboxFrame.Size = UDim2.new(0, 100, 0, 28)
 
-					UICorner_18.CornerRadius = UDim.new(0, 8)
+					UICorner_18.CornerRadius = UDim.new(0, 10)
 
 					UICorner_18.Parent = TextboxFrame
 
@@ -2711,9 +2711,9 @@ function Library:NewWindow(ConfigWindow)
 
 					Slider.Parent = SectionList
 
-					Slider.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+				Slider.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 
-					Slider.BackgroundTransparency = 0.5
+				Slider.BackgroundTransparency = 0.3
 
 					Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2721,7 +2721,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Slider.Size = UDim2.new(1, 0, 0, 35)
 
-					UICorner_10.CornerRadius = UDim.new(0, 8)
+					UICorner_10.CornerRadius = UDim.new(0, 10)
 
 					UICorner_10.Parent = Slider
 
@@ -2805,7 +2805,7 @@ function Library:NewWindow(ConfigWindow)
 
 					SliderDraggable.Parent = SliderFrame
 
-					SliderDraggable.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+					SliderDraggable.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
 					SliderDraggable.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2843,7 +2843,7 @@ function Library:NewWindow(ConfigWindow)
 
 					SliderValue.AnchorPoint = Vector2.new(0, 0.5)
 
-					SliderValue.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+					SliderValue.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
 					SliderValue.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -2865,7 +2865,7 @@ function Library:NewWindow(ConfigWindow)
 
 					SliderValue.TextSize = 13.000
 
-					UICorner_14.CornerRadius = UDim.new(0, 8)
+					UICorner_14.CornerRadius = UDim.new(0, 10)
 
 					UICorner_14.Parent = SliderValue
 
@@ -3051,9 +3051,9 @@ function Library:NewWindow(ConfigWindow)
 
 					Paragraph.Parent = SectionList
 
-					Paragraph.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+				Paragraph.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
 
-					Paragraph.BackgroundTransparency = 0.5
+				Paragraph.BackgroundTransparency = 0.3
 
 					Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
 
@@ -3061,7 +3061,7 @@ function Library:NewWindow(ConfigWindow)
 
 					Paragraph.Size = UDim2.new(1, 0, 0, 45)
 
-					UICorner_16.CornerRadius = UDim.new(0, 8)
+					UICorner_16.CornerRadius = UDim.new(0, 10)
 
 					UICorner_16.Parent = Paragraph
 
@@ -3148,12 +3148,12 @@ function Library:NewWindow(ConfigWindow)
 
 					DiscordCard.Name = "DiscordCard"
 					DiscordCard.Parent = SectionList 
-					DiscordCard.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
-					DiscordCard.BackgroundTransparency = 0.4
+					DiscordCard.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+					DiscordCard.BackgroundTransparency = 0.3
 					DiscordCard.BorderSizePixel = 0
 					DiscordCard.Size = UDim2.new(1, 0, 0, 65)
 
-					UICorner.CornerRadius = UDim.new(0, 9)
+					UICorner.CornerRadius = UDim.new(0, 10)
 					UICorner.Parent = DiscordCard
 
 					Icon.Parent = DiscordCard
@@ -3184,7 +3184,7 @@ function Library:NewWindow(ConfigWindow)
 
 					JoinBtn.Name = "JoinBtn"
 					JoinBtn.Parent = DiscordCard
-					JoinBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+					JoinBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 					JoinBtn.Position = UDim2.new(1, -75, 0, 17)
 					JoinBtn.Size = UDim2.new(0, 65, 0, 30)
 					JoinBtn.Font = Enum.Font.GothamBold
@@ -3192,7 +3192,7 @@ function Library:NewWindow(ConfigWindow)
 					JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 					JoinBtn.TextSize = 13
 
-					BtnCorner.CornerRadius = UDim.new(0, 8)
+					BtnCorner.CornerRadius = UDim.new(0, 10)
 					BtnCorner.Parent = JoinBtn
 
 					JoinBtn.MouseButton1Click:Connect(function()
@@ -3243,7 +3243,7 @@ function Library:NewWindow(ConfigWindow)
 
 		self:MakeDraggable(G2L["2"],G2L["2"])
 
-		G2L["2"]["BackgroundColor3"] = Color3.fromRGB(70, 70, 70);
+			G2L["2"]["BackgroundColor3"] = Color3.fromRGB(255, 0, 0);
 
 		G2L["2"]["Image"] = [[rbxassetid://101817370702077]];
 
