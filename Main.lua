@@ -66,46 +66,6 @@ function Library:MakeDraggable(topbarobject, object)
     end)
 end
 
-function Library:MakeResizable(object, minSize)
-    local ResizeBtn = Instance.new("ImageButton")
-    ResizeBtn.Name = "ResizeBtn"
-    ResizeBtn.Parent = object
-    ResizeBtn.AnchorPoint = Vector2.new(1, 1)
-    ResizeBtn.Position = UDim2.new(1, -2, 1, -2)
-    ResizeBtn.Size = UDim2.new(0, 15, 0, 15)
-    ResizeBtn.BackgroundTransparency = 1
-    ResizeBtn.Image = "rbxassetid://10131441151"
-    ResizeBtn.ImageColor3 = Color3.fromRGB(180, 180, 180)
-    ResizeBtn.ZIndex = 10
-
-    local Resizing = false
-    local ResizeStart = nil
-    local StartSize = nil
-
-    ResizeBtn.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            Resizing = true
-            ResizeStart = input.Position
-            StartSize = object.AbsoluteSize
-        end
-    end)
-
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if Resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            local Delta = input.Position - ResizeStart
-            local NewWidth = math.max(minSize.X, StartSize.X + Delta.X)
-            local NewHeight = math.max(minSize.Y, StartSize.Y + Delta.Y)
-            object.Size = UDim2.new(0, NewWidth, 0, NewHeight)
-        end
-    end)
-
-    game:GetService("UserInputService").InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            Resizing = false
-        end
-    end)
-end
-
 -- [ Main Window ] --
 function Library:NewWindow(ConfigWindow)
     local ConfigWindow = self:MakeConfig({
@@ -130,11 +90,7 @@ function Library:NewWindow(ConfigWindow)
     local UIListLayout_Buttons = Instance.new("UIListLayout")
     local Close = Instance.new("TextButton")
     local Minize = Instance.new("TextButton")
-    
-    local Sidebar = Instance.new("Frame")
-    local SidebarList = Instance.new("ScrollingFrame")
-    local SidebarLayout = Instance.new("UIListLayout")
-    local SidebarPadding = Instance.new("UIPadding")
+    local BackBtn = Instance.new("TextButton")
     
     local ContentFrame = Instance.new("Frame")
     local PageLayout = Instance.new("UIPageLayout")
@@ -220,8 +176,8 @@ function Library:NewWindow(ConfigWindow)
     RightButtons.Name = "RightButtons"
     RightButtons.Parent = Top
     RightButtons.BackgroundTransparency = 1
-    RightButtons.Position = UDim2.new(1, -80, 0, 0)
-    RightButtons.Size = UDim2.new(0, 80, 1, 0)
+    RightButtons.Position = UDim2.new(1, -150, 0, 0)
+    RightButtons.Size = UDim2.new(0, 150, 1, 0)
 
     UIListLayout_Buttons.Parent = RightButtons
     UIListLayout_Buttons.FillDirection = Enum.FillDirection.Horizontal
@@ -247,34 +203,22 @@ function Library:NewWindow(ConfigWindow)
     Minize.TextColor3 = Color3.fromRGB(255, 255, 255)
     Minize.TextSize = 20
 
-    -- Sidebar
-    Sidebar.Name = "Sidebar"
-    Sidebar.Parent = Main
-    Sidebar.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
-    Sidebar.Position = UDim2.new(0, 0, 0, 50)
-    Sidebar.Size = UDim2.new(0, 160, 1, -50)
-
-    SidebarList.Name = "SidebarList"
-    SidebarList.Parent = Sidebar
-    SidebarList.BackgroundTransparency = 1
-    SidebarList.Size = UDim2.new(1, 0, 1, 0)
-    SidebarList.ScrollBarThickness = 0
-
-    SidebarLayout.Parent = SidebarList
-    SidebarLayout.Padding = UDim.new(0, 5)
-    SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-    SidebarPadding.Parent = SidebarList
-    SidebarPadding.PaddingLeft = UDim.new(0, 10)
-    SidebarPadding.PaddingRight = UDim.new(0, 10)
-    SidebarPadding.PaddingTop = UDim.new(0, 10)
+    BackBtn.Name = "BackBtn"
+    BackBtn.Parent = RightButtons
+    BackBtn.BackgroundTransparency = 1
+    BackBtn.Size = UDim2.new(0, 60, 0, 30)
+    BackBtn.Font = Enum.Font.GothamBold
+    BackBtn.Text = "< Voltar"
+    BackBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    BackBtn.TextSize = 12
+    BackBtn.Visible = false
 
     -- Content Area
     ContentFrame.Name = "ContentFrame"
     ContentFrame.Parent = Main
     ContentFrame.BackgroundTransparency = 1
-    ContentFrame.Position = UDim2.new(0, 160, 0, 50)
-    ContentFrame.Size = UDim2.new(1, -160, 1, -50)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 50)
+    ContentFrame.Size = UDim2.new(1, 0, 1, -50)
     ContentFrame.ClipsDescendants = true
 
     PageList.Name = "PageList"
@@ -302,28 +246,8 @@ function Library:NewWindow(ConfigWindow)
     HomePadding.PaddingLeft = UDim.new(0, 15)
     HomePadding.PaddingTop = UDim.new(0, 15)
 
-    -- Home Sidebar Button
-    local HomeBtn = Instance.new("TextButton")
-    local HomeCorner = Instance.new("UICorner")
-    HomeBtn.Name = "HomeBtn"
-    HomeBtn.Parent = SidebarList
-    HomeBtn.BackgroundColor3 = ConfigWindow.AccentColor
-    HomeBtn.Size = UDim2.new(1, 0, 0, 35)
-    HomeBtn.Font = Enum.Font.GothamBold
-    HomeBtn.Text = "Home"
-    HomeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    HomeBtn.TextSize = 14
-    HomeBtn.LayoutOrder = 0
-    HomeCorner.CornerRadius = UDim.new(0, 6)
-    HomeCorner.Parent = HomeBtn
-
-    HomeBtn.MouseButton1Click:Connect(function()
-        PageLayout:JumpToIndex(0)
-    end)
-
     -- Functionality
     self:MakeDraggable(Top, DropShadowHolder)
-    self:MakeResizable(DropShadowHolder, Vector2.new(500, 350))
 
     Close.MouseButton1Click:Connect(function()
         TeddyUI_Premium:Destroy()
@@ -331,6 +255,11 @@ function Library:NewWindow(ConfigWindow)
 
     Minize.MouseButton1Click:Connect(function()
         TeddyUI_Premium.Enabled = false
+    end)
+
+    BackBtn.MouseButton1Click:Connect(function()
+        PageLayout:JumpToIndex(0)
+        BackBtn.Visible = false
     end)
 
     local TabCount = 1
@@ -361,21 +290,6 @@ function Library:NewWindow(ConfigWindow)
         TabPadding.PaddingBottom = UDim.new(0, 15)
 
         Library:UpdateScrolling(TabPage, TabListLayout)
-
-        -- Sidebar Button
-        local SideBtn = Instance.new("TextButton")
-        local SideCorner = Instance.new("UICorner")
-        SideBtn.Name = t .. "_Btn"
-        SideBtn.Parent = SidebarList
-        SideBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-        SideBtn.Size = UDim2.new(1, 0, 0, 35)
-        SideBtn.Font = Enum.Font.Gotham
-        SideBtn.Text = t
-        SideBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
-        SideBtn.TextSize = 13
-        SideBtn.LayoutOrder = TabCount
-        SideCorner.CornerRadius = UDim.new(0, 6)
-        SideCorner.Parent = SideBtn
 
         -- Home Card
         local Card = Instance.new("TextButton")
@@ -414,21 +328,10 @@ function Library:NewWindow(ConfigWindow)
         CardTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
         CardTitle.TextSize = 14
 
-        local function SwitchToTab()
+        Card.MouseButton1Click:Connect(function()
             PageLayout:JumpToIndex(TabPage.LayoutOrder)
-            -- Update Sidebar Visuals
-            for _, v in pairs(SidebarList:GetChildren()) do
-                if v:IsA("TextButton") then
-                    Library:TweenInstance(v, 0.2, "BackgroundColor3", Color3.fromRGB(20, 20, 20))
-                    v.TextColor3 = Color3.fromRGB(200, 200, 200)
-                end
-            end
-            Library:TweenInstance(SideBtn, 0.2, "BackgroundColor3", ConfigWindow.AccentColor)
-            SideBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        end
-
-        SideBtn.MouseButton1Click:Connect(SwitchToTab)
-        Card.MouseButton1Click:Connect(SwitchToTab)
+            BackBtn.Visible = true
+        end)
 
         TabCount = TabCount + 1
         local TabFunc = {}
@@ -485,7 +388,7 @@ function Library:NewWindow(ConfigWindow)
 
             local SectionFunc = {}
 
-            -- [ Toggle Function (API: Section:AddToggle(config)) ] --
+            -- [ Toggle Function ] --
             function SectionFunc:AddToggle(cftoggle)
                 cftoggle = Library:MakeConfig({
                     Title = "Toggle",
@@ -575,7 +478,7 @@ function Library:NewWindow(ConfigWindow)
                 return { Set = function(self, val) Toggled = val UpdateToggle() end }
             end
 
-            -- [ Button Function (API: Section:AddButton(config)) ] --
+            -- [ Button Function ] --
             function SectionFunc:AddButton(cfbtn)
                 cfbtn = Library:MakeConfig({
                     Title = "Button",
@@ -627,7 +530,7 @@ function Library:NewWindow(ConfigWindow)
                 end)
             end
 
-            -- [ Slider Function (API: Section:AddSlider(config)) ] --
+            -- [ Slider Function ] --
             function SectionFunc:AddSlider(cfslider)
                 cfslider = Library:MakeConfig({
                     Title = "Slider",
@@ -726,13 +629,13 @@ function Library:NewWindow(ConfigWindow)
                 end)
             end
 
-            -- [ Dropdown Function (API: Section:AddDropdown(config)) ] --
+            -- [ Dropdown Function ] --
             function SectionFunc:AddDropdown(cfdrop)
                 cfdrop = Library:MakeConfig({
                     Title = "Dropdown",
                     Description = "",
                     Options = {},
-                    Values = {}, -- Support both 'Options' and 'Values'
+                    Values = {},
                     Default = "",
                     Callback = function() end
                 }, cfdrop or {})
@@ -833,10 +736,6 @@ function Library:NewWindow(ConfigWindow)
                     Refresh = function(self, newopts)
                         for _, v in pairs(DropList:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
                         AddOptions(newopts)
-                        if Open then
-                            task.wait()
-                            Library:TweenInstance(DropFrame, 0.3, "Size", UDim2.new(1, 0, 0, DropListLayout.AbsoluteContentSize.Y + 40))
-                        end
                     end,
                     Set = function(self, val)
                         DropTitle.Text = cfdrop.Title .. " : " .. tostring(val)
@@ -845,7 +744,7 @@ function Library:NewWindow(ConfigWindow)
                 }
             end
 
-            -- [ TextBox Function (API: Section:AddTextbox / AddInput) ] --
+            -- [ TextBox Function ] --
             function SectionFunc:AddTextbox(cfbox)
                 cfbox = Library:MakeConfig({
                     Title = "Textbox",
@@ -896,7 +795,7 @@ function Library:NewWindow(ConfigWindow)
             end
             SectionFunc.AddInput = SectionFunc.AddTextbox
 
-            -- [ Label Function (API: Section:AddLabel(text)) ] --
+            -- [ Label Function ] --
             function SectionFunc:AddLabel(text)
                 local Label = Instance.new("TextLabel")
                 Label.Parent = SectionList
@@ -938,6 +837,128 @@ function Library:NewWindow(ConfigWindow)
                     SepText.TextColor3 = Color3.fromRGB(100, 100, 100)
                     SepText.TextSize = 10
                 end
+            end
+
+            -- [ Paragraph Function ] --
+            function SectionFunc:AddParagraph(cfpara)
+                cfpara = Library:MakeConfig({
+                    Title = "Paragraph",
+                    Content = ""
+                }, cfpara or {})
+
+                local ParaFrame = Instance.new("Frame")
+                local ParaCorner = Instance.new("UICorner")
+                local ParaTitle = Instance.new("TextLabel")
+                local ParaContent = Instance.new("TextLabel")
+
+                ParaFrame.Name = "Paragraph"
+                ParaFrame.Parent = SectionList
+                ParaFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+                ParaFrame.Size = UDim2.new(1, 0, 0, 45)
+                
+                ParaCorner.CornerRadius = UDim.new(0, 8)
+                ParaCorner.Parent = ParaFrame
+
+                ParaTitle.Parent = ParaFrame
+                ParaTitle.BackgroundTransparency = 1
+                ParaTitle.Position = UDim2.new(0, 10, 0, 5)
+                ParaTitle.Size = UDim2.new(1, -20, 0, 15)
+                ParaTitle.Font = Enum.Font.GothamBold
+                ParaTitle.Text = cfpara.Title
+                ParaTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+                ParaTitle.TextSize = 13
+                ParaTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+                ParaContent.Parent = ParaFrame
+                ParaContent.BackgroundTransparency = 1
+                ParaContent.Position = UDim2.new(0, 10, 0, 22)
+                ParaContent.Size = UDim2.new(1, -20, 0, 18)
+                ParaContent.Font = Enum.Font.Gotham
+                ParaContent.Text = cfpara.Content
+                ParaContent.TextColor3 = Color3.fromRGB(150, 150, 150)
+                ParaContent.TextSize = 11
+                ParaContent.TextXAlignment = Enum.TextXAlignment.Left
+                ParaContent.TextWrapped = true
+
+                local function UpdateSize()
+                    local textHeight = ParaContent.TextBounds.Y
+                    ParaFrame.Size = UDim2.new(1, 0, 0, textHeight + 30)
+                    ParaContent.Size = UDim2.new(1, -20, 0, textHeight)
+                end
+                
+                ParaContent:GetPropertyChangedSignal("Text"):Connect(UpdateSize)
+                UpdateSize()
+
+                return {
+                    SetTitle = function(self, val) ParaTitle.Text = val end,
+                    SetDesc = function(self, val) ParaContent.Text = val end
+                }
+            end
+
+            -- [ Discord Function ] --
+            function SectionFunc:AddDiscord(DiscordTitle, InviteCode)
+                local DiscordCard = Instance.new("Frame")
+                local UICorner = Instance.new("UICorner")
+                local Icon = Instance.new("ImageLabel")
+                local Title = Instance.new("TextLabel")
+                local SubTitle = Instance.new("TextLabel")
+                local JoinBtn = Instance.new("TextButton")
+                local BtnCorner = Instance.new("UICorner")
+
+                DiscordCard.Name = "DiscordCard"
+                DiscordCard.Parent = SectionList 
+                DiscordCard.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+                DiscordCard.BorderSizePixel = 0
+                DiscordCard.Size = UDim2.new(1, 0, 0, 65)
+
+                UICorner.CornerRadius = UDim.new(0, 10)
+                UICorner.Parent = DiscordCard
+
+                Icon.Parent = DiscordCard
+                Icon.BackgroundTransparency = 1
+                Icon.Position = UDim2.new(0, 10, 0, 10)
+                Icon.Size = UDim2.new(0, 45, 0, 45)
+                Icon.Image = "rbxassetid://123256573634"
+
+                Title.Parent = DiscordCard
+                Title.BackgroundTransparency = 1
+                Title.Position = UDim2.new(0, 65, 0, 15)
+                Title.Size = UDim2.new(1, -140, 0, 20)
+                Title.Font = Enum.Font.GothamBold
+                Title.Text = DiscordTitle or "Discord Server"
+                Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Title.TextSize = 14
+                Title.TextXAlignment = Enum.TextXAlignment.Left
+
+                SubTitle.Parent = DiscordCard
+                SubTitle.BackgroundTransparency = 1
+                SubTitle.Position = UDim2.new(0, 65, 0, 32)
+                SubTitle.Size = UDim2.new(1, -140, 0, 20)
+                SubTitle.Font = Enum.Font.Gotham
+                SubTitle.Text = "Clique para entrar no servidor"
+                SubTitle.TextColor3 = Color3.fromRGB(180, 180, 180)
+                SubTitle.TextSize = 11
+                SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+                JoinBtn.Name = "JoinBtn"
+                JoinBtn.Parent = DiscordCard
+                JoinBtn.BackgroundColor3 = ConfigWindow.AccentColor
+                JoinBtn.Position = UDim2.new(1, -75, 0, 17)
+                JoinBtn.Size = UDim2.new(0, 65, 0, 30)
+                JoinBtn.Font = Enum.Font.GothamBold
+                JoinBtn.Text = "Join"
+                JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                JoinBtn.TextSize = 13
+
+                BtnCorner.CornerRadius = UDim.new(0, 10)
+                BtnCorner.Parent = JoinBtn
+
+                JoinBtn.MouseButton1Click:Connect(function()
+                    if setclipboard then setclipboard("https://discord.gg/" .. InviteCode) end
+                    JoinBtn.Text = "Copiado!"
+                    task.wait(2)
+                    JoinBtn.Text = "Join"
+                end)
             end
 
             return SectionFunc
