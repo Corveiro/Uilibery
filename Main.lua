@@ -369,76 +369,76 @@ function Library:NewWindow(ConfigWindow)
             end)
 
             local SectionFunc = {}
-            local CurrentGroup = SectionList -- Default to section list
-            local GroupOpen = true
+            local CurrentGroup = SectionList 
 
             -- [ Seperator as Group Function ] --
             function SectionFunc:AddSeperator(text)
                 local SepFrame = Instance.new("Frame")
                 local SepBtn = Instance.new("TextButton")
-                local SepLine = Instance.new("Frame")
+                local SepCorner = Instance.new("UICorner")
+                local SepStroke = Instance.new("UIStroke")
                 local SepText = Instance.new("TextLabel")
-                local SepIcon = Instance.new("TextLabel")
+                local SepIcon = Instance.new("ImageLabel")
                 local GroupFrame = Instance.new("Frame")
                 local GroupLayout = Instance.new("UIListLayout")
                 
                 SepFrame.Name = "SeperatorGroup"
                 SepFrame.Parent = SectionList
-                SepFrame.BackgroundTransparency = 1
-                SepFrame.Size = UDim2.new(1, 0, 0, 25)
+                SepFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+                SepFrame.Size = UDim2.new(1, 0, 0, 30)
+                
+                SepCorner.CornerRadius = UDim.new(0, 6)
+                SepCorner.Parent = SepFrame
+                
+                SepStroke.Color = Color3.fromRGB(35, 35, 35)
+                SepStroke.Parent = SepFrame
                 
                 SepBtn.Parent = SepFrame
                 SepBtn.BackgroundTransparency = 1
                 SepBtn.Size = UDim2.new(1, 0, 1, 0)
                 SepBtn.Text = ""
                 
-                SepLine.Parent = SepFrame
-                SepLine.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-                SepLine.BorderSizePixel = 0
-                SepLine.Position = UDim2.new(0, 0, 0.5, 0)
-                SepLine.Size = UDim2.new(1, 0, 0, 1)
+                SepText.Parent = SepFrame
+                SepText.BackgroundTransparency = 1
+                SepText.Position = UDim2.new(0, 10, 0, 0)
+                SepText.Size = UDim2.new(1, -40, 1, 0)
+                SepText.Font = Enum.Font.GothamBold
+                SepText.Text = text or "Group"
+                SepText.TextColor3 = Color3.fromRGB(200, 200, 200)
+                SepText.TextSize = 11
+                SepText.TextXAlignment = Enum.TextXAlignment.Left
                 
-                if text and text ~= "" then
-                    SepText.Parent = SepFrame
-                    SepText.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-                    SepText.Position = UDim2.new(0, 10, 0.5, 0)
-                    SepText.AnchorPoint = Vector2.new(0, 0.5)
-                    SepText.Size = UDim2.new(0, 0, 0, 15)
-                    SepText.Font = Enum.Font.GothamBold
-                    SepText.Text = "  " .. text .. "  "
-                    SepText.TextColor3 = ConfigWindow.AccentColor
-                    SepText.TextSize = 11
-                    SepText.AutomaticSize = Enum.AutomaticSize.X
-                    
-                    SepIcon.Parent = SepFrame
-                    SepIcon.BackgroundTransparency = 1
-                    SepIcon.Position = UDim2.new(1, -20, 0.5, 0)
-                    SepIcon.AnchorPoint = Vector2.new(1, 0.5)
-                    SepIcon.Size = UDim2.new(0, 15, 0, 15)
-                    SepIcon.Font = Enum.Font.GothamBold
-                    SepIcon.Text = "▼"
-                    SepIcon.TextColor3 = Color3.fromRGB(150, 150, 150)
-                    SepIcon.TextSize = 10
-                end
+                SepIcon.Parent = SepFrame
+                SepIcon.AnchorPoint = Vector2.new(1, 0.5)
+                SepIcon.BackgroundTransparency = 1
+                SepIcon.Position = UDim2.new(1, -10, 0.5, 0)
+                SepIcon.Size = UDim2.new(0, 14, 0, 14)
+                SepIcon.Image = "rbxassetid://10131441151" -- Arrow icon
+                SepIcon.ImageColor3 = ConfigWindow.AccentColor
+                SepIcon.Rotation = 0
 
                 GroupFrame.Name = "Group_" .. (text or "Unnamed")
                 GroupFrame.Parent = SectionList
                 GroupFrame.BackgroundTransparency = 1
                 GroupFrame.Size = UDim2.new(1, 0, 0, 0)
                 GroupFrame.ClipsDescendants = true
-                GroupFrame.Visible = true
+                GroupFrame.Visible = false -- Start closed
 
                 GroupLayout.Parent = GroupFrame
                 GroupLayout.Padding = UDim.new(0, 5)
                 GroupLayout.SortOrder = Enum.SortOrder.LayoutOrder
                 
-                local isOpen = true
+                local isOpen = false
                 local function ToggleGroup()
                     isOpen = not isOpen
                     GroupFrame.Visible = isOpen
-                    SepIcon.Text = isOpen and "▼" or "▶"
+                    Library:TweenInstance(SepIcon, 0.2, "Rotation", isOpen and 90 or 0)
+                    Library:TweenInstance(SepFrame, 0.2, "BackgroundColor3", isOpen and Color3.fromRGB(25, 25, 25) or Color3.fromRGB(20, 20, 20))
+                    
                     if not isOpen then
                         GroupFrame.Size = UDim2.new(1, 0, 0, 0)
+                    else
+                        GroupFrame.Size = UDim2.new(1, 0, 0, GroupLayout.AbsoluteContentSize.Y)
                     end
                 end
 
@@ -450,7 +450,7 @@ function Library:NewWindow(ConfigWindow)
                     end
                 end)
 
-                CurrentGroup = GroupFrame -- Redirect subsequent elements to this group
+                CurrentGroup = GroupFrame 
             end
 
             function SectionFunc:AddToggle(cftoggle)
@@ -489,7 +489,7 @@ function Library:NewWindow(ConfigWindow)
                     if not noCallback then pcall(cftoggle.Callback, Toggled) end
                 end
                 ToggleFrame.MouseButton1Click:Connect(function() Toggled = not Toggled UpdateToggle() end)
-                UpdateToggle(false) -- Execute callback on creation to sync with saved data
+                UpdateToggle(false) 
                 return { Set = function(self, val) Toggled = val UpdateToggle() end }
             end
 
@@ -576,7 +576,6 @@ function Library:NewWindow(ConfigWindow)
                 end
                 AddOptions(options)
                 
-                -- Execute callback with default value on creation
                 if cfdrop.Default ~= "" then pcall(cfdrop.Callback, cfdrop.Default) end
 
                 return { 
