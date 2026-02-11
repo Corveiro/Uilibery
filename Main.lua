@@ -406,7 +406,7 @@ function Library:NewWindow(ConfigWindow)
                 local StatusCircle = Instance.new("Frame")
                 local CircleCorner = Instance.new("UICorner")
 
-                local hasDesc = cftoggle.Description ~= ""
+                local hasDesc = cftoggle.Description and cftoggle.Description ~= ""
                 ToggleFrame.Name = "Toggle_" .. cftoggle.Title
                 ToggleFrame.Parent = SectionList
                 ToggleFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
@@ -486,7 +486,7 @@ function Library:NewWindow(ConfigWindow)
                     Callback = function() end
                 }, cfbtn or {})
 
-                local hasDesc = cfbtn.Description ~= ""
+                local hasDesc = cfbtn.Description and cfbtn.Description ~= ""
                 local Button = Instance.new("TextButton")
                 local BtnCorner = Instance.new("UICorner")
                 local BtnTitle = Instance.new("TextLabel")
@@ -541,7 +541,7 @@ function Library:NewWindow(ConfigWindow)
                     Callback = function() end
                 }, cfslider or {})
 
-                local hasDesc = cfslider.Description ~= ""
+                local hasDesc = cfslider.Description and cfslider.Description ~= ""
                 local SliderFrame = Instance.new("Frame")
                 local SliderCorner = Instance.new("UICorner")
                 local SliderTitle = Instance.new("TextLabel")
@@ -843,8 +843,11 @@ function Library:NewWindow(ConfigWindow)
             function SectionFunc:AddParagraph(cfpara)
                 cfpara = Library:MakeConfig({
                     Title = "Paragraph",
-                    Content = ""
+                    Content = "",
+                    Desc = "" -- Compatibilidade com PremiumTest.lua
                 }, cfpara or {})
+                
+                local contentText = (cfpara.Content ~= "" and cfpara.Content) or cfpara.Desc
 
                 local ParaFrame = Instance.new("Frame")
                 local ParaCorner = Instance.new("UICorner")
@@ -874,7 +877,7 @@ function Library:NewWindow(ConfigWindow)
                 ParaContent.Position = UDim2.new(0, 10, 0, 22)
                 ParaContent.Size = UDim2.new(1, -20, 0, 18)
                 ParaContent.Font = Enum.Font.Gotham
-                ParaContent.Text = cfpara.Content
+                ParaContent.Text = contentText
                 ParaContent.TextColor3 = Color3.fromRGB(150, 150, 150)
                 ParaContent.TextSize = 11
                 ParaContent.TextXAlignment = Enum.TextXAlignment.Left
@@ -891,7 +894,8 @@ function Library:NewWindow(ConfigWindow)
 
                 return {
                     SetTitle = function(self, val) ParaTitle.Text = val end,
-                    SetDesc = function(self, val) ParaContent.Text = val end
+                    SetDesc = function(self, val) ParaContent.Text = val end,
+                    Set = function(self, val) ParaContent.Text = val end
                 }
             end
 
