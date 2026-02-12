@@ -85,7 +85,6 @@ function Library:NewWindow(ConfigWindow)
     TeddyUI_Premium.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     TeddyUI_Premium.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-    -- Compact Window Size (500x350 instead of 600x400)
     DropShadowHolder.Name = "DropShadowHolder"
     DropShadowHolder.Parent = TeddyUI_Premium
     DropShadowHolder.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -256,7 +255,6 @@ function Library:NewWindow(ConfigWindow)
 
         Library:UpdateScrolling(TabPage, TabListLayout)
 
-        -- Premium Card Design
         local Card = Instance.new("TextButton")
         local CardCorner = Instance.new("UICorner")
         local CardStroke = Instance.new("UIStroke")
@@ -407,7 +405,6 @@ function Library:NewWindow(ConfigWindow)
                 CurrentGroup = GroupFrame 
             end
 
-            -- Elements with increased height (40px instead of 35px)
             function SectionFunc:AddToggle(cftoggle)
                 cftoggle = Library:MakeConfig({ Title = "Toggle", Description = "", Default = false, Callback = function() end }, cftoggle or {})
                 local ToggleFrame = Instance.new("TextButton")
@@ -425,7 +422,7 @@ function Library:NewWindow(ConfigWindow)
                 ToggleFrame.Size = UDim2.new(1, 0, 0, hasDesc and 50 or 40)
                 ToggleFrame.Text = ""
                 ToggleCorner.CornerRadius = UDim.new(0, 6); ToggleCorner.Parent = ToggleFrame
-                ToggleTitle.Parent = ToggleFrame; ToggleTitle.BackgroundTransparency = 1; ToggleTitle.Position = UDim2.new(0, 12, 0, hasDesc and 6 or 0); ToggleTitle.Size = UDim2.new(1, -60, 0, hasDesc tea 20 or 40); ToggleTitle.Font = Enum.Font.Gotham; ToggleTitle.Text = cftoggle.Title; ToggleTitle.TextColor3 = Color3.fromRGB(230, 230, 230); ToggleTitle.TextSize = 13; ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
+                ToggleTitle.Parent = ToggleFrame; ToggleTitle.BackgroundTransparency = 1; ToggleTitle.Position = UDim2.new(0, 12, 0, hasDesc and 6 or 0); ToggleTitle.Size = UDim2.new(1, -60, 0, hasDesc and 20 or 40); ToggleTitle.Font = Enum.Font.Gotham; ToggleTitle.Text = cftoggle.Title; ToggleTitle.TextColor3 = Color3.fromRGB(230, 230, 230); ToggleTitle.TextSize = 13; ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
                 if hasDesc then ToggleDesc.Parent = ToggleFrame; ToggleDesc.BackgroundTransparency = 1; ToggleDesc.Position = UDim2.new(0, 12, 0, 26); ToggleDesc.Size = UDim2.new(1, -60, 0, 18); ToggleDesc.Font = Enum.Font.Gotham; ToggleDesc.Text = cftoggle.Description; ToggleDesc.TextColor3 = Color3.fromRGB(120, 120, 120); ToggleDesc.TextSize = 11; ToggleDesc.TextXAlignment = Enum.TextXAlignment.Left end
                 ToggleStatus.Parent = ToggleFrame; ToggleStatus.AnchorPoint = Vector2.new(1, 0.5); ToggleStatus.BackgroundColor3 = Color3.fromRGB(35, 35, 35); ToggleStatus.Position = UDim2.new(1, -10, 0.5, 0); ToggleStatus.Size = UDim2.new(0, 32, 0, 16); StatusCorner.CornerRadius = UDim.new(1, 0); StatusCorner.Parent = ToggleStatus
                 StatusCircle.Parent = ToggleStatus; StatusCircle.BackgroundColor3 = Color3.fromRGB(150, 150, 150); StatusCircle.Position = UDim2.new(0, 2, 0.5, -6); StatusCircle.Size = UDim2.new(0, 12, 0, 12); CircleCorner.CornerRadius = UDim.new(1, 0); CircleCorner.Parent = StatusCircle
