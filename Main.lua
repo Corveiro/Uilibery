@@ -470,7 +470,9 @@ function Library:NewWindow(ConfigWindow)
         TeddyUI_Premium.Enabled = false
     end)
 
+    -- Retornar objeto Tab correto
     local Tab = {}
+    
     function Tab:NewTab(ConfigTab)
         ConfigTab = self:MakeConfig({ Title = "Tab", Icon = "" }, ConfigTab or {})
         
