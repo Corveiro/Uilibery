@@ -9,7 +9,7 @@ end
 
 function Library:UpdateScrolling(Scroll, List)
     List:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 10)
+        Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 15)
     end)
 end
 
@@ -52,7 +52,7 @@ function Library:NewWindow(ConfigWindow)
     local ConfigWindow = self:MakeConfig({
         Title = "ARCADE HUB",
         Description = "Retro Edition",
-        AccentColor = Color3.fromRGB(255, 0, 150) -- Neon Pink
+        AccentColor = Color3.fromRGB(255, 0, 0) -- Cor padrão alterada para VERMELHO
     }, ConfigWindow or {})
 
     local TeddyUI_Premium = Instance.new("ScreenGui")
@@ -60,7 +60,6 @@ function Library:NewWindow(ConfigWindow)
     local Main = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
     local UIStroke = Instance.new("UIStroke")
-    local UIGradient = Instance.new("UIGradient")
     
     local Top = Instance.new("Frame")
     local NameHub = Instance.new("TextLabel")
@@ -84,21 +83,20 @@ function Library:NewWindow(ConfigWindow)
     TeddyUI_Premium.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     TeddyUI_Premium.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-    -- Reduzindo o tamanho total: de 520x380 para 440x300
     DropShadowHolder.Name = "DropShadowHolder"
     DropShadowHolder.Parent = TeddyUI_Premium
     DropShadowHolder.AnchorPoint = Vector2.new(0.5, 0.5)
     DropShadowHolder.BackgroundTransparency = 1
     DropShadowHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
-    DropShadowHolder.Size = UDim2.new(0, 440, 0, 300)
+    DropShadowHolder.Size = UDim2.new(0, 440, 0, 320) -- Ajustado para garantir espaço
 
     Main.Name = "Main"
     Main.Parent = DropShadowHolder
-    Main.BackgroundColor3 = Color3.fromRGB(10, 10, 15) -- Deep Space Blue
+    Main.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
     Main.Size = UDim2.new(1, 0, 1, 0)
     Main.ClipsDescendants = true
 
-    UICorner.CornerRadius = UDim.new(0, 4) -- Estilo mais "pixel/quadrado" mas suave
+    UICorner.CornerRadius = UDim.new(0, 4)
     UICorner.Parent = Main
 
     UIStroke.Color = ConfigWindow.AccentColor
@@ -109,7 +107,7 @@ function Library:NewWindow(ConfigWindow)
     Top.Name = "Top"
     Top.Parent = Main
     Top.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-    Top.Size = UDim2.new(1, 0, 0, 40) -- Reduzido de 45 para 40
+    Top.Size = UDim2.new(1, 0, 0, 40)
 
     LogoHub.Name = "LogoHub"
     LogoHub.Parent = Top
@@ -123,7 +121,7 @@ function Library:NewWindow(ConfigWindow)
     NameHub.BackgroundTransparency = 1
     NameHub.Position = UDim2.new(0, 45, 0, 6)
     NameHub.Size = UDim2.new(0, 200, 0, 16)
-    NameHub.Font = Enum.Font.Arcade -- Mudança para fonte Arcade
+    NameHub.Font = Enum.Font.Arcade
     NameHub.Text = ConfigWindow.Title:upper()
     NameHub.TextColor3 = Color3.fromRGB(255, 255, 255)
     NameHub.TextSize = 16
@@ -170,12 +168,11 @@ function Library:NewWindow(ConfigWindow)
     Minize.TextColor3 = Color3.fromRGB(200, 200, 200)
     Minize.TextSize = 14
 
-    -- Horizontal Tab Holder
     TabHolder.Name = "TabHolder"
     TabHolder.Parent = Main
     TabHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
     TabHolder.Position = UDim2.new(0, 0, 0, 40)
-    TabHolder.Size = UDim2.new(1, 0, 0, 30) -- Reduzido de 35 para 30
+    TabHolder.Size = UDim2.new(1, 0, 0, 30)
     TabHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
     TabHolder.ScrollBarThickness = 0
     TabHolder.ScrollingDirection = Enum.ScrollingDirection.X
@@ -230,7 +227,7 @@ function Library:NewWindow(ConfigWindow)
         TabPage.LayoutOrder = TabCount
         
         TabListLayout_Page.Parent = TabPage
-        TabListLayout_Page.Padding = UDim.new(0, 6) -- Reduzido de 8 para 6
+        TabListLayout_Page.Padding = UDim.new(0, 6)
         TabListLayout_Page.SortOrder = Enum.SortOrder.LayoutOrder
         
         TabPadding_Page.Parent = TabPage
@@ -241,7 +238,6 @@ function Library:NewWindow(ConfigWindow)
 
         Library:UpdateScrolling(TabPage, TabListLayout_Page)
 
-        -- Horizontal Tab Button
         local TabBtn = Instance.new("TextButton")
         local TabBtnTitle = Instance.new("TextLabel")
         local TabIndicator = Instance.new("Frame")
@@ -337,7 +333,7 @@ function Library:NewWindow(ConfigWindow)
                 
                 BtnFrame.Parent = CurrentGroup
                 BtnFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
-                BtnFrame.Size = UDim2.new(1, 0, 0, 32) -- Reduzido de 38 para 32
+                BtnFrame.Size = UDim2.new(1, 0, 0, 32)
                 BtnFrame.Text = ""
                 BtnFrame.AutoButtonColor = false
                 
@@ -433,7 +429,7 @@ function Library:NewWindow(ConfigWindow)
 
                 SliderFrame.Parent = CurrentGroup
                 SliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
-                SliderFrame.Size = UDim2.new(1, 0, 0, 45) -- Reduzido de 50 para 45
+                SliderFrame.Size = UDim2.new(1, 0, 0, 45)
                 
                 SliderCorner.CornerRadius = UDim.new(0, 3)
                 SliderCorner.Parent = SliderFrame
@@ -778,6 +774,42 @@ function Library:NewWindow(ConfigWindow)
                     task.wait(2) 
                     JoinBtn.Text = "JOIN" 
                 end)
+            end
+
+            -- Adicionando o método AddSeperator que estava faltando
+            function SectionFunc:AddSeperator(text)
+                local SeperatorFrame = Instance.new("Frame")
+                local SeperatorLabel = Instance.new("TextLabel")
+                local LineLeft = Instance.new("Frame")
+                local LineRight = Instance.new("Frame")
+
+                SeperatorFrame.Parent = CurrentGroup
+                SeperatorFrame.BackgroundTransparency = 1
+                SeperatorFrame.Size = UDim2.new(1, 0, 0, 20)
+
+                SeperatorLabel.Parent = SeperatorFrame
+                SeperatorLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+                SeperatorLabel.BackgroundTransparency = 1
+                SeperatorLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+                SeperatorLabel.Size = UDim2.new(0, 0, 1, 0)
+                SeperatorLabel.AutomaticSize = Enum.AutomaticSize.X
+                SeperatorLabel.Font = Enum.Font.Code
+                SeperatorLabel.Text = text:upper()
+                SeperatorLabel.TextColor3 = Color3.fromRGB(80, 80, 100)
+                SeperatorLabel.TextSize = 10
+
+                LineLeft.Parent = SeperatorFrame
+                LineLeft.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+                LineLeft.BorderSizePixel = 0
+                LineLeft.Position = UDim2.new(0, 0, 0.5, 0)
+                LineLeft.Size = UDim2.new(0.5, -60, 0, 1)
+
+                LineRight.Parent = SeperatorFrame
+                LineRight.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+                LineRight.BorderSizePixel = 0
+                LineRight.Position = UDim2.new(1, 0, 0.5, 0)
+                LineRight.AnchorPoint = Vector2.new(1, 0)
+                LineRight.Size = UDim2.new(0.5, -60, 0, 1)
             end
 
             return SectionFunc
