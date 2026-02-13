@@ -71,14 +71,15 @@ function Library:NewWindow(ConfigWindow)
     local UIListLayout_Buttons = Instance.new("UIListLayout")
     local Close = Instance.new("TextButton")
     local Minize = Instance.new("TextButton")
-    
-    local TabHolder = Instance.new("ScrollingFrame")
-    local TabListLayout = Instance.new("UIListLayout")
-    local TabPadding = Instance.new("UIPadding")
+    local BackBtn = Instance.new("TextButton")
     
     local ContentFrame = Instance.new("Frame")
     local PageLayout = Instance.new("UIPageLayout")
     local PageList = Instance.new("Folder")
+    
+    local HomeTab = Instance.new("ScrollingFrame")
+    local HomeGridLayout = Instance.new("UIGridLayout")
+    local HomePadding = Instance.new("UIPadding")
 
     TeddyUI_Premium.Name = "TeddyUI_Premium"
     TeddyUI_Premium.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -89,7 +90,7 @@ function Library:NewWindow(ConfigWindow)
     DropShadowHolder.AnchorPoint = Vector2.new(0.5, 0.5)
     DropShadowHolder.BackgroundTransparency = 1
     DropShadowHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
-    DropShadowHolder.Size = UDim2.new(0, 520, 0, 380)
+    DropShadowHolder.Size = UDim2.new(0, 520, 0, 360)
 
     DropShadow.Name = "DropShadow"
     DropShadow.Parent = DropShadowHolder
@@ -153,8 +154,8 @@ function Library:NewWindow(ConfigWindow)
     RightButtons.Name = "RightButtons"
     RightButtons.Parent = Top
     RightButtons.BackgroundTransparency = 1
-    RightButtons.Position = UDim2.new(1, -70, 0, 0)
-    RightButtons.Size = UDim2.new(0, 60, 1, 0)
+    RightButtons.Position = UDim2.new(1, -140, 0, 0)
+    RightButtons.Size = UDim2.new(0, 130, 1, 0)
 
     UIListLayout_Buttons.Parent = RightButtons
     UIListLayout_Buttons.FillDirection = Enum.FillDirection.Horizontal
@@ -180,34 +181,21 @@ function Library:NewWindow(ConfigWindow)
     Minize.TextColor3 = Color3.fromRGB(200, 200, 200)
     Minize.TextSize = 14
 
-    -- Horizontal Tab Holder
-    TabHolder.Name = "TabHolder"
-    TabHolder.Parent = Main
-    TabHolder.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    TabHolder.Position = UDim2.new(0, 0, 0, 45)
-    TabHolder.Size = UDim2.new(1, 0, 0, 35)
-    TabHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
-    TabHolder.ScrollBarThickness = 0
-    TabHolder.ScrollingDirection = Enum.ScrollingDirection.X
-
-    TabListLayout.Parent = TabHolder
-    TabListLayout.FillDirection = Enum.FillDirection.Horizontal
-    TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabListLayout.Padding = UDim.new(0, 10)
-
-    TabPadding.Parent = TabHolder
-    TabPadding.PaddingLeft = UDim.new(0, 10)
-    TabPadding.PaddingRight = UDim.new(0, 10)
-
-    TabListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        TabHolder.CanvasSize = UDim2.new(0, TabListLayout.AbsoluteContentSize.X + 20, 0, 0)
-    end)
+    BackBtn.Name = "BackBtn"
+    BackBtn.Parent = RightButtons
+    BackBtn.BackgroundTransparency = 1
+    BackBtn.Size = UDim2.new(0, 55, 0, 25)
+    BackBtn.Font = Enum.Font.GothamBold
+    BackBtn.Text = "← Back"
+    BackBtn.TextColor3 = ConfigWindow.AccentColor
+    BackBtn.TextSize = 11
+    BackBtn.Visible = false
 
     ContentFrame.Name = "ContentFrame"
     ContentFrame.Parent = Main
     ContentFrame.BackgroundTransparency = 1
-    ContentFrame.Position = UDim2.new(0, 0, 0, 80)
-    ContentFrame.Size = UDim2.new(1, 0, 1, -80)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 45)
+    ContentFrame.Size = UDim2.new(1, 0, 1, -45)
     ContentFrame.ClipsDescendants = true
 
     PageList.Name = "PageList"
@@ -217,19 +205,35 @@ function Library:NewWindow(ConfigWindow)
     PageLayout.EasingStyle = Enum.EasingStyle.Quad
     PageLayout.TweenTime = 0.3
 
+    HomeTab.Name = "Home"
+    HomeTab.Parent = PageList
+    HomeTab.BackgroundTransparency = 1
+    HomeTab.Size = UDim2.new(1, 0, 1, 0)
+    HomeTab.ScrollBarThickness = 0
+    HomeTab.LayoutOrder = 0
+
+    HomeGridLayout.Parent = HomeTab
+    HomeGridLayout.CellPadding = UDim2.new(0, 12, 0, 12)
+    HomeGridLayout.CellSize = UDim2.new(0, 115, 0, 115)
+    HomeGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    HomePadding.Parent = HomeTab
+    HomePadding.PaddingLeft = UDim.new(0, 15)
+    HomePadding.PaddingTop = UDim.new(0, 15)
+
     self:MakeDraggable(Top, DropShadowHolder)
 
     Close.MouseButton1Click:Connect(function() TeddyUI_Premium:Destroy() end)
-    Minize.MouseButton1Click:Connect(function() TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled end)
+    Minize.MouseButton1Click:Connect(function() TeddyUI_Premium.Enabled = false end)
+    BackBtn.MouseButton1Click:Connect(function() PageLayout:JumpToIndex(0) BackBtn.Visible = false end)
 
-    local TabCount = 0
+    local TabCount = 1
     local Tab = {}
-    local FirstTab = true
 
     function Tab:T(t, iconid)
         local TabPage = Instance.new("ScrollingFrame")
-        local TabListLayout_Page = Instance.new("UIListLayout")
-        local TabPadding_Page = Instance.new("UIPadding")
+        local TabListLayout = Instance.new("UIListLayout")
+        local TabPadding = Instance.new("UIPadding")
         
         TabPage.Name = t
         TabPage.Parent = PageList
@@ -239,72 +243,67 @@ function Library:NewWindow(ConfigWindow)
         TabPage.ScrollBarImageColor3 = ConfigWindow.AccentColor
         TabPage.LayoutOrder = TabCount
         
-        TabListLayout_Page.Parent = TabPage
-        TabListLayout_Page.Padding = UDim.new(0, 8)
-        TabListLayout_Page.SortOrder = Enum.SortOrder.LayoutOrder
+        TabListLayout.Parent = TabPage
+        TabListLayout.Padding = UDim.new(0, 8)
+        TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
         
-        TabPadding_Page.Parent = TabPage
-        TabPadding_Page.PaddingLeft = UDim.new(0, 12)
-        TabPadding_Page.PaddingRight = UDim.new(0, 12)
-        TabPadding_Page.PaddingTop = UDim.new(0, 12)
-        TabPadding_Page.PaddingBottom = UDim.new(0, 12)
+        TabPadding.Parent = TabPage
+        TabPadding.PaddingLeft = UDim.new(0, 12)
+        TabPadding.PaddingRight = UDim.new(0, 12)
+        TabPadding.PaddingTop = UDim.new(0, 12)
+        TabPadding.PaddingBottom = UDim.new(0, 12)
 
-        Library:UpdateScrolling(TabPage, TabListLayout_Page)
+        Library:UpdateScrolling(TabPage, TabListLayout)
 
-        -- Horizontal Tab Button
-        local TabBtn = Instance.new("TextButton")
-        local TabBtnTitle = Instance.new("TextLabel")
-        local TabIndicator = Instance.new("Frame")
+        local Card = Instance.new("TextButton")
+        local CardCorner = Instance.new("UICorner")
+        local CardStroke = Instance.new("UIStroke")
+        local CardIcon = Instance.new("ImageLabel")
+        local CardTitle = Instance.new("TextLabel")
 
-        TabBtn.Name = t .. "_Tab"
-        TabBtn.Parent = TabHolder
-        TabBtn.BackgroundTransparency = 1
-        TabBtn.Size = UDim2.new(0, 0, 1, 0)
-        TabBtn.Text = ""
-        TabBtn.LayoutOrder = TabCount
-
-        TabBtnTitle.Parent = TabBtn
-        TabBtnTitle.BackgroundTransparency = 1
-        TabBtnTitle.Size = UDim2.new(1, 0, 1, 0)
-        TabBtnTitle.Font = Enum.Font.GothamBold
-        TabBtnTitle.Text = t
-        TabBtnTitle.TextColor3 = Color3.fromRGB(150, 150, 150)
-        TabBtnTitle.TextSize = 12
+        Card.Name = t .. "_Card"
+        Card.Parent = HomeTab
+        Card.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        Card.Text = ""
+        Card.LayoutOrder = TabCount
         
-        -- Auto size tab button based on text
-        TabBtnTitle:GetPropertyChangedSignal("TextBounds"):Connect(function()
-            TabBtn.Size = UDim2.new(0, TabBtnTitle.TextBounds.X + 20, 1, 0)
+        CardCorner.CornerRadius = UDim.new(0, 8)
+        CardCorner.Parent = Card
+        
+        CardStroke.Color = Color3.fromRGB(40, 40, 40)
+        CardStroke.Thickness = 1
+        CardStroke.Parent = Card
+
+        CardIcon.Parent = Card
+        CardIcon.AnchorPoint = Vector2.new(0.5, 0)
+        CardIcon.BackgroundTransparency = 1
+        CardIcon.Position = UDim2.new(0.5, 0, 0, 20)
+        CardIcon.Size = UDim2.new(0, 40, 0, 40)
+        CardIcon.Image = (iconid and iconid ~= "") and iconid or "rbxassetid://123256573634"
+        CardIcon.ImageColor3 = ConfigWindow.AccentColor
+
+        CardTitle.Parent = Card
+        CardTitle.BackgroundTransparency = 1
+        CardTitle.Position = UDim2.new(0, 0, 0, 70)
+        CardTitle.Size = UDim2.new(1, 0, 0, 25)
+        CardTitle.Font = Enum.Font.GothamBold
+        CardTitle.Text = t
+        CardTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
+        CardTitle.TextSize = 12
+
+        Card.MouseEnter:Connect(function()
+            Library:TweenInstance(Card, 0.2, "BackgroundColor3", Color3.fromRGB(25, 25, 25))
+            Library:TweenInstance(CardStroke, 0.2, "Color", ConfigWindow.AccentColor)
         end)
-        TabBtnTitle.Text = t
+        Card.MouseLeave:Connect(function()
+            Library:TweenInstance(Card, 0.2, "BackgroundColor3", Color3.fromRGB(20, 20, 20))
+            Library:TweenInstance(CardStroke, 0.2, "Color", Color3.fromRGB(40, 40, 40))
+        end)
 
-        TabIndicator.Parent = TabBtn
-        TabIndicator.AnchorPoint = Vector2.new(0.5, 1)
-        TabIndicator.BackgroundColor3 = ConfigWindow.AccentColor
-        TabIndicator.Position = UDim2.new(0.5, 0, 1, 0)
-        TabIndicator.Size = UDim2.new(0, 0, 0, 2)
-        TabIndicator.BorderSizePixel = 0
-
-        local function SelectTab()
-            for _, v in pairs(TabHolder:GetChildren()) do
-                if v:IsA("TextButton") then
-                    Library:TweenInstance(v.TextLabel, 0.2, "TextColor3", Color3.fromRGB(150, 150, 150))
-                    Library:TweenInstance(v.Frame, 0.2, "Size", UDim2.new(0, 0, 0, 2))
-                end
-            end
-            Library:TweenInstance(TabBtnTitle, 0.2, "TextColor3", Color3.fromRGB(255, 255, 255))
-            Library:TweenInstance(TabIndicator, 0.2, "Size", UDim2.new(1, 0, 0, 2))
+        Card.MouseButton1Click:Connect(function()
             PageLayout:JumpToIndex(TabPage.LayoutOrder)
-        end
-
-        TabBtn.MouseButton1Click:Connect(SelectTab)
-
-        if FirstTab then
-            task.spawn(function()
-                task.wait(0.1)
-                SelectTab()
-            end)
-            FirstTab = false
-        end
+            BackBtn.Visible = true
+        end)
 
         TabCount = TabCount + 1
         local TabFunc = {}
