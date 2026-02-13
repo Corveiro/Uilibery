@@ -327,10 +327,21 @@ function Library:NewWindow(Config)
                     if Open then Group.Size = UDim2.new(1, 0, 0, GroupList.AbsoluteContentSize.Y) end
                 end)
                 
-                CurrentParent = Group
+                local GroupElements = {}
+                function GroupElements:AddToggle(cfg) return Elements:AddToggle(cfg, Group) end
+                function GroupElements:AddButton(cfg) return Elements:AddButton(cfg, Group) end
+                function GroupElements:AddSlider(cfg) return Elements:AddSlider(cfg, Group) end
+                function GroupElements:AddDropdown(cfg) return Elements:AddDropdown(cfg, Group) end
+                function GroupElements:AddTextbox(cfg) return Elements:AddTextbox(cfg, Group) end
+                GroupElements.AddInput = GroupElements.AddTextbox
+                function GroupElements:AddLabel(text) return Elements:AddLabel(text, Group) end
+                function GroupElements:AddParagraph(cfg) return Elements:AddParagraph(cfg, Group) end
+                function GroupElements:AddDiscord(title, invite) return Elements:AddDiscord(title, invite, Group) end
+                
+                return GroupElements
             end
 
-            function Elements:AddToggle(cfg)
+            function Elements:AddToggle(cfg, parent)
                 cfg = cfg or {}
                 local Toggled = cfg.Default or false
                 local Toggle = Instance.new("TextButton")
@@ -340,7 +351,7 @@ function Library:NewWindow(Config)
                 local Knob = Instance.new("Frame")
                 
                 local hasDesc = cfg.Description and cfg.Description ~= ""
-                Toggle.Parent = CurrentParent
+                Toggle.Parent = parent or SectionContainer
                 Toggle.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
                 Toggle.Size = UDim2.new(1, 0, 0, hasDesc and 48 or 40)
                 Toggle.Text = ""
@@ -363,13 +374,13 @@ function Library:NewWindow(Config)
                 return { Set = function(self, val) Toggled = val Update() end }
             end
 
-            function Elements:AddButton(cfg)
+            function Elements:AddButton(cfg, parent)
                 cfg = cfg or {}
                 local Button = Instance.new("TextButton")
                 local Title = Instance.new("TextLabel")
                 local hasDesc = cfg.Description and cfg.Description ~= ""
                 
-                Button.Parent = CurrentParent; Button.BackgroundColor3 = Color3.fromRGB(22, 22, 22); Button.Size = UDim2.new(1, 0, 0, hasDesc and 48 or 40); Button.Text = ""; Instance.new("UICorner", Button).CornerRadius = UDim.new(0, 6)
+                Button.Parent = parent or SectionContainer; Button.BackgroundColor3 = Color3.fromRGB(22, 22, 22); Button.Size = UDim2.new(1, 0, 0, hasDesc and 48 or 40); Button.Text = ""; Instance.new("UICorner", Button).CornerRadius = UDim.new(0, 6)
                 Title.Parent = Button; Title.BackgroundTransparency = 1; Title.Size = UDim2.new(1, 0, 1, 0); Title.Font = Enum.Font.GothamBold; Title.Text = cfg.Title or "Button"; Title.TextColor3 = Color3.fromRGB(255, 255, 255); Title.TextSize = 13
                 
                 Button.MouseEnter:Connect(function() Library:Tween(Button, 0.2, {BackgroundColor3 = Color3.fromRGB(28, 28, 28)}) end)
@@ -382,7 +393,7 @@ function Library:NewWindow(Config)
                 end)
             end
 
-            function Elements:AddSlider(cfg)
+            function Elements:AddSlider(cfg, parent)
                 cfg = cfg or {}
                 local Min, Max, Default = cfg.Min or 0, cfg.Max or 100, cfg.Default or 50
                 local Slider = Instance.new("Frame")
@@ -392,7 +403,7 @@ function Library:NewWindow(Config)
                 local Fill = Instance.new("Frame")
                 local Trigger = Instance.new("TextButton")
                 
-                Slider.Parent = CurrentParent; Slider.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Slider.Size = UDim2.new(1, 0, 0, 50); Instance.new("UICorner", Slider).CornerRadius = UDim.new(0, 6)
+                Slider.Parent = parent or SectionContainer; Slider.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Slider.Size = UDim2.new(1, 0, 0, 50); Instance.new("UICorner", Slider).CornerRadius = UDim.new(0, 6)
                 Title.Parent = Slider; Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 12, 0, 8); Title.Size = UDim2.new(1, -60, 0, 15); Title.Font = Enum.Font.Gotham; Title.Text = cfg.Title or "Slider"; Title.TextColor3 = Color3.fromRGB(200, 200, 200); Title.TextSize = 12; Title.TextXAlignment = Enum.TextXAlignment.Left
                 Value.Parent = Slider; Value.BackgroundTransparency = 1; Value.Position = UDim2.new(1, -60, 0, 8); Value.Size = UDim2.new(0, 50, 0, 15); Value.Font = Enum.Font.GothamBold; Value.Text = tostring(Default); Value.TextColor3 = AccentColor; Value.TextSize = 12; Value.TextXAlignment = Enum.TextXAlignment.Right
                 
@@ -415,7 +426,7 @@ function Library:NewWindow(Config)
                 pcall(cfg.Callback, Default)
             end
 
-            function Elements:AddDropdown(cfg)
+            function Elements:AddDropdown(cfg, parent)
                 cfg = cfg or {}
                 local Options = cfg.Options or cfg.Values or {}
                 local Dropdown = Instance.new("Frame")
@@ -425,7 +436,7 @@ function Library:NewWindow(Config)
                 local List = Instance.new("Frame")
                 local ListLayout = Instance.new("UIListLayout")
                 
-                Dropdown.Parent = CurrentParent; Dropdown.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Dropdown.Size = UDim2.new(1, 0, 0, 40); Dropdown.ClipsDescendants = true; Instance.new("UICorner", Dropdown).CornerRadius = UDim.new(0, 6)
+                Dropdown.Parent = parent or SectionContainer; Dropdown.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Dropdown.Size = UDim2.new(1, 0, 0, 40); Dropdown.ClipsDescendants = true; Instance.new("UICorner", Dropdown).CornerRadius = UDim.new(0, 6)
                 Title.Parent = Dropdown; Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 12, 0, 0); Title.Size = UDim2.new(1, -40, 0, 40); Title.Font = Enum.Font.Gotham; Title.Text = (cfg.Title or "Dropdown") .. " : " .. tostring(cfg.Default or "None"); Title.TextColor3 = Color3.fromRGB(230, 230, 230); Title.TextSize = 13; Title.TextXAlignment = Enum.TextXAlignment.Left
                 Icon.Parent = Dropdown; Icon.AnchorPoint = Vector2.new(1, 0.5); Icon.BackgroundTransparency = 1; Icon.Position = UDim2.new(1, -12, 0, 20); Icon.Size = UDim2.new(0, 14, 0, 14); Icon.Image = "rbxassetid://10131441151"; Icon.ImageColor3 = Color3.fromRGB(150, 150, 150)
                 Trigger.Parent = Dropdown; Trigger.BackgroundTransparency = 1; Trigger.Size = UDim2.new(1, 0, 0, 40); Trigger.Text = ""
@@ -457,13 +468,13 @@ function Library:NewWindow(Config)
                 return { Refresh = function(self, new) for _, v in pairs(List:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end AddOptions(new) end }
             end
 
-            function Elements:AddTextbox(cfg)
+            function Elements:AddTextbox(cfg, parent)
                 cfg = cfg or {}
                 local Box = Instance.new("Frame")
                 local Title = Instance.new("TextLabel")
                 local Input = Instance.new("TextBox")
                 
-                Box.Parent = CurrentParent; Box.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Box.Size = UDim2.new(1, 0, 0, 40); Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 6)
+                Box.Parent = parent or SectionContainer; Box.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Box.Size = UDim2.new(1, 0, 0, 40); Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 6)
                 Title.Parent = Box; Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 12, 0, 0); Title.Size = UDim2.new(0, 100, 1, 0); Title.Font = Enum.Font.Gotham; Title.Text = cfg.Title or "Input"; Title.TextColor3 = Color3.fromRGB(230, 230, 230); Title.TextSize = 13; Title.TextXAlignment = Enum.TextXAlignment.Left
                 Input.Parent = Box; Input.BackgroundColor3 = Color3.fromRGB(25, 25, 25); Input.Position = UDim2.new(1, -160, 0.5, -13); Input.Size = UDim2.new(0, 150, 0, 26); Input.Font = Enum.Font.Gotham; Input.Text = cfg.Default or ""; Input.TextColor3 = Color3.fromRGB(255, 255, 255); Input.TextSize = 12; Instance.new("UICorner", Input).CornerRadius = UDim.new(0, 4)
                 Input.FocusLost:Connect(function() pcall(cfg.Callback, Input.Text) end)
@@ -471,19 +482,19 @@ function Library:NewWindow(Config)
             end
             Elements.AddInput = Elements.AddTextbox
 
-            function Elements:AddLabel(text)
+            function Elements:AddLabel(text, parent)
                 local Label = Instance.new("TextLabel")
-                Label.Parent = CurrentParent; Label.BackgroundTransparency = 1; Label.Size = UDim2.new(1, 0, 0, 25); Label.Font = Enum.Font.Gotham; Label.Text = text; Label.TextColor3 = Color3.fromRGB(150, 150, 150); Label.TextSize = 12; Label.TextXAlignment = Enum.TextXAlignment.Left
+                Label.Parent = parent or SectionContainer; Label.BackgroundTransparency = 1; Label.Size = UDim2.new(1, 0, 0, 25); Label.Font = Enum.Font.Gotham; Label.Text = text; Label.TextColor3 = Color3.fromRGB(150, 150, 150); Label.TextSize = 12; Label.TextXAlignment = Enum.TextXAlignment.Left
                 return { Set = function(self, val) Label.Text = val end }
             end
 
-            function Elements:AddParagraph(cfg)
+            function Elements:AddParagraph(cfg, parent)
                 cfg = cfg or {}
                 local Para = Instance.new("Frame")
                 local Title = Instance.new("TextLabel")
                 local Content = Instance.new("TextLabel")
                 
-                Para.Parent = CurrentParent; Para.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Para.Size = UDim2.new(1, 0, 0, 50); Instance.new("UICorner", Para).CornerRadius = UDim.new(0, 6)
+                Para.Parent = parent or SectionContainer; Para.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Para.Size = UDim2.new(1, 0, 0, 50); Instance.new("UICorner", Para).CornerRadius = UDim.new(0, 6)
                 Title.Parent = Para; Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 12, 0, 8); Title.Size = UDim2.new(1, -24, 0, 15); Title.Font = Enum.Font.GothamBold; Title.Text = cfg.Title or "Info"; Title.TextColor3 = Color3.fromRGB(255, 255, 255); Title.TextSize = 13; Title.TextXAlignment = Enum.TextXAlignment.Left
                 Content.Parent = Para; Content.BackgroundTransparency = 1; Content.Position = UDim2.new(0, 12, 0, 26); Content.Size = UDim2.new(1, -24, 0, 18); Content.Font = Enum.Font.Gotham; Content.Text = cfg.Content or cfg.Desc or ""; Content.TextColor3 = Color3.fromRGB(140, 140, 140); Content.TextSize = 11; Content.TextXAlignment = Enum.TextXAlignment.Left; Content.TextWrapped = true
                 
@@ -492,13 +503,13 @@ function Library:NewWindow(Config)
                 return { Set = function(self, val) Content.Text = val end }
             end
 
-            function Elements:AddDiscord(title, invite)
+            function Elements:AddDiscord(title, invite, parent)
                 local Card = Instance.new("Frame")
                 local Icon = Instance.new("ImageLabel")
                 local Title = Instance.new("TextLabel")
                 local Join = Instance.new("TextButton")
                 
-                Card.Parent = CurrentParent; Card.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Card.Size = UDim2.new(1, 0, 0, 60); Instance.new("UICorner", Card).CornerRadius = UDim.new(0, 8)
+                Card.Parent = parent or SectionContainer; Card.BackgroundColor3 = Color3.fromRGB(18, 18, 18); Card.Size = UDim2.new(1, 0, 0, 60); Instance.new("UICorner", Card).CornerRadius = UDim.new(0, 8)
                 Icon.Parent = Card; Icon.BackgroundTransparency = 1; Icon.Position = UDim2.new(0, 10, 0, 10); Icon.Size = UDim2.new(0, 40, 0, 40); Icon.Image = "rbxassetid://123256573634"
                 Title.Parent = Card; Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 60, 0, 0); Title.Size = UDim2.new(1, -140, 1, 0); Title.Font = Enum.Font.GothamBold; Title.Text = title or "Discord"; Title.TextColor3 = Color3.fromRGB(255, 255, 255); Title.TextSize = 14; Title.TextXAlignment = Enum.TextXAlignment.Left
                 Join.Parent = Card; Join.AnchorPoint = Vector2.new(1, 0.5); Join.BackgroundColor3 = AccentColor; Join.Position = UDim2.new(1, -10, 0.5, 0); Join.Size = UDim2.new(0, 70, 0, 30); Join.Font = Enum.Font.GothamBold; Join.Text = "JOIN"; Join.TextColor3 = Color3.fromRGB(255, 255, 255); Join.TextSize = 12; Instance.new("UICorner", Join).CornerRadius = UDim.new(0, 6)
