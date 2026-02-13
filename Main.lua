@@ -37,6 +37,12 @@ function Library:MakeDraggable(topbarobject, object)
     end)
 end
 
+function Library:UpdateScrolling(Scroll, List)
+    List:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 20)
+    end)
+end
+
 -- [ Main Window ] --
 function Library:NewWindow(Config)
     Config = Config or {}
@@ -52,35 +58,20 @@ function Library:NewWindow(Config)
     local Main = Instance.new("Frame")
     local MainCorner = Instance.new("UICorner")
     local MainStroke = Instance.new("UIStroke")
-    local MainShadow = Instance.new("ImageLabel")
     
     Main.Name = "Main"
     Main.Parent = ScreenGui
     Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
     Main.Position = UDim2.new(0.5, -250, 0.5, -180)
-    Main.Size = UDim2.new(0, 500, 0, 360)
+    Main.Size = UDim2.new(0, 500, 0, 380)
     Main.ClipsDescendants = true
     
-    MainCorner.CornerRadius = UDim.new(0, 12)
+    MainCorner.CornerRadius = UDim.new(0, 10)
     MainCorner.Parent = Main
     
     MainStroke.Color = Color3.fromRGB(30, 30, 30)
     MainStroke.Thickness = 1.2
-    MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     MainStroke.Parent = Main
-
-    MainShadow.Name = "Shadow"
-    MainShadow.Parent = Main
-    MainShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-    MainShadow.BackgroundTransparency = 1
-    MainShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    MainShadow.Size = UDim2.new(1, 40, 1, 40)
-    MainShadow.Image = "rbxassetid://6014265364"
-    MainShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-    MainShadow.ImageTransparency = 0.5
-    MainShadow.ScaleType = Enum.ScaleType.Slice
-    MainShadow.SliceCenter = Rect.new(49, 49, 450, 450)
-    MainShadow.ZIndex = 0
 
     -- [ Topbar ] --
     local Topbar = Instance.new("Frame")
@@ -222,9 +213,7 @@ function Library:NewWindow(Config)
         PagePadding.PaddingTop = UDim.new(0, 10)
         PagePadding.PaddingBottom = UDim.new(0, 10)
 
-        PageList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            Page.CanvasSize = UDim2.new(0, 0, 0, PageList.AbsoluteContentSize.Y + 20)
-        end)
+        Library:UpdateScrolling(Page, PageList)
 
         local function Select()
             for _, v in pairs(TabHolder:GetChildren()) do
