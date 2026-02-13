@@ -274,7 +274,7 @@ function Library:NewWindow(ConfigWindow)
     TabHolder.Parent = Main
     TabHolder.Active = true
     TabHolder.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
-    TabHolder.BackgroundTransparency = 0.5
+    TabHolder.BackgroundTransparency = 0
     TabHolder.BorderSizePixel = 0
     TabHolder.Position = UDim2.new(0, 10, 0, 65)
     TabHolder.Size = UDim2.new(0, 120, 1, -75)
@@ -282,10 +282,15 @@ function Library:NewWindow(ConfigWindow)
     TabHolder.ScrollBarThickness = 3
     TabHolder.ScrollBarImageColor3 = ConfigWindow.AccentColor
     TabHolder.ScrollBarImageTransparency = 0.5
+    TabHolder.Visible = true
 
     TabListLayout.Parent = TabHolder
     TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     TabListLayout.Padding = UDim.new(0, 6)
+
+    local TabHolderCorner = Instance.new("UICorner")
+    TabHolderCorner.CornerRadius = UDim.new(0, 8)
+    TabHolderCorner.Parent = TabHolder
 
     TabPadding.Parent = TabHolder
     TabPadding.PaddingTop = UDim.new(0, 8)
@@ -300,6 +305,7 @@ function Library:NewWindow(ConfigWindow)
     ContentFrame.Position = UDim2.new(0, 140, 0, 65)
     ContentFrame.Size = UDim2.new(1, -150, 1, -75)
     ContentFrame.ClipsDescendants = true
+    ContentFrame.Visible = true
 
     PageLayout.Parent = ContentFrame
     PageLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -341,6 +347,8 @@ function Library:NewWindow(ConfigWindow)
         TabButton.Size = UDim2.new(1, 0, 0, 42)
         TabButton.AutoButtonColor = false
         TabButton.Text = ""
+        TabButton.Visible = true
+        TabButton.ZIndex = 2
 
         TabCorner.CornerRadius = UDim.new(0, 8)
         TabCorner.Parent = TabButton
@@ -396,6 +404,7 @@ function Library:NewWindow(ConfigWindow)
         TabPage.ScrollBarThickness = 4
         TabPage.ScrollBarImageColor3 = ConfigWindow.AccentColor
         TabPage.ScrollBarImageTransparency = 0.6
+        TabPage.Visible = true
 
         PageListLayout.Parent = TabPage
         PageListLayout.SortOrder = Enum.SortOrder.LayoutOrder
