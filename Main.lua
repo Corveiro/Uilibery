@@ -1,8 +1,8 @@
 local Library = {}
 
 -- [ Utility Functions ] --
-function Library:TweenInstance(Instance, Time, OldValue, NewValue)
-    local rz_Tween = game:GetService("TweenService"):Create(Instance, TweenInfo.new(Time, Enum.EasingStyle.Back), { [OldValue] = NewValue })
+function Library:TweenInstance(Instance, Time, OldValue, NewValue, Style, Direction)
+    local rz_Tween = game:GetService("TweenService"):Create(Instance, TweenInfo.new(Time, Style or Enum.EasingStyle.Back, Direction or Enum.EasingDirection.Out), { [OldValue] = NewValue })
     rz_Tween:Play()
     return rz_Tween
 end
@@ -50,8 +50,8 @@ end
 -- [ Main Window ] --
 function Library:NewWindow(ConfigWindow)
     local ConfigWindow = self:MakeConfig({
-        Title = "ARCADE HUB",
-        Description = "Retro Edition",
+        Title = "ARCADE W-AZURE",
+        Description = "Elite Edition",
         AccentColor = Color3.fromRGB(255, 0, 0)
     }, ConfigWindow or {})
 
@@ -79,17 +79,80 @@ function Library:NewWindow(ConfigWindow)
     local PageLayout = Instance.new("UIPageLayout")
     local PageList = Instance.new("Folder")
 
-    -- [ Intro Elements ] --
-    local IntroFrame = Instance.new("Frame")
-    local IntroCorner = Instance.new("UICorner")
-    local IntroStroke = Instance.new("UIStroke")
-    local IntroText = Instance.new("TextLabel")
-    local LoadingBarBG = Instance.new("Frame")
-    local LoadingBarFill = Instance.new("Frame")
-    local LoadingBarCorner = Instance.new("UICorner")
-    local BootText = Instance.new("TextLabel")
+    -- [ W-AZURE Style Dropdown Overlay ] --
+    local DropdownOverlay = Instance.new("Frame")
+    DropdownOverlay.Name = "DropdownOverlay"
+    DropdownOverlay.Parent = Main
+    DropdownOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    DropdownOverlay.BackgroundTransparency = 1
+    DropdownOverlay.Size = UDim2.new(1, 0, 1, 0)
+    DropdownOverlay.Visible = false
+    DropdownOverlay.ZIndex = 50
 
-    TeddyUI_Premium.Name = "ArcadeUI_Premium"
+    local DropdownPanel = Instance.new("Frame")
+    DropdownPanel.Name = "DropdownPanel"
+    DropdownPanel.Parent = DropdownOverlay
+    DropdownPanel.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    DropdownPanel.Position = UDim2.new(1, 0, 0, 0) -- Começa fora da tela (direita)
+    DropdownPanel.Size = UDim2.new(0.6, 0, 1, 0) -- Ocupa 60% da largura
+    DropdownPanel.ZIndex = 51
+
+    local PanelStroke = Instance.new("UIStroke")
+    PanelStroke.Color = ConfigWindow.AccentColor
+    PanelStroke.Thickness = 1
+    PanelStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    PanelStroke.Parent = DropdownPanel
+
+    local PanelTop = Instance.new("Frame")
+    PanelTop.Name = "PanelTop"
+    PanelTop.Parent = DropdownPanel
+    PanelTop.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
+    PanelTop.Size = UDim2.new(1, 0, 0, 40)
+    PanelTop.ZIndex = 52
+
+    local BackBtn = Instance.new("TextButton")
+    BackBtn.Name = "BackBtn"
+    BackBtn.Parent = PanelTop
+    BackBtn.BackgroundTransparency = 1
+    BackBtn.Position = UDim2.new(0, 5, 0, 5)
+    BackBtn.Size = UDim2.new(0, 30, 0, 30)
+    BackBtn.Font = Enum.Font.Arcade
+    BackBtn.Text = "<"
+    BackBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    BackBtn.TextSize = 18
+    BackBtn.ZIndex = 53
+
+    local PanelTitle = Instance.new("TextLabel")
+    PanelTitle.Name = "PanelTitle"
+    PanelTitle.Parent = PanelTop
+    PanelTitle.BackgroundTransparency = 1
+    PanelTitle.Position = UDim2.new(0, 40, 0, 0)
+    PanelTitle.Size = UDim2.new(1, -45, 1, 0)
+    PanelTitle.Font = Enum.Font.Arcade
+    PanelTitle.Text = "SETTING"
+    PanelTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PanelTitle.TextSize = 14
+    PanelTitle.TextXAlignment = Enum.TextXAlignment.Left
+    PanelTitle.ZIndex = 53
+
+    local PanelScroll = Instance.new("ScrollingFrame")
+    PanelScroll.Name = "PanelScroll"
+    PanelScroll.Parent = DropdownPanel
+    PanelScroll.BackgroundTransparency = 1
+    PanelScroll.Position = UDim2.new(0, 5, 0, 45)
+    PanelScroll.Size = UDim2.new(1, -10, 1, -50)
+    PanelScroll.ScrollBarThickness = 2
+    PanelScroll.ScrollBarImageColor3 = ConfigWindow.AccentColor
+    PanelScroll.ZIndex = 52
+
+    local PanelList = Instance.new("UIListLayout")
+    PanelList.Parent = PanelScroll
+    PanelList.Padding = UDim.new(0, 5)
+    PanelList.SortOrder = Enum.SortOrder.LayoutOrder
+
+    Library:UpdateScrolling(PanelScroll, PanelList)
+
+    TeddyUI_Premium.Name = "ArcadeUI_Wazure"
     TeddyUI_Premium.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     TeddyUI_Premium.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -105,7 +168,7 @@ function Library:NewWindow(ConfigWindow)
     Main.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
     Main.Size = UDim2.new(1, 0, 1, 0)
     Main.ClipsDescendants = true
-    Main.Visible = false -- Escondido durante o boot
+    Main.Visible = false
 
     UICorner.CornerRadius = UDim.new(0, 4)
     UICorner.Parent = Main
@@ -224,7 +287,16 @@ function Library:NewWindow(ConfigWindow)
     end)
     Minize.MouseButton1Click:Connect(function() TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled end)
 
-    -- [ Setup Intro/Loading ] --
+    -- [ Intro Animation ] --
+    local IntroFrame = Instance.new("Frame")
+    local IntroCorner = Instance.new("UICorner")
+    local IntroStroke = Instance.new("UIStroke")
+    local IntroText = Instance.new("TextLabel")
+    local LoadingBarBG = Instance.new("Frame")
+    local LoadingBarFill = Instance.new("Frame")
+    local LoadingBarCorner = Instance.new("UICorner")
+    local BootText = Instance.new("TextLabel")
+
     IntroFrame.Name = "IntroFrame"
     IntroFrame.Parent = DropShadowHolder
     IntroFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 10)
@@ -273,10 +345,8 @@ function Library:NewWindow(ConfigWindow)
     BootText.TextSize = 10
     BootText.TextXAlignment = Enum.TextXAlignment.Left
 
-    local function PlayPremiumIntro()
+    local function PlayWazureIntro()
         local TS = game:GetService("TweenService")
-        
-        -- Start with a glitchy pop-in
         IntroFrame.Size = UDim2.new(0, 0, 0, 2)
         TS:Create(IntroFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart), {Size = UDim2.new(0, 300, 0, 2)}):Play()
         task.wait(0.3)
@@ -285,7 +355,7 @@ function Library:NewWindow(ConfigWindow)
         
         local stages = {
             {text = "LOADING ASSETS...", progress = 0.3},
-            {text = "CONFIGURING UI...", progress = 0.6},
+            {text = "CONFIGURING W-AZURE...", progress = 0.6},
             {text = "READY TO START!", progress = 1.0}
         }
         
@@ -296,12 +366,11 @@ function Library:NewWindow(ConfigWindow)
         end
         
         task.wait(0.3)
-        IntroText.Text = "ACCESS GRANTED"
+        IntroText.Text = "W-AZURE ELITE READY"
         IntroText.TextColor3 = Color3.fromRGB(0, 255, 100)
         IntroStroke.Color = Color3.fromRGB(0, 255, 100)
         task.wait(0.8)
         
-        -- Transition to Main
         TS:Create(IntroFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)}):Play()
         task.wait(0.5)
         IntroFrame:Destroy()
@@ -311,7 +380,7 @@ function Library:NewWindow(ConfigWindow)
         TS:Create(Main, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 1, 0)}):Play()
     end
 
-    task.spawn(PlayPremiumIntro)
+    task.spawn(PlayWazureIntro)
 
     local TabCount = 0
     local Tab = {}
@@ -463,12 +532,8 @@ function Library:NewWindow(ConfigWindow)
                 ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                 ButtonStroke.Parent = ButtonFrame
 
-                ButtonBtn.MouseButton1Down:Connect(function()
-                    Library:TweenInstance(ButtonFrame, 0.1, "BackgroundColor3", Color3.fromRGB(40, 40, 60))
-                end)
-                ButtonBtn.MouseButton1Up:Connect(function()
-                    Library:TweenInstance(ButtonFrame, 0.1, "BackgroundColor3", Color3.fromRGB(25, 25, 40))
-                end)
+                ButtonBtn.MouseEnter:Connect(function() Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(35, 35, 55), Enum.EasingStyle.Sine) end)
+                ButtonBtn.MouseLeave:Connect(function() Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(25, 25, 40), Enum.EasingStyle.Sine) end)
                 ButtonBtn.MouseButton1Click:Connect(function() pcall(cfbut.Callback) end)
             end
 
@@ -626,14 +691,10 @@ function Library:NewWindow(ConfigWindow)
                 local DropBtn = Instance.new("TextButton")
                 local DropTitle = Instance.new("TextLabel")
                 local DropIcon = Instance.new("TextLabel")
-                local DropList = Instance.new("Frame")
-                local DropListLayout = Instance.new("UIListLayout")
-                local DropPadding = Instance.new("UIPadding")
 
                 DropFrame.Parent = CurrentGroup
                 DropFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
                 DropFrame.Size = UDim2.new(1, 0, 0, 32)
-                DropFrame.ClipsDescendants = true
                 
                 DropCorner.CornerRadius = UDim.new(0, 3)
                 DropCorner.Parent = DropFrame
@@ -658,62 +719,54 @@ function Library:NewWindow(ConfigWindow)
                 DropIcon.Position = UDim2.new(1, -30, 0, 0)
                 DropIcon.Size = UDim2.new(0, 30, 0, 32)
                 DropIcon.Font = Enum.Font.Arcade
-                DropIcon.Text = "+"
+                DropIcon.Text = ">"
                 DropIcon.TextColor3 = ConfigWindow.AccentColor
-                DropIcon.TextSize = 14
+                DropIcon.TextSize = 12
 
-                DropList.Parent = DropFrame
-                DropList.BackgroundTransparency = 1
-                DropList.Position = UDim2.new(0, 0, 0, 32)
-                DropList.Size = UDim2.new(1, 0, 0, 0)
-                
-                DropListLayout.Parent = DropList
-                DropListLayout.Padding = UDim.new(0, 4)
-                DropListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-                
-                DropPadding.Parent = DropList
-                DropPadding.PaddingBottom = UDim.new(0, 5)
-                DropPadding.PaddingLeft = UDim.new(0, 5)
-                DropPadding.PaddingRight = UDim.new(0, 5)
-
-                local Open = false
-                local function ToggleDrop()
-                    Open = not Open
-                    local targetSize = Open and (DropListLayout.AbsoluteContentSize.Y + 38) or 32
-                    Library:TweenInstance(DropFrame, 0.3, "Size", UDim2.new(1, 0, 0, targetSize))
-                    DropIcon.Text = Open and "-" or "+"
+                local function CloseWazureDropdown()
+                    Library:TweenInstance(DropdownPanel, 0.4, "Position", UDim2.new(1, 0, 0, 0), Enum.EasingStyle.Sine)
+                    Library:TweenInstance(DropdownOverlay, 0.3, "BackgroundTransparency", 1, Enum.EasingStyle.Sine)
+                    task.wait(0.4)
+                    DropdownOverlay.Visible = false
                 end
-                DropBtn.MouseButton1Click:Connect(ToggleDrop)
 
-                local function AddOptions(opts)
-                    for _, opt in pairs(opts) do
+                local function OpenWazureDropdown()
+                    for _, v in pairs(PanelScroll:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end
+                    
+                    PanelTitle.Text = cfdrop.Title:upper()
+                    DropdownOverlay.Visible = true
+                    Library:TweenInstance(DropdownOverlay, 0.3, "BackgroundTransparency", 0.6, Enum.EasingStyle.Sine)
+                    Library:TweenInstance(DropdownPanel, 0.5, "Position", UDim2.new(0.4, 0, 0, 0), Enum.EasingStyle.Back)
+
+                    for _, opt in pairs(options) do
                         local OptBtn = Instance.new("TextButton")
                         local OptCorner = Instance.new("UICorner")
-                        OptBtn.Parent = DropList
+                        OptBtn.Parent = PanelScroll
                         OptBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
-                        OptBtn.Size = UDim2.new(1, 0, 0, 28)
+                        OptBtn.Size = UDim2.new(1, 0, 0, 35)
                         OptBtn.Font = Enum.Font.Code
                         OptBtn.Text = opt
-                        OptBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
-                        OptBtn.TextSize = 11
+                        OptBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
+                        OptBtn.TextSize = 12
+                        OptBtn.ZIndex = 53
                         
-                        OptCorner.CornerRadius = UDim.new(0, 2)
+                        OptCorner.CornerRadius = UDim.new(0, 4)
                         OptCorner.Parent = OptBtn
                         
                         OptBtn.MouseButton1Click:Connect(function()
                             DropTitle.Text = cfdrop.Title .. " : " .. opt
-                            ToggleDrop()
                             pcall(cfdrop.Callback, opt)
+                            CloseWazureDropdown()
                         end)
                     end
                 end
-                AddOptions(options)
+
+                DropBtn.MouseButton1Click:Connect(OpenWazureDropdown)
+                BackBtn.MouseButton1Click:Connect(CloseWazureDropdown)
+
                 if cfdrop.Default ~= "" then pcall(cfdrop.Callback, cfdrop.Default) end
                 return { 
-                    Refresh = function(self, newopts) 
-                        for _, v in pairs(DropList:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end 
-                        AddOptions(newopts) 
-                    end, 
+                    Refresh = function(self, newopts) options = newopts end, 
                     Set = function(self, val) 
                         DropTitle.Text = cfdrop.Title .. " : " .. tostring(val) 
                         pcall(cfdrop.Callback, val) 
