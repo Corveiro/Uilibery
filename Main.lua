@@ -1,4 +1,3 @@
-
 local Library = {}
 
 -- [ Utility Functions ] --
@@ -48,102 +47,6 @@ function Library:MakeDraggable(topbarobject, object)
     end)
 end
 
--- [ Active Functions Monitor ] --
-local ActiveFunctionsGui = Instance.new("ScreenGui")
-ActiveFunctionsGui.Name = "ArcadeActiveMonitor"
-ActiveFunctionsGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ActiveFunctionsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ActiveFunctionsGui.Enabled = false -- Hidden by default until UI opens
-
-local ActiveHolder = Instance.new("ScrollingFrame")
-ActiveHolder.Name = "ActiveHolder"
-ActiveHolder.Parent = ActiveFunctionsGui
-ActiveHolder.BackgroundTransparency = 1
-ActiveHolder.Position = UDim2.new(0, 15, 0.4, 0)
-ActiveHolder.Size = UDim2.new(0, 250, 0.5, 0)
-ActiveHolder.ScrollBarThickness = 2
-ActiveHolder.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 100)
-ActiveHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
-
-local ActiveList = Instance.new("UIListLayout")
-ActiveList.Parent = ActiveHolder
-ActiveList.Padding = UDim.new(0, 6)
-ActiveList.SortOrder = Enum.SortOrder.LayoutOrder
-
-ActiveList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    ActiveHolder.CanvasSize = UDim2.new(0, 0, 0, ActiveList.AbsoluteContentSize.Y)
-end)
-
-local ActiveToggles = {}
-
-function Library:UpdateActiveMonitor()
-    for _, v in pairs(ActiveHolder:GetChildren()) do
-        if v:IsA("Frame") then v:Destroy() end
-    end
-    
-    for title, state in pairs(ActiveToggles) do
-        if state then
-            local StatusFrame = Instance.new("Frame")
-            local StatusLabel = Instance.new("TextLabel")
-            local StatusOn = Instance.new("TextLabel")
-            local StatusCorner = Instance.new("UICorner")
-            local StatusStroke = Instance.new("UIStroke")
-            
-            StatusFrame.Name = title
-            StatusFrame.Parent = ActiveHolder
-            StatusFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-            StatusFrame.BackgroundTransparency = 0.4
-            StatusFrame.Size = UDim2.new(0, 0, 0, 24)
-            StatusFrame.AutomaticSize = Enum.AutomaticSize.X
-            
-            StatusCorner.CornerRadius = UDim.new(0, 2)
-            StatusCorner.Parent = StatusFrame
-            
-            StatusStroke.Color = Color3.fromRGB(0, 255, 100)
-            StatusStroke.Thickness = 1
-            StatusStroke.Transparency = 0.6
-            StatusStroke.Parent = StatusFrame
-            
-            StatusLabel.Parent = StatusFrame
-            StatusLabel.BackgroundTransparency = 1
-            StatusLabel.Position = UDim2.new(0, 10, 0, 0)
-            StatusLabel.Size = UDim2.new(0, 0, 1, 0)
-            StatusLabel.AutomaticSize = Enum.AutomaticSize.X
-            StatusLabel.Font = Enum.Font.Code
-            StatusLabel.Text = title:upper() .. "    " -- Added extra space here
-            StatusLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-            StatusLabel.TextSize = 11
-            
-            StatusOn.Parent = StatusFrame
-            StatusOn.BackgroundTransparency = 1
-            StatusOn.Position = UDim2.new(0, 0, 0, 0)
-            StatusOn.Size = UDim2.new(0, 0, 1, 0)
-            StatusOn.AutomaticSize = Enum.AutomaticSize.X
-            StatusOn.Font = Enum.Font.Arcade
-            StatusOn.Text = "ON"
-            StatusOn.TextColor3 = Color3.fromRGB(0, 255, 100)
-            StatusOn.TextSize = 11
-            
-            local InternalLayout = Instance.new("UIListLayout")
-            InternalLayout.Parent = StatusFrame
-            InternalLayout.FillDirection = Enum.FillDirection.Horizontal
-            InternalLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-            InternalLayout.Padding = UDim.new(0, 15) -- Extra space between title and ON
-
-            local InternalPadding = Instance.new("UIPadding")
-            InternalPadding.Parent = StatusFrame
-            InternalPadding.PaddingLeft = UDim.new(0, 10)
-            InternalPadding.PaddingRight = UDim.new(0, 10)
-
-            StatusLabel.Parent = StatusFrame
-            StatusOn.Parent = StatusFrame
-
-            -- Simple animation for appearing
-            game:GetService("TweenService"):Create(StatusFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {BackgroundTransparency = 0.4}):Play()
-        end
-    end
-end
-
 -- [ Notification System ] --
 local NotificationGui = Instance.new("ScreenGui")
 NotificationGui.Name = "ArcadeNotifications"
@@ -180,24 +83,13 @@ function Library:Notify(ConfigNotif)
 
     NotifFrame.Name = "Notification"
     NotifFrame.Parent = NotifHolder
-    NotifFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 15)
-    NotifFrame.Size = UDim2.new(1, 0, 0, 70)
-    NotifFrame.Position = UDim2.new(1.5, 0, 0, 0)
-    NotifFrame.BorderSizePixel = 0
+    NotifFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    NotifFrame.Size = UDim2.new(1, 0, 0, 65)
+    NotifFrame.Position = UDim2.new(1.2, 0, 0, 0)
+    NotifFrame.ClipsDescendants = true
 
-    local NotifPattern = Instance.new("Frame")
-    NotifPattern.Name = "Pattern"
-    NotifPattern.Parent = NotifFrame
-    NotifPattern.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    NotifPattern.BackgroundTransparency = 0.95
-    NotifPattern.Size = UDim2.new(1, 0, 1, 0)
-    NotifPattern.ZIndex = 2
-    
-    local PatternLayout = Instance.new("UIGridLayout")
-    PatternLayout.Parent = NotifPattern
-    PatternLayout.CellPadding = UDim2.new(0, 0, 0, 2)
-    PatternLayout.CellSize = UDim2.new(1, 0, 0, 1)
-    for i=1, 20 do Instance.new("Frame", NotifPattern).BorderSizePixel = 0 end
+    NotifCorner.CornerRadius = UDim.new(0, 4)
+    NotifCorner.Parent = NotifFrame
 
     NotifStroke.Color = ConfigNotif.Color
     NotifStroke.Thickness = 2
@@ -205,33 +97,30 @@ function Library:Notify(ConfigNotif)
 
     NotifTitle.Parent = NotifFrame
     NotifTitle.BackgroundTransparency = 1
-    NotifTitle.Position = UDim2.new(0, 12, 0, 10)
-    NotifTitle.Size = UDim2.new(1, -24, 0, 18)
+    NotifTitle.Position = UDim2.new(0, 10, 0, 8)
+    NotifTitle.Size = UDim2.new(1, -20, 0, 15)
     NotifTitle.Font = Enum.Font.Arcade
-    NotifTitle.Text = "[ " .. ConfigNotif.Title:upper() .. " ]"
+    NotifTitle.Text = ConfigNotif.Title:upper()
     NotifTitle.TextColor3 = ConfigNotif.Color
-    NotifTitle.TextSize = 13
+    NotifTitle.TextSize = 12
     NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
-    NotifTitle.ZIndex = 3
 
     NotifContent.Parent = NotifFrame
     NotifContent.BackgroundTransparency = 1
-    NotifContent.Position = UDim2.new(0, 12, 0, 32)
-    NotifContent.Size = UDim2.new(1, -24, 0, 30)
+    NotifContent.Position = UDim2.new(0, 10, 0, 25)
+    NotifContent.Size = UDim2.new(1, -20, 0, 30)
     NotifContent.Font = Enum.Font.Code
-    NotifContent.Text = "> " .. ConfigNotif.Content
-    NotifContent.TextColor3 = Color3.fromRGB(255, 255, 255)
-    NotifContent.TextSize = 11
+    NotifContent.Text = ConfigNotif.Content
+    NotifContent.TextColor3 = Color3.fromRGB(200, 200, 220)
+    NotifContent.TextSize = 10
     NotifContent.TextXAlignment = Enum.TextXAlignment.Left
     NotifContent.TextWrapped = true
-    NotifContent.ZIndex = 3
 
     NotifBar.Parent = NotifFrame
     NotifBar.BackgroundColor3 = ConfigNotif.Color
     NotifBar.BorderSizePixel = 0
-    NotifBar.Position = UDim2.new(0, 0, 1, -4)
-    NotifBar.Size = UDim2.new(1, 0, 0, 4)
-    NotifBar.ZIndex = 4
+    NotifBar.Position = UDim2.new(0, 0, 1, -3)
+    NotifBar.Size = UDim2.new(1, 0, 0, 3)
 
     game:GetService("TweenService"):Create(NotifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(0, 0, 0, 0)}):Play()
     game:GetService("TweenService"):Create(NotifBar, TweenInfo.new(ConfigNotif.Duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
@@ -246,8 +135,8 @@ end
 -- [ Main Window ] --
 function Library:NewWindow(ConfigWindow)
     local ConfigWindow = self:MakeConfig({
-        Title = "ARCADE MASTER PRO",
-        Description = "Elite Monitoring",
+        Title = "ARCADE ULTIMATE",
+        Description = "Master Edition",
         AccentColor = Color3.fromRGB(255, 0, 0)
     }, ConfigWindow or {})
 
@@ -353,7 +242,7 @@ function Library:NewWindow(ConfigWindow)
 
     Library:UpdateScrolling(PanelScroll, PanelList)
 
-    TeddyUI_Premium.Name = "ArcadeUI_MasterPro"
+    TeddyUI_Premium.Name = "ArcadeUI_Ultimate"
     TeddyUI_Premium.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     TeddyUI_Premium.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -485,69 +374,9 @@ function Library:NewWindow(ConfigWindow)
         game:GetService("TweenService"):Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)}):Play()
         task.wait(0.5)
         BlurEffect:Destroy()
-        ActiveFunctionsGui:Destroy()
         TeddyUI_Premium:Destroy() 
     end)
-
-    -- [ Dynamic ON/OFF Toggle Button ] --
-    local ControlBtnGui = Instance.new("ScreenGui")
-    ControlBtnGui.Name = "ArcadeControl"
-    ControlBtnGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    
-    local MainBtn = Instance.new("TextButton")
-    local BtnCorner = Instance.new("UICorner")
-    local BtnStroke = Instance.new("UIStroke")
-    local BtnStatus = Instance.new("TextLabel")
-    
-    MainBtn.Name = "MainBtn"
-    MainBtn.Parent = ControlBtnGui
-    MainBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-    MainBtn.Position = UDim2.new(0, 20, 0, 20)
-    MainBtn.Size = UDim2.new(0, 110, 0, 35) -- Increased width for better spacing
-    MainBtn.Font = Enum.Font.Arcade
-    MainBtn.Text = "ARCADE"
-    MainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    MainBtn.TextSize = 12
-    MainBtn.TextXAlignment = Enum.TextXAlignment.Left
-    
-    local MainBtnPadding = Instance.new("UIPadding")
-    MainBtnPadding.Parent = MainBtn
-    MainBtnPadding.PaddingLeft = UDim.new(0, 10)
-
-    BtnCorner.CornerRadius = UDim.new(0, 6)
-    BtnCorner.Parent = MainBtn
-    
-    BtnStroke.Color = ConfigWindow.AccentColor
-    BtnStroke.Thickness = 2
-    BtnStroke.Parent = MainBtn
-    
-    BtnStatus.Parent = MainBtn
-    BtnStatus.BackgroundTransparency = 1
-    BtnStatus.Position = UDim2.new(1, -40, 0, 0) -- Moved status further to the right
-    BtnStatus.Size = UDim2.new(0, 30, 1, 0)
-    BtnStatus.Font = Enum.Font.Arcade
-    BtnStatus.Text = "OFF"
-    BtnStatus.TextColor3 = Color3.fromRGB(255, 50, 50)
-    BtnStatus.TextSize = 10
-    
-    self:MakeDraggable(MainBtn, MainBtn)
-
-    local function ToggleUI()
-        TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled
-        ActiveFunctionsGui.Enabled = TeddyUI_Premium.Enabled -- Sync visibility
-        if TeddyUI_Premium.Enabled then
-            BtnStatus.Text = "ON"
-            BtnStatus.TextColor3 = Color3.fromRGB(0, 255, 100)
-            Library:TweenInstance(MainBtn, 0.3, "BackgroundColor3", Color3.fromRGB(30, 30, 45))
-        else
-            BtnStatus.Text = "OFF"
-            BtnStatus.TextColor3 = Color3.fromRGB(255, 50, 50)
-            Library:TweenInstance(MainBtn, 0.3, "BackgroundColor3", Color3.fromRGB(20, 20, 30))
-        end
-    end
-
-    MainBtn.MouseButton1Click:Connect(ToggleUI)
-    Minize.MouseButton1Click:Connect(ToggleUI)
+    Minize.MouseButton1Click:Connect(function() TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled end)
 
     -- [ Intro Animation ] --
     local IntroFrame = Instance.new("Frame")
@@ -607,7 +436,7 @@ function Library:NewWindow(ConfigWindow)
     BootText.TextSize = 10
     BootText.TextXAlignment = Enum.TextXAlignment.Left
 
-    local function PlayMasterIntro()
+    local function PlayUltimateIntro()
         local TS = game:GetService("TweenService")
         IntroFrame.Size = UDim2.new(0, 0, 0, 2)
         TS:Create(IntroFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart), {Size = UDim2.new(0, 300, 0, 2)}):Play()
@@ -616,8 +445,8 @@ function Library:NewWindow(ConfigWindow)
         task.wait(0.5)
         
         local stages = {
-            {text = "LOADING MONITOR...", progress = 0.3},
-            {text = "CONFIGURING MASTER PRO...", progress = 0.6},
+            {text = "LOADING ASSETS...", progress = 0.3},
+            {text = "CONFIGURING ULTIMATE UI...", progress = 0.6},
             {text = "READY TO START!", progress = 1.0}
         }
         
@@ -628,7 +457,7 @@ function Library:NewWindow(ConfigWindow)
         end
         
         task.wait(0.3)
-        IntroText.Text = "MASTER PRO GRANTED"
+        IntroText.Text = "ULTIMATE ACCESS GRANTED"
         IntroText.TextColor3 = Color3.fromRGB(0, 255, 100)
         IntroStroke.Color = Color3.fromRGB(0, 255, 100)
         task.wait(0.8)
@@ -638,21 +467,17 @@ function Library:NewWindow(ConfigWindow)
         IntroFrame:Destroy()
         
         Main.Visible = true
-        ActiveFunctionsGui.Enabled = true -- Show monitor after intro
         Main.Size = UDim2.new(0, 0, 0, 0)
         TS:Create(Main, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 1, 0)}):Play()
         
-        BtnStatus.Text = "ON"
-        BtnStatus.TextColor3 = Color3.fromRGB(0, 255, 100)
-        
         Library:Notify({
-            Title = "MASTER PRO LOADED",
-            Content = "Control and monitoring systems are active.",
+            Title = "SYSTEM LOADED",
+            Content = "Welcome to the Ultimate Arcade UI experience.",
             Color = Color3.fromRGB(0, 255, 100)
         })
     end
 
-    task.spawn(PlayMasterIntro)
+    task.spawn(PlayUltimateIntro)
 
     local TabCount = 0
     local Tab = {}
@@ -865,33 +690,16 @@ function Library:NewWindow(ConfigWindow)
                 CheckCorner.Parent = BoxCheck
 
                 local Toggled = cftog.Default
-                local Initial = true
                 local function Update()
                     local targetPos = Toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
                     local targetColor = Toggled and ConfigWindow.AccentColor or Color3.fromRGB(255, 255, 255)
                     Library:TweenInstance(BoxCheck, 0.3, "Position", targetPos, Enum.EasingStyle.Back)
                     Library:TweenInstance(BoxCheck, 0.3, "BackgroundColor3", targetColor, Enum.EasingStyle.Sine)
-                    
-                    -- Monitor Update
-                    ActiveToggles[cftog.Title] = Toggled
-                    Library:UpdateActiveMonitor()
-                    
-                    -- Automatic Notification (Only after initial setup)
-                    if not Initial then
-                        Library:Notify({
-                            Title = cftog.Title,
-                            Content = Toggled and "Status: ENABLED" or "Status: DISABLED",
-                            Duration = 2,
-                            Color = Toggled and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(255, 50, 50)
-                        })
-                    end
-                    
                     pcall(cftog.Callback, Toggled)
                 end
 
-                ToggleBtn.MouseButton1Click:Connect(function() Initial = false Toggled = not Toggled Update() end)
+                ToggleBtn.MouseButton1Click:Connect(function() Toggled = not Toggled Update() end)
                 Update()
-                Initial = false
                 return { Set = function(self, val) Toggled = val Update() end }
             end
 
@@ -1282,6 +1090,30 @@ function Library:NewWindow(ConfigWindow)
 
         return TabFunc
     end
+
+    local ToggleBtn = Instance.new("ScreenGui")
+    local MainBtn = Instance.new("ImageButton")
+    local BtnCorner = Instance.new("UICorner")
+    local BtnStroke = Instance.new("UIStroke")
+    
+    ToggleBtn.Name = "ToggleUI"
+    ToggleBtn.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    
+    MainBtn.Parent = ToggleBtn
+    MainBtn.BackgroundColor3 = ConfigWindow.AccentColor
+    MainBtn.Position = UDim2.new(0, 20, 0, 20)
+    MainBtn.Size = UDim2.new(0, 40, 0, 40)
+    MainBtn.Image = "rbxassetid://101817370702077"
+    
+    BtnCorner.CornerRadius = UDim.new(1, 0)
+    BtnCorner.Parent = MainBtn
+    
+    BtnStroke.Color = Color3.fromRGB(20, 20, 30)
+    BtnStroke.Thickness = 2
+    BtnStroke.Parent = MainBtn
+    
+    self:MakeDraggable(MainBtn, MainBtn)
+    MainBtn.MouseButton1Click:Connect(function() TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled end)
 
     return Tab
 end
