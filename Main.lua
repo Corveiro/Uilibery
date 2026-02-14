@@ -52,6 +52,7 @@ local ActiveFunctionsGui = Instance.new("ScreenGui")
 ActiveFunctionsGui.Name = "ArcadeActiveMonitor"
 ActiveFunctionsGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ActiveFunctionsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ActiveFunctionsGui.Enabled = false -- Hidden by default until UI opens
 
 local ActiveHolder = Instance.new("ScrollingFrame")
 ActiveHolder.Name = "ActiveHolder"
@@ -532,6 +533,7 @@ function Library:NewWindow(ConfigWindow)
 
     local function ToggleUI()
         TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled
+        ActiveFunctionsGui.Enabled = TeddyUI_Premium.Enabled -- Sync visibility
         if TeddyUI_Premium.Enabled then
             BtnStatus.Text = "ON"
             BtnStatus.TextColor3 = Color3.fromRGB(0, 255, 100)
@@ -635,6 +637,7 @@ function Library:NewWindow(ConfigWindow)
         IntroFrame:Destroy()
         
         Main.Visible = true
+        ActiveFunctionsGui.Enabled = true -- Show monitor after intro
         Main.Size = UDim2.new(0, 0, 0, 0)
         TS:Create(Main, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 1, 0)}):Play()
         
