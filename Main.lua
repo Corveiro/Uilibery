@@ -1,4 +1,3 @@
-
 local Library = {}
 
 -- [ Utility Functions ] --
@@ -48,9 +47,8 @@ function Library:MakeDraggable(topbarobject, object)
     end)
 end
 
--- [ Global State for Intelligent Monitor ] --
-local CurrentTabName = ""
-local ActiveTogglesByTab = {} -- { [TabName] = { [ToggleTitle] = state } }
+-- [ Global State for Monitor ] --
+local GlobalActiveToggles = {} -- Reverted to Global Monitoring
 
 -- [ Active Functions Monitor ] --
 local ActiveFunctionsGui = Instance.new("ScreenGui")
@@ -75,10 +73,7 @@ function Library:UpdateActiveMonitor()
         if v:IsA("Frame") then v:Destroy() end
     end
     
-    local currentTabToggles = ActiveTogglesByTab[CurrentTabName]
-    if not currentTabToggles then return end
-    
-    for title, state in pairs(currentTabToggles) do
+    for title, state in pairs(GlobalActiveToggles) do
         if state then
             local StatusFrame = Instance.new("Frame")
             local StatusLabel = Instance.new("TextLabel")
@@ -88,7 +83,7 @@ function Library:UpdateActiveMonitor()
             
             StatusFrame.Name = title
             StatusFrame.Parent = ActiveHolder
-            StatusFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+            StatusFrame.BackgroundColor3 = Color3.fromRGB(15, 5, 5)
             StatusFrame.BackgroundTransparency = 0.4
             StatusFrame.Size = UDim2.new(0, 0, 0, 24)
             StatusFrame.AutomaticSize = Enum.AutomaticSize.X
@@ -96,54 +91,47 @@ function Library:UpdateActiveMonitor()
             StatusCorner.CornerRadius = UDim.new(0, 2)
             StatusCorner.Parent = StatusFrame
             
-            StatusStroke.Color = Color3.fromRGB(0, 255, 150)
+            StatusStroke.Color = Color3.fromRGB(255, 0, 0) -- RED THEME
             StatusStroke.Thickness = 1
             StatusStroke.Transparency = 0.6
             StatusStroke.Parent = StatusFrame
             
-            StatusLabel.Parent = StatusFrame
-            StatusLabel.BackgroundTransparency = 1
-            StatusLabel.Position = UDim2.new(0, 10, 0, 0)
-            StatusLabel.Size = UDim2.new(0, 0, 1, 0)
-            StatusLabel.AutomaticSize = Enum.AutomaticSize.X
-            StatusLabel.Font = Enum.Font.Code
-            StatusLabel.Text = title:upper()
-            StatusLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-            StatusLabel.TextSize = 11
-            
-            StatusOn.Parent = StatusFrame
-            StatusOn.BackgroundTransparency = 1
-            StatusOn.Position = UDim2.new(0, 5, 0, 0) -- Extra space between title and ON
-            StatusOn.Size = UDim2.new(0, 0, 1, 0)
-            StatusOn.AutomaticSize = Enum.AutomaticSize.X
-            StatusOn.Font = Enum.Font.Arcade
-            StatusOn.Text = " ON"
-            StatusOn.TextColor3 = Color3.fromRGB(0, 255, 150)
-            StatusOn.TextSize = 11
-            
-            -- UIListLayout will handle positioning, we just need a small horizontal layout inside the frame
             local InternalLayout = Instance.new("UIListLayout")
             InternalLayout.Parent = StatusFrame
             InternalLayout.FillDirection = Enum.FillDirection.Horizontal
             InternalLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-            InternalLayout.Padding = UDim.new(0, 10) -- Space between Title and ON
-            
-            StatusLabel.Parent = StatusFrame
-            StatusOn.Parent = StatusFrame
+            InternalLayout.Padding = UDim.new(0, 15) -- Improved spacing between Title and ON
             
             local InternalPadding = Instance.new("UIPadding")
             InternalPadding.Parent = StatusFrame
-            InternalPadding.PaddingLeft = UDim.new(0, 10)
-            InternalPadding.PaddingRight = UDim.new(0, 10)
+            InternalPadding.PaddingLeft = UDim.new(0, 12)
+            InternalPadding.PaddingRight = UDim.new(0, 12)
+
+            StatusLabel.Parent = StatusFrame
+            StatusLabel.BackgroundTransparency = 1
+            StatusLabel.Size = UDim2.new(0, 0, 1, 0)
+            StatusLabel.AutomaticSize = Enum.AutomaticSize.X
+            StatusLabel.Font = Enum.Font.Code
+            StatusLabel.Text = title:upper()
+            StatusLabel.TextColor3 = Color3.fromRGB(255, 200, 200)
+            StatusLabel.TextSize = 11
             
-            -- Simple animation for appearing
+            StatusOn.Parent = StatusFrame
+            StatusOn.BackgroundTransparency = 1
+            StatusOn.Size = UDim2.new(0, 0, 1, 0)
+            StatusOn.AutomaticSize = Enum.AutomaticSize.X
+            StatusOn.Font = Enum.Font.Arcade
+            StatusOn.Text = "ON"
+            StatusOn.TextColor3 = Color3.fromRGB(255, 0, 0) -- RED THEME
+            StatusOn.TextSize = 11
+            
             StatusFrame.GroupTransparency = 1
             game:GetService("TweenService"):Create(StatusFrame, TweenInfo.new(0.3), {BackgroundTransparency = 0.4}):Play()
         end
     end
 end
 
--- [ Notification System - Arcade Theme ] --
+-- [ Notification System - Arcade Red Theme ] --
 local NotificationGui = Instance.new("ScreenGui")
 NotificationGui.Name = "ArcadeNotifications"
 NotificationGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -167,7 +155,7 @@ function Library:Notify(ConfigNotif)
         Title = "SYSTEM ALERT",
         Content = "Operation successful.",
         Duration = 5,
-        Color = Color3.fromRGB(0, 255, 255)
+        Color = Color3.fromRGB(255, 0, 0) -- RED THEME
     }, ConfigNotif or {})
 
     local NotifFrame = Instance.new("Frame")
@@ -175,19 +163,19 @@ function Library:Notify(ConfigNotif)
     local NotifTitle = Instance.new("TextLabel")
     local NotifContent = Instance.new("TextLabel")
     local NotifBar = Instance.new("Frame")
-    local NotifPattern = Instance.new("Frame") -- Scanline effect
+    local NotifPattern = Instance.new("Frame")
 
     NotifFrame.Name = "Notification"
     NotifFrame.Parent = NotifHolder
-    NotifFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 15)
+    NotifFrame.BackgroundColor3 = Color3.fromRGB(15, 5, 5)
     NotifFrame.Size = UDim2.new(1, 0, 0, 70)
     NotifFrame.Position = UDim2.new(1.5, 0, 0, 0)
     NotifFrame.BorderSizePixel = 0
 
     NotifPattern.Name = "Pattern"
     NotifPattern.Parent = NotifFrame
-    NotifPattern.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    NotifPattern.BackgroundTransparency = 0.95
+    NotifPattern.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    NotifPattern.BackgroundTransparency = 0.96
     NotifPattern.Size = UDim2.new(1, 0, 1, 0)
     NotifPattern.ZIndex = 2
     
@@ -218,7 +206,7 @@ function Library:Notify(ConfigNotif)
     NotifContent.Size = UDim2.new(1, -24, 0, 30)
     NotifContent.Font = Enum.Font.Code
     NotifContent.Text = "> " .. ConfigNotif.Content
-    NotifContent.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NotifContent.TextColor3 = Color3.fromRGB(255, 230, 230)
     NotifContent.TextSize = 11
     NotifContent.TextXAlignment = Enum.TextXAlignment.Left
     NotifContent.TextWrapped = true
@@ -244,10 +232,11 @@ end
 -- [ Main Window ] --
 function Library:NewWindow(ConfigWindow)
     local ConfigWindow = self:MakeConfig({
-        Title = "ARCADE MASTER PRO V2",
-        Description = "Intelligent Monitoring",
-        AccentColor = Color3.fromRGB(0, 255, 255)
+        Title = "ARCADE MASTER PRO",
+        Description = "Ultimate Edition",
+        AccentColor = Color3.fromRGB(255, 0, 0) -- FORCED RED THEME
     }, ConfigWindow or {})
+    ConfigWindow.AccentColor = Color3.fromRGB(255, 0, 0) -- Force red
 
     local TeddyUI_Premium = Instance.new("ScreenGui")
     local DropShadowHolder = Instance.new("Frame")
@@ -289,7 +278,7 @@ function Library:NewWindow(ConfigWindow)
     local DropdownPanel = Instance.new("Frame")
     DropdownPanel.Name = "DropdownPanel"
     DropdownPanel.Parent = DropdownOverlay
-    DropdownPanel.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+    DropdownPanel.BackgroundColor3 = Color3.fromRGB(15, 5, 5)
     DropdownPanel.Position = UDim2.new(1, 0, 0, 0)
     DropdownPanel.Size = UDim2.new(0.65, 0, 1, 0)
     DropdownPanel.ZIndex = 51
@@ -302,7 +291,7 @@ function Library:NewWindow(ConfigWindow)
     local PanelTop = Instance.new("Frame")
     PanelTop.Name = "PanelTop"
     PanelTop.Parent = DropdownPanel
-    PanelTop.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    PanelTop.BackgroundColor3 = Color3.fromRGB(20, 5, 5)
     PanelTop.Size = UDim2.new(1, 0, 0, 45)
     PanelTop.ZIndex = 52
 
@@ -348,7 +337,7 @@ function Library:NewWindow(ConfigWindow)
 
     Library:UpdateScrolling(PanelScroll, PanelList)
 
-    TeddyUI_Premium.Name = "ArcadeUI_MasterProV2"
+    TeddyUI_Premium.Name = "ArcadeUI_MasterPro"
     TeddyUI_Premium.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     TeddyUI_Premium.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -361,7 +350,7 @@ function Library:NewWindow(ConfigWindow)
 
     Main.Name = "Main"
     Main.Parent = DropShadowHolder
-    Main.BackgroundColor3 = Color3.fromRGB(5, 5, 10)
+    Main.BackgroundColor3 = Color3.fromRGB(10, 2, 2)
     Main.Size = UDim2.new(1, 0, 1, 0)
     Main.ClipsDescendants = true
     Main.Visible = false
@@ -375,7 +364,7 @@ function Library:NewWindow(ConfigWindow)
 
     Top.Name = "Top"
     Top.Parent = Main
-    Top.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    Top.BackgroundColor3 = Color3.fromRGB(20, 5, 5)
     Top.Size = UDim2.new(1, 0, 0, 45)
 
     LogoHub.Name = "LogoHub"
@@ -439,7 +428,7 @@ function Library:NewWindow(ConfigWindow)
 
     TabHolder.Name = "TabHolder"
     TabHolder.Parent = Main
-    TabHolder.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+    TabHolder.BackgroundColor3 = Color3.fromRGB(15, 5, 5)
     TabHolder.Position = UDim2.new(0, 0, 0, 45)
     TabHolder.Size = UDim2.new(1, 0, 0, 35)
     TabHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -483,7 +472,7 @@ function Library:NewWindow(ConfigWindow)
         TeddyUI_Premium:Destroy() 
     end)
 
-    -- [ Dynamic ON/OFF Toggle Button - Refined ] --
+    -- [ Dynamic ON/OFF Toggle Button - RED THEME & SPACING ] --
     local ControlBtnGui = Instance.new("ScreenGui")
     ControlBtnGui.Name = "ArcadeControl"
     ControlBtnGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -496,9 +485,9 @@ function Library:NewWindow(ConfigWindow)
     
     MainBtn.Name = "MainBtn"
     MainBtn.Parent = ControlBtnGui
-    MainBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    MainBtn.BackgroundColor3 = Color3.fromRGB(20, 5, 5)
     MainBtn.Position = UDim2.new(0, 30, 0, 30)
-    MainBtn.Size = UDim2.new(0, 110, 0, 38)
+    MainBtn.Size = UDim2.new(0, 120, 0, 38)
     MainBtn.Text = ""
     
     BtnCorner.CornerRadius = UDim.new(0, 2)
@@ -520,7 +509,7 @@ function Library:NewWindow(ConfigWindow)
 
     BtnStatus.Parent = MainBtn
     BtnStatus.BackgroundTransparency = 1
-    BtnStatus.Position = UDim2.new(0, 75, 0, 0) -- Increased space between Arcade and Status
+    BtnStatus.Position = UDim2.new(0, 85, 0, 0) -- Increased space between Arcade and Status
     BtnStatus.Size = UDim2.new(0, 30, 1, 0)
     BtnStatus.Font = Enum.Font.Arcade
     BtnStatus.Text = "OFF"
@@ -534,19 +523,19 @@ function Library:NewWindow(ConfigWindow)
         TeddyUI_Premium.Enabled = not TeddyUI_Premium.Enabled
         if TeddyUI_Premium.Enabled then
             BtnStatus.Text = "ON"
-            BtnStatus.TextColor3 = Color3.fromRGB(0, 255, 150)
-            Library:TweenInstance(MainBtn, 0.3, "BackgroundColor3", Color3.fromRGB(25, 25, 40))
+            BtnStatus.TextColor3 = Color3.fromRGB(255, 0, 0)
+            Library:TweenInstance(MainBtn, 0.3, "BackgroundColor3", Color3.fromRGB(30, 10, 10))
         else
             BtnStatus.Text = "OFF"
             BtnStatus.TextColor3 = Color3.fromRGB(255, 80, 80)
-            Library:TweenInstance(MainBtn, 0.3, "BackgroundColor3", Color3.fromRGB(15, 15, 25))
+            Library:TweenInstance(MainBtn, 0.3, "BackgroundColor3", Color3.fromRGB(20, 5, 5))
         end
     end
 
     MainBtn.MouseButton1Click:Connect(ToggleUI)
     Minize.MouseButton1Click:Connect(ToggleUI)
 
-    -- [ Intro Animation ] --
+    -- [ Intro Animation - RED ] --
     local IntroFrame = Instance.new("Frame")
     local IntroStroke = Instance.new("UIStroke")
     local IntroText = Instance.new("TextLabel")
@@ -556,7 +545,7 @@ function Library:NewWindow(ConfigWindow)
 
     IntroFrame.Name = "IntroFrame"
     IntroFrame.Parent = DropShadowHolder
-    IntroFrame.BackgroundColor3 = Color3.fromRGB(2, 2, 8)
+    IntroFrame.BackgroundColor3 = Color3.fromRGB(10, 2, 2)
     IntroFrame.Size = UDim2.new(0, 320, 0, 200)
     IntroFrame.AnchorPoint = Vector2.new(0.5, 0.5)
     IntroFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -576,7 +565,7 @@ function Library:NewWindow(ConfigWindow)
     IntroText.TextSize = 20
     
     LoadingBarBG.Parent = IntroFrame
-    LoadingBarBG.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    LoadingBarBG.BackgroundColor3 = Color3.fromRGB(20, 5, 5)
     LoadingBarBG.Position = UDim2.new(0.1, 0, 0.6, 0)
     LoadingBarBG.Size = UDim2.new(0.8, 0, 0, 12)
     LoadingBarBG.BorderSizePixel = 0
@@ -591,7 +580,7 @@ function Library:NewWindow(ConfigWindow)
     BootText.Position = UDim2.new(0.1, 0, 0.75, 0)
     BootText.Size = UDim2.new(0.8, 0, 0, 20)
     BootText.Font = Enum.Font.Code
-    BootText.Text = "MASTER_PRO_V2: INITIALIZED"
+    BootText.Text = "ARCADE_PRO: READY"
     BootText.TextColor3 = ConfigWindow.AccentColor
     BootText.TextSize = 11
     BootText.TextXAlignment = Enum.TextXAlignment.Left
@@ -605,8 +594,8 @@ function Library:NewWindow(ConfigWindow)
         task.wait(0.6)
         
         local stages = {
-            {text = "SYNCING INTELLIGENT MONITOR...", progress = 0.4},
-            {text = "LOADING ARCADE ASSETS...", progress = 0.8},
+            {text = "SYNCING GLOBAL MONITOR...", progress = 0.4},
+            {text = "LOADING RED ASSETS...", progress = 0.8},
             {text = "SYSTEM READY!", progress = 1.0}
         }
         
@@ -618,8 +607,8 @@ function Library:NewWindow(ConfigWindow)
         
         task.wait(0.3)
         IntroText.Text = "ACCESS GRANTED"
-        IntroText.TextColor3 = Color3.fromRGB(0, 255, 150)
-        IntroStroke.Color = Color3.fromRGB(0, 255, 150)
+        IntroText.TextColor3 = Color3.fromRGB(255, 0, 0)
+        IntroStroke.Color = Color3.fromRGB(255, 0, 0)
         task.wait(0.8)
         
         TS:Create(IntroFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0)}):Play()
@@ -631,12 +620,12 @@ function Library:NewWindow(ConfigWindow)
         TS:Create(Main, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Size = UDim2.new(1, 0, 1, 0)}):Play()
         
         BtnStatus.Text = "ON"
-        BtnStatus.TextColor3 = Color3.fromRGB(0, 255, 150)
+        BtnStatus.TextColor3 = Color3.fromRGB(255, 0, 0)
         
         Library:Notify({
-            Title = "MASTER PRO V2",
-            Content = "Intelligent Tab Monitor Active.",
-            Color = Color3.fromRGB(0, 255, 150)
+            Title = "MASTER PRO RED",
+            Content = "Global Monitor System Active.",
+            Color = Color3.fromRGB(255, 0, 0)
         })
     end
 
@@ -687,7 +676,7 @@ function Library:NewWindow(ConfigWindow)
         TabBtnTitle.Size = UDim2.new(1, 0, 1, 0)
         TabBtnTitle.Font = Enum.Font.Arcade
         TabBtnTitle.Text = t:upper()
-        TabBtnTitle.TextColor3 = Color3.fromRGB(120, 120, 140)
+        TabBtnTitle.TextColor3 = Color3.fromRGB(140, 120, 120)
         TabBtnTitle.TextSize = 13
         
         TabIndicator.Name = "Indicator"
@@ -705,23 +694,15 @@ function Library:NewWindow(ConfigWindow)
         UpdateTabBtnSize()
 
         local function SelectTab()
-            CurrentTabName = t
-            if not ActiveTogglesByTab[CurrentTabName] then
-                ActiveTogglesByTab[CurrentTabName] = {}
-            end
-            
             for _, v in pairs(TabHolder:GetChildren()) do
                 if v:IsA("TextButton") then
-                    game:GetService("TweenService"):Create(v.TextLabel, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(120, 120, 140)}):Play()
+                    game:GetService("TweenService"):Create(v.TextLabel, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(140, 120, 120)}):Play()
                     game:GetService("TweenService"):Create(v.Indicator, TweenInfo.new(0.3), {Transparency = 1}):Play()
                 end
             end
             game:GetService("TweenService"):Create(TabBtnTitle, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
             game:GetService("TweenService"):Create(TabIndicator, TweenInfo.new(0.3), {Transparency = 0}):Play()
             PageLayout:JumpTo(TabPage)
-            
-            -- Intelligent Monitor Update on Tab Change
-            Library:UpdateActiveMonitor()
         end
 
         TabBtn.MouseButton1Click:Connect(SelectTab)
@@ -780,7 +761,7 @@ function Library:NewWindow(ConfigWindow)
                 local ButtonStroke = Instance.new("UIStroke")
 
                 ButtonFrame.Parent = CurrentGroup
-                ButtonFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+                ButtonFrame.BackgroundColor3 = Color3.fromRGB(30, 10, 10)
                 ButtonFrame.Size = UDim2.new(1, 0, 0, 34)
                 ButtonFrame.BorderSizePixel = 0
                 
@@ -789,20 +770,20 @@ function Library:NewWindow(ConfigWindow)
                 ButtonBtn.Size = UDim2.new(1, 0, 1, 0)
                 ButtonBtn.Font = Enum.Font.Code
                 ButtonBtn.Text = cfbut.Title
-                ButtonBtn.TextColor3 = Color3.fromRGB(230, 230, 230)
+                ButtonBtn.TextColor3 = Color3.fromRGB(255, 230, 230)
                 ButtonBtn.TextSize = 12
                 
-                ButtonStroke.Color = Color3.fromRGB(45, 45, 65)
+                ButtonStroke.Color = Color3.fromRGB(60, 30, 30)
                 ButtonStroke.Thickness = 1
                 ButtonStroke.Parent = ButtonFrame
 
                 ButtonBtn.MouseEnter:Connect(function() 
-                    Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(30, 30, 50), Enum.EasingStyle.Sine)
+                    Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(45, 15, 15), Enum.EasingStyle.Sine)
                     Library:TweenInstance(ButtonStroke, 0.2, "Color", ConfigWindow.AccentColor, Enum.EasingStyle.Sine)
                 end)
                 ButtonBtn.MouseLeave:Connect(function() 
-                    Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(20, 20, 35), Enum.EasingStyle.Sine)
-                    Library:TweenInstance(ButtonStroke, 0.2, "Color", Color3.fromRGB(45, 45, 65), Enum.EasingStyle.Sine)
+                    Library:TweenInstance(ButtonFrame, 0.2, "BackgroundColor3", Color3.fromRGB(30, 10, 10), Enum.EasingStyle.Sine)
+                    Library:TweenInstance(ButtonStroke, 0.2, "Color", Color3.fromRGB(60, 30, 30), Enum.EasingStyle.Sine)
                 end)
                 ButtonBtn.MouseButton1Click:Connect(function() pcall(cfbut.Callback) end)
             end
@@ -817,7 +798,7 @@ function Library:NewWindow(ConfigWindow)
                 local BoxStroke = Instance.new("UIStroke")
 
                 ToggleFrame.Parent = CurrentGroup
-                ToggleFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+                ToggleFrame.BackgroundColor3 = Color3.fromRGB(30, 10, 10)
                 ToggleFrame.Size = UDim2.new(1, 0, 0, 34)
                 ToggleFrame.BorderSizePixel = 0
                 
@@ -832,17 +813,17 @@ function Library:NewWindow(ConfigWindow)
                 ToggleTitle.Size = UDim2.new(1, -60, 1, 0)
                 ToggleTitle.Font = Enum.Font.Code
                 ToggleTitle.Text = cftog.Title
-                ToggleTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
+                ToggleTitle.TextColor3 = Color3.fromRGB(255, 230, 230)
                 ToggleTitle.TextSize = 12
                 ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
 
                 ToggleBox.Parent = ToggleFrame
-                ToggleBox.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+                ToggleBox.BackgroundColor3 = Color3.fromRGB(15, 5, 5)
                 ToggleBox.Position = UDim2.new(1, -45, 0.5, -10)
                 ToggleBox.Size = UDim2.new(0, 32, 0, 20)
                 ToggleBox.BorderSizePixel = 0
                 
-                BoxStroke.Color = Color3.fromRGB(50, 50, 70)
+                BoxStroke.Color = Color3.fromRGB(70, 30, 30)
                 BoxStroke.Thickness = 1
                 BoxStroke.Parent = ToggleBox
                 
@@ -858,15 +839,11 @@ function Library:NewWindow(ConfigWindow)
                     local targetColor = Toggled and ConfigWindow.AccentColor or Color3.fromRGB(255, 255, 255)
                     Library:TweenInstance(BoxCheck, 0.3, "Position", targetPos, Enum.EasingStyle.Back)
                     Library:TweenInstance(BoxCheck, 0.3, "BackgroundColor3", targetColor, Enum.EasingStyle.Sine)
-                    Library:TweenInstance(BoxStroke, 0.3, "Color", Toggled and ConfigWindow.AccentColor or Color3.fromRGB(50, 50, 70))
+                    Library:TweenInstance(BoxStroke, 0.3, "Color", Toggled and ConfigWindow.AccentColor or Color3.fromRGB(70, 30, 30))
                     
-                    -- Intelligent Monitor Update (Tab Specific)
-                    if not ActiveTogglesByTab[t] then ActiveTogglesByTab[t] = {} end
-                    ActiveTogglesByTab[t][cftog.Title] = Toggled
-                    
-                    if CurrentTabName == t then
-                        Library:UpdateActiveMonitor()
-                    end
+                    -- GLOBAL Monitor Update
+                    GlobalActiveToggles[cftog.Title] = Toggled
+                    Library:UpdateActiveMonitor()
                     
                     pcall(cftog.Callback, Toggled)
                 end
@@ -887,7 +864,7 @@ function Library:NewWindow(ConfigWindow)
                 local SliderStroke = Instance.new("UIStroke")
 
                 SliderFrame.Parent = CurrentGroup
-                SliderFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+                SliderFrame.BackgroundColor3 = Color3.fromRGB(30, 10, 10)
                 SliderFrame.Size = UDim2.new(1, 0, 0, 48)
                 SliderFrame.BorderSizePixel = 0
                 
@@ -897,7 +874,7 @@ function Library:NewWindow(ConfigWindow)
                 SliderTitle.Size = UDim2.new(1, -24, 0, 16)
                 SliderTitle.Font = Enum.Font.Code
                 SliderTitle.Text = cfslid.Title
-                SliderTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
+                SliderTitle.TextColor3 = Color3.fromRGB(255, 230, 230)
                 SliderTitle.TextSize = 12
                 SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -912,12 +889,12 @@ function Library:NewWindow(ConfigWindow)
                 SliderValue.TextXAlignment = Enum.TextXAlignment.Right
 
                 SliderBar.Parent = SliderFrame
-                SliderBar.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+                SliderBar.BackgroundColor3 = Color3.fromRGB(15, 5, 5)
                 SliderBar.Position = UDim2.new(0, 12, 0, 28)
                 SliderBar.Size = UDim2.new(1, -24, 0, 10)
                 SliderBar.BorderSizePixel = 0
                 
-                SliderStroke.Color = Color3.fromRGB(50, 50, 70)
+                SliderStroke.Color = Color3.fromRGB(70, 30, 30)
                 SliderStroke.Thickness = 1
                 SliderStroke.Parent = SliderBar
                 
@@ -965,7 +942,7 @@ function Library:NewWindow(ConfigWindow)
                 local DropStroke = Instance.new("UIStroke")
 
                 DropFrame.Parent = CurrentGroup
-                DropFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+                DropFrame.BackgroundColor3 = Color3.fromRGB(30, 10, 10)
                 DropFrame.Size = UDim2.new(1, 0, 0, 34)
                 DropFrame.BorderSizePixel = 0
                 
@@ -980,7 +957,7 @@ function Library:NewWindow(ConfigWindow)
                 DropTitle.Size = UDim2.new(1, -45, 1, 0)
                 DropTitle.Font = Enum.Font.Code
                 DropTitle.Text = cfdrop.Title .. " : " .. (type(cfdrop.Default) == "table" and table.concat(cfdrop.Default, ", ") or tostring(cfdrop.Default))
-                DropTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
+                DropTitle.TextColor3 = Color3.fromRGB(255, 230, 230)
                 DropTitle.TextSize = 12
                 DropTitle.TextXAlignment = Enum.TextXAlignment.Left
                 
@@ -993,7 +970,7 @@ function Library:NewWindow(ConfigWindow)
                 DropIcon.TextColor3 = ConfigWindow.AccentColor
                 DropIcon.TextSize = 14
 
-                DropStroke.Color = Color3.fromRGB(45, 45, 65)
+                DropStroke.Color = Color3.fromRGB(60, 30, 30)
                 DropStroke.Thickness = 1
                 DropStroke.Parent = DropFrame
 
@@ -1018,21 +995,21 @@ function Library:NewWindow(ConfigWindow)
                         local OptBtn = Instance.new("TextButton")
                         local OptStroke = Instance.new("UIStroke")
                         OptBtn.Parent = PanelScroll
-                        OptBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+                        OptBtn.BackgroundColor3 = Color3.fromRGB(30, 10, 10)
                         OptBtn.Size = UDim2.new(1, 0, 0, 38)
                         OptBtn.Font = Enum.Font.Code
                         OptBtn.Text = opt
-                        OptBtn.TextColor3 = Color3.fromRGB(230, 230, 230)
+                        OptBtn.TextColor3 = Color3.fromRGB(255, 230, 230)
                         OptBtn.TextSize = 13
                         OptBtn.ZIndex = 53
                         OptBtn.BorderSizePixel = 0
                         
-                        OptStroke.Color = Color3.fromRGB(40, 40, 60)
+                        OptStroke.Color = Color3.fromRGB(60, 30, 30)
                         OptStroke.Thickness = 1
                         OptStroke.Parent = OptBtn
                         
-                        OptBtn.MouseEnter:Connect(function() Library:TweenInstance(OptBtn, 0.2, "BackgroundColor3", Color3.fromRGB(30, 30, 45), Enum.EasingStyle.Sine) end)
-                        OptBtn.MouseLeave:Connect(function() Library:TweenInstance(OptBtn, 0.2, "BackgroundColor3", Color3.fromRGB(20, 20, 30), Enum.EasingStyle.Sine) end)
+                        OptBtn.MouseEnter:Connect(function() Library:TweenInstance(OptBtn, 0.2, "BackgroundColor3", Color3.fromRGB(45, 15, 15), Enum.EasingStyle.Sine) end)
+                        OptBtn.MouseLeave:Connect(function() Library:TweenInstance(OptBtn, 0.2, "BackgroundColor3", Color3.fromRGB(30, 10, 10), Enum.EasingStyle.Sine) end)
                         
                         OptBtn.MouseButton1Click:Connect(function()
                             DropTitle.Text = cfdrop.Title .. " : " .. opt
@@ -1064,7 +1041,7 @@ function Library:NewWindow(ConfigWindow)
                 local InputStroke = Instance.new("UIStroke")
 
                 BoxFrame.Parent = CurrentGroup
-                BoxFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+                BoxFrame.BackgroundColor3 = Color3.fromRGB(30, 10, 10)
                 BoxFrame.Size = UDim2.new(1, 0, 0, 34)
                 BoxFrame.BorderSizePixel = 0
                 
@@ -1074,12 +1051,12 @@ function Library:NewWindow(ConfigWindow)
                 BoxTitle.Size = UDim2.new(0, 120, 1, 0)
                 BoxTitle.Font = Enum.Font.Code
                 BoxTitle.Text = cfbox.Title
-                BoxTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
+                BoxTitle.TextColor3 = Color3.fromRGB(255, 230, 230)
                 BoxTitle.TextSize = 12
                 BoxTitle.TextXAlignment = Enum.TextXAlignment.Left
 
                 BoxInput.Parent = BoxFrame
-                BoxInput.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+                BoxInput.BackgroundColor3 = Color3.fromRGB(15, 5, 5)
                 BoxInput.Position = UDim2.new(1, -140, 0.5, -11)
                 BoxInput.Size = UDim2.new(0, 130, 0, 22)
                 BoxInput.Font = Enum.Font.Code
@@ -1088,11 +1065,11 @@ function Library:NewWindow(ConfigWindow)
                 BoxInput.TextSize = 12
                 BoxInput.BorderSizePixel = 0
                 
-                InputStroke.Color = Color3.fromRGB(60, 60, 80)
+                InputStroke.Color = Color3.fromRGB(80, 40, 40)
                 InputStroke.Thickness = 1
                 InputStroke.Parent = BoxInput
 
-                BoxStroke.Color = Color3.fromRGB(45, 45, 65)
+                BoxStroke.Color = Color3.fromRGB(60, 30, 30)
                 BoxStroke.Thickness = 1
                 BoxStroke.Parent = BoxFrame
 
@@ -1108,7 +1085,7 @@ function Library:NewWindow(ConfigWindow)
                 Label.Size = UDim2.new(1, 0, 0, 22)
                 Label.Font = Enum.Font.Code
                 Label.Text = ">> " .. text
-                Label.TextColor3 = Color3.fromRGB(160, 160, 180)
+                Label.TextColor3 = Color3.fromRGB(200, 150, 150)
                 Label.TextSize = 12
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 return { Set = function(self, val) Label.Text = ">> " .. val end }
@@ -1123,11 +1100,11 @@ function Library:NewWindow(ConfigWindow)
                 local ParaStroke = Instance.new("UIStroke")
                 
                 ParaFrame.Parent = CurrentGroup
-                ParaFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 30)
+                ParaFrame.BackgroundColor3 = Color3.fromRGB(25, 5, 5)
                 ParaFrame.Size = UDim2.new(1, 0, 0, 50)
                 ParaFrame.BorderSizePixel = 0
                 
-                ParaStroke.Color = Color3.fromRGB(40, 40, 60)
+                ParaStroke.Color = Color3.fromRGB(60, 20, 20)
                 ParaStroke.Thickness = 1
                 ParaStroke.Parent = ParaFrame
                 
@@ -1147,7 +1124,7 @@ function Library:NewWindow(ConfigWindow)
                 ParaContent.Size = UDim2.new(1, -24, 0, 18)
                 ParaContent.Font = Enum.Font.Code
                 ParaContent.Text = contentText
-                ParaContent.TextColor3 = Color3.fromRGB(200, 200, 220)
+                ParaContent.TextColor3 = Color3.fromRGB(255, 220, 220)
                 ParaContent.TextSize = 11
                 ParaContent.TextXAlignment = Enum.TextXAlignment.Left
                 ParaContent.TextWrapped = true
@@ -1171,11 +1148,11 @@ function Library:NewWindow(ConfigWindow)
                 local CardStroke = Instance.new("UIStroke")
                 
                 DiscordCard.Parent = CurrentGroup
-                DiscordCard.BackgroundColor3 = Color3.fromRGB(25, 25, 45)
+                DiscordCard.BackgroundColor3 = Color3.fromRGB(35, 10, 10)
                 DiscordCard.Size = UDim2.new(1, 0, 0, 65)
                 DiscordCard.BorderSizePixel = 0
                 
-                CardStroke.Color = Color3.fromRGB(50, 50, 80)
+                CardStroke.Color = Color3.fromRGB(70, 30, 30)
                 CardStroke.Thickness = 1
                 CardStroke.Parent = DiscordCard
                 
@@ -1201,7 +1178,7 @@ function Library:NewWindow(ConfigWindow)
                 SubTitle.Size = UDim2.new(1, -150, 0, 14)
                 SubTitle.Font = Enum.Font.Code
                 SubTitle.Text = "Join our community"
-                SubTitle.TextColor3 = Color3.fromRGB(160, 160, 180)
+                SubTitle.TextColor3 = Color3.fromRGB(200, 150, 150)
                 SubTitle.TextSize = 11
                 SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -1241,17 +1218,17 @@ function Library:NewWindow(ConfigWindow)
                 SeperatorLabel.AutomaticSize = Enum.AutomaticSize.X
                 SeperatorLabel.Font = Enum.Font.Code
                 SeperatorLabel.Text = ":: " .. text:upper() .. " ::"
-                SeperatorLabel.TextColor3 = Color3.fromRGB(100, 100, 120)
+                SeperatorLabel.TextColor3 = Color3.fromRGB(120, 80, 80)
                 SeperatorLabel.TextSize = 11
 
                 LineLeft.Parent = SeperatorFrame
-                LineLeft.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+                LineLeft.BackgroundColor3 = Color3.fromRGB(80, 40, 40)
                 LineLeft.BorderSizePixel = 0
                 LineLeft.Position = UDim2.new(0, 0, 0.5, 0)
                 LineLeft.Size = UDim2.new(0.5, -70, 0, 1)
 
                 LineRight.Parent = SeperatorFrame
-                LineRight.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+                LineRight.BackgroundColor3 = Color3.fromRGB(80, 40, 40)
                 LineRight.BorderSizePixel = 0
                 LineRight.Position = UDim2.new(1, 0, 0.5, 0)
                 LineRight.AnchorPoint = Vector2.new(1, 0)
