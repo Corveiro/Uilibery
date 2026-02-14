@@ -53,17 +53,24 @@ ActiveFunctionsGui.Name = "ArcadeActiveMonitor"
 ActiveFunctionsGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ActiveFunctionsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local ActiveHolder = Instance.new("Frame")
+local ActiveHolder = Instance.new("ScrollingFrame")
 ActiveHolder.Name = "ActiveHolder"
 ActiveHolder.Parent = ActiveFunctionsGui
 ActiveHolder.BackgroundTransparency = 1
 ActiveHolder.Position = UDim2.new(0, 15, 0.4, 0)
-ActiveHolder.Size = UDim2.new(0, 200, 0.5, 0)
+ActiveHolder.Size = UDim2.new(0, 250, 0.5, 0)
+ActiveHolder.ScrollBarThickness = 2
+ActiveHolder.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 100)
+ActiveHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
 
 local ActiveList = Instance.new("UIListLayout")
 ActiveList.Parent = ActiveHolder
-ActiveList.Padding = UDim.new(0, 5)
+ActiveList.Padding = UDim.new(0, 6)
 ActiveList.SortOrder = Enum.SortOrder.LayoutOrder
+
+ActiveList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    ActiveHolder.CanvasSize = UDim2.new(0, 0, 0, ActiveList.AbsoluteContentSize.Y)
+end)
 
 local ActiveToggles = {}
 
@@ -83,26 +90,26 @@ function Library:UpdateActiveMonitor()
             StatusFrame.Name = title
             StatusFrame.Parent = ActiveHolder
             StatusFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-            StatusFrame.BackgroundTransparency = 0.3
-            StatusFrame.Size = UDim2.new(0, 0, 0, 22)
+            StatusFrame.BackgroundTransparency = 0.4
+            StatusFrame.Size = UDim2.new(0, 0, 0, 24)
             StatusFrame.AutomaticSize = Enum.AutomaticSize.X
             
-            StatusCorner.CornerRadius = UDim.new(0, 4)
+            StatusCorner.CornerRadius = UDim.new(0, 2)
             StatusCorner.Parent = StatusFrame
             
             StatusStroke.Color = Color3.fromRGB(0, 255, 100)
             StatusStroke.Thickness = 1
-            StatusStroke.Transparency = 0.5
+            StatusStroke.Transparency = 0.6
             StatusStroke.Parent = StatusFrame
             
             StatusLabel.Parent = StatusFrame
             StatusLabel.BackgroundTransparency = 1
-            StatusLabel.Position = UDim2.new(0, 8, 0, 0)
+            StatusLabel.Position = UDim2.new(0, 10, 0, 0)
             StatusLabel.Size = UDim2.new(0, 0, 1, 0)
             StatusLabel.AutomaticSize = Enum.AutomaticSize.X
             StatusLabel.Font = Enum.Font.Code
-            StatusLabel.Text = title .. " : "
-            StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            StatusLabel.Text = title:upper() .. "    " -- Added extra space here
+            StatusLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
             StatusLabel.TextSize = 11
             
             StatusOn.Parent = StatusFrame
@@ -115,8 +122,22 @@ function Library:UpdateActiveMonitor()
             StatusOn.TextColor3 = Color3.fromRGB(0, 255, 100)
             StatusOn.TextSize = 11
             
+            local InternalLayout = Instance.new("UIListLayout")
+            InternalLayout.Parent = StatusFrame
+            InternalLayout.FillDirection = Enum.FillDirection.Horizontal
+            InternalLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+            InternalLayout.Padding = UDim.new(0, 15) -- Extra space between title and ON
+
+            local InternalPadding = Instance.new("UIPadding")
+            InternalPadding.Parent = StatusFrame
+            InternalPadding.PaddingLeft = UDim.new(0, 10)
+            InternalPadding.PaddingRight = UDim.new(0, 10)
+
+            StatusLabel.Parent = StatusFrame
+            StatusOn.Parent = StatusFrame
+
             -- Simple animation for appearing
-            game:GetService("TweenService"):Create(StatusFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {BackgroundTransparency = 0.3}):Play()
+            game:GetService("TweenService"):Create(StatusFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {BackgroundTransparency = 0.4}):Play()
         end
     end
 end
@@ -840,6 +861,7 @@ function Library:NewWindow(ConfigWindow)
                 CheckCorner.Parent = BoxCheck
 
                 local Toggled = cftog.Default
+                local Initial = true
                 local function Update()
                     local targetPos = Toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
                     local targetColor = Toggled and ConfigWindow.AccentColor or Color3.fromRGB(255, 255, 255)
@@ -850,11 +872,22 @@ function Library:NewWindow(ConfigWindow)
                     ActiveToggles[cftog.Title] = Toggled
                     Library:UpdateActiveMonitor()
                     
+                    -- Automatic Notification (Only after initial setup)
+                    if not Initial then
+                        Library:Notify({
+                            Title = cftog.Title,
+                            Content = Toggled and "Status: ENABLED" or "Status: DISABLED",
+                            Duration = 2,
+                            Color = Toggled and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(255, 50, 50)
+                        })
+                    end
+                    
                     pcall(cftog.Callback, Toggled)
                 end
 
-                ToggleBtn.MouseButton1Click:Connect(function() Toggled = not Toggled Update() end)
+                ToggleBtn.MouseButton1Click:Connect(function() Initial = false Toggled = not Toggled Update() end)
                 Update()
+                Initial = false
                 return { Set = function(self, val) Toggled = val Update() end }
             end
 
