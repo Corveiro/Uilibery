@@ -848,10 +848,15 @@ function Library.CreateLib(title, themeColor)
                 tb.Focused:Connect(function() tween(inBg, {BackgroundColor3 = C.ELEM_H}, 0.1) end)
                 tb.FocusLost:Connect(function(enter)
                     tween(inBg, {BackgroundColor3 = C.INP}, 0.1)
-                    if enter then pcall(callback, tb.Text); tb.Text = "" end
+                    if enter then pcall(callback, tb.Text) end
+                    -- NÃO limpa o texto ao perder foco — permite edição persistente
                 end)
 
-                return {}
+                local TX = {}
+                function TX:SetText(str) pcall(function() tb.Text = tostring(str or "") end) end
+                function TX:GetText() return tb.Text end
+                function TX:Clear() tb.Text = "" end
+                return TX
             end
 
             --------------------------------------------------------
