@@ -411,7 +411,8 @@ local function playIntro(onDone)
 
         pulseConn:Disconnect()
         sg:Destroy()
-        pcall(onDone)
+        -- Chama sempre, sem suprimir erro
+        task.spawn(onDone)
     end)
 end
 
@@ -447,7 +448,10 @@ function Library.CreateLib(title, themeColor)
     sg.Name="__OLib"; sg.ResetOnSpawn=false
     sg.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
     sg.DisplayOrder=9999; sg.Enabled=false
-    pcall(function() sg.Parent=game.CoreGui end)
+    local _sgOk = pcall(function() sg.Parent=game.CoreGui end)
+    if not _sgOk or sg.Parent ~= game.CoreGui then
+        sg.Parent = PL.LocalPlayer:WaitForChild("PlayerGui")
+    end
     _GUI = sg
 
     -- ────────────────────────────────────────────────────────────────
@@ -740,7 +744,10 @@ function Library.CreateLib(title, themeColor)
     notifSg.Name="__OLibNotif"; notifSg.ResetOnSpawn=false
     notifSg.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
     notifSg.DisplayOrder=99990
-    pcall(function() notifSg.Parent=game.CoreGui end)
+    local _nOk = pcall(function() notifSg.Parent=game.CoreGui end)
+    if not _nOk or notifSg.Parent ~= game.CoreGui then
+        notifSg.Parent = PL.LocalPlayer:WaitForChild("PlayerGui")
+    end
 
     NotifHolder = mk("Frame",{
         Size=UDim2.new(0,200,1,0),
@@ -870,11 +877,9 @@ function Library.CreateLib(title, themeColor)
             }, panel)
 
             -- Ponto + linha + texto
-            mk("Frame",{Size=UDim2.new(0,5,0,5),Position=UDim2.new(0,0,.5,-2.5),
+            local dot = mk("Frame",{Size=UDim2.new(0,5,0,5),Position=UDim2.new(0,0,.5,-2.5),
                 BackgroundColor3=C.SCHEME,BorderSizePixel=0,ZIndex=6}, sh)
-                :Parent.Parent -- just corner it
-            local dot = sh:FindFirstChildOfClass("Frame")
-            if dot then corner(dot,3) end
+            corner(dot, 3)
 
             local shL = lbl(sh,sc,11,C.SCHEME,Enum.TextXAlignment.Left,Enum.Font.GothamBold,6)
             shL.Size=UDim2.new(1,-8,1,0); shL.Position=UDim2.new(0,10,0,0)
@@ -1431,6 +1436,15 @@ function Library.CreateLib(title, themeColor)
         win.BackgroundTransparency=1
         tw(win,{Position=UDim2.new(.5,0,.5,0), BackgroundTransparency=0}, .32,
             Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    end)
+
+    -- Fallback: se a intro travar, mostra a GUI em 6s de qualquer forma
+    task.delay(6, function()
+        if sg and sg.Parent and not sg.Enabled then
+            sg.Enabled = true
+            win.BackgroundTransparency = 0
+            win.Position = UDim2.new(.5,0,.5,0)
+        end
     end)
 
     return Window
