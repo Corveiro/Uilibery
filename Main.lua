@@ -26,12 +26,7 @@ end
 local function corner(p, r)
     local c = Instance.new("UICorner")
     c.CornerRadius = UDim.new(0, r or 6)
-    c.
-	CanvasSize = UDim2.new(0, 0, 0, 0)
-	ScrollBarThickness = 4
-	ScrollingDirection = Enum.ScrollingDirection.X
-	AutomaticCanvasSize = Enum.AutomaticSize.X
-Parent = p
+    c.Parent = p
     return c
 end
 
@@ -177,7 +172,7 @@ local function playIntro(title, onDone)
     if not sg.Parent then sg.Parent = pGui end
 
     -- Fundo preto total
-    local bg = Instance.new("ScrollingFrame")
+    local bg = Instance.new("Frame")
     bg.Size             = UDim2.new(1, 0, 1, 0)
     bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     bg.BorderSizePixel  = 0
@@ -208,7 +203,7 @@ local function playIntro(title, onDone)
     scanLine.Size             = UDim2.new(1, 0, 0, 2)
     scanLine.Position         = UDim2.new(0, 0, 0, 0)
     scanLine.BackgroundColor3 = C.SCHEME
-    scanLine.BackgroundTransparency = 1.3
+    scanLine.BackgroundTransparency = 0.3
     scanLine.BorderSizePixel  = 0
     scanLine.ZIndex           = 10
     scanLine.Parent           = panel
@@ -501,7 +496,7 @@ function Library.CreateLib(title, themeColor)
     hdrIcon.Size                 = UDim2.new(0, 44, 0, 44)
     hdrIcon.Position             = UDim2.new(0, 14, 0.5, -22)
     hdrIcon.BackgroundColor3     = Color3.fromRGB(255, 255, 255)
-    hdrIcon.BackgroundTransparency = 1.9
+    hdrIcon.BackgroundTransparency = 0.9
     hdrIcon.Text                 = "⚔️"
     hdrIcon.TextScaled           = true
     hdrIcon.Font                 = Enum.Font.GothamBold
@@ -589,14 +584,32 @@ function Library.CreateLib(title, themeColor)
     sideCornerFix.ZIndex           = 3
     sideCornerFix.Parent           = sidebar
 
-    -- Lista das tabs
+    -- ScrollingFrame das tabs (scroll vertical premium)
+    local sideScroll = Instance.new("ScrollingFrame")
+    sideScroll.Name                  = "SideScroll"
+    sideScroll.Size                  = UDim2.new(1, 0, 1, -10)
+    sideScroll.Position              = UDim2.new(0, 0, 0, 10)
+    sideScroll.BackgroundTransparency = 1
+    sideScroll.BorderSizePixel       = 0
+    sideScroll.ScrollBarThickness    = 2
+    sideScroll.ScrollBarImageColor3  = C.SCROLL
+    sideScroll.ScrollBarImageTransparency = 0.35
+    sideScroll.CanvasSize            = UDim2.new(0, 0, 0, 0)
+    sideScroll.AutomaticCanvasSize   = Enum.AutomaticSize.Y
+    sideScroll.ScrollingDirection    = Enum.ScrollingDirection.Y
+    sideScroll.ClipsDescendants      = true
+    sideScroll.ZIndex                = 4
+    sideScroll.ElasticBehavior       = Enum.ElasticBehavior.WhenScrollable
+    sideScroll.Parent                = sidebar
+
+    -- Lista das tabs (dentro do scroll)
     local sideList = Instance.new("Frame")
-    sideList.Size             = UDim2.new(1, 0, 1, -10)
-    sideList.Position         = UDim2.new(0, 0, 0, 10)
+    sideList.Size             = UDim2.new(1, 0, 0, 0)
+    sideList.AutomaticSize    = Enum.AutomaticSize.Y
     sideList.BackgroundTransparency = 1
     sideList.BorderSizePixel  = 0
     sideList.ZIndex           = 4
-    sideList.Parent           = sidebar
+    sideList.Parent           = sideScroll
     list(sideList, 4)
     pad(sideList, 8, 8, 10, 10)
 
@@ -655,7 +668,7 @@ function Library.CreateLib(title, themeColor)
     resizeHandle.Size             = UDim2.new(1, -20, 0, 8)
     resizeHandle.Position         = UDim2.new(0, 10, 1, -4)
     resizeHandle.BackgroundColor3 = Color3.fromRGB(80, 80, 100)
-    resizeHandle.BackgroundTransparency = 1.6
+    resizeHandle.BackgroundTransparency = 0.6
     resizeHandle.BorderSizePixel  = 0
     resizeHandle.AutoButtonColor  = false
     resizeHandle.Text             = ""
@@ -678,7 +691,7 @@ function Library.CreateLib(title, themeColor)
         local d = Instance.new("Frame")
         d.Size             = UDim2.new(0, 5, 0, 3)
         d.BackgroundColor3 = Color3.fromRGB(160, 160, 180)
-        d.BackgroundTransparency = 1.3
+        d.BackgroundTransparency = 0.3
         d.BorderSizePixel  = 0
         d.ZIndex           = 22
         d.Parent           = dotContainer
@@ -690,10 +703,10 @@ function Library.CreateLib(title, themeColor)
     local resizeStart, resizeStartH = nil, nil
 
     resizeHandle.MouseEnter:Connect(function()
-        tween(resizeHandle, {BackgroundTransparency = 1.3}, 0.1)
+        tween(resizeHandle, {BackgroundTransparency = 0.3}, 0.1)
     end)
     resizeHandle.MouseLeave:Connect(function()
-        if not resizing then tween(resizeHandle, {BackgroundTransparency = 1.6}, 0.1) end
+        if not resizing then tween(resizeHandle, {BackgroundTransparency = 0.6}, 0.1) end
     end)
 
     resizeHandle.InputBegan:Connect(function(input)
@@ -705,7 +718,7 @@ function Library.CreateLib(title, themeColor)
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     resizing = false
-                    tween(resizeHandle, {BackgroundTransparency = 1.6}, 0.1)
+                    tween(resizeHandle, {BackgroundTransparency = 0.6}, 0.1)
                 end
             end)
         end
@@ -874,7 +887,7 @@ function Library.CreateLib(title, themeColor)
             secLine.Size             = UDim2.new(1, 0, 0, 1)
             secLine.Position         = UDim2.new(0, 0, 1, -1)
             secLine.BackgroundColor3 = C.SCHEME
-            secLine.BackgroundTransparency = 1.6
+            secLine.BackgroundTransparency = 0.6
             secLine.BorderSizePixel  = 0
             secLine.ZIndex           = 6
             secLine.Parent           = secHeader
@@ -1466,7 +1479,7 @@ function Library.CreateLib(title, themeColor)
         -- Animação de entrada da janela
         win.Size = UDim2.new(0, WIN_W, 0, 0)
         win.BackgroundTransparency = 1
-        tween(win, {Size = UDim2.new(0, WIN_W, 0, WIN_H), BackgroundTransparency = 1}, 0.4,
+        tween(win, {Size = UDim2.new(0, WIN_W, 0, WIN_H), BackgroundTransparency = 0}, 0.4,
             Enum.EasingStyle.Back, Enum.EasingDirection.Out)
     end)
 
