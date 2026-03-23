@@ -91,67 +91,67 @@ end
 -- PALETA  — cores exatas do print Night Hub
 ------------------------------------------------------------------------
 local C = {
-    -- Janela
-    WIN        = Color3.fromRGB(22, 24, 35),       -- fundo janela #16181F aprox
-    WIN_STR    = Color3.fromRGB(40, 43, 60),
+    -- Janela / fundo geral  → BEM escuro, mais escuro que os elementos
+    WIN        = Color3.fromRGB(13, 14, 20),       -- #0D0E14  quase preto-azul
+    WIN_STR    = Color3.fromRGB(32, 34, 50),
 
-    -- Header (escuro, sem cor)
-    HDR        = Color3.fromRGB(22, 24, 35),
-    HDR_LINE   = Color3.fromRGB(38, 41, 58),       -- linha divisória header
+    -- Header (mesma cor da janela, indistinguível)
+    HDR        = Color3.fromRGB(13, 14, 20),
+    HDR_LINE   = Color3.fromRGB(32, 35, 52),
 
-    -- Sidebar
-    SIDEBAR    = Color3.fromRGB(26, 28, 42),       -- #1A1C2A
-    SIDE_CAT   = Color3.fromRGB(100, 104, 130),    -- "FARMMING" cinza
+    -- Sidebar (ligeiramente mais claro que WIN, mais escuro que ELEM)
+    SIDEBAR    = Color3.fromRGB(18, 19, 28),       -- #12131C
+    SIDE_CAT   = Color3.fromRGB(90, 95, 120),
 
     -- Tabs
-    TAB_OFF    = Color3.fromRGB(26, 28, 42),
-    TAB_ON     = Color3.fromRGB(42, 98, 210),      -- azul da tab ativa
-    TAB_H      = Color3.fromRGB(34, 37, 54),
-    TAB_TXT_OFF= Color3.fromRGB(150, 155, 180),
+    TAB_OFF    = Color3.fromRGB(18, 19, 28),
+    TAB_ON     = Color3.fromRGB(42, 98, 210),      -- azul real do print
+    TAB_H      = Color3.fromRGB(26, 28, 42),
+    TAB_TXT_OFF= Color3.fromRGB(140, 145, 170),
     TAB_TXT_ON = Color3.fromRGB(255, 255, 255),
     TAB_ICON_ON= Color3.fromRGB(255, 255, 255),
 
-    -- Conteúdo
-    CONTENT    = Color3.fromRGB(18, 20, 30),       -- #12141E
+    -- Conteúdo (mesmo fundo da janela)
+    CONTENT    = Color3.fromRGB(13, 14, 20),       -- igual WIN
 
-    -- Seção
-    SEC_TXT    = Color3.fromRGB(100, 104, 130),    -- cinza igual "Discord Invite" / "Farmming Toggle"
+    -- Seção label cinza
+    SEC_TXT    = Color3.fromRGB(90, 95, 120),
 
-    -- Elementos (cards escuros)
-    ELEM       = Color3.fromRGB(30, 33, 48),       -- #1E2130
-    ELEM_H     = Color3.fromRGB(38, 42, 60),
-    ELEM_STR   = Color3.fromRGB(44, 48, 68),       -- borda sutil
+    -- Elementos/cards → mais claros que o fundo
+    ELEM       = Color3.fromRGB(30, 32, 46),       -- #1E2030  bem visível sobre o fundo
+    ELEM_H     = Color3.fromRGB(38, 40, 58),
+    ELEM_STR   = Color3.fromRGB(42, 45, 65),
 
     -- Toggle pill
-    TOG_OFF    = Color3.fromRGB(52, 55, 75),       -- cinza off
-    TOG_ON     = Color3.fromRGB(55, 135, 255),     -- azul vivo on
+    TOG_OFF    = Color3.fromRGB(48, 51, 72),
+    TOG_ON     = Color3.fromRGB(55, 135, 255),
 
     -- Badge / inputs
-    BADGE_BG   = Color3.fromRGB(36, 39, 56),
-    BADGE_TXT  = Color3.fromRGB(185, 190, 215),
-    BADGE_STR  = Color3.fromRGB(52, 56, 78),
+    BADGE_BG   = Color3.fromRGB(34, 37, 54),
+    BADGE_TXT  = Color3.fromRGB(175, 180, 210),
+    BADGE_STR  = Color3.fromRGB(48, 52, 74),
 
     -- Textos
-    TXT        = Color3.fromRGB(225, 228, 245),    -- texto principal
-    TXT_DIM    = Color3.fromRGB(95, 100, 128),     -- "DISABLE", descrição
-    TXT_MID    = Color3.fromRGB(155, 160, 188),
-    TXT_ACTIVE = Color3.fromRGB(55, 135, 255),     -- "ACTIVE" azul
+    TXT        = Color3.fromRGB(225, 228, 248),
+    TXT_DIM    = Color3.fromRGB(88, 92, 118),
+    TXT_MID    = Color3.fromRGB(145, 150, 180),
+    TXT_ACTIVE = Color3.fromRGB(55, 135, 255),
 
     -- Misc
-    DIV        = Color3.fromRGB(38, 41, 58),
-    SL_TR      = Color3.fromRGB(42, 45, 65),
+    DIV        = Color3.fromRGB(32, 34, 50),
+    SL_TR      = Color3.fromRGB(38, 40, 60),
     SL_FILL    = Color3.fromRGB(55, 135, 255),
-    OPT        = Color3.fromRGB(26, 28, 42),
-    OPT_H      = Color3.fromRGB(36, 40, 58),
+    OPT        = Color3.fromRGB(22, 24, 36),
+    OPT_H      = Color3.fromRGB(34, 37, 54),
     SCHEME     = Color3.fromRGB(55, 135, 255),
     SCROLL     = Color3.fromRGB(55, 135, 255),
 
     -- Header btns
-    BTN_HDR    = Color3.fromRGB(38, 41, 58),
+    BTN_HDR    = Color3.fromRGB(32, 34, 50),
 
     -- Discord Join (verde igual ao print)
     DISC_JOIN  = Color3.fromRGB(48, 185, 90),
-    DISC_BG    = Color3.fromRGB(26, 28, 42),
+    DISC_BG    = Color3.fromRGB(22, 24, 36),
 }
 
 local _GUI       = nil
@@ -321,18 +321,18 @@ function Library.CreateLib(title, themeColor)
     _GUI = sg
 
     --------------------------------------------------------------------
-    -- DIMENSÕES  (menores, fiéis ao print)
+    -- DIMENSÕES
     --------------------------------------------------------------------
-    local WIN_W    = 530   -- largura total (~print)
-    local SIDE_W   = 168   -- sidebar
-    local HDR_H    = 46    -- header fino igual ao print
-    local WIN_H    = 420
-    local WIN_MIN_H= 260
+    local WIN_W    = 450   -- largura total
+    local SIDE_W   = 148   -- sidebar proporcional
+    local HDR_H    = 44    -- header fino
+    local WIN_H    = 300
+    local WIN_MIN_H= 220
     local WIN_MAX_H= 760
-    local WIN_MIN_W= 400
+    local WIN_MIN_W= 340
     local WIN_MAX_W= 960
-    local EH       = 76    -- altura de cada cell (element)
-    local CELL_GAP = 7     -- gap entre células
+    local EH       = 68    -- altura de cada cell
+    local CELL_GAP = 6     -- gap entre células
 
     --------------------------------------------------------------------
     -- JANELA
