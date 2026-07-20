@@ -3557,6 +3557,19 @@ Components.Window = (function()
 		    Position = Window.Position,
 		    Parent = Config.Parent,
 		}, {
+		    New("ImageLabel", {
+		        Image = "rbxassetid://5028857084", -- soft glow/shadow
+		        ImageColor3 = Color3.fromRGB(255, 255, 255),
+		        ImageTransparency = 0.6,
+		        ScaleType = Enum.ScaleType.Slice,
+		        SliceCenter = Rect.new(24, 24, 276, 276),
+		        Size = UDim2.new(1, 30, 1, 30),
+		        Position = UDim2.new(0.5, 0, 0.5, 0),
+		        AnchorPoint = Vector2.new(0.5, 0.5),
+		        BackgroundTransparency = 1,
+		        ZIndex = -1,
+		        ThemeTag = { ImageColor3 = "Accent" },
+		    }),
 		    AcrylicFrame,   -- ใช้ตัวแปร แทน Window.AcrylicPaint.Frame
 		    Window.TabDisplay,
 		    Window.ContainerCanvas,
@@ -5083,11 +5096,20 @@ ElementsTable.DiscordUser = (function()
 	DiscordUser.__index = DiscordUser
 	DiscordUser.__type = "DiscordUser"
 
+local function SafeAssetId(id)
+		if type(id) ~= "string" or id == "" then return nil end
+		if not id:match("^rbxassetid://%d+$") and not id:match("^rbxthumb://") and not id:match("^http") then
+			return nil -- ID inválido/placeholder (ex: "SEU_ID_AQUI") não vira uma Image válida
+		end
+		return id
+	end
+
 	function DiscordUser:New(Idx, Config)
 		assert(Config.Link, "DiscordUser - Missing Link")
 		Config.Title = Config.Title or "Discord"
 		Config.Description = Config.Description or Config.Link
-		Config.Image = Config.Image or "rbxassetid://14294736508" -- discord logo default
+		Config.Image = SafeAssetId(Config.Image) or "rbxassetid://14294736508" -- discord logo default
+		Config.Background = SafeAssetId(Config.Background)
 
 		local Card = New("Frame", {
 			Size = UDim2.new(1, 0, 0, 90),
@@ -5105,15 +5127,28 @@ ElementsTable.DiscordUser = (function()
 		})
 
 		-- imagem de fundo (banner do servidor)
-		local BackgroundImage = New("ImageLabel", {
-			Image = Config.Background or "",
-			Size = UDim2.new(1, 0, 1, 0),
-			ScaleType = Enum.ScaleType.Crop,
-			BackgroundTransparency = 1,
-			ImageTransparency = Config.Background and 0 or 1,
-			ZIndex = 1,
-			Parent = Card,
-		})
+		local BackgroundImage
+		pcall(function()
+			BackgroundImage = New("ImageLabel", {
+				Image = Config.Background or "",
+				Size = UDim2.new(1, 0, 1, 0),
+				ScaleType = Enum.ScaleType.Crop,
+				BackgroundTransparency = 1,
+				ImageTransparency = Config.Background and 0 or 1,
+				ZIndex = 1,
+				Parent = Card,
+			})
+		end)
+		if not BackgroundImage then
+			BackgroundImage = New("ImageLabel", {
+				Image = "",
+				Size = UDim2.new(1, 0, 1, 0),
+				BackgroundTransparency = 1,
+				ImageTransparency = 1,
+				ZIndex = 1,
+				Parent = Card,
+			})
+		end
 
 		-- gradiente escuro por cima da imagem pra manter o texto legível
 		New("UIGradient", {
