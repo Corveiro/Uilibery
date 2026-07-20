@@ -5078,6 +5078,146 @@ ElementsTable.Paragraph = (function()
 
 	return Paragraph
 end)()
+ElementsTable.DiscordUser = (function()
+	local DiscordUser = {}
+	DiscordUser.__index = DiscordUser
+	DiscordUser.__type = "DiscordUser"
+
+	function DiscordUser:New(Idx, Config)
+		assert(Config.Link, "DiscordUser - Missing Link")
+		Config.Title = Config.Title or "Discord"
+		Config.Description = Config.Description or Config.Link
+		Config.Image = Config.Image or "rbxassetid://14294736508" -- discord logo default
+
+		local Card = New("Frame", {
+			Size = UDim2.new(1, 0, 0, 90),
+			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+			BackgroundTransparency = 0,
+			Parent = self.Container,
+			ClipsDescendants = true,
+			ThemeTag = { BackgroundColor3 = "Element" },
+		}, {
+			New("UICorner", { CornerRadius = UDim.new(0, 10) }),
+			New("UIStroke", {
+				Transparency = 0.4,
+				ThemeTag = { Color = "ElementBorder" },
+			}),
+		})
+
+		-- imagem de fundo (banner do servidor)
+		local BackgroundImage = New("ImageLabel", {
+			Image = Config.Background or "",
+			Size = UDim2.new(1, 0, 1, 0),
+			ScaleType = Enum.ScaleType.Crop,
+			BackgroundTransparency = 1,
+			ImageTransparency = Config.Background and 0 or 1,
+			ZIndex = 1,
+			Parent = Card,
+		})
+
+		-- gradiente escuro por cima da imagem pra manter o texto legível
+		New("UIGradient", {
+			Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
+			}),
+			Transparency = NumberSequence.new({
+				NumberSequenceKeypoint.new(0, 0.15),
+				NumberSequenceKeypoint.new(0.5, 0.35),
+				NumberSequenceKeypoint.new(1, 0.75),
+			}),
+			Rotation = 90,
+			Parent = BackgroundImage,
+		})
+
+		local Icon = New("ImageLabel", {
+			Image = Config.Image,
+			Size = UDim2.fromOffset(38, 38),
+			Position = UDim2.new(0, 14, 0, 14),
+			BackgroundTransparency = 1,
+			ZIndex = 3,
+			Parent = Card,
+		}, {
+			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+		})
+
+		local TitleLabel = New("TextLabel", {
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+			Text = Config.Title,
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			TextSize = 15,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1, -140, 0, 18),
+			Position = UDim2.new(0, 62, 0, 14),
+			ZIndex = 3,
+			Parent = Card,
+		})
+
+		local LinkLabel = New("TextLabel", {
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			Text = Config.Link,
+			TextColor3 = Color3.fromRGB(210, 210, 210),
+			TextSize = 12,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			TextTruncate = Enum.TextTruncate.AtEnd,
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1, -140, 0, 16),
+			Position = UDim2.new(0, 62, 0, 36),
+			ZIndex = 3,
+			Parent = Card,
+		})
+
+		local CopyButton = New("TextButton", {
+			Text = "Copy Invite",
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+			TextSize = 13,
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			Size = UDim2.new(0, 108, 0, 30),
+			Position = UDim2.new(1, -14, 1, -14),
+			AnchorPoint = Vector2.new(1, 1),
+			BackgroundColor3 = Color3.fromRGB(88, 101, 242), -- Discord blurple
+			ZIndex = 3,
+			Parent = Card,
+		}, {
+			New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		})
+
+		CopyButton.MouseButton1Click:Connect(function()
+			local ok = pcall(function()
+				if setclipboard then
+					setclipboard(Config.Link)
+				elseif toclipboard then
+					toclipboard(Config.Link)
+				end
+			end)
+			local Original = CopyButton.Text
+			CopyButton.Text = ok and "Copied!" or "Copy failed"
+			task.delay(1.4, function()
+				if CopyButton then CopyButton.Text = Original end
+			end)
+		end)
+
+		Card.MouseEnter:Connect(function()
+			TweenService:Create(Card, TweenInfo.new(0.15), { BackgroundTransparency = 0 }):Play()
+		end)
+
+		local DiscordUserObj = {
+			Instance = Card,
+			SetLink = function(_, NewLink) Config.Link = NewLink; LinkLabel.Text = NewLink end,
+			SetBackground = function(_, NewImage)
+				BackgroundImage.Image = NewImage or ""
+				BackgroundImage.ImageTransparency = NewImage and 0 or 1
+			end,
+			Visible = function(_, Bool) Card.Visible = Bool end,
+		}
+		DiscordUserObj.Elements = DiscordUserObj
+
+		return DiscordUserObj
+	end
+
+	return DiscordUser
+end)()
 ElementsTable.Slider = (function()
 	local Element = {}
 	Element.__index = Element
@@ -7401,6 +7541,82 @@ function Library:CreateWindow(Config)
 	if Library.Window then
 		print("You cannot create more than one window.")
 		return
+	end
+
+	-- ================== PREMIUM LOADING SCREEN ==================
+	if not Config.NoLoadingScreen then
+		local LoadingGui = New("Frame", {
+			Size = UDim2.fromScale(1, 1),
+			BackgroundColor3 = Color3.fromRGB(15, 15, 18),
+			BackgroundTransparency = 0,
+			ZIndex = 999,
+			Parent = GUI,
+		})
+
+		local LogoLabel = New("TextLabel", {
+			Text = Config.Title,
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+			TextSize = 26,
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1, 0, 0, 40),
+			Position = UDim2.new(0.5, 0, 0.42, 0),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			TextTransparency = 1,
+			ZIndex = 1000,
+			Parent = LoadingGui,
+		})
+
+		local SubLabel = New("TextLabel", {
+			Text = Config.SubTitle or "Loading...",
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			TextSize = 13,
+			TextColor3 = Color3.fromRGB(160, 160, 170),
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1, 0, 0, 20),
+			Position = UDim2.new(0.5, 0, 0.48, 0),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			TextTransparency = 1,
+			ZIndex = 1000,
+			Parent = LoadingGui,
+		})
+
+		local BarHolder = New("Frame", {
+			Size = UDim2.new(0, 220, 0, 4),
+			Position = UDim2.new(0.5, 0, 0.53, 0),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundColor3 = Color3.fromRGB(40, 40, 46),
+			BackgroundTransparency = 1,
+			ZIndex = 1000,
+			Parent = LoadingGui,
+		}, {
+			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+		})
+
+		local BarFill = New("Frame", {
+			Size = UDim2.new(0, 0, 1, 0),
+			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+			ZIndex = 1001,
+			Parent = BarHolder,
+		}, {
+			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+		})
+
+		-- fade in
+		TweenService:Create(LogoLabel, TweenInfo.new(0.5), { TextTransparency = 0 }):Play()
+		TweenService:Create(SubLabel, TweenInfo.new(0.5), { TextTransparency = 0.2 }):Play()
+		TweenService:Create(BarHolder, TweenInfo.new(0.5), { BackgroundTransparency = 0 }):Play()
+		TweenService:Create(BarFill, TweenInfo.new(1.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 1, 0) }):Play()
+
+		task.wait(1.3)
+
+		local FadeOut = TweenService:Create(LoadingGui, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 })
+		TweenService:Create(LogoLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
+		TweenService:Create(SubLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
+		TweenService:Create(BarHolder, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
+		FadeOut:Play()
+		FadeOut.Completed:Wait()
+		LoadingGui:Destroy()
 	end
 
 	Library.MinimizeKey = Config.MinimizeKey or Enum.KeyCode.RightControl
