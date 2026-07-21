@@ -2266,6 +2266,18 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 
 	Element.Original.Text = Title
 
+	-- ── Borda com destaque sutil no hover (todos os elementos) ──
+	Creator.AddSignal(Element.Frame.MouseEnter, function()
+		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Transparency = 0.15,
+		}):Play()
+	end)
+	Creator.AddSignal(Element.Frame.MouseLeave, function()
+		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Transparency = 0.5,
+		}):Play()
+	end)
+
 	if Hover then
 		local Themes = Library.Themes
 		local Motor, SetTransparency = Creator.SpringMotor(
@@ -2314,6 +2326,14 @@ Components.Section = function(Title, Parent)
 		LayoutOrder = 7,
 		Parent = Parent,
 	}, {
+		New("Frame", {
+			Size = UDim2.fromOffset(3, 14),
+			Position = UDim2.fromOffset(0, 6),
+			BackgroundTransparency = 0,
+			ThemeTag = { BackgroundColor3 = "Accent" },
+		}, {
+			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+		}),
 		New("TextLabel", {
 			RichText = true,
 			Text = Title,
@@ -2322,8 +2342,8 @@ Components.Section = function(Title, Parent)
 			TextSize = 22,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
-			Size = UDim2.new(1, -16, 0, 18),
-			Position = UDim2.fromOffset(0, 2),
+			Size = UDim2.new(1, -24, 0, 18),
+			Position = UDim2.fromOffset(10, 2),
 			AutoLocalize = false,
 			ThemeTag = {
 				TextColor3 = "Text",
@@ -2982,6 +3002,13 @@ Components.Notification = (function()
 			}),
 		})
 
+		local NotifTypeColors = {
+			success = Color3.fromRGB(70, 200, 120),
+			error   = Color3.fromRGB(230, 80, 80),
+			warning = Color3.fromRGB(240, 180, 60),
+		}
+		local NotifAccentColor = NotifTypeColors[Config.Type]
+
 		NewNotification.Root = New("Frame", {
 		    BackgroundTransparency = 0,
 		    Size = UDim2.new(1, 0, 1, 0),
@@ -2992,6 +3019,16 @@ Components.Notification = (function()
 		    New("UIStroke", {
 		        Transparency = 0.5,
 		        ThemeTag = { Color = "AcrylicBorder" },
+		    }),
+		    New("Frame", {
+		        Size = UDim2.new(0, 4, 1, -12),
+		        Position = UDim2.new(0, 6, 0.5, 0),
+		        AnchorPoint = Vector2.new(0, 0.5),
+		        BackgroundColor3 = NotifAccentColor or Color3.fromRGB(255, 255, 255),
+		        BackgroundTransparency = NotifAccentColor and 0 or 1,
+		        ThemeTag = not NotifAccentColor and { BackgroundColor3 = "Accent" } or nil,
+		    }, {
+		        New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 		    }),
 		    NewNotification.Title,
 		    NewNotification.CloseButton,
@@ -3223,6 +3260,24 @@ Components.TitleBar = function(Config)
 		BackgroundTransparency = 1,
 		Parent           = Config.Parent,
 	}, {
+		-- ── Divisor com gradiente sutil embaixo da barra ─────
+		New("Frame", {
+			Size             = UDim2.new(1, 0, 0, 1),
+			Position         = UDim2.new(0, 0, 1, 0),
+			AnchorPoint      = Vector2.new(0, 1),
+			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+			BackgroundTransparency = 0.85,
+			BorderSizePixel  = 0,
+			ThemeTag         = { BackgroundColor3 = "ElementBorder" },
+		}, {
+			New("UIGradient", {
+				Transparency = NumberSequence.new({
+					NumberSequenceKeypoint.new(0, 1),
+					NumberSequenceKeypoint.new(0.5, 0.3),
+					NumberSequenceKeypoint.new(1, 1),
+				}),
+			}),
+		}),
 		-- ── Logo (20×20, vertically centered, left) ──────────
 		New("ImageLabel", {
 			Image            = "rbxassetid://115743955187199",
@@ -3885,6 +3940,19 @@ ElementsTable.Button = (function()
 			},
 		})
 
+		Creator.AddSignal(ButtonFrame.Frame.MouseEnter, function()
+			TweenService:Create(ButtonIco, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.fromOffset(19, 19),
+				Position = UDim2.new(1, -8, 0.5, 0),
+			}):Play()
+		end)
+		Creator.AddSignal(ButtonFrame.Frame.MouseLeave, function()
+			TweenService:Create(ButtonIco, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.fromOffset(16, 16),
+				Position = UDim2.new(1, -10, 0.5, 0),
+			}):Play()
+		end)
+
 		Creator.AddSignal(ButtonFrame.Frame.MouseButton1Click, function()
 			Library:SafeCallback(Config.Callback)
 		end)
@@ -3959,6 +4027,15 @@ ElementsTable.Toggle = (function()
 			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 		})
 
+		-- ── Glow (visível apenas quando ligado) ──────────────
+		local Glow = New("UIStroke", {
+			Transparency    = 1,
+			Thickness       = 1.5,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			ThemeTag        = { Color = "Accent" },
+			Parent          = Track,
+		})
+
 		-- ── Easing helpers ────────────────────────────────────
 		local TI_FAST  = TweenInfo.new(0.22, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
 		local TI_BACK  = TweenInfo.new(0.20, Enum.EasingStyle.Back,  Enum.EasingDirection.Out)
@@ -3968,12 +4045,14 @@ ElementsTable.Toggle = (function()
 		local function applyOff()
 			TweenService:Create(Fill,  TI_FAST, { Size     = UDim2.new(0, 0, 1, 0)   }):Play()
 			TweenService:Create(Thumb, TI_BACK, { Position = UDim2.new(0, 3, 0.5, 0) }):Play()
+			TweenService:Create(Glow,  TI_FAST, { Transparency = 1 }):Play()
 		end
 
 		-- ON state
 		local function applyOn()
 			TweenService:Create(Fill,  TI_FAST, { Size     = UDim2.fromScale(1, 1)    }):Play()
 			TweenService:Create(Thumb, TI_BACK, { Position = UDim2.new(0, 23, 0.5, 0)}):Play()
+			TweenService:Create(Glow,  TI_FAST, { Transparency = 0.45 }):Play()
 		end
 
 		-- Press squish
@@ -4213,6 +4292,18 @@ ElementsTable.Dropdown = (function()
 		        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		        Transparency    = 0.5,
 		        ThemeTag        = { Color = "InElementBorder" },
+		    }),
+		    New("ImageLabel", {
+		        Image = "rbxassetid://5028857084",
+		        ImageColor3 = Color3.fromRGB(0, 0, 0),
+		        ImageTransparency = 0.35,
+		        ScaleType = Enum.ScaleType.Slice,
+		        SliceCenter = Rect.new(24, 24, 276, 276),
+		        Size = UDim2.new(1, 26, 1, 26),
+		        Position = UDim2.new(0.5, 0, 0.5, 0),
+		        AnchorPoint = Vector2.new(0.5, 0.5),
+		        BackgroundTransparency = 1,
+		        ZIndex = -1,
 		    }),
 		    DropdownScrollFrame,
 		})
@@ -5337,6 +5428,16 @@ ElementsTable.Slider = (function()
 			ThemeTag = { BackgroundColor3 = "Accent" },
 		}, {
 			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			New("UIGradient", {
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+					ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255)),
+				}),
+				Transparency = NumberSequence.new({
+					NumberSequenceKeypoint.new(0, 0.55),
+					NumberSequenceKeypoint.new(1, 0),
+				}),
+			}),
 		})
 
 		-- ── Thumb ─────────────────────────────────────────────
