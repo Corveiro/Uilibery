@@ -5196,7 +5196,16 @@ local function SafeAssetId(id)
 	end
 
 	function DiscordUser:New(Idx, Config)
-		assert(Config.Link, "DiscordUser - Missing Link")
+		-- proteção: aceita tanto AddDiscordUser("Idx", {...}) quanto AddDiscordUser({...})
+		if Config == nil and type(Idx) == "table" then
+			Config = Idx
+			Idx = "DiscordUser"
+		end
+		Config = Config or {}
+		if not Config.Link then
+			warn("DiscordUser - Missing Link (elemento ignorado, script continua normalmente)")
+			return { Instance = nil, SetLink = function() end, SetBackground = function() end, Visible = function() end }
+		end
 		Config.Title = Config.Title or "Discord"
 		Config.Description = Config.Description or Config.Link
 		Config.Image = SafeAssetId(Config.Image) or "rbxassetid://14294736508" -- discord logo default
@@ -7681,77 +7690,82 @@ function Library:CreateWindow(Config)
 
 	-- ================== PREMIUM LOADING SCREEN ==================
 	if not Config.NoLoadingScreen then
-		local LoadingGui = New("Frame", {
-			Size = UDim2.fromScale(1, 1),
-			BackgroundColor3 = Color3.fromRGB(15, 15, 18),
-			BackgroundTransparency = 0,
-			ZIndex = 999,
-			Parent = GUI,
-		})
+		pcall(function()
+			local LoadingGui = New("Frame", {
+				Size = UDim2.fromScale(1, 1),
+				BackgroundColor3 = Color3.fromRGB(15, 15, 18),
+				BackgroundTransparency = 0,
+				ZIndex = 999,
+				Parent = GUI,
+			})
 
-		local LogoLabel = New("TextLabel", {
-			Text = Config.Title,
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
-			TextSize = 26,
-			TextColor3 = Color3.fromRGB(255, 255, 255),
-			BackgroundTransparency = 1,
-			Size = UDim2.new(1, 0, 0, 40),
-			Position = UDim2.new(0.5, 0, 0.42, 0),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			TextTransparency = 1,
-			ZIndex = 1000,
-			Parent = LoadingGui,
-		})
+			local LogoLabel = New("TextLabel", {
+				Text = Config.Title,
+				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+				TextSize = 26,
+				TextColor3 = Color3.fromRGB(255, 255, 255),
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, 0, 0, 40),
+				Position = UDim2.new(0.5, 0, 0.42, 0),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				TextTransparency = 1,
+				ZIndex = 1000,
+				Parent = LoadingGui,
+			})
 
-		local SubLabel = New("TextLabel", {
-			Text = Config.SubTitle or "Loading...",
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-			TextSize = 13,
-			TextColor3 = Color3.fromRGB(160, 160, 170),
-			BackgroundTransparency = 1,
-			Size = UDim2.new(1, 0, 0, 20),
-			Position = UDim2.new(0.5, 0, 0.48, 0),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			TextTransparency = 1,
-			ZIndex = 1000,
-			Parent = LoadingGui,
-		})
+			local SubLabel = New("TextLabel", {
+				Text = Config.SubTitle or "Loading...",
+				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+				TextSize = 13,
+				TextColor3 = Color3.fromRGB(160, 160, 170),
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, 0, 0, 20),
+				Position = UDim2.new(0.5, 0, 0.48, 0),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				TextTransparency = 1,
+				ZIndex = 1000,
+				Parent = LoadingGui,
+			})
 
-		local BarHolder = New("Frame", {
-			Size = UDim2.new(0, 220, 0, 4),
-			Position = UDim2.new(0.5, 0, 0.53, 0),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			BackgroundColor3 = Color3.fromRGB(40, 40, 46),
-			BackgroundTransparency = 1,
-			ZIndex = 1000,
-			Parent = LoadingGui,
-		}, {
-			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-		})
+			local BarHolder = New("Frame", {
+				Size = UDim2.new(0, 220, 0, 4),
+				Position = UDim2.new(0.5, 0, 0.53, 0),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundColor3 = Color3.fromRGB(40, 40, 46),
+				BackgroundTransparency = 1,
+				ZIndex = 1000,
+				Parent = LoadingGui,
+			}, {
+				New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			})
 
-		local BarFill = New("Frame", {
-			Size = UDim2.new(0, 0, 1, 0),
-			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-			ZIndex = 1001,
-			Parent = BarHolder,
-		}, {
-			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-		})
+			local BarFill = New("Frame", {
+				Size = UDim2.new(0, 0, 1, 0),
+				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+				ZIndex = 1001,
+				Parent = BarHolder,
+			}, {
+				New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			})
 
-		-- fade in
-		TweenService:Create(LogoLabel, TweenInfo.new(0.5), { TextTransparency = 0 }):Play()
-		TweenService:Create(SubLabel, TweenInfo.new(0.5), { TextTransparency = 0.2 }):Play()
-		TweenService:Create(BarHolder, TweenInfo.new(0.5), { BackgroundTransparency = 0 }):Play()
-		TweenService:Create(BarFill, TweenInfo.new(1.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 1, 0) }):Play()
+			-- fade in
+			TweenService:Create(LogoLabel, TweenInfo.new(0.5), { TextTransparency = 0 }):Play()
+			TweenService:Create(SubLabel, TweenInfo.new(0.5), { TextTransparency = 0.2 }):Play()
+			TweenService:Create(BarHolder, TweenInfo.new(0.5), { BackgroundTransparency = 0 }):Play()
+			TweenService:Create(BarFill, TweenInfo.new(1.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 1, 0) }):Play()
 
-		task.wait(1.3)
+			task.wait(1.3)
 
-		TweenService:Create(LoadingGui, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
-		TweenService:Create(LogoLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
-		TweenService:Create(SubLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
-		TweenService:Create(BarHolder, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
-		task.wait(0.45)
-		LoadingGui:Destroy()
+			TweenService:Create(LoadingGui, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
+			TweenService:Create(LogoLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
+			TweenService:Create(SubLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
+			TweenService:Create(BarHolder, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
+
+			-- task.wait em vez de Tween.Completed:Wait() -- Wait() em Tween pode travar
+			-- para sempre em alguns executores, o que bloquearia a criação das abas.
+			task.wait(0.45)
+			LoadingGui:Destroy()
+		end)
 	end
 
 	Library.MinimizeKey = Config.MinimizeKey or Enum.KeyCode.RightControl
