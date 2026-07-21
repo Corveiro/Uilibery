@@ -7746,12 +7746,11 @@ function Library:CreateWindow(Config)
 
 		task.wait(1.3)
 
-		local FadeOut = TweenService:Create(LoadingGui, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 })
+		TweenService:Create(LoadingGui, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
 		TweenService:Create(LogoLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
 		TweenService:Create(SubLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
 		TweenService:Create(BarHolder, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
-		FadeOut:Play()
-		FadeOut.Completed:Wait()
+		task.wait(0.45)
 		LoadingGui:Destroy()
 	end
 
