@@ -66,37 +66,37 @@ local Themes = {
 	},
 	White = {
 		Name = "White",
-		Accent = Color3.fromRGB(0, 103, 192),
+		Accent = Color3.fromRGB(245, 166, 35),
 
-		AcrylicMain = Color3.fromRGB(200, 200, 200),
-		AcrylicBorder = Color3.fromRGB(120, 120, 120),
+		AcrylicMain = Color3.fromRGB(255, 255, 255),
+		AcrylicBorder = Color3.fromRGB(225, 225, 228),
 		AcrylicGradient = ColorSequence.new(Color3.fromRGB(255, 255, 255), Color3.fromRGB(255, 255, 255)),
-		AcrylicNoise = 0.96,
+		AcrylicNoise = 1,
 
-		TitleBarLine = Color3.fromRGB(160, 160, 160),
-		Tab = Color3.fromRGB(90, 90, 90),
+		TitleBarLine = Color3.fromRGB(228, 228, 231),
+		Tab = Color3.fromRGB(110, 110, 116),
 
-		Element = Color3.fromRGB(255, 255, 255),
-		ElementBorder = Color3.fromRGB(180, 180, 180),
-		InElementBorder = Color3.fromRGB(150, 150, 150),
-		ElementTransparency = 0.65,
+		Element = Color3.fromRGB(247, 247, 249),
+		ElementBorder = Color3.fromRGB(224, 224, 228),
+		InElementBorder = Color3.fromRGB(210, 210, 215),
+		ElementTransparency = 0,
 
-		ToggleSlider = Color3.fromRGB(40, 40, 40),
+		ToggleSlider = Color3.fromRGB(210, 210, 215),
 		ToggleToggled = Color3.fromRGB(255, 255, 255),
 
-		SliderRail = Color3.fromRGB(40, 40, 40),
+		SliderRail = Color3.fromRGB(210, 210, 215),
 
-		DropdownFrame = Color3.fromRGB(200, 200, 200),
-		DropdownHolder = Color3.fromRGB(240, 240, 240),
-		DropdownBorder = Color3.fromRGB(200, 200, 200),
-		DropdownOption = Color3.fromRGB(150, 150, 150),
+		DropdownFrame = Color3.fromRGB(247, 247, 249),
+		DropdownHolder = Color3.fromRGB(255, 255, 255),
+		DropdownBorder = Color3.fromRGB(224, 224, 228),
+		DropdownOption = Color3.fromRGB(247, 247, 249),
 
-		Keybind = Color3.fromRGB(120, 120, 120),
+		Keybind = Color3.fromRGB(247, 247, 249),
 
-		Input = Color3.fromRGB(200, 200, 200),
-		InputFocused = Color3.fromRGB(100, 100, 100),
+		Input = Color3.fromRGB(247, 247, 249),
+		InputFocused = Color3.fromRGB(240, 240, 242),
 		InputIndicator = Color3.fromRGB(80, 80, 80),
-		InputIndicatorFocus = Color3.fromRGB(0, 103, 192),
+		InputIndicatorFocus = Color3.fromRGB(245, 166, 35),
 
 		Dialog = Color3.fromRGB(255, 255, 255),
 		DialogHolder = Color3.fromRGB(240, 240, 240),
@@ -1190,7 +1190,7 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
 		Text = Title,
 		TextColor3 = Color3.fromRGB(240, 240, 240),
-		TextSize = 14,
+		TextSize = 13,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Size = UDim2.new(1, 0, 0, 16),
 		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -1222,17 +1222,17 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 		BackgroundTransparency = 1,
-		Position = UDim2.fromOffset(14, 0),
-		Size = UDim2.new(1, -32, 0, 0),
+		Position = UDim2.fromOffset(10, 0),
+		Size = UDim2.new(1, -24, 0, 0),
 	}, {
 		New("UIListLayout", {
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			VerticalAlignment = Enum.VerticalAlignment.Center,
-			Padding = UDim.new(0, 2),
+			Padding = UDim.new(0, 1),
 		}),
 		New("UIPadding", {
-			PaddingBottom = UDim.new(0, 15),
-			PaddingTop = UDim.new(0, 15),
+			PaddingBottom = UDim.new(0, 9),
+			PaddingTop = UDim.new(0, 9),
 		}),
 		Element.TitleLabel,
 		Element.DescLabel,
@@ -2507,6 +2507,43 @@ Components.TitleBar = function(Config)
 		function() Library.Window:Minimize() end
 	)
 
+	-- ── Mini seletor de tema (Dark / White) ──────────────
+	local ThemeOrder = { "Dark", "White" }
+	local ThemeSwitch = New("TextButton", {
+		Size             = UDim2.new(0, 56, 0, 22),
+		AnchorPoint      = Vector2.new(1, 0.5),
+		Position         = UDim2.new(1, -108, 0.5, 0),
+		BackgroundTransparency = 0,
+		Text             = "",
+		Parent           = TitleBar.Frame,
+		ThemeTag         = { BackgroundColor3 = "Element" },
+	}, {
+		New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+		New("UIStroke", {
+			Thickness       = 1,
+			Transparency    = 0.5,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			ThemeTag        = { Color = "InElementBorder" },
+		}),
+	})
+	local ThemeSwitchLabel = New("TextLabel", {
+		Text            = Library.Theme or "Dark",
+		FontFace        = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+		TextSize        = 11,
+		Size            = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		AutoLocalize    = false,
+		Parent          = ThemeSwitch,
+		ThemeTag        = { TextColor3 = "Text" },
+	})
+	AddSignal(ThemeSwitch.MouseButton1Click, function()
+		local currentIdx = table.find(ThemeOrder, Library.Theme) or 1
+		local nextIdx = (currentIdx % #ThemeOrder) + 1
+		local nextTheme = ThemeOrder[nextIdx]
+		Library:SetTheme(nextTheme)
+		ThemeSwitchLabel.Text = nextTheme
+	end)
+
 	return TitleBar
 end
 
@@ -2571,35 +2608,21 @@ Components.Window = (function()
 			}),
 		})
 
-		local Icon = New("TextButton", {
+		local Icon = New("ImageLabel", {
 			BackgroundTransparency = 1,
-			Size = UDim2.new(0, Window.TabWidth, 0, Window.TabWidth),
-			Position = UDim2.new(0, 12, 0, (Window.TabWidth/4)- 20),
-			BorderSizePixel = 0
-		}, {
-			New("UIPadding", {
-				PaddingBottom = UDim.new(0, 2),
-				PaddingLeft = UDim.new(0, 2),
-				PaddingRight = UDim.new(0, 2),
-				PaddingTop = UDim.new(0, 2),
-			}),
-			New("ImageLabel", {
-				Image = "rbxassetid://115743955187199",
-				Size = UDim2.new(1, 0, 1, 0),
-				BackgroundTransparency = 1,
-			}, {
-				New("UIAspectRatioConstraint", {
-					AspectRatio = 1,
-					AspectType = Enum.AspectType.FitWithinMaxSize,
-				})
-			})
+			Image = Config.Logo or "",
+			ImageTransparency = Config.Logo and 0 or 1,
+			Size = UDim2.fromOffset(40, 40),
+			Position = UDim2.new(0, 12, 0, 50),
+			ScaleType = Enum.ScaleType.Fit,
+			Parent = Window.Root,
 		})
 
 		local OFFSETY = 0  -- tab list เริ่มใต้ titlebar ทันที
 
 		local TabFrame = New("Frame", {
-			Size             = UDim2.new(0, Window.TabWidth, 1, -66),
-			Position         = UDim2.new(0, 12, 0, 54),
+			Size             = UDim2.new(0, Window.TabWidth, 1, -102),
+			Position         = UDim2.new(0, 12, 0, 90),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
@@ -2660,9 +2683,9 @@ Components.Window = (function()
 		        }),
 		    }),
 		    New("UIStroke", {
-		        Thickness = 1,
-		        Transparency = 0.55,
-		        ThemeTag = { Color = "AcrylicBorder" },
+		        Thickness = 1.5,
+		        Transparency = 0,
+		        Color = Color3.fromRGB(0, 0, 0),
 		    }),
 		})
 		
@@ -3045,7 +3068,7 @@ ElementsTable.Toggle = (function()
 		}
 
 		local ToggleFrame = Components.Element(Config.Title, Config.Description, self.Container, true, Config)
-		ToggleFrame.DescLabel.Size = UDim2.new(1, -66, 0, 14)
+		ToggleFrame.DescLabel.Size = UDim2.new(1, -52, 0, 14)
 
 		Toggle.SetTitle        = ToggleFrame.SetTitle
 		Toggle.AddText         = ToggleFrame.AddText
@@ -3056,7 +3079,7 @@ ElementsTable.Toggle = (function()
 
 		-- ── Track (pill) ──────────────────────────────────────
 		local Track = New("Frame", {
-			Size             = UDim2.fromOffset(50, 27),
+			Size             = UDim2.fromOffset(36, 20),
 			AnchorPoint      = Vector2.new(1, 0.5),
 			Position         = UDim2.new(1, -12, 0.5, 0),
 			BackgroundColor3 = Color3.fromRGB(60, 60, 60),
@@ -3084,7 +3107,7 @@ ElementsTable.Toggle = (function()
 
 		-- ── Thumb ─────────────────────────────────────────────
 		local Thumb = New("Frame", {
-			Size             = UDim2.fromOffset(21, 21),
+			Size             = UDim2.fromOffset(14, 14),
 			AnchorPoint      = Vector2.new(0, 0.5),
 			Position         = UDim2.new(0, 3, 0.5, 0),
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -3118,7 +3141,7 @@ ElementsTable.Toggle = (function()
 		-- ON state
 		local function applyOn()
 			TweenService:Create(Fill,  TI_FAST, { Size     = UDim2.fromScale(1, 1)    }):Play()
-			TweenService:Create(Thumb, TI_BACK, { Position = UDim2.new(0, 26, 0.5, 0)}):Play()
+			TweenService:Create(Thumb, TI_BACK, { Position = UDim2.new(0, 19, 0.5, 0)}):Play()
 			TweenService:Create(Glow,  TI_FAST, { Transparency = 0.45 }):Play()
 		end
 
@@ -3507,29 +3530,32 @@ ElementsTable.Dropdown = (function()
 
 		table.insert(Library.OpenFrames, DropdownHolderCanvas)
 
-        local XADD = 195
-        local DEFAULT_Y_OFFSET_WITH_OBJ = -5
-        local DEFAULT_Y_OFFSET_WITHOUT_OBJ = 18
+        local XADD = 0
+        local DEFAULT_Y_OFFSET_WITH_OBJ = 6
+        local DEFAULT_Y_OFFSET_WITHOUT_OBJ = 6
         local MAX_DROPDOWN_ITEMS = 5
 
         local MoveList = {
-            { Instance = DropdownHolderCanvas, YOffset = 35}, -- no custom offset
+            { Instance = DropdownHolderCanvas, YOffset = 0}, -- no custom offset
             { Instance = SearchBase, YOffset = 0 }, -- custom Y offset
             { Instance = ClearButton, YOffset = 0, XOffset = 175 }, -- Clear button ข้างๆ search
         }
 
         local function RecalculateListPosition()
             local Add = 0
-            local availableSpace = Camera.ViewportSize.Y - DropdownInner.AbsolutePosition.Y
+            local availableSpace = Camera.ViewportSize.Y - (DropdownInner.AbsolutePosition.Y + DropdownInner.AbsoluteSize.Y)
             local neededSpace = DropdownHolderCanvas.AbsoluteSize.Y - 5
 
-            if availableSpace < neededSpace then
-                Add = neededSpace - availableSpace + 40
-            end
-
-            local defaultYOffset = (DEFAULT_Y_OFFSET_WITH_OBJ - Add) or DEFAULT_Y_OFFSET_WITHOUT_OBJ
             local baseX = DropdownInner.AbsolutePosition.X - 1 + XADD
-            local baseY = DropdownInner.AbsolutePosition.Y + defaultYOffset
+            local baseY
+
+            if availableSpace < neededSpace then
+                -- não cabe embaixo: abre para cima, colado no dropdown
+                baseY = DropdownInner.AbsolutePosition.Y - neededSpace - 6
+            else
+                -- abre logo abaixo do dropdown, alinhado com ele (não mais deslocado pro lado)
+                baseY = DropdownInner.AbsolutePosition.Y + DropdownInner.AbsoluteSize.Y + DEFAULT_Y_OFFSET_WITH_OBJ
+            end
 
             for _, entry in ipairs(MoveList) do
                 local inst = entry.Instance
@@ -3544,6 +3570,7 @@ ElementsTable.Dropdown = (function()
 
 		local ListSizeX = 0
 		local function RecalculateListSize()
+			ListSizeX = DropdownInner.AbsoluteSize.X
 			if #Dropdown.Values > MAX_DROPDOWN_ITEMS then
 				DropdownHolderCanvas.Size = UDim2.fromOffset(ListSizeX, (42 * MAX_DROPDOWN_ITEMS) - 10) -- ปรับขนาดตาม item ที่ใหญ่ขึ้น
 			else
