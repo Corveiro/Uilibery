@@ -2609,21 +2609,27 @@ Components.Window = (function()
 		})
 
 		-- LogoHub: elemento de logo configurável (quem cria o script define a imagem)
-		-- aceita: Config.LogoHub = "rbxassetid://..." ou Config.LogoHub = { Image = "...", Size = 110 }
+		-- aceita: Config.LogoHub = "rbxassetid://..." ou Config.LogoHub = { Image = "...", Size = 100, OffsetY = 66 }
 		-- Config.Logo continua funcionando por retrocompatibilidade.
 		local LogoHubConfig = Config.LogoHub or Config.Logo or {}
 		if type(LogoHubConfig) == "string" then
 			LogoHubConfig = { Image = LogoHubConfig }
 		end
 		local LogoHubImage = LogoHubConfig.Image
-		local LogoHubSize = LogoHubConfig.Size or 110
+		local LogoHubSize = LogoHubConfig.Size or 100
+
+		-- a TitleBar (título/subtítulo) tem 40px de altura fixa (Components.TitleBar).
+		-- some uma margem generosa embaixo dela pra logo nunca encostar no título.
+		local TitleBarHeight = 40
+		local LogoHubOffsetY = LogoHubConfig.OffsetY or (TitleBarHeight + 26) -- 66
+		local LogoHubBottom = LogoHubOffsetY + LogoHubSize
 
 		local Icon = New("ImageLabel", {
 			BackgroundTransparency = 1,
 			Image = LogoHubImage or "",
 			ImageTransparency = LogoHubImage and 0 or 1,
 			Size = UDim2.fromOffset(LogoHubSize, LogoHubSize),
-			Position = UDim2.new(0, 12 + (Window.TabWidth / 2), 0, 46),
+			Position = UDim2.new(0, 12 + (Window.TabWidth / 2), 0, LogoHubOffsetY),
 			AnchorPoint = Vector2.new(0.5, 0),
 			ScaleType = Enum.ScaleType.Fit,
 			Visible = LogoHubConfig.Visible ~= false,
@@ -2646,9 +2652,14 @@ Components.Window = (function()
 
 		local OFFSETY = 0  -- tab list เริ่มใต้ titlebar ทันที
 
+		-- lista de tabs começa sempre abaixo da logo, com um espaçamento de 14px
+		local TabListGap = 14
+		local TabListTop = LogoHubBottom + TabListGap
+		local TabListBottomPadding = 12
+
 		local TabFrame = New("Frame", {
-			Size             = UDim2.new(0, Window.TabWidth, 1, -176),
-			Position         = UDim2.new(0, 12, 0, 164),
+			Size             = UDim2.new(0, Window.TabWidth, 1, -(TabListTop + TabListBottomPadding)),
+			Position         = UDim2.new(0, 12, 0, TabListTop),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
