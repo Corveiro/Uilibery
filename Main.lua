@@ -2570,7 +2570,7 @@ Components.Window = (function()
 		local MinimizeNotif = false
 
 		--Window.AcrylicPaint = Acrylic.AcrylicPaint()
-		Window.TabWidth = Config.TabWidth
+		Window.TabWidth = Config.TabWidth or 150
 
 		local Selector = New("Frame", {
 			Size = UDim2.fromOffset(4, 0),
@@ -2624,25 +2624,77 @@ Components.Window = (function()
 		local LogoHubOffsetY = LogoHubConfig.OffsetY or (TitleBarHeight + 26) -- 66
 		local LogoHubBottom = LogoHubOffsetY + LogoHubSize
 
-		local Icon = New("ImageLabel", {
+		local IconHolder = New("Frame", {
 			BackgroundTransparency = 1,
-			Image = LogoHubImage or "",
-			ImageTransparency = LogoHubImage and 0 or 1,
 			Size = UDim2.fromOffset(LogoHubSize, LogoHubSize),
 			Position = UDim2.new(0, 12 + (Window.TabWidth / 2), 0, LogoHubOffsetY),
 			AnchorPoint = Vector2.new(0.5, 0),
-			ScaleType = Enum.ScaleType.Fit,
 			Visible = LogoHubConfig.Visible ~= false,
+		}, {
+			New("UIScale", { Scale = 0.85 }),
 		})
+		local IconScale = IconHolder.UIScale
+
+		-- glow suave atrás da logo (usa a cor de destaque do tema)
+		local IconGlow = New("ImageLabel", {
+			Image = "rbxassetid://5028857084",
+			ScaleType = Enum.ScaleType.Slice,
+			SliceCenter = Rect.new(24, 24, 276, 276),
+			Size = UDim2.new(1, 46, 1, 46),
+			Position = UDim2.fromScale(0.5, 0.5),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundTransparency = 1,
+			ImageTransparency = 1,
+			ZIndex = 0,
+			Parent = IconHolder,
+			ThemeTag = { ImageColor3 = "Accent" },
+		})
+
+		local Icon = New("ImageLabel", {
+			BackgroundTransparency = 1,
+			Image = LogoHubImage or "",
+			ImageTransparency = 1,
+			Size = UDim2.fromScale(1, 1),
+			ScaleType = Enum.ScaleType.Fit,
+			ZIndex = 1,
+			Parent = IconHolder,
+		})
+
+		local function PlayLogoIntro()
+			if not Icon.Image or Icon.Image == "" then return end
+			IconScale.Scale = 0.85
+			TweenService:Create(IconScale, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+				Scale = 1,
+			}):Play()
+			TweenService:Create(Icon, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+				ImageTransparency = 0,
+			}):Play()
+			TweenService:Create(IconGlow, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				ImageTransparency = 0.55,
+			}):Play()
+		end
+
+		task.defer(PlayLogoIntro)
 
 		Window.LogoHub = {
 			Instance = Icon,
 			SetImage = function(_, NewImage)
-				Icon.Image = NewImage or ""
-				Icon.ImageTransparency = NewImage and 0 or 1
+				if not NewImage or NewImage == "" then
+					TweenService:Create(Icon, TweenInfo.new(0.2), { ImageTransparency = 1 }):Play()
+					TweenService:Create(IconGlow, TweenInfo.new(0.2), { ImageTransparency = 1 }):Play()
+					task.delay(0.2, function()
+						Icon.Image = ""
+					end)
+					return
+				end
+				TweenService:Create(Icon, TweenInfo.new(0.15), { ImageTransparency = 1 }):Play()
+				task.delay(0.15, function()
+					Icon.Image = NewImage
+					PlayLogoIntro()
+				end)
 			end,
 			SetVisible = function(_, Bool)
-				Icon.Visible = Bool
+				IconHolder.Visible = Bool
 			end,
 		}
 
@@ -2753,7 +2805,7 @@ Components.Window = (function()
 		        ThemeTag = { ImageColor3 = "Accent" },
 		    }),
 		    AcrylicFrame,   -- ใช้ตัวแปร แทน Window.AcrylicPaint.Frame
-		    Icon,
+		    IconHolder,
 		    Window.TabDisplay,
 		    Window.ContainerCanvas,
 		    TabFrame,
@@ -6833,22 +6885,85 @@ function Library:CreateWindow(Config)
 	-- ================== PREMIUM LOADING SCREEN ==================
 	if not Config.NoLoadingScreen then
 		pcall(function()
+			-- aceita o mesmo logo configurável usado no LogoHub (imagem opcional)
+			local SplashLogoConfig = Config.LogoHub or Config.Logo or Config.Icon
+			if type(SplashLogoConfig) == "string" then
+				SplashLogoConfig = { Image = SplashLogoConfig }
+			end
+			local SplashLogoImage = type(SplashLogoConfig) == "table" and SplashLogoConfig.Image or nil
+
 			local LoadingGui = New("Frame", {
 				Size = UDim2.fromScale(1, 1),
-				BackgroundColor3 = Color3.fromRGB(15, 15, 18),
+				BackgroundColor3 = Color3.fromRGB(13, 13, 16),
 				BackgroundTransparency = 0,
 				ZIndex = 999,
 				Parent = GUI,
 			})
 
+			-- vinheta radial sutil pra dar profundidade ao fundo
+			New("ImageLabel", {
+				Image = "rbxassetid://5028857084",
+				ImageColor3 = Color3.fromRGB(0, 0, 0),
+				ImageTransparency = 0.25,
+				ScaleType = Enum.ScaleType.Slice,
+				SliceCenter = Rect.new(24, 24, 276, 276),
+				Size = UDim2.new(1, 220, 1, 220),
+				Position = UDim2.fromScale(0.5, 0.5),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundTransparency = 1,
+				ZIndex = 999,
+				Parent = LoadingGui,
+			})
+
+			local LogoHolder
+			local LogoImage
+			local LogoGlow
+			if SplashLogoImage then
+				LogoHolder = New("Frame", {
+					Size = UDim2.fromOffset(64, 64),
+					Position = UDim2.new(0.5, 0, 0.36, 0),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundTransparency = 1,
+					ZIndex = 1000,
+					Parent = LoadingGui,
+				}, {
+					New("UIScale", { Scale = 0.7 }),
+				})
+
+				LogoGlow = New("ImageLabel", {
+					Image = "rbxassetid://5028857084",
+					ImageColor3 = Color3.fromRGB(245, 166, 35),
+					ImageTransparency = 1,
+					ScaleType = Enum.ScaleType.Slice,
+					SliceCenter = Rect.new(24, 24, 276, 276),
+					Size = UDim2.new(1, 60, 1, 60),
+					Position = UDim2.fromScale(0.5, 0.5),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundTransparency = 1,
+					ZIndex = 999,
+					Parent = LogoHolder,
+					ThemeTag = { ImageColor3 = "Accent" },
+				})
+
+				LogoImage = New("ImageLabel", {
+					Image = SplashLogoImage,
+					ImageTransparency = 1,
+					ScaleType = Enum.ScaleType.Fit,
+					Size = UDim2.fromScale(1, 1),
+					BackgroundTransparency = 1,
+					ZIndex = 1000,
+					Parent = LogoHolder,
+				})
+			end
+
 			local LogoLabel = New("TextLabel", {
 				Text = Config.Title,
 				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
-				TextSize = 26,
+				TextSize = 24,
 				TextColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1,
-				Size = UDim2.new(1, 0, 0, 40),
-				Position = UDim2.new(0.5, 0, 0.42, 0),
+				Size = UDim2.new(1, 0, 0, 34),
+				Position = UDim2.new(0.5, 0, SplashLogoImage and 0.5 or 0.44, 0),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				TextTransparency = 1,
 				ZIndex = 1000,
@@ -6856,13 +6971,13 @@ function Library:CreateWindow(Config)
 			})
 
 			local SubLabel = New("TextLabel", {
-				Text = Config.SubTitle or "Loading...",
+				Text = Config.SubTitle or "Carregando...",
 				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 				TextSize = 13,
 				TextColor3 = Color3.fromRGB(160, 160, 170),
 				BackgroundTransparency = 1,
 				Size = UDim2.new(1, 0, 0, 20),
-				Position = UDim2.new(0.5, 0, 0.48, 0),
+				Position = UDim2.new(0.5, 0, SplashLogoImage and 0.555 or 0.5, 0),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				TextTransparency = 1,
 				ZIndex = 1000,
@@ -6870,10 +6985,10 @@ function Library:CreateWindow(Config)
 			})
 
 			local BarHolder = New("Frame", {
-				Size = UDim2.new(0, 220, 0, 4),
-				Position = UDim2.new(0.5, 0, 0.53, 0),
+				Size = UDim2.new(0, 200, 0, 3),
+				Position = UDim2.new(0.5, 0, SplashLogoImage and 0.61 or 0.555, 0),
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				BackgroundColor3 = Color3.fromRGB(40, 40, 46),
+				BackgroundColor3 = Color3.fromRGB(38, 38, 44),
 				BackgroundTransparency = 1,
 				ZIndex = 1000,
 				Parent = LoadingGui,
@@ -6888,24 +7003,48 @@ function Library:CreateWindow(Config)
 				Parent = BarHolder,
 			}, {
 				New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+				New("UIGradient", {
+					Color = ColorSequence.new(Color3.fromRGB(245, 166, 35), Color3.fromRGB(255, 220, 150)),
+				}),
 			})
 
-			-- fade in
-			TweenService:Create(LogoLabel, TweenInfo.new(0.5), { TextTransparency = 0 }):Play()
-			TweenService:Create(SubLabel, TweenInfo.new(0.5), { TextTransparency = 0.2 }):Play()
-			TweenService:Create(BarHolder, TweenInfo.new(0.5), { BackgroundTransparency = 0 }):Play()
-			TweenService:Create(BarFill, TweenInfo.new(1.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 1, 0) }):Play()
+			-- ── entrada escalonada (logo -> título -> subtítulo -> barra) ──
+			if LogoHolder then
+				TweenService:Create(LogoHolder.UIScale, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+					Scale = 1,
+				}):Play()
+				TweenService:Create(LogoImage, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+					ImageTransparency = 0,
+				}):Play()
+				TweenService:Create(LogoGlow, TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					ImageTransparency = 0.5,
+				}):Play()
+			end
 
-			task.wait(1.3)
+			task.wait(0.12)
+			TweenService:Create(LogoLabel, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { TextTransparency = 0 }):Play()
 
-			TweenService:Create(LoadingGui, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
-			TweenService:Create(LogoLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
-			TweenService:Create(SubLabel, TweenInfo.new(0.35), { TextTransparency = 1 }):Play()
-			TweenService:Create(BarHolder, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
+			task.wait(0.08)
+			TweenService:Create(SubLabel, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { TextTransparency = 0.2 }):Play()
+			TweenService:Create(BarHolder, TweenInfo.new(0.4), { BackgroundTransparency = 0 }):Play()
+			TweenService:Create(BarFill, TweenInfo.new(1.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 1, 0) }):Play()
+
+			task.wait(1.15)
+
+			-- ── saída (fade geral + leve "subida" da logo) ──
+			TweenService:Create(LoadingGui, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
+			TweenService:Create(LogoLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
+			TweenService:Create(SubLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
+			TweenService:Create(BarHolder, TweenInfo.new(0.3), { BackgroundTransparency = 1 }):Play()
+			if LogoHolder then
+				TweenService:Create(LogoImage, TweenInfo.new(0.3), { ImageTransparency = 1 }):Play()
+				TweenService:Create(LogoGlow, TweenInfo.new(0.3), { ImageTransparency = 1 }):Play()
+				TweenService:Create(LogoHolder.UIScale, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In), { Scale = 1.08 }):Play()
+			end
 
 			-- task.wait em vez de Tween.Completed:Wait() -- Wait() em Tween pode travar
 			-- para sempre em alguns executores, o que bloquearia a criação das abas.
-			task.wait(0.45)
+			task.wait(0.4)
 			LoadingGui:Destroy()
 		end)
 	end
@@ -6925,7 +7064,24 @@ function Library:CreateWindow(Config)
 		Title = Config.Title,
 		SubTitle = Config.SubTitle,
 		TabWidth = Config.TabWidth,
+		LogoHub = Config.LogoHub,
+		Logo = Config.Logo,
 	})
+
+	do
+		-- ================== ENTRADA DA JANELA (fade + scale) ==================
+		local EntryScale = Instance.new("UIScale")
+		EntryScale.Scale = 0.9
+		EntryScale.Parent = Window.Root
+
+		TweenService:Create(EntryScale, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+			Scale = 1,
+		}):Play()
+
+		task.delay(0.5, function()
+			if EntryScale then EntryScale:Destroy() end
+		end)
+	end
 
 	Library.Window = Window
 	InterfaceManager:SetTheme(Config.Theme)
