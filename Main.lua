@@ -1251,7 +1251,7 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 	Element.Frame = New("TextButton", {
 		Visible = Options.Visible and Options.Visible or true,
 		Size = UDim2.new(1, 0, 0, 0),
-		BackgroundTransparency = 0.75,
+		BackgroundTransparency = 0,
 		BackgroundColor3 = Color3.fromRGB(130, 130, 130),
 		Parent = Parent,
 		AutomaticSize = Enum.AutomaticSize.Y,
@@ -2610,10 +2610,10 @@ Components.Window = (function()
 
 		local Icon = New("ImageLabel", {
 			BackgroundTransparency = 1,
-			Image = Config.Logo or "",
-			ImageTransparency = Config.Logo and 0 or 1,
-			Size = UDim2.fromOffset(40, 40),
-			Position = UDim2.new(0, 12, 0, 50),
+			Image = Config.Logo or "rbxassetid://116593268376729",
+			ImageTransparency = 0,
+			Size = UDim2.fromOffset(64, 64),
+			Position = UDim2.new(0, 12, 0, 46),
 			ScaleType = Enum.ScaleType.Fit,
 			Parent = Window.Root,
 		})
@@ -2621,8 +2621,8 @@ Components.Window = (function()
 		local OFFSETY = 0  -- tab list เริ่มใต้ titlebar ทันที
 
 		local TabFrame = New("Frame", {
-			Size             = UDim2.new(0, Window.TabWidth, 1, -102),
-			Position         = UDim2.new(0, 12, 0, 90),
+			Size             = UDim2.new(0, Window.TabWidth, 1, -128),
+			Position         = UDim2.new(0, 12, 0, 116),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
@@ -3542,20 +3542,11 @@ ElementsTable.Dropdown = (function()
         }
 
         local function RecalculateListPosition()
-            local Add = 0
-            local availableSpace = Camera.ViewportSize.Y - (DropdownInner.AbsolutePosition.Y + DropdownInner.AbsoluteSize.Y)
+            local baseX = DropdownInner.AbsolutePosition.X - 1 + XADD
             local neededSpace = DropdownHolderCanvas.AbsoluteSize.Y - 5
 
-            local baseX = DropdownInner.AbsolutePosition.X - 1 + XADD
-            local baseY
-
-            if availableSpace < neededSpace then
-                -- não cabe embaixo: abre para cima, colado no dropdown
-                baseY = DropdownInner.AbsolutePosition.Y - neededSpace - 6
-            else
-                -- abre logo abaixo do dropdown, alinhado com ele (não mais deslocado pro lado)
-                baseY = DropdownInner.AbsolutePosition.Y + DropdownInner.AbsoluteSize.Y + DEFAULT_Y_OFFSET_WITH_OBJ
-            end
+            -- abre sempre para cima, colado no dropdown (dentro da área da UI)
+            local baseY = DropdownInner.AbsolutePosition.Y - neededSpace - 6
 
             for _, entry in ipairs(MoveList) do
                 local inst = entry.Instance
@@ -6865,7 +6856,7 @@ function Library:CreateWindow(Config)
 	Library.MinimizeKey = Config.MinimizeKey or Enum.KeyCode.RightControl
 	Library.UseAcrylic = Config.Acrylic or false
 	Library.Acrylic = Config.Acrylic or false
-	Library.Theme = Config.Theme or "Darker"
+	Library.Theme = Config.Theme or "Dark"
 	Library.Transparency = Config.Transparency or false
 	if Config.Acrylic then
 		Acrylic.init()
