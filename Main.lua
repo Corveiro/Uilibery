@@ -2612,8 +2612,9 @@ Components.Window = (function()
 			BackgroundTransparency = 1,
 			Image = Config.Logo or "rbxassetid://116593268376729",
 			ImageTransparency = 0,
-			Size = UDim2.fromOffset(84, 84),
-			Position = UDim2.new(0, 10, 0, 44),
+			Size = UDim2.fromOffset(110, 110),
+			Position = UDim2.new(0, 12 + (Window.TabWidth / 2), 0, 20),
+			AnchorPoint = Vector2.new(0.5, 0),
 			ScaleType = Enum.ScaleType.Fit,
 		})
 
@@ -2677,8 +2678,8 @@ Components.Window = (function()
 		            ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 210, 210)),
 		        }),
 		        Transparency = NumberSequence.new({
-		            NumberSequenceKeypoint.new(0, 0.94),
-		            NumberSequenceKeypoint.new(1, 1),
+		            NumberSequenceKeypoint.new(0, 0),
+		            NumberSequenceKeypoint.new(1, 0),
 		        }),
 		    }),
 		    New("UIStroke", {
@@ -3547,9 +3548,21 @@ ElementsTable.Dropdown = (function()
             local baseX, baseY
 
             if WinRoot then
-                -- abre flutuando, fixo perto do topo da janela (não mais deslocado pro lado)
-                baseX = WinRoot.AbsolutePosition.X + (WinRoot.AbsoluteSize.X / 2) - (DropdownHolderCanvas.AbsoluteSize.X / 2)
-                baseY = WinRoot.AbsolutePosition.Y + 46
+                -- abre ao lado da UI, encostado na borda, alinhado com o topo da janela
+                local gap = 10
+                local screenWidth = Camera.ViewportSize.X
+                local rightX = WinRoot.AbsolutePosition.X + WinRoot.AbsoluteSize.X + gap
+                local leftX = WinRoot.AbsolutePosition.X - DropdownHolderCanvas.AbsoluteSize.X - gap
+
+                if rightX + DropdownHolderCanvas.AbsoluteSize.X <= screenWidth then
+                    baseX = rightX
+                elseif leftX >= 0 then
+                    baseX = leftX
+                else
+                    baseX = rightX
+                end
+
+                baseY = WinRoot.AbsolutePosition.Y
             else
                 baseX = DropdownInner.AbsolutePosition.X - 1 + XADD
                 baseY = DropdownInner.AbsolutePosition.Y - neededSpace - 6
