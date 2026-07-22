@@ -2608,21 +2608,47 @@ Components.Window = (function()
 			}),
 		})
 
+		-- LogoHub: elemento de logo configurável (quem cria o script define a imagem)
+		-- aceita: Config.LogoHub = "rbxassetid://..." ou Config.LogoHub = { Image = "...", Size = 110 }
+		-- Config.Logo continua funcionando por retrocompatibilidade.
+		local LogoHubConfig = Config.LogoHub or Config.Logo or {}
+		if type(LogoHubConfig) == "string" then
+			LogoHubConfig = { Image = LogoHubConfig }
+		end
+		local LogoHubImage = LogoHubConfig.Image
+		local LogoHubSize = LogoHubConfig.Size or 110
+
 		local Icon = New("ImageLabel", {
 			BackgroundTransparency = 1,
-			Image = Config.Logo or "rbxassetid://116593268376729",
-			ImageTransparency = 0,
-			Size = UDim2.fromOffset(110, 110),
-			Position = UDim2.new(0, 12 + (Window.TabWidth / 2), 0, 20),
+			Image = LogoHubImage or "",
+			ImageTransparency = LogoHubImage and 0 or 1,
+			Size = UDim2.fromOffset(LogoHubSize, LogoHubSize),
+			Position = UDim2.new(0, 12 + (Window.TabWidth / 2), 0, 46),
 			AnchorPoint = Vector2.new(0.5, 0),
 			ScaleType = Enum.ScaleType.Fit,
+			Visible = LogoHubConfig.Visible ~= false,
 		})
+
+		Window.LogoHub = {
+			Instance = Icon,
+			SetImage = function(_, NewImage)
+				Icon.Image = NewImage or ""
+				Icon.ImageTransparency = NewImage and 0 or 1
+			end,
+			SetVisible = function(_, Bool)
+				Icon.Visible = Bool
+			end,
+		}
+
+		function Window:SetLogoHub(NewImage)
+			Window.LogoHub:SetImage(NewImage)
+		end
 
 		local OFFSETY = 0  -- tab list เริ่มใต้ titlebar ทันที
 
 		local TabFrame = New("Frame", {
-			Size             = UDim2.new(0, Window.TabWidth, 1, -148),
-			Position         = UDim2.new(0, 12, 0, 136),
+			Size             = UDim2.new(0, Window.TabWidth, 1, -176),
+			Position         = UDim2.new(0, 12, 0, 164),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
