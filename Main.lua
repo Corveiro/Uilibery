@@ -6884,7 +6884,8 @@ function Library:CreateWindow(Config)
 
 	-- ================== PREMIUM LOADING SCREEN ==================
 	if not Config.NoLoadingScreen then
-		pcall(function()
+		local LoadingGui
+		local Success, ErrMsg = pcall(function()
 			-- aceita o mesmo logo configurável usado no LogoHub (imagem opcional)
 			local SplashLogoConfig = Config.LogoHub or Config.Logo or Config.Icon
 			if type(SplashLogoConfig) == "string" then
@@ -6892,7 +6893,7 @@ function Library:CreateWindow(Config)
 			end
 			local SplashLogoImage = type(SplashLogoConfig) == "table" and SplashLogoConfig.Image or nil
 
-			local LoadingGui = New("Frame", {
+			LoadingGui = New("Frame", {
 				Size = UDim2.fromScale(1, 1),
 				BackgroundColor3 = Color3.fromRGB(13, 13, 16),
 				BackgroundTransparency = 0,
@@ -6942,7 +6943,6 @@ function Library:CreateWindow(Config)
 					BackgroundTransparency = 1,
 					ZIndex = 999,
 					Parent = LogoHolder,
-					ThemeTag = { ImageColor3 = "Accent" },
 				})
 
 				LogoImage = New("ImageLabel", {
@@ -7046,7 +7046,15 @@ function Library:CreateWindow(Config)
 			-- para sempre em alguns executores, o que bloquearia a criação das abas.
 			task.wait(0.4)
 			LoadingGui:Destroy()
+			LoadingGui = nil
 		end)
+
+		if not Success then
+			warn("[UI Library] Erro na tela de carregamento: " .. tostring(ErrMsg))
+			if LoadingGui then
+				LoadingGui:Destroy()
+			end
+		end
 	end
 
 	Library.MinimizeKey = Config.MinimizeKey or Enum.KeyCode.RightControl
