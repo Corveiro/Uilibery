@@ -2313,19 +2313,19 @@ Components.TitleBar = function(Config)
 	}, {
 		-- ── Divisor com gradiente sutil embaixo da barra ─────
 		New("Frame", {
-			Size             = UDim2.new(1, 0, 0, 1),
+			Size             = UDim2.new(1, 0, 0, 2),
 			Position         = UDim2.new(0, 0, 1, 0),
 			AnchorPoint      = Vector2.new(0, 1),
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-			BackgroundTransparency = 0.85,
+			BackgroundTransparency = 0.4,
 			BorderSizePixel  = 0,
-			ThemeTag         = { BackgroundColor3 = "ElementBorder" },
+			ThemeTag         = { BackgroundColor3 = "Accent" },
 		}, {
 			New("UIGradient", {
 				Transparency = NumberSequence.new({
-					NumberSequenceKeypoint.new(0, 1),
-					NumberSequenceKeypoint.new(0.5, 0.3),
-					NumberSequenceKeypoint.new(1, 1),
+					NumberSequenceKeypoint.new(0, 0.4),
+					NumberSequenceKeypoint.new(0.5, 0),
+					NumberSequenceKeypoint.new(1, 0.4),
 				}),
 			}),
 		}),
@@ -2612,17 +2612,16 @@ Components.Window = (function()
 			BackgroundTransparency = 1,
 			Image = Config.Logo or "rbxassetid://116593268376729",
 			ImageTransparency = 0,
-			Size = UDim2.fromOffset(64, 64),
-			Position = UDim2.new(0, 12, 0, 46),
+			Size = UDim2.fromOffset(84, 84),
+			Position = UDim2.new(0, 10, 0, 44),
 			ScaleType = Enum.ScaleType.Fit,
-			Parent = Window.Root,
 		})
 
 		local OFFSETY = 0  -- tab list เริ่มใต้ titlebar ทันที
 
 		local TabFrame = New("Frame", {
-			Size             = UDim2.new(0, Window.TabWidth, 1, -128),
-			Position         = UDim2.new(0, 12, 0, 116),
+			Size             = UDim2.new(0, Window.TabWidth, 1, -148),
+			Position         = UDim2.new(0, 12, 0, 136),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
@@ -2716,6 +2715,7 @@ Components.Window = (function()
 		        ThemeTag = { ImageColor3 = "Accent" },
 		    }),
 		    AcrylicFrame,   -- ใช้ตัวแปร แทน Window.AcrylicPaint.Frame
+		    Icon,
 		    Window.TabDisplay,
 		    Window.ContainerCanvas,
 		    TabFrame,
@@ -3542,11 +3542,18 @@ ElementsTable.Dropdown = (function()
         }
 
         local function RecalculateListPosition()
-            local baseX = DropdownInner.AbsolutePosition.X - 1 + XADD
+            local WinRoot = Library.Window and Library.Window.Root
             local neededSpace = DropdownHolderCanvas.AbsoluteSize.Y - 5
+            local baseX, baseY
 
-            -- abre sempre para cima, colado no dropdown (dentro da área da UI)
-            local baseY = DropdownInner.AbsolutePosition.Y - neededSpace - 6
+            if WinRoot then
+                -- abre flutuando, fixo perto do topo da janela (não mais deslocado pro lado)
+                baseX = WinRoot.AbsolutePosition.X + (WinRoot.AbsoluteSize.X / 2) - (DropdownHolderCanvas.AbsoluteSize.X / 2)
+                baseY = WinRoot.AbsolutePosition.Y + 46
+            else
+                baseX = DropdownInner.AbsolutePosition.X - 1 + XADD
+                baseY = DropdownInner.AbsolutePosition.Y - neededSpace - 6
+            end
 
             for _, entry in ipairs(MoveList) do
                 local inst = entry.Instance
@@ -4402,7 +4409,7 @@ local function SafeAssetId(id)
 			Size = UDim2.new(0, 108, 0, 30),
 			Position = UDim2.new(1, -14, 1, -14),
 			AnchorPoint = Vector2.new(1, 1),
-			BackgroundColor3 = Color3.fromRGB(88, 101, 242), -- Discord blurple
+			ThemeTag = { BackgroundColor3 = "Accent" },
 			ZIndex = 3,
 			Parent = Card,
 		}, {
