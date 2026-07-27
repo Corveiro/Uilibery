@@ -1257,16 +1257,41 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		AutomaticSize = Enum.AutomaticSize.Y,
 		Text = "",
 		LayoutOrder = 7,
+		ClipsDescendants = true,
 		ThemeTag = {
 			BackgroundColor3 = "Element",
 			BackgroundTransparency = "ElementTransparency",
 		},
 	}, {
 		New("UICorner", {
-			CornerRadius = UDim.new(0, 6),
+			CornerRadius = UDim.new(0, 8),
+		}),
+		New("UIGradient", {
+			Rotation = 90,
+			Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 210, 210)),
+			}),
+			Transparency = NumberSequence.new({
+				NumberSequenceKeypoint.new(0, 0.94),
+				NumberSequenceKeypoint.new(1, 1),
+			}),
 		}),
 		Element.Border,
 		Element.LabelHolder,
+	})
+
+	-- ── barra de destaque à esquerda (acende suave no hover) ──
+	Element.AccentBar = New("Frame", {
+		Size = UDim2.new(0, 3, 1, -10),
+		Position = UDim2.fromOffset(0, 5),
+		BackgroundColor3 = Color3.fromRGB(245, 166, 35),
+		BackgroundTransparency = 1,
+		ZIndex = 2,
+		Parent = Element.Frame,
+		ThemeTag = { BackgroundColor3 = "Accent" },
+	}, {
+		New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 	})
 
 	function Element:SetTitle(Set)
@@ -1321,10 +1346,16 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.15,
 		}):Play()
+		TweenService:Create(Element.AccentBar, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			BackgroundTransparency = 0.35,
+		}):Play()
 	end)
 	Creator.AddSignal(Element.Frame.MouseLeave, function()
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.35,
+		}):Play()
+		TweenService:Create(Element.AccentBar, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			BackgroundTransparency = 1,
 		}):Play()
 	end)
 
@@ -3195,6 +3226,17 @@ ElementsTable.Toggle = (function()
 			Parent           = Track,
 		}, {
 			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			New("UIGradient", {
+				Rotation = 90,
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+					ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 150, 150)),
+				}),
+				Transparency = NumberSequence.new({
+					NumberSequenceKeypoint.new(0, 0.75),
+					NumberSequenceKeypoint.new(1, 0.9),
+				}),
+			}),
 		})
 
 		-- ── Thumb ─────────────────────────────────────────────
@@ -3207,6 +3249,13 @@ ElementsTable.Toggle = (function()
 			Parent           = Track,
 		}, {
 			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			New("UIGradient", {
+				Rotation = 90,
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+					ColorSequenceKeypoint.new(1, Color3.fromRGB(215, 215, 220)),
+				}),
+			}),
 		})
 
 		-- ── Glow (visível apenas quando ligado) ──────────────
