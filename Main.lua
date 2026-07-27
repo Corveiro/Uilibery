@@ -1257,41 +1257,16 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		AutomaticSize = Enum.AutomaticSize.Y,
 		Text = "",
 		LayoutOrder = 7,
-		ClipsDescendants = true,
 		ThemeTag = {
 			BackgroundColor3 = "Element",
 			BackgroundTransparency = "ElementTransparency",
 		},
 	}, {
 		New("UICorner", {
-			CornerRadius = UDim.new(0, 8),
-		}),
-		New("UIGradient", {
-			Rotation = 90,
-			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 210, 210)),
-			}),
-			Transparency = NumberSequence.new({
-				NumberSequenceKeypoint.new(0, 0.94),
-				NumberSequenceKeypoint.new(1, 1),
-			}),
+			CornerRadius = UDim.new(0, 6),
 		}),
 		Element.Border,
 		Element.LabelHolder,
-	})
-
-	-- ── barra de destaque à esquerda (acende suave no hover) ──
-	Element.AccentBar = New("Frame", {
-		Size = UDim2.new(0, 3, 1, -10),
-		Position = UDim2.fromOffset(0, 5),
-		BackgroundColor3 = Color3.fromRGB(245, 166, 35),
-		BackgroundTransparency = 1,
-		ZIndex = 2,
-		Parent = Element.Frame,
-		ThemeTag = { BackgroundColor3 = "Accent" },
-	}, {
-		New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 	})
 
 	function Element:SetTitle(Set)
@@ -1346,16 +1321,10 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.15,
 		}):Play()
-		TweenService:Create(Element.AccentBar, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			BackgroundTransparency = 0.35,
-		}):Play()
 	end)
 	Creator.AddSignal(Element.Frame.MouseLeave, function()
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.35,
-		}):Play()
-		TweenService:Create(Element.AccentBar, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			BackgroundTransparency = 1,
 		}):Play()
 	end)
 
@@ -2648,14 +2617,12 @@ Components.Window = (function()
 		end
 		local LogoHubImage = LogoHubConfig.Image
 		local LogoHubSize = LogoHubConfig.Size or 100
-		local HasLogoHub = LogoHubImage ~= nil and LogoHubImage ~= ""
 
 		-- a TitleBar (título/subtítulo) tem 40px de altura fixa (Components.TitleBar).
-		-- só reserva o espaço grande da logo se ela realmente existir - senão a
-		-- lista de abas sobe e cola logo abaixo do título, sem sobrar vão vazio.
+		-- some uma margem generosa embaixo dela pra logo nunca encostar no título.
 		local TitleBarHeight = 40
-		local LogoHubOffsetY = LogoHubConfig.OffsetY or (HasLogoHub and (TitleBarHeight + 26) or TitleBarHeight) -- 66 com logo / 40 sem
-		local LogoHubBottom = HasLogoHub and (LogoHubOffsetY + LogoHubSize) or LogoHubOffsetY
+		local LogoHubOffsetY = LogoHubConfig.OffsetY or (TitleBarHeight + 26) -- 66
+		local LogoHubBottom = LogoHubOffsetY + LogoHubSize
 
 		local IconHolder = New("Frame", {
 			BackgroundTransparency = 1,
@@ -3226,17 +3193,6 @@ ElementsTable.Toggle = (function()
 			Parent           = Track,
 		}, {
 			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-			New("UIGradient", {
-				Rotation = 90,
-				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 150, 150)),
-				}),
-				Transparency = NumberSequence.new({
-					NumberSequenceKeypoint.new(0, 0.75),
-					NumberSequenceKeypoint.new(1, 0.9),
-				}),
-			}),
 		})
 
 		-- ── Thumb ─────────────────────────────────────────────
@@ -3249,13 +3205,6 @@ ElementsTable.Toggle = (function()
 			Parent           = Track,
 		}, {
 			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-			New("UIGradient", {
-				Rotation = 90,
-				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(215, 215, 220)),
-				}),
-			}),
 		})
 
 		-- ── Glow (visível apenas quando ligado) ──────────────
@@ -6925,297 +6874,7 @@ local InterfaceManager = {} do
 	end
 end
 
--- ================== KEY SYSTEM ==================
--- Tela minimalista de entrada de Key, mostrada ANTES da janela principal.
--- Uso no script:
---   local Ok = Fluent:CreateKeySystem({
---       Title = "Meu Hub",
---       Subtitle = "Key System",
---       Logo = "rbxassetid://...",
---       Note = "Pegue sua key no Discord",
---       Keys = {"CHAVE1", "CHAVE2"},
---       KeyLink = "https://discord.gg/...",
---       SaveKey = true,
---   })
---   if not Ok then return end -- pessoa fechou sem validar
-function Library:CreateKeySystem(Config)
-	Config = Config or {}
-	local HubTitle    = Config.Title or "Hub"
-	local HubSubtitle = Config.Subtitle or "Key System"
-	local Note        = Config.Note or "Insira sua key para continuar"
-	local LogoImage   = Config.Logo or Config.LogoHub
-	local KeyLink     = Config.KeyLink
-	local SaveKey     = Config.SaveKey ~= false
-	local FileName    = Config.FileName or (HubTitle:gsub("%s+", "") .. "_Key.txt")
-	local ValidateFn  = Config.Validate -- function(key) -> bool, opcional
-	local ValidKeys   = {}
-	for _, k in ipairs(Config.Key or Config.Keys or {}) do
-		ValidKeys[tostring(k):lower()] = true
-	end
-
-	local function IsValidKey(K)
-		if type(ValidateFn) == "function" then
-			local Ok, Result = pcall(ValidateFn, K)
-			return Ok and Result == true
-		end
-		return ValidKeys[tostring(K):lower()] == true
-	end
-
-	-- tenta usar uma key salva de sessões anteriores
-	if SaveKey and readfile and isfile and pcall(isfile, FileName) and isfile(FileName) then
-		local Ok, Saved = pcall(readfile, FileName)
-		if Ok and Saved and IsValidKey(Saved) then
-			return true
-		end
-	end
-
-	local Approved = false
-	local Closed = false
-
-	local KeyGui = New("Frame", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Color3.fromRGB(10, 10, 13),
-		BackgroundTransparency = 1,
-		ZIndex = 998,
-		Parent = GUI,
-	})
-	TweenService:Create(KeyGui, TweenInfo.new(0.35), { BackgroundTransparency = 0.05 }):Play()
-
-	-- vinheta radial de fundo (mesmo recurso usado na loading screen)
-	New("ImageLabel", {
-		Image = "rbxassetid://5028857084",
-		ImageColor3 = Color3.fromRGB(0, 0, 0),
-		ImageTransparency = 0.2,
-		ScaleType = Enum.ScaleType.Slice,
-		SliceCenter = Rect.new(24, 24, 276, 276),
-		Size = UDim2.new(1, 260, 1, 260),
-		Position = UDim2.fromScale(0.5, 0.5),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		BackgroundTransparency = 1,
-		ZIndex = 998,
-		Parent = KeyGui,
-	})
-
-	local Card = New("Frame", {
-		Size = UDim2.fromOffset(340, LogoImage and 400 or 340),
-		Position = UDim2.fromScale(0.5, 0.5),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		BackgroundColor3 = Color3.fromRGB(18, 18, 22),
-		BackgroundTransparency = 1,
-		ZIndex = 999,
-		Parent = KeyGui,
-	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 14) }),
-		New("UIStroke", { Color = Color3.fromRGB(50, 50, 58), Thickness = 1, Transparency = 0.3 }),
-		New("UIScale", { Scale = 0.9 }),
-	})
-	local CardStroke = Card.UIStroke
-	local CardScale = Card.UIScale
-
-	local ContentY = 28
-	if LogoImage and LogoImage ~= "" then
-		New("ImageLabel", {
-			Image = LogoImage,
-			ScaleType = Enum.ScaleType.Fit,
-			Size = UDim2.fromOffset(64, 64),
-			Position = UDim2.new(0.5, 0, 0, ContentY),
-			AnchorPoint = Vector2.new(0.5, 0),
-			BackgroundTransparency = 1,
-			ZIndex = 1000,
-			Parent = Card,
-		})
-		ContentY = ContentY + 80
-	end
-
-	New("TextLabel", {
-		Text = HubTitle,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
-		TextSize = 22,
-		TextColor3 = Color3.fromRGB(255, 255, 255),
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, -40, 0, 28),
-		Position = UDim2.new(0.5, 0, 0, ContentY),
-		AnchorPoint = Vector2.new(0.5, 0),
-		ZIndex = 1000,
-		Parent = Card,
-	})
-	New("TextLabel", {
-		Text = HubSubtitle,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-		TextSize = 13,
-		TextColor3 = Color3.fromRGB(150, 150, 160),
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, -40, 0, 18),
-		Position = UDim2.new(0.5, 0, 0, ContentY + 28),
-		AnchorPoint = Vector2.new(0.5, 0),
-		ZIndex = 1000,
-		Parent = Card,
-	})
-	New("TextLabel", {
-		Text = Note,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-		TextSize = 12,
-		TextColor3 = Color3.fromRGB(120, 120, 130),
-		TextWrapped = true,
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, -48, 0, 32),
-		Position = UDim2.new(0.5, 0, 0, ContentY + 52),
-		AnchorPoint = Vector2.new(0.5, 0),
-		ZIndex = 1000,
-		Parent = Card,
-	})
-
-	local InputBoxHolder = New("Frame", {
-		Size = UDim2.new(1, -48, 0, 38),
-		Position = UDim2.new(0.5, 0, 0, ContentY + 92),
-		AnchorPoint = Vector2.new(0.5, 0),
-		BackgroundColor3 = Color3.fromRGB(26, 26, 31),
-		ZIndex = 1000,
-		Parent = Card,
-	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-		New("UIStroke", { Color = Color3.fromRGB(60, 60, 68), Thickness = 1, Transparency = 0.4 }),
-	})
-	local InputStroke = InputBoxHolder.UIStroke
-
-	local KeyBox = New("TextBox", {
-		Text = "",
-		PlaceholderText = "Cole sua key aqui...",
-		PlaceholderColor3 = Color3.fromRGB(100, 100, 110),
-		Font = Enum.Font.Unknown,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-		TextSize = 13,
-		TextColor3 = Color3.fromRGB(230, 230, 235),
-		ClearTextOnFocus = false,
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, -20, 1, 0),
-		Position = UDim2.fromOffset(10, 0),
-		ZIndex = 1001,
-		Parent = InputBoxHolder,
-	})
-	KeyBox.Focused:Connect(function()
-		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(245, 166, 35), Transparency = 0 }):Play()
-	end)
-	KeyBox.FocusLost:Connect(function()
-		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(60, 60, 68), Transparency = 0.4 }):Play()
-	end)
-
-	local StatusLabel = New("TextLabel", {
-		Text = "",
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-		TextSize = 12,
-		TextColor3 = Color3.fromRGB(235, 90, 90),
-		BackgroundTransparency = 1,
-		TextTransparency = 1,
-		Size = UDim2.new(1, -48, 0, 16),
-		Position = UDim2.new(0.5, 0, 0, ContentY + 134),
-		AnchorPoint = Vector2.new(0.5, 0),
-		ZIndex = 1000,
-		Parent = Card,
-	})
-
-	local SubmitBtn = New("TextButton", {
-		Text = "",
-		AutoButtonColor = false,
-		BackgroundColor3 = Color3.fromRGB(245, 166, 35),
-		Size = UDim2.new(1, -48, 0, 38),
-		Position = UDim2.new(0.5, 0, 0, ContentY + 156),
-		AnchorPoint = Vector2.new(0.5, 0),
-		ZIndex = 1000,
-		Parent = Card,
-	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-	})
-	New("TextLabel", {
-		Text = "Entrar",
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
-		TextSize = 14,
-		TextColor3 = Color3.fromRGB(20, 20, 20),
-		BackgroundTransparency = 1,
-		Size = UDim2.fromScale(1, 1),
-		ZIndex = 1001,
-		Parent = SubmitBtn,
-	})
-	SubmitBtn.MouseEnter:Connect(function()
-		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(255, 180, 60) }):Play()
-	end)
-	SubmitBtn.MouseLeave:Connect(function()
-		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(245, 166, 35) }):Play()
-	end)
-
-	local BottomY = ContentY + 156 + 46
-	if KeyLink then
-		local LinkBtn = New("TextButton", {
-			Text = "Pegar Key",
-			AutoButtonColor = false,
-			BackgroundTransparency = 1,
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-			TextSize = 12,
-			TextColor3 = Color3.fromRGB(245, 166, 35),
-			Size = UDim2.new(1, -48, 0, 18),
-			Position = UDim2.new(0.5, 0, 0, BottomY),
-			AnchorPoint = Vector2.new(0.5, 0),
-			ZIndex = 1000,
-			Parent = Card,
-		})
-		LinkBtn.MouseButton1Click:Connect(function()
-			pcall(function() setclipboard(KeyLink) end)
-		end)
-	end
-
-	local function Shake()
-		local orig = Card.Position
-		for _, off in ipairs({8, -8, 6, -6, 3, -3, 0}) do
-			Card.Position = UDim2.new(orig.X.Scale, orig.X.Offset + off, orig.Y.Scale, orig.Y.Offset)
-			task.wait(0.03)
-		end
-		Card.Position = orig
-	end
-
-	local function TrySubmit()
-		local K = KeyBox.Text
-		if K == "" then return end
-		if IsValidKey(K) then
-			if SaveKey and writefile then
-				pcall(writefile, FileName, K)
-			end
-			Approved = true
-		else
-			StatusLabel.Text = "Key inválida. Tenta de novo."
-			StatusLabel.TextTransparency = 0
-			TweenService:Create(CardStroke, TweenInfo.new(0.15), { Color = Color3.fromRGB(235, 90, 90) }):Play()
-			task.spawn(Shake)
-			task.delay(1.2, function()
-				if StatusLabel and StatusLabel.Parent then
-					TweenService:Create(StatusLabel, TweenInfo.new(0.4), { TextTransparency = 1 }):Play()
-					TweenService:Create(CardStroke, TweenInfo.new(0.3), { Color = Color3.fromRGB(50, 50, 58) }):Play()
-				end
-			end)
-		end
-	end
-
-	SubmitBtn.MouseButton1Click:Connect(TrySubmit)
-	KeyBox.FocusLost:Connect(function(EnterPressed)
-		if EnterPressed then TrySubmit() end
-	end)
-
-	-- entrada
-	TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { BackgroundTransparency = 0 }):Play()
-	TweenService:Create(CardScale, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Scale = 1 }):Play()
-
-	repeat task.wait() until Approved or Closed
-
-	-- saída
-	TweenService:Create(KeyGui, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
-	TweenService:Create(Card, TweenInfo.new(0.3), { BackgroundTransparency = 1 }):Play()
-	TweenService:Create(CardScale, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In), { Scale = 0.92 }):Play()
-	task.wait(0.4)
-	KeyGui:Destroy()
-
-	return Approved
-end
-
-
+function Library:CreateWindow(Config)
 	assert(Config.Title, "Window - Missing Title")
 
 	if Library.Window then
@@ -7256,43 +6915,6 @@ end
 				ZIndex = 999,
 				Parent = LoadingGui,
 			})
-
-			-- dois "orbs" de glow suaves que respiram devagar no fundo,
-			-- pra tela de loading não ficar só preto chapado
-			for i, orbCfg in ipairs({
-				{ Pos = UDim2.fromScale(0.18, 0.28), Size = 260, Color = Color3.fromRGB(245, 166, 35) },
-				{ Pos = UDim2.fromScale(0.85, 0.78), Size = 300, Color = Color3.fromRGB(60, 110, 220) },
-			}) do
-				local Orb = New("ImageLabel", {
-					Image = "rbxassetid://5028857084",
-					ImageColor3 = orbCfg.Color,
-					ImageTransparency = 1,
-					ScaleType = Enum.ScaleType.Slice,
-					SliceCenter = Rect.new(24, 24, 276, 276),
-					Size = UDim2.fromOffset(orbCfg.Size, orbCfg.Size),
-					Position = orbCfg.Pos,
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					BackgroundTransparency = 1,
-					ZIndex = 998,
-					Parent = LoadingGui,
-				})
-				TweenService:Create(Orb, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-					ImageTransparency = 0.88,
-				}):Play()
-				task.spawn(function()
-					while Orb and Orb.Parent do
-						TweenService:Create(Orb, TweenInfo.new(2.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-							ImageTransparency = 0.94,
-						}):Play()
-						task.wait(2.6)
-						if not (Orb and Orb.Parent) then break end
-						TweenService:Create(Orb, TweenInfo.new(2.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-							ImageTransparency = 0.86,
-						}):Play()
-						task.wait(2.6)
-					end
-				end)
-			end
 
 			local LogoHolder
 			local LogoImage
