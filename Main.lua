@@ -1281,19 +1281,6 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		Element.LabelHolder,
 	})
 
-	-- ── barra de destaque à esquerda (acende suave no hover) ──
-	Element.AccentBar = New("Frame", {
-		Size = UDim2.new(0, 3, 1, -10),
-		Position = UDim2.fromOffset(0, 5),
-		BackgroundColor3 = Color3.fromRGB(245, 166, 35),
-		BackgroundTransparency = 1,
-		ZIndex = 2,
-		Parent = Element.Frame,
-		ThemeTag = { BackgroundColor3 = "Accent" },
-	}, {
-		New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-	})
-
 	function Element:SetTitle(Set)
 		Element.TitleLabel.Text = Set
 	end
@@ -1346,16 +1333,10 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.15,
 		}):Play()
-		TweenService:Create(Element.AccentBar, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			BackgroundTransparency = 0.35,
-		}):Play()
 	end)
 	Creator.AddSignal(Element.Frame.MouseLeave, function()
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.35,
-		}):Play()
-		TweenService:Create(Element.AccentBar, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			BackgroundTransparency = 1,
 		}):Play()
 	end)
 
@@ -2647,19 +2628,25 @@ Components.Window = (function()
 			LogoHubConfig = { Image = LogoHubConfig }
 		end
 		local LogoHubImage = LogoHubConfig.Image
-		local LogoHubSize = LogoHubConfig.Size or 100
 		local HasLogoHub = LogoHubImage ~= nil and LogoHubImage ~= ""
+
+		-- por padrão a logo preenche a largura da barra lateral (com uma
+		-- margem pequena) em vez de um quadrado fixo de 100x100 - assim ela
+		-- ocupa exatamente o espaço que sobra acima da lista de abas.
+		local LogoHubPadding = LogoHubConfig.Padding or 16
+		local LogoHubWidth = LogoHubConfig.Size or LogoHubConfig.Width or (Window.TabWidth - LogoHubPadding * 2)
+		local LogoHubSize = LogoHubConfig.Height or LogoHubWidth -- altura (padrão: quadrado)
 
 		-- a TitleBar (título/subtítulo) tem 40px de altura fixa (Components.TitleBar).
 		-- só reserva o espaço grande da logo se ela realmente existir - senão a
 		-- lista de abas sobe e cola logo abaixo do título, sem sobrar vão vazio.
 		local TitleBarHeight = 40
-		local LogoHubOffsetY = LogoHubConfig.OffsetY or (HasLogoHub and (TitleBarHeight + 26) or TitleBarHeight) -- 66 com logo / 40 sem
+		local LogoHubOffsetY = LogoHubConfig.OffsetY or (HasLogoHub and (TitleBarHeight + 14) or TitleBarHeight)
 		local LogoHubBottom = HasLogoHub and (LogoHubOffsetY + LogoHubSize) or LogoHubOffsetY
 
 		local IconHolder = New("Frame", {
 			BackgroundTransparency = 1,
-			Size = UDim2.fromOffset(LogoHubSize, LogoHubSize),
+			Size = UDim2.fromOffset(LogoHubWidth, LogoHubSize),
 			Position = UDim2.new(0, 12 + (Window.TabWidth / 2), 0, LogoHubOffsetY),
 			AnchorPoint = Vector2.new(0.5, 0),
 			Visible = LogoHubConfig.Visible ~= false,
@@ -4520,11 +4507,17 @@ local function SafeAssetId(id)
 			Image = Config.Image,
 			Size = UDim2.fromOffset(38, 38),
 			Position = UDim2.new(0, 14, 0, 14),
-			BackgroundTransparency = 1,
+			BackgroundColor3 = Color3.fromRGB(88, 101, 242), -- discord blurple, aparece se a imagem tiver transparência
+			BackgroundTransparency = 0,
 			ZIndex = 3,
 			Parent = Card,
 		}, {
 			New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			New("UIStroke", {
+				Color = Color3.fromRGB(255, 255, 255),
+				Thickness = 2,
+				Transparency = 0.25,
+			}),
 		})
 
 		local TitleLabel = New("TextLabel", {
@@ -4569,6 +4562,13 @@ local function SafeAssetId(id)
 			New("UICorner", { CornerRadius = UDim.new(0, 5) }),
 		})
 
+		CopyButton.MouseEnter:Connect(function()
+			TweenService:Create(CopyButton, TweenInfo.new(0.15), { Size = UDim2.new(0, 112, 0, 32) }):Play()
+		end)
+		CopyButton.MouseLeave:Connect(function()
+			TweenService:Create(CopyButton, TweenInfo.new(0.15), { Size = UDim2.new(0, 108, 0, 30) }):Play()
+		end)
+
 		CopyButton.MouseButton1Click:Connect(function()
 			local ok = pcall(function()
 				if setclipboard then
@@ -4586,6 +4586,14 @@ local function SafeAssetId(id)
 
 		Card.MouseEnter:Connect(function()
 			TweenService:Create(Card, TweenInfo.new(0.15), { BackgroundTransparency = 0 }):Play()
+			TweenService:Create(Card, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.new(1, 0, 0, 94),
+			}):Play()
+		end)
+		Card.MouseLeave:Connect(function()
+			TweenService:Create(Card, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.new(1, 0, 0, 90),
+			}):Play()
 		end)
 
 		local DiscordUserObj = {
@@ -6972,6 +6980,12 @@ function Library:CreateKeySystem(Config)
 	local Approved = false
 	local Closed = false
 
+	-- desfoque real no fundo em vez de tela preta chapada
+	local KeyBlur = Instance.new("BlurEffect")
+	KeyBlur.Size = 0
+	KeyBlur.Parent = game:GetService("Lighting")
+	TweenService:Create(KeyBlur, TweenInfo.new(0.4), { Size = 24 }):Play()
+
 	local KeyGui = New("Frame", {
 		Size = UDim2.fromScale(1, 1),
 		BackgroundColor3 = Color3.fromRGB(10, 10, 13),
@@ -6979,7 +6993,7 @@ function Library:CreateKeySystem(Config)
 		ZIndex = 998,
 		Parent = GUI,
 	})
-	TweenService:Create(KeyGui, TweenInfo.new(0.35), { BackgroundTransparency = 0.05 }):Play()
+	TweenService:Create(KeyGui, TweenInfo.new(0.35), { BackgroundTransparency = 0.55 }):Play()
 
 	-- vinheta radial de fundo (mesmo recurso usado na loading screen)
 	New("ImageLabel", {
@@ -7209,8 +7223,10 @@ function Library:CreateKeySystem(Config)
 	TweenService:Create(KeyGui, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
 	TweenService:Create(Card, TweenInfo.new(0.3), { BackgroundTransparency = 1 }):Play()
 	TweenService:Create(CardScale, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In), { Scale = 0.92 }):Play()
+	TweenService:Create(KeyBlur, TweenInfo.new(0.4), { Size = 0 }):Play()
 	task.wait(0.4)
 	KeyGui:Destroy()
+	KeyBlur:Destroy()
 
 	return Approved
 end
@@ -7226,6 +7242,7 @@ function Library:CreateWindow(Config)
 	-- ================== PREMIUM LOADING SCREEN ==================
 	if not Config.NoLoadingScreen then
 		local LoadingGui
+		local LoadingBlur
 		local Success, ErrMsg = pcall(function()
 			-- aceita o mesmo logo configurável usado no LogoHub (imagem opcional)
 			local SplashLogoConfig = Config.LogoHub or Config.Logo or Config.Icon
@@ -7234,13 +7251,20 @@ function Library:CreateWindow(Config)
 			end
 			local SplashLogoImage = type(SplashLogoConfig) == "table" and SplashLogoConfig.Image or nil
 
+			local LoadingBlurInstance = Instance.new("BlurEffect")
+			LoadingBlurInstance.Size = 0
+			LoadingBlurInstance.Parent = game:GetService("Lighting")
+			TweenService:Create(LoadingBlurInstance, TweenInfo.new(0.4), { Size = 22 }):Play()
+			LoadingBlur = LoadingBlurInstance
+
 			LoadingGui = New("Frame", {
 				Size = UDim2.fromScale(1, 1),
 				BackgroundColor3 = Color3.fromRGB(13, 13, 16),
-				BackgroundTransparency = 0,
+				BackgroundTransparency = 1,
 				ZIndex = 999,
 				Parent = GUI,
 			})
+			TweenService:Create(LoadingGui, TweenInfo.new(0.4), { BackgroundTransparency = 0.5 }):Play()
 
 			-- vinheta radial sutil pra dar profundidade ao fundo
 			New("ImageLabel", {
@@ -7322,6 +7346,38 @@ function Library:CreateWindow(Config)
 					ZIndex = 999,
 					Parent = LogoHolder,
 				})
+
+				-- anel tipo "sonar" pulsando ao redor da logo, pra ter
+				-- movimento constante e chamativo sem depender de asset externo
+				task.spawn(function()
+					while LogoHolder and LogoHolder.Parent do
+						local Ring = New("Frame", {
+							Size = UDim2.new(1, 10, 1, 10),
+							Position = UDim2.fromScale(0.5, 0.5),
+							AnchorPoint = Vector2.new(0.5, 0.5),
+							BackgroundTransparency = 1,
+							ZIndex = 997,
+							Parent = LogoHolder,
+						}, {
+							New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+							New("UIStroke", {
+								Color = Color3.fromRGB(245, 166, 35),
+								Thickness = 2,
+								Transparency = 0.2,
+							}),
+						})
+						TweenService:Create(Ring, TweenInfo.new(1.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+							Size = UDim2.new(1, 50, 1, 50),
+						}):Play()
+						TweenService:Create(Ring.UIStroke, TweenInfo.new(1.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+							Transparency = 1,
+						}):Play()
+						task.delay(1.6, function()
+							if Ring then Ring:Destroy() end
+						end)
+						task.wait(0.9)
+					end
+				end)
 
 				LogoImage = New("ImageLabel", {
 					Image = SplashLogoImage,
@@ -7407,10 +7463,13 @@ function Library:CreateWindow(Config)
 			TweenService:Create(BarHolder, TweenInfo.new(0.4), { BackgroundTransparency = 0 }):Play()
 			TweenService:Create(BarFill, TweenInfo.new(1.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 1, 0) }):Play()
 
-			task.wait(1.15)
+			task.wait(2.2)
 
 			-- ── saída (fade geral + leve "subida" da logo) ──
 			TweenService:Create(LoadingGui, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { BackgroundTransparency = 1 }):Play()
+			if LoadingBlur then
+				TweenService:Create(LoadingBlur, TweenInfo.new(0.4), { Size = 0 }):Play()
+			end
 			TweenService:Create(LogoLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
 			TweenService:Create(SubLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
 			TweenService:Create(BarHolder, TweenInfo.new(0.3), { BackgroundTransparency = 1 }):Play()
@@ -7425,12 +7484,18 @@ function Library:CreateWindow(Config)
 			task.wait(0.4)
 			LoadingGui:Destroy()
 			LoadingGui = nil
+			if LoadingBlur then
+				LoadingBlur:Destroy()
+			end
 		end)
 
 		if not Success then
 			warn("[UI Library] Erro na tela de carregamento: " .. tostring(ErrMsg))
 			if LoadingGui then
 				LoadingGui:Destroy()
+			end
+			if LoadingBlur then
+				LoadingBlur:Destroy()
 			end
 		end
 	end
