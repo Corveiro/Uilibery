@@ -1024,7 +1024,7 @@ function AcrylicPaint()
 			}),
 
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 8),
+				CornerRadius = UDim.new(0, 4),
 			}),
 
 			New("Frame", {
@@ -1036,7 +1036,7 @@ function AcrylicPaint()
 				},
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 8),
+					CornerRadius = UDim.new(0, 4),
 				}),
 			}),
 
@@ -1046,7 +1046,7 @@ function AcrylicPaint()
 				Size = UDim2.fromScale(1, 1),
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 8),
+					CornerRadius = UDim.new(0, 4),
 				}),
 
 				New("UIGradient", {
@@ -1066,7 +1066,7 @@ function AcrylicPaint()
 				BackgroundTransparency = 1,
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 8),
+					CornerRadius = UDim.new(0, 4),
 				}),
 			}),
 
@@ -1082,7 +1082,7 @@ function AcrylicPaint()
 				},
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 8),
+					CornerRadius = UDim.new(0, 4),
 				}),
 			}),
 
@@ -1092,7 +1092,7 @@ function AcrylicPaint()
 				ZIndex = 2,
 			}, {
 				New("UICorner", {
-					CornerRadius = UDim.new(0, 8),
+					CornerRadius = UDim.new(0, 4),
 				}),
 				New("UIStroke", {
 					Transparency = 0.5,
@@ -1225,8 +1225,8 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 		BackgroundTransparency = 1,
-		Position = UDim2.fromOffset(14, 0),
-		Size = UDim2.new(1, -28, 0, 0),
+		Position = UDim2.fromOffset(10, 0),
+		Size = UDim2.new(1, -24, 0, 0),
 	}, {
 		New("UIListLayout", {
 			SortOrder = Enum.SortOrder.LayoutOrder,
@@ -1243,24 +1243,12 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 
 	Element.Border = New("UIStroke", {
 		Transparency = 0.35,
-		Thickness = 1.2,
+		Thickness = 1,
 		ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		Color = Color3.fromRGB(0, 0, 0),
 		ThemeTag = {
 			Color = "ElementBorder",
 		},
-	})
-
-	-- barrinha de destaque na lateral esquerda, aparece suavemente no hover
-	Element.AccentBar = New("Frame", {
-		Size = UDim2.new(0, 3, 0.6, 0),
-		Position = UDim2.new(0, 0, 0.5, 0),
-		AnchorPoint = Vector2.new(0, 0.5),
-		BackgroundColor3 = Color3.fromRGB(212, 175, 55),
-		BackgroundTransparency = 1,
-		ZIndex = 5,
-	}, {
-		New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 	})
 
 	Element.Frame = New("TextButton", {
@@ -1279,21 +1267,9 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		},
 	}, {
 		New("UICorner", {
-			CornerRadius = UDim.new(0, 10),
-		}),
-		New("UIGradient", {
-			Rotation = 90,
-			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 210, 210)),
-			}),
-			Transparency = NumberSequence.new({
-				NumberSequenceKeypoint.new(0, 0.95),
-				NumberSequenceKeypoint.new(1, 1),
-			}),
+			CornerRadius = UDim.new(0, 4),
 		}),
 		Element.Border,
-		Element.AccentBar,
 		Element.LabelHolder,
 	})
 
@@ -1344,28 +1320,6 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 
 	Element.Original.Text = Title
 
-	-- ── Hover premium: borda ganha tom ciano + barra lateral aparece ──
-	Creator.AddSignal(Element.Frame.MouseEnter, function()
-		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			Transparency = 0.15,
-			Color = Color3.fromRGB(212, 175, 55),
-		}):Play()
-		TweenService:Create(Element.AccentBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			BackgroundTransparency = 0.25,
-			Size = UDim2.new(0, 3, 0.7, 0),
-		}):Play()
-	end)
-	Creator.AddSignal(Element.Frame.MouseLeave, function()
-		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			Transparency = 0.35,
-			Color = Creator.GetThemeProperty("ElementBorder"),
-		}):Play()
-		TweenService:Create(Element.AccentBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			BackgroundTransparency = 1,
-			Size = UDim2.new(0, 3, 0.6, 0),
-		}):Play()
-	end)
-
 	if Hover then
 		local Themes = Library.Themes
 		local Motor, SetTransparency = Creator.SpringMotor(
@@ -1405,8 +1359,9 @@ Components.Section = function(Title, Parent)
 	})
 
 	Section.Container = New("Frame", {
-		Size = UDim2.new(1, 0, 0, 26),
+		Size = UDim2.new(1, 0, 0, 0),
 		Position = UDim2.fromOffset(0, 24),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundTransparency = 1,
 	}, {
 		Section.Layout,
@@ -1425,10 +1380,10 @@ Components.Section = function(Title, Parent)
 	Section.Root = New("TextButton", {
 		BackgroundTransparency = 1,
 		Size = UDim2.new(1, 0, 0, 20),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		LayoutOrder = 7,
 		Text = "",
 		AutoButtonColor = false,
-		ClipsDescendants = true,
 		Parent = Parent,
 	}, {
 		New("Frame", {
@@ -1448,7 +1403,7 @@ Components.Section = function(Title, Parent)
 			TextSize = 13,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
-			Size = UDim2.new(1, -30, 1, 0),
+			Size = UDim2.new(1, -30, 0, 20),
 			Position = UDim2.fromOffset(12, 0),
 			AutoLocalize = false,
 			ThemeTag = {
@@ -1462,33 +1417,15 @@ Components.Section = function(Title, Parent)
 	Section.Root:SetAttribute("FluentIsSection", true)
 	Section.Root:SetAttribute("FluentSearchTitle", tostring(Title or ""))
 
-	local FullHeight = 45
-	Creator.AddSignal(Section.Layout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-		Section.Container.Size = UDim2.new(1, 0, 0, Section.Layout.AbsoluteContentSize.Y)
-		FullHeight = Section.Layout.AbsoluteContentSize.Y + 25
-		if not Collapsed then
-			Section.Root.Size = UDim2.new(1, 0, 0, FullHeight)
-		end
-	end)
-
-	-- ── Novidade: seção recolhível clicando no cabeçalho ──
+	-- ── Seção recolhível: clique no cabeçalho expande/recolhe o que está abaixo ──
+	-- Usa AutomaticSize (sem tween/cálculo manual de altura) pra evitar
+	-- qualquer condição de corrida com o conteúdo mudando de tamanho.
 	Creator.AddSignal(Section.Root.MouseButton1Click, function()
 		Collapsed = not Collapsed
-		if Collapsed then
-			TweenService:Create(Section.Root, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.new(1, 0, 0, 20),
-			}):Play()
-			TweenService:Create(Chevron, TweenInfo.new(0.2), { Rotation = -90 }):Play()
-			Section.Container.Visible = false
-		else
-			Section.Container.Visible = true
-			TweenService:Create(Section.Root, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.new(1, 0, 0, FullHeight),
-			}):Play()
-			TweenService:Create(Chevron, TweenInfo.new(0.2), { Rotation = 0 }):Play()
-		end
+		Section.Container.Visible = not Collapsed
+		Chevron.Rotation = Collapsed and -90 or 0
 	end)
-	
+
 	return Section
 end
 Components.Tab = (function()
@@ -1870,7 +1807,7 @@ Components.Dialog = (function()
 			Parent = Dialog.Window.Root,
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 8),
+				CornerRadius = UDim.new(0, 4),
 			}),
 		})
 
@@ -1939,7 +1876,7 @@ Components.Dialog = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 8),
+				CornerRadius = UDim.new(0, 4),
 			}),
 			New("UIStroke", {
 				Transparency = 0.5,
@@ -2164,7 +2101,7 @@ Components.Notification = (function()
 		    Position = UDim2.fromScale(1, 0),
 		    ThemeTag = { BackgroundColor3 = "AcrylicMain" },
 		}, {
-		    New("UICorner", { CornerRadius = UDim.new(0, 10) }),
+		    New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 		    New("UIStroke", {
 		        Transparency = 0.5,
 		        ThemeTag = { Color = "AcrylicBorder" },
@@ -2405,7 +2342,7 @@ Components.TitleBar = function(Config)
 			Text             = "",
 			ThemeTag         = { BackgroundColor3 = "Text" },
 		}, {
-			New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+			New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 			New("ImageLabel", {
 				Image       = Icon,
 				Size        = UDim2.fromOffset(14, 14),
@@ -2629,7 +2566,7 @@ Components.TitleBar = function(Config)
 		Parent           = TitleBar.Frame,
 		ThemeTag         = { BackgroundColor3 = "Element" },
 	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+		New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		New("UIStroke", {
 			Thickness       = 1,
 			Transparency    = 0.5,
@@ -2872,7 +2809,7 @@ Components.Window = (function()
 			TextColor3 = Color3.fromRGB(230, 230, 235),
 			PlaceholderColor3 = Color3.fromRGB(130, 130, 138),
 		}, {
-			New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+			New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 			New("UIStroke", { Color = Color3.fromRGB(212, 175, 55), Thickness = 1, Transparency = 0.6 }),
 			New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10) }),
 		})
@@ -2925,7 +2862,7 @@ Components.Window = (function()
 			BackgroundTransparency = 0, -- sólido, sem efeito vidro/blur
 		    ThemeTag = { BackgroundColor3 = "AcrylicMain" },
 		}, {
-		    New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+		    New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		    New("UIGradient", {
 		        Rotation = 90,
 		        Color = ColorSequence.new({
@@ -3564,7 +3501,7 @@ ElementsTable.Dropdown = (function()
 			AutoLocalize    = false,
 			ThemeTag        = { BackgroundColor3 = "DropdownFrame" },
 		}, {
-			New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+			New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 			New("UIStroke", {
 				Thickness       = 1,
 				Transparency    = 0.5,
@@ -3647,8 +3584,8 @@ ElementsTable.Dropdown = (function()
 		})
 
 		local DropdownScrollFrame = New("ScrollingFrame", {
-			Size = UDim2.new(1, -8, 1, -12), -- ปรับขนาด
-			Position = UDim2.fromOffset(6, 6), -- ปรับตำแหน่ง
+			Size = UDim2.new(1, -8, 1, -42), -- deixa espaço no topo pro botão de fechar (X)
+			Position = UDim2.fromOffset(6, 34),
 			BackgroundTransparency = 1,
 			BottomImage = "rbxassetid://6889812791",
 			MidImage = "rbxassetid://6889812721",
@@ -3669,11 +3606,12 @@ ElementsTable.Dropdown = (function()
 			TextSize = 14,
 			TextColor3 = Color3.fromRGB(230, 230, 230),
 			BackgroundTransparency = 1,
-			Size = UDim2.fromOffset(26, 26),
-			Position = UDim2.new(1, -6, 0, 6),
+			Size = UDim2.fromOffset(30, 30),
+			Position = UDim2.new(1, -2, 0, 2),
 			AnchorPoint = Vector2.new(1, 0),
 			AutoButtonColor = false,
-			ZIndex = 10,
+			Active = true,
+			ZIndex = 100,
 		})
 		Creator.AddSignal(DropdownCloseBtn.MouseEnter, function()
 			TweenService:Create(DropdownCloseBtn, TweenInfo.new(0.12), { TextColor3 = Color3.fromRGB(212, 175, 55) }):Play()
@@ -3690,7 +3628,7 @@ ElementsTable.Dropdown = (function()
 		    ThemeTag         = { BackgroundColor3 = "DropdownHolder" },
 		}, {
 		    New("UICorner", {
-		        CornerRadius = UDim.new(0, 6),
+		        CornerRadius = UDim.new(0, 3),
 		    }),
 		    New("UIStroke", {
 		        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -3745,7 +3683,7 @@ ElementsTable.Dropdown = (function()
 				AutoLocalize = false,
 			}),
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 8),
+				CornerRadius = UDim.new(0, 4),
 			}),
 		})
  
@@ -3783,7 +3721,7 @@ ElementsTable.Dropdown = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 8), -- เพิ่มขนาด corner
+				CornerRadius = UDim.new(0, 4), -- เพิ่มขนาด corner
 			}),
 			searchIcon,
 			Border,
@@ -4151,7 +4089,7 @@ ElementsTable.Dropdown = (function()
 				LayoutOrder      = Idx,
 				ThemeTag         = { BackgroundColor3 = "DropdownOption" },
 			}, {
-				New("UICorner", { CornerRadius = UDim.new(0, 14) }),  -- มนขึ้นจาก 6
+				New("UICorner", { CornerRadius = UDim.new(0, 4) }),  -- มนขึ้นจาก 6
 				ButtonAccent,
 				ButtonLabel,
 				SelectDot,
@@ -4617,7 +4555,7 @@ local function SafeAssetId(id)
 			ClipsDescendants = true,
 			ThemeTag = { BackgroundColor3 = "Element" },
 		}, {
-			New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+			New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 			New("UIStroke", {
 				Transparency = 0.4,
 				ThemeTag = { Color = "ElementBorder" },
@@ -5050,7 +4988,7 @@ ElementsTable.Keybind = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 10),
+				CornerRadius = UDim.new(0, 4),
 			}),
 			New("UIPadding", {
 				PaddingLeft = UDim.new(0, 8),
@@ -7177,7 +7115,7 @@ function Library:CreateKeySystem(Config)
 		ZIndex = 999,
 		Parent = KeyGui,
 	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 18) }),
+		New("UICorner", { CornerRadius = UDim.new(0, 6) }),
 		New("UIStroke", { Color = Color3.fromRGB(212, 175, 55), Thickness = 1.5, Transparency = 0.35 }, {
 			New("UIGradient", {
 				Color = ColorSequence.new({
@@ -7295,7 +7233,7 @@ function Library:CreateKeySystem(Config)
 		ZIndex = 1000,
 		Parent = Card,
 	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 		New("UIStroke", { Color = Color3.fromRGB(60, 60, 68), Thickness = 1, Transparency = 0.4 }),
 	})
 	local InputStroke = InputBoxHolder.UIStroke
@@ -7332,7 +7270,7 @@ function Library:CreateKeySystem(Config)
 		ZIndex = 1001,
 		Parent = InputBoxHolder,
 	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+		New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 	})
 	PasteBtn.MouseEnter:Connect(function()
 		TweenService:Create(PasteBtn, TweenInfo.new(0.12), { BackgroundTransparency = 0.75 }):Play()
@@ -7378,7 +7316,7 @@ function Library:CreateKeySystem(Config)
 		ZIndex = 1000,
 		Parent = Card,
 	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 	})
 	New("TextLabel", {
 		Text = "Entrar",
@@ -8053,7 +7991,7 @@ function Library:CreateWindow(Config)
 		)
 	end
 	MakeDraggable(Main, Main)
-	UICorner.CornerRadius = UDim.new(0, 12)
+	UICorner.CornerRadius = UDim.new(0, 4)
 	UICorner.Parent = Main
 
 	AddSignal(Main.MouseButton1Click, function()
@@ -8142,7 +8080,7 @@ function Library:CreateWatermark(Config)
 		Parent = GUI,
 		ZIndex = 50,
 	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 		New("UIStroke", { Color = Color3.fromRGB(212, 175, 55), Thickness = 1, Transparency = 0.5 }),
 		New("UIPadding", {
 			PaddingLeft = UDim.new(0, 12),
