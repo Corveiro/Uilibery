@@ -19,18 +19,18 @@ local Themes = {
 	},
 	Dark = {
 		Name = "Dark",
-		Accent = Color3.fromRGB(0, 229, 204),
+		Accent = Color3.fromRGB(212, 175, 55),
 
-		AcrylicMain = Color3.fromRGB(15, 15, 19),
-		AcrylicBorder = Color3.fromRGB(0, 229, 204),
+		AcrylicMain = Color3.fromRGB(12, 11, 10),
+		AcrylicBorder = Color3.fromRGB(130, 108, 55),
 		AcrylicGradient = ColorSequence.new(Color3.fromRGB(24, 24, 29), Color3.fromRGB(24, 24, 29)),
 		AcrylicNoise = 1,
 
 		TitleBarLine = Color3.fromRGB(40, 40, 46),
 		Tab = Color3.fromRGB(150, 150, 158),
 
-		Element = Color3.fromRGB(36, 36, 43),
-		ElementBorder = Color3.fromRGB(56, 56, 66),
+		Element = Color3.fromRGB(32, 29, 24),
+		ElementBorder = Color3.fromRGB(70, 60, 40),
 		InElementBorder = Color3.fromRGB(55, 55, 64),
 		ElementTransparency = 0,
 
@@ -40,7 +40,7 @@ local Themes = {
 		SliderRail = Color3.fromRGB(55, 55, 63),
 
 		DropdownFrame = Color3.fromRGB(32, 32, 38),
-		DropdownHolder = Color3.fromRGB(18, 18, 23),
+		DropdownHolder = Color3.fromRGB(16, 14, 12),
 		DropdownBorder = Color3.fromRGB(48, 48, 56),
 		DropdownOption = Color3.fromRGB(38, 38, 45),
 
@@ -51,7 +51,7 @@ local Themes = {
 		InputIndicator = Color3.fromRGB(150, 150, 158),
 
 		Dialog = Color3.fromRGB(28, 28, 34),
-		DialogHolder = Color3.fromRGB(16, 16, 20),
+		DialogHolder = Color3.fromRGB(14, 13, 11),
 		DialogHolderLine = Color3.fromRGB(18, 18, 22),
 		DialogButton = Color3.fromRGB(32, 32, 38),
 		DialogButtonBorder = Color3.fromRGB(50, 50, 58),
@@ -66,7 +66,7 @@ local Themes = {
 	},
 	White = {
 		Name = "White",
-		Accent = Color3.fromRGB(0, 229, 204),
+		Accent = Color3.fromRGB(212, 175, 55),
 
 		AcrylicMain = Color3.fromRGB(255, 255, 255),
 		AcrylicBorder = Color3.fromRGB(225, 225, 228),
@@ -96,7 +96,7 @@ local Themes = {
 		Input = Color3.fromRGB(247, 247, 249),
 		InputFocused = Color3.fromRGB(240, 240, 242),
 		InputIndicator = Color3.fromRGB(80, 80, 80),
-		InputIndicatorFocus = Color3.fromRGB(0, 229, 204),
+		InputIndicatorFocus = Color3.fromRGB(212, 175, 55),
 
 		Dialog = Color3.fromRGB(255, 255, 255),
 		DialogHolder = Color3.fromRGB(240, 240, 240),
@@ -1190,7 +1190,7 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 	local Options = Options or {}
 
 	Element.TitleLabel = New("TextLabel", {
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
+		FontFace = Font.fromEnum(Enum.Font.GothamSemibold),
 		Text = Title,
 		TextColor3 = Color3.fromRGB(240, 240, 240),
 		TextSize = 13,
@@ -1205,7 +1205,7 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 	})
 
 	Element.DescLabel = New("TextLabel", {
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 		Text = Desc,
 		TextColor3 = Color3.fromRGB(200, 200, 200),
 		TextSize = 12,
@@ -1256,7 +1256,7 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		Size = UDim2.new(0, 3, 0.6, 0),
 		Position = UDim2.new(0, 0, 0.5, 0),
 		AnchorPoint = Vector2.new(0, 0.5),
-		BackgroundColor3 = Color3.fromRGB(0, 229, 204),
+		BackgroundColor3 = Color3.fromRGB(212, 175, 55),
 		BackgroundTransparency = 1,
 		ZIndex = 5,
 	}, {
@@ -1348,7 +1348,7 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 	Creator.AddSignal(Element.Frame.MouseEnter, function()
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.15,
-			Color = Color3.fromRGB(0, 229, 204),
+			Color = Color3.fromRGB(212, 175, 55),
 		}):Play()
 		TweenService:Create(Element.AccentBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			BackgroundTransparency = 0.25,
@@ -1393,29 +1393,6 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 	-- ── Novidade: tag pra permitir busca/filtro global pela UI ──
 	Element.Frame:SetAttribute("FluentSearchTitle", tostring(Title or ""))
 
-	-- ── Novidade: animação de entrada em cascata (borda + barra lateral) ──
-	do
-		ElementStaggerCount = (ElementStaggerCount + 1) % 10
-		local Delay = ElementStaggerCount * 0.035
-
-		Element.Border.Transparency = 1
-
-		task.spawn(function()
-			task.wait(Delay)
-			TweenService:Create(Element.Border, TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-				Transparency = 0.35,
-			}):Play()
-			TweenService:Create(Element.AccentBar, TweenInfo.new(0.32, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-				BackgroundTransparency = 0.55,
-			}):Play()
-			task.wait(0.12)
-			TweenService:Create(Element.AccentBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				BackgroundTransparency = 1,
-				Size = UDim2.new(0, 3, 0.6, 0),
-			}):Play()
-		end)
-	end
-
 	return Element
 end
 
@@ -1451,6 +1428,7 @@ Components.Section = function(Title, Parent)
 		LayoutOrder = 7,
 		Text = "",
 		AutoButtonColor = false,
+		ClipsDescendants = true,
 		Parent = Parent,
 	}, {
 		New("Frame", {
@@ -1596,11 +1574,7 @@ Components.Tab = (function()
 			Text             = Title,
 			RichText         = true,
 			TextTransparency = 0.35,
-			FontFace         = Font.new(
-				"rbxasset://fonts/families/GothamSSm.json",
-				Enum.FontWeight.Regular,
-				Enum.FontStyle.Normal
-			),
+			FontFace         = Font.fromEnum(Enum.Font.Gotham),
 			TextSize         = 12,
 			TextXAlignment   = Enum.TextXAlignment.Left,
 			TextYAlignment   = Enum.TextYAlignment.Center,
@@ -1804,7 +1778,7 @@ Components.Button = function(Theme, Parent, DialogCheck)
 	local Button = {}
 
 	Button.Title = New("TextLabel", {
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 		TextColor3 = Color3.fromRGB(200, 200, 200),
 		TextSize = 14,
 		TextWrapped = true,
@@ -1933,11 +1907,7 @@ Components.Dialog = (function()
 		})
 
 		NewDialog.Title = New("TextLabel", {
-			FontFace = Font.new(
-				"rbxasset://fonts/families/GothamSSm.json",
-				Enum.FontWeight.SemiBold,
-				Enum.FontStyle.Normal
-			),
+			FontFace = Font.fromEnum(Enum.Font.GothamSemibold),
 			Text = "Dialog",
 			TextColor3 = Color3.fromRGB(240, 240, 240),
 			TextSize = 22,
@@ -2086,7 +2056,7 @@ Components.Notification = (function()
 			RichText = true,
 			TextColor3 = Color3.fromRGB(255, 255, 255),
 			TextTransparency = 0,
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 			TextSize = 13,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
@@ -2106,14 +2076,14 @@ Components.Notification = (function()
 				Size = UDim2.fromOffset(16, 16),
 				BackgroundTransparency = 1,
 				TextColor3 = NotifTypeColorsEarly[Config.Type] or Color3.fromRGB(255, 255, 255),
-				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold),
+				FontFace = Font.fromEnum(Enum.Font.GothamBold),
 				TextSize = 14,
 				Parent = NewNotification.Title,
 			})
 		end
 
 		NewNotification.ContentLabel = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 			Text = Config.Content,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
 			TextSize = 14,
@@ -2130,7 +2100,7 @@ Components.Notification = (function()
 		})
 
 		NewNotification.SubContentLabel = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 			Text = Config.SubContent,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
 			TextSize = 14,
@@ -2221,7 +2191,7 @@ Components.Notification = (function()
 				Size = UDim2.new(1, 0, 0, 2),
 				Position = UDim2.new(0, 0, 1, 0),
 				AnchorPoint = Vector2.new(0, 1),
-				BackgroundColor3 = NotifAccentColor or Color3.fromRGB(0, 229, 204),
+				BackgroundColor3 = NotifAccentColor or Color3.fromRGB(212, 175, 55),
 				BackgroundTransparency = 0.2,
 				ThemeTag = not NotifAccentColor and { BackgroundColor3 = "Accent" } or nil,
 				Parent = NewNotification.Root,
@@ -2311,7 +2281,7 @@ Components.Textbox = function(Parent, Acrylic)
 	local Textbox = {}
 
 	Textbox.Input = New("TextBox", {
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 		TextColor3 = Color3.fromRGB(200, 200, 200),
 		TextSize = 14,
 		TextXAlignment = Enum.TextXAlignment.Left,
@@ -2500,11 +2470,7 @@ Components.TitleBar = function(Config)
 		New("TextLabel", {
 			RichText         = true,
 			Text             = Config.Title,
-			FontFace         = Font.new(
-				"rbxasset://fonts/families/GothamSSm.json",
-				Enum.FontWeight.SemiBold,
-				Enum.FontStyle.Normal
-			),
+			FontFace         = Font.fromEnum(Enum.Font.GothamSemibold),
 			TextSize         = 13,
 			TextXAlignment   = Enum.TextXAlignment.Left,
 			TextYAlignment   = Enum.TextYAlignment.Center,
@@ -2586,11 +2552,7 @@ Components.TitleBar = function(Config)
 		New("TextLabel", {
 			RichText         = true,
 			Text             = Config.Title,
-			FontFace         = Font.new(
-				"rbxasset://fonts/families/GothamSSm.json",
-				Enum.FontWeight.SemiBold,
-				Enum.FontStyle.Normal
-			),
+			FontFace         = Font.fromEnum(Enum.Font.GothamSemibold),
 			TextSize         = 13,
 			TextXAlignment   = Enum.TextXAlignment.Left,
 			TextYAlignment   = Enum.TextYAlignment.Center,
@@ -2605,11 +2567,7 @@ Components.TitleBar = function(Config)
 			RichText         = true,
 			Text             = Config.SubTitle or "",
 			TextTransparency = 0.5,
-			FontFace         = Font.new(
-				"rbxasset://fonts/families/GothamSSm.json",
-				Enum.FontWeight.SemiBold,
-				Enum.FontStyle.Normal
-			),
+			FontFace         = Font.fromEnum(Enum.Font.GothamSemibold),
 			TextSize         = 13,
 			TextXAlignment   = Enum.TextXAlignment.Left,
 			TextYAlignment   = Enum.TextYAlignment.Center,
@@ -2681,7 +2639,7 @@ Components.TitleBar = function(Config)
 	})
 	local ThemeSwitchLabel = New("TextLabel", {
 		Text            = Library.Theme or "Dark",
-		FontFace        = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+		FontFace        = Font.fromEnum(Enum.Font.GothamMedium),
 		TextSize        = 11,
 		Size            = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
@@ -2915,7 +2873,7 @@ Components.Window = (function()
 			PlaceholderColor3 = Color3.fromRGB(130, 130, 138),
 		}, {
 			New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-			New("UIStroke", { Color = Color3.fromRGB(0, 229, 204), Thickness = 1, Transparency = 0.6 }),
+			New("UIStroke", { Color = Color3.fromRGB(212, 175, 55), Thickness = 1, Transparency = 0.6 }),
 			New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10) }),
 		})
 
@@ -2971,9 +2929,8 @@ Components.Window = (function()
 		    New("UIGradient", {
 		        Rotation = 90,
 		        Color = ColorSequence.new({
-		            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-		            ColorSequenceKeypoint.new(0.55, Color3.fromRGB(225, 225, 232)),
-		            ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 165, 175)),
+		            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 250, 235)),
+		            ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 165, 130)),
 		        }),
 		        Transparency = NumberSequence.new({
 		            NumberSequenceKeypoint.new(0, 0),
@@ -2981,9 +2938,9 @@ Components.Window = (function()
 		        }),
 		    }),
 		    New("UIStroke", {
-		        Thickness = 1.2,
+		        Thickness = 1.3,
 		        Transparency = 0.25,
-		        Color = Color3.fromRGB(0, 229, 204),
+		        Color = Color3.fromRGB(212, 175, 55),
 		    }),
 		})
 		
@@ -3253,7 +3210,7 @@ Components.Window = (function()
 			Dialog.Title.Text = Config.Title
 
 			local Content = New("TextLabel", {
-				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+				FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 				Text = Config.Content,
 				TextColor3 = Color3.fromRGB(240, 240, 240),
 				TextSize = 14,
@@ -3352,17 +3309,6 @@ ElementsTable.Button = (function()
 			TweenService:Create(ButtonIco, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 				Size = UDim2.fromOffset(16, 16),
 				Position = UDim2.new(1, -10, 0.5, 0),
-			}):Play()
-		end)
-
-		Creator.AddSignal(ButtonFrame.Frame.MouseButton1Down, function()
-			TweenService:Create(ButtonIco, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.fromOffset(14, 14),
-			}):Play()
-		end)
-		Creator.AddSignal(ButtonFrame.Frame.MouseButton1Up, function()
-			TweenService:Create(ButtonIco, TweenInfo.new(0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-				Size = UDim2.fromOffset(19, 19),
 			}):Play()
 		end)
 
@@ -3570,8 +3516,7 @@ ElementsTable.Dropdown = (function()
 		Dropdown.Elements = DropdownFrame
 
 				local DropdownDisplay = New("TextBox", {
-			FontFace        = Font.new("rbxasset://fonts/families/GothamSSm.json",
-			                           Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+			FontFace        = Font.fromEnum(Enum.Font.Gotham),
 			Text            = "",
 			PlaceholderText = "...",
 			PlaceholderColor3 = Color3.fromRGB(200, 200, 200),
@@ -3718,6 +3663,28 @@ ElementsTable.Dropdown = (function()
 			DropdownListLayout,
 		})
 
+		local DropdownCloseBtn = New("TextButton", {
+			Text = "✕",
+			FontFace = Font.fromEnum(Enum.Font.GothamBlack),
+			TextSize = 14,
+			TextColor3 = Color3.fromRGB(230, 230, 230),
+			BackgroundTransparency = 1,
+			Size = UDim2.fromOffset(26, 26),
+			Position = UDim2.new(1, -6, 0, 6),
+			AnchorPoint = Vector2.new(1, 0),
+			AutoButtonColor = false,
+			ZIndex = 10,
+		})
+		Creator.AddSignal(DropdownCloseBtn.MouseEnter, function()
+			TweenService:Create(DropdownCloseBtn, TweenInfo.new(0.12), { TextColor3 = Color3.fromRGB(212, 175, 55) }):Play()
+		end)
+		Creator.AddSignal(DropdownCloseBtn.MouseLeave, function()
+			TweenService:Create(DropdownCloseBtn, TweenInfo.new(0.12), { TextColor3 = Color3.fromRGB(230, 230, 230) }):Play()
+		end)
+		Creator.AddSignal(DropdownCloseBtn.MouseButton1Click, function()
+			Dropdown:Close()
+		end)
+
 		local DropdownHolderFrame = New("Frame", {
 		    Size             = UDim2.fromScale(1, 0.6),
 		    ThemeTag         = { BackgroundColor3 = "DropdownHolder" },
@@ -3743,6 +3710,7 @@ ElementsTable.Dropdown = (function()
 		        ZIndex = -1,
 		    }),
 		    DropdownScrollFrame,
+		    DropdownCloseBtn,
 		})
 
 		local DropdownHolderCanvas = New("Frame", {
@@ -3767,7 +3735,7 @@ ElementsTable.Dropdown = (function()
 			Visible = false,
 		}, {
 			New("TextLabel", {
-				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+				FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 				Text = "📦 Loading more items...",
 				TextColor3 = Color3.fromRGB(150, 150, 150),
 				TextSize = 12,
@@ -3836,7 +3804,7 @@ ElementsTable.Dropdown = (function()
 		})
 
         local DropdownSearch = New("TextBox", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+			FontFace = Font.fromEnum(Enum.Font.Gotham),
 			Text = "",
 			PlaceholderText = "Search...",
 			PlaceholderColor3 = Color3.fromRGB(180, 180, 190),
@@ -3877,36 +3845,15 @@ ElementsTable.Dropdown = (function()
         local MAX_DROPDOWN_ITEMS = 5
 
         local MoveList = {
-            { Instance = DropdownHolderCanvas, YOffset = 0}, -- no custom offset
-            { Instance = SearchBase, YOffset = 0 }, -- custom Y offset
-            { Instance = ClearButton, YOffset = 0, XOffset = 175 }, -- Clear button ข้างๆ search
+            { Instance = DropdownHolderCanvas, YOffset = 0 },
+            { Instance = SearchBase, YOffset = -42 }, -- busca fica logo acima da lista, centralizada
+            { Instance = ClearButton, YOffset = -42, XOffset = 178 }, -- botão de limpar ao lado da busca
         }
 
         local function RecalculateListPosition()
-            local WinRoot = Library.Window and Library.Window.Root
-            local neededSpace = DropdownHolderCanvas.AbsoluteSize.Y - 5
-            local baseX, baseY
-
-            if WinRoot then
-                -- abre ao lado da UI, encostado na borda, alinhado com o topo da janela
-                local gap = 10
-                local screenWidth = Camera.ViewportSize.X
-                local rightX = WinRoot.AbsolutePosition.X + WinRoot.AbsoluteSize.X + gap
-                local leftX = WinRoot.AbsolutePosition.X - DropdownHolderCanvas.AbsoluteSize.X - gap
-
-                if rightX + DropdownHolderCanvas.AbsoluteSize.X <= screenWidth then
-                    baseX = rightX
-                elseif leftX >= 0 then
-                    baseX = leftX
-                else
-                    baseX = rightX
-                end
-
-                baseY = WinRoot.AbsolutePosition.Y
-            else
-                baseX = DropdownInner.AbsolutePosition.X - 1 + XADD
-                baseY = DropdownInner.AbsolutePosition.Y - neededSpace - 6
-            end
+            local screenSize = Camera.ViewportSize
+            local baseX = (screenSize.X - DropdownHolderCanvas.AbsoluteSize.X) / 2
+            local baseY = (screenSize.Y - DropdownHolderCanvas.AbsoluteSize.Y) / 2
 
             for _, entry in ipairs(MoveList) do
                 local inst = entry.Instance
@@ -3921,7 +3868,7 @@ ElementsTable.Dropdown = (function()
 
 		local ListSizeX = 0
 		local function RecalculateListSize()
-			ListSizeX = DropdownInner.AbsoluteSize.X
+			ListSizeX = math.max(DropdownInner.AbsoluteSize.X, 320) -- modal maior, não só a largura do botão
 			if #Dropdown.Values > MAX_DROPDOWN_ITEMS then
 				DropdownHolderCanvas.Size = UDim2.fromOffset(ListSizeX, (42 * MAX_DROPDOWN_ITEMS) - 10) -- ปรับขนาดตาม item ที่ใหญ่ขึ้น
 			else
@@ -4171,7 +4118,7 @@ ElementsTable.Dropdown = (function()
 			})
 
 			local ButtonLabel = New("TextLabel", {
-				FontFace         = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+				FontFace         = Font.fromEnum(Enum.Font.GothamMedium),
 				Text             = tostring(Value),
 				TextColor3       = Color3.fromRGB(200, 200, 200),
 				TextSize         = 13,
@@ -4734,7 +4681,7 @@ local function SafeAssetId(id)
 		})
 
 		local TitleLabel = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+			FontFace = Font.fromEnum(Enum.Font.GothamBlack),
 			Text = Config.Title,
 			TextColor3 = Color3.fromRGB(255, 255, 255),
 			TextSize = 15,
@@ -4747,7 +4694,7 @@ local function SafeAssetId(id)
 		})
 
 		local LinkLabel = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 			Text = Config.Link,
 			TextColor3 = Color3.fromRGB(210, 210, 210),
 			TextSize = 12,
@@ -4762,7 +4709,7 @@ local function SafeAssetId(id)
 
 		local CopyButton = New("TextButton", {
 			Text = "Copy Invite",
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
+			FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 			TextSize = 13,
 			TextColor3 = Color3.fromRGB(255, 255, 255),
 			Size = UDim2.new(0, 108, 0, 30),
@@ -4860,7 +4807,7 @@ ElementsTable.Slider = (function()
 
 		-- ── Value display box (ขวาบน) ────────────────────────
 		local SliderDisplay = New("TextBox", {
-			FontFace         = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
+			FontFace         = Font.fromEnum(Enum.Font.GothamSemibold),
 			Text             = tostring(Config.Default),
 			PlaceholderText  = "",
 			TextSize         = 12,
@@ -5074,7 +5021,7 @@ ElementsTable.Keybind = (function()
 		Keybind.Elements = KeybindFrame
 
 		local KeybindDisplayLabel = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
+			FontFace = Font.fromEnum(Enum.Font.Gotham),
 			Text = Config.Default,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
 			TextSize = 13,
@@ -5328,11 +5275,7 @@ ElementsTable.Colorpicker = (function()
 
 			local function CreateInputLabel(Text, Pos)
 				return New("TextLabel", {
-					FontFace = Font.new(
-						"rbxasset://fonts/families/GothamSSm.json",
-						Enum.FontWeight.Medium,
-						Enum.FontStyle.Normal
-					),
+					FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 					Text = Text,
 					TextColor3 = Color3.fromRGB(240, 240, 240),
 					TextSize = 13,
@@ -7235,12 +7178,12 @@ function Library:CreateKeySystem(Config)
 		Parent = KeyGui,
 	}, {
 		New("UICorner", { CornerRadius = UDim.new(0, 18) }),
-		New("UIStroke", { Color = Color3.fromRGB(0, 229, 204), Thickness = 1.5, Transparency = 0.35 }, {
+		New("UIStroke", { Color = Color3.fromRGB(212, 175, 55), Thickness = 1.5, Transparency = 0.35 }, {
 			New("UIGradient", {
 				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 229, 204)),
+					ColorSequenceKeypoint.new(0, Color3.fromRGB(212, 175, 55)),
 					ColorSequenceKeypoint.new(0.5, Color3.fromRGB(90, 90, 110)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 229, 204)),
+					ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 175, 55)),
 				}),
 				Rotation = 0,
 			}),
@@ -7262,7 +7205,7 @@ function Library:CreateKeySystem(Config)
 	-- brilho suave por trás do card (contido, nao cobre a tela)
 	New("ImageLabel", {
 		Image = "rbxassetid://5028857084",
-		ImageColor3 = Color3.fromRGB(0, 229, 204),
+		ImageColor3 = Color3.fromRGB(212, 175, 55),
 		ImageTransparency = 0.75,
 		ScaleType = Enum.ScaleType.Slice,
 		SliceCenter = Rect.new(24, 24, 276, 276),
@@ -7308,7 +7251,7 @@ function Library:CreateKeySystem(Config)
 
 	New("TextLabel", {
 		Text = HubTitle,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+		FontFace = Font.fromEnum(Enum.Font.GothamBlack),
 		TextSize = 22,
 		TextColor3 = Color3.fromRGB(255, 255, 255),
 		BackgroundTransparency = 1,
@@ -7320,7 +7263,7 @@ function Library:CreateKeySystem(Config)
 	})
 	New("TextLabel", {
 		Text = HubSubtitle,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 		TextSize = 13,
 		TextColor3 = Color3.fromRGB(150, 150, 160),
 		BackgroundTransparency = 1,
@@ -7332,7 +7275,7 @@ function Library:CreateKeySystem(Config)
 	})
 	New("TextLabel", {
 		Text = Note,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 		TextSize = 12,
 		TextColor3 = Color3.fromRGB(120, 120, 130),
 		TextWrapped = true,
@@ -7362,18 +7305,50 @@ function Library:CreateKeySystem(Config)
 		PlaceholderText = "Cole sua key aqui...",
 		PlaceholderColor3 = Color3.fromRGB(100, 100, 110),
 		Font = Enum.Font.Unknown,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 		TextSize = 13,
 		TextColor3 = Color3.fromRGB(230, 230, 235),
 		ClearTextOnFocus = false,
 		BackgroundTransparency = 1,
-		Size = UDim2.new(1, -20, 1, 0),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Size = UDim2.new(1, -66, 1, 0),
 		Position = UDim2.fromOffset(10, 0),
 		ZIndex = 1001,
 		Parent = InputBoxHolder,
 	})
+
+	-- ── novidade: botão "Colar" pra preencher a key direto da área de transferência ──
+	local PasteBtn = New("TextButton", {
+		Text = "Colar",
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
+		TextSize = 12,
+		TextColor3 = Color3.fromRGB(212, 175, 55),
+		BackgroundColor3 = Color3.fromRGB(212, 175, 55),
+		BackgroundTransparency = 0.88,
+		Size = UDim2.fromOffset(48, 26),
+		Position = UDim2.new(1, -8, 0.5, 0),
+		AnchorPoint = Vector2.new(1, 0.5),
+		AutoButtonColor = false,
+		ZIndex = 1001,
+		Parent = InputBoxHolder,
+	}, {
+		New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+	})
+	PasteBtn.MouseEnter:Connect(function()
+		TweenService:Create(PasteBtn, TweenInfo.new(0.12), { BackgroundTransparency = 0.75 }):Play()
+	end)
+	PasteBtn.MouseLeave:Connect(function()
+		TweenService:Create(PasteBtn, TweenInfo.new(0.12), { BackgroundTransparency = 0.88 }):Play()
+	end)
+	PasteBtn.MouseButton1Click:Connect(function()
+		pcall(function()
+			if getclipboard then
+				KeyBox.Text = getclipboard() or ""
+			end
+		end)
+	end)
 	KeyBox.Focused:Connect(function()
-		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(0, 229, 204), Transparency = 0 }):Play()
+		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(212, 175, 55), Transparency = 0 }):Play()
 	end)
 	KeyBox.FocusLost:Connect(function()
 		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(60, 60, 68), Transparency = 0.4 }):Play()
@@ -7381,7 +7356,7 @@ function Library:CreateKeySystem(Config)
 
 	local StatusLabel = New("TextLabel", {
 		Text = "",
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+		FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 		TextSize = 12,
 		TextColor3 = Color3.fromRGB(235, 90, 90),
 		BackgroundTransparency = 1,
@@ -7396,7 +7371,7 @@ function Library:CreateKeySystem(Config)
 	local SubmitBtn = New("TextButton", {
 		Text = "",
 		AutoButtonColor = false,
-		BackgroundColor3 = Color3.fromRGB(0, 229, 204),
+		BackgroundColor3 = Color3.fromRGB(212, 175, 55),
 		Size = UDim2.new(1, -48, 0, 38),
 		Position = UDim2.new(0.5, 0, 0, ContentY + 156),
 		AnchorPoint = Vector2.new(0.5, 0),
@@ -7407,7 +7382,7 @@ function Library:CreateKeySystem(Config)
 	})
 	New("TextLabel", {
 		Text = "Entrar",
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+		FontFace = Font.fromEnum(Enum.Font.GothamBlack),
 		TextSize = 14,
 		TextColor3 = Color3.fromRGB(20, 20, 20),
 		BackgroundTransparency = 1,
@@ -7416,10 +7391,10 @@ function Library:CreateKeySystem(Config)
 		Parent = SubmitBtn,
 	})
 	SubmitBtn.MouseEnter:Connect(function()
-		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(255, 180, 60) }):Play()
+		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(245, 220, 150) }):Play()
 	end)
 	SubmitBtn.MouseLeave:Connect(function()
-		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(0, 229, 204) }):Play()
+		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(212, 175, 55) }):Play()
 	end)
 
 	local BottomY = ContentY + 156 + 46
@@ -7428,9 +7403,9 @@ function Library:CreateKeySystem(Config)
 			Text = "Pegar Key",
 			AutoButtonColor = false,
 			BackgroundTransparency = 1,
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 			TextSize = 12,
-			TextColor3 = Color3.fromRGB(0, 229, 204),
+			TextColor3 = Color3.fromRGB(212, 175, 55),
 			Size = UDim2.new(1, -48, 0, 18),
 			Position = UDim2.new(0.5, 0, 0, BottomY),
 			AnchorPoint = Vector2.new(0.5, 0),
@@ -7551,7 +7526,7 @@ function Library:CreateWindow(Config)
 			-- dois "orbs" de glow suaves que respiram devagar no fundo,
 			-- pra tela de loading não ficar só preto chapado
 			for i, orbCfg in ipairs({
-				{ Pos = UDim2.fromScale(0.18, 0.28), Size = 260, Color = Color3.fromRGB(0, 229, 204) },
+				{ Pos = UDim2.fromScale(0.18, 0.28), Size = 260, Color = Color3.fromRGB(212, 175, 55) },
 				{ Pos = UDim2.fromScale(0.85, 0.78), Size = 300, Color = Color3.fromRGB(60, 110, 220) },
 			}) do
 				local Orb = New("ImageLabel", {
@@ -7602,7 +7577,7 @@ function Library:CreateWindow(Config)
 
 				LogoGlow = New("ImageLabel", {
 					Image = "rbxassetid://5028857084",
-					ImageColor3 = Color3.fromRGB(0, 229, 204),
+					ImageColor3 = Color3.fromRGB(212, 175, 55),
 					ImageTransparency = 1,
 					ScaleType = Enum.ScaleType.Slice,
 					SliceCenter = Rect.new(24, 24, 276, 276),
@@ -7628,7 +7603,7 @@ function Library:CreateWindow(Config)
 						}, {
 							New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 							New("UIStroke", {
-								Color = Color3.fromRGB(0, 229, 204),
+								Color = Color3.fromRGB(212, 175, 55),
 								Thickness = 2,
 								Transparency = 0.2,
 							}),
@@ -7659,7 +7634,7 @@ function Library:CreateWindow(Config)
 
 			local LogoLabel = New("TextLabel", {
 				Text = Config.Title,
-				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+				FontFace = Font.fromEnum(Enum.Font.GothamBlack),
 				TextSize = 24,
 				TextColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1,
@@ -7673,7 +7648,7 @@ function Library:CreateWindow(Config)
 
 			local SubLabel = New("TextLabel", {
 				Text = Config.SubTitle or "Carregando...",
-				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+				FontFace = Font.fromEnum(Enum.Font.GothamMedium),
 				TextSize = 13,
 				TextColor3 = Color3.fromRGB(160, 160, 170),
 				BackgroundTransparency = 1,
@@ -7705,9 +7680,29 @@ function Library:CreateWindow(Config)
 			}, {
 				New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 				New("UIGradient", {
-					Color = ColorSequence.new(Color3.fromRGB(0, 229, 204), Color3.fromRGB(140, 255, 240)),
+					Color = ColorSequence.new(Color3.fromRGB(212, 175, 55), Color3.fromRGB(245, 220, 150)),
 				}),
 			})
+
+			-- ── novidade: porcentagem numérica contando junto com a barra ──
+			local PercentLabel = New("TextLabel", {
+				Text = "0%",
+				FontFace = Font.fromEnum(Enum.Font.GothamMedium),
+				TextSize = 11,
+				TextColor3 = Color3.fromRGB(212, 175, 55),
+				BackgroundTransparency = 1,
+				Size = UDim2.new(0, 50, 0, 14),
+				Position = UDim2.new(0.5, 0, (SplashLogoImage and 0.61 or 0.555), 0.028),
+				AnchorPoint = Vector2.new(0.5, 0),
+				TextTransparency = 1,
+				ZIndex = 1000,
+				Parent = LoadingGui,
+			})
+			local PercentValue = Instance.new("NumberValue")
+			PercentValue.Value = 0
+			PercentValue.Changed:Connect(function(v)
+				PercentLabel.Text = math.floor(v) .. "%"
+			end)
 
 			-- ── entrada escalonada (logo -> título -> subtítulo -> barra) ──
 			if LogoHolder then
@@ -7729,6 +7724,8 @@ function Library:CreateWindow(Config)
 			TweenService:Create(SubLabel, TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { TextTransparency = 0.2 }):Play()
 			TweenService:Create(BarHolder, TweenInfo.new(0.4), { BackgroundTransparency = 0 }):Play()
 			TweenService:Create(BarFill, TweenInfo.new(1.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { Size = UDim2.new(1, 0, 1, 0) }):Play()
+			TweenService:Create(PercentLabel, TweenInfo.new(0.3), { TextTransparency = 0.15 }):Play()
+			TweenService:Create(PercentValue, TweenInfo.new(1.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), { Value = 100 }):Play()
 
 			task.wait(2.2)
 
@@ -7739,6 +7736,7 @@ function Library:CreateWindow(Config)
 			end
 			TweenService:Create(LogoLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
 			TweenService:Create(SubLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
+			TweenService:Create(PercentLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
 			TweenService:Create(BarHolder, TweenInfo.new(0.3), { BackgroundTransparency = 1 }):Play()
 			if LogoHolder then
 				TweenService:Create(LogoImage, TweenInfo.new(0.3), { ImageTransparency = 1 }):Play()
@@ -7751,6 +7749,7 @@ function Library:CreateWindow(Config)
 			task.wait(0.4)
 			LoadingGui:Destroy()
 			LoadingGui = nil
+			PercentValue:Destroy()
 			if LoadingBlur then
 				LoadingBlur:Destroy()
 			end
@@ -8144,7 +8143,7 @@ function Library:CreateWatermark(Config)
 		ZIndex = 50,
 	}, {
 		New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-		New("UIStroke", { Color = Color3.fromRGB(0, 229, 204), Thickness = 1, Transparency = 0.5 }),
+		New("UIStroke", { Color = Color3.fromRGB(212, 175, 55), Thickness = 1, Transparency = 0.5 }),
 		New("UIPadding", {
 			PaddingLeft = UDim.new(0, 12),
 			PaddingRight = UDim.new(0, 12),
@@ -8162,7 +8161,7 @@ function Library:CreateWatermark(Config)
 	New("TextLabel", {
 		Text = Title,
 		FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
-		TextColor3 = Color3.fromRGB(0, 229, 204),
+		TextColor3 = Color3.fromRGB(212, 175, 55),
 		TextSize = 13,
 		AutomaticSize = Enum.AutomaticSize.X,
 		Size = UDim2.new(0, 0, 1, 0),
