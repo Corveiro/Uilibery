@@ -19,18 +19,18 @@ local Themes = {
 	},
 	Dark = {
 		Name = "Dark",
-		Accent = Color3.fromRGB(245, 166, 35),
+		Accent = Color3.fromRGB(0, 229, 204),
 
-		AcrylicMain = Color3.fromRGB(24, 24, 29),
-		AcrylicBorder = Color3.fromRGB(45, 45, 52),
+		AcrylicMain = Color3.fromRGB(15, 15, 19),
+		AcrylicBorder = Color3.fromRGB(0, 229, 204),
 		AcrylicGradient = ColorSequence.new(Color3.fromRGB(24, 24, 29), Color3.fromRGB(24, 24, 29)),
 		AcrylicNoise = 1,
 
 		TitleBarLine = Color3.fromRGB(40, 40, 46),
 		Tab = Color3.fromRGB(150, 150, 158),
 
-		Element = Color3.fromRGB(38, 38, 45),
-		ElementBorder = Color3.fromRGB(48, 48, 56),
+		Element = Color3.fromRGB(36, 36, 43),
+		ElementBorder = Color3.fromRGB(56, 56, 66),
 		InElementBorder = Color3.fromRGB(55, 55, 64),
 		ElementTransparency = 0,
 
@@ -40,7 +40,7 @@ local Themes = {
 		SliderRail = Color3.fromRGB(55, 55, 63),
 
 		DropdownFrame = Color3.fromRGB(32, 32, 38),
-		DropdownHolder = Color3.fromRGB(28, 28, 34),
+		DropdownHolder = Color3.fromRGB(18, 18, 23),
 		DropdownBorder = Color3.fromRGB(48, 48, 56),
 		DropdownOption = Color3.fromRGB(38, 38, 45),
 
@@ -51,7 +51,7 @@ local Themes = {
 		InputIndicator = Color3.fromRGB(150, 150, 158),
 
 		Dialog = Color3.fromRGB(28, 28, 34),
-		DialogHolder = Color3.fromRGB(22, 22, 27),
+		DialogHolder = Color3.fromRGB(16, 16, 20),
 		DialogHolderLine = Color3.fromRGB(18, 18, 22),
 		DialogButton = Color3.fromRGB(32, 32, 38),
 		DialogButtonBorder = Color3.fromRGB(50, 50, 58),
@@ -66,7 +66,7 @@ local Themes = {
 	},
 	White = {
 		Name = "White",
-		Accent = Color3.fromRGB(245, 166, 35),
+		Accent = Color3.fromRGB(0, 229, 204),
 
 		AcrylicMain = Color3.fromRGB(255, 255, 255),
 		AcrylicBorder = Color3.fromRGB(225, 225, 228),
@@ -96,7 +96,7 @@ local Themes = {
 		Input = Color3.fromRGB(247, 247, 249),
 		InputFocused = Color3.fromRGB(240, 240, 242),
 		InputIndicator = Color3.fromRGB(80, 80, 80),
-		InputIndicatorFocus = Color3.fromRGB(245, 166, 35),
+		InputIndicatorFocus = Color3.fromRGB(0, 229, 204),
 
 		Dialog = Color3.fromRGB(255, 255, 255),
 		DialogHolder = Color3.fromRGB(240, 240, 240),
@@ -1182,6 +1182,9 @@ local Spring = Flipper.Spring.new
 local Instant = Flipper.Instant.new
 local AddSignal = Creator.AddSignal
 
+-- ── Novidade: contador pra escalonar a animação de entrada dos elementos ──
+local ElementStaggerCount = 0
+
 Components.Element = function(Title, Desc, Parent, Hover, Options)
 	local Element = { Original = { Text = "" } }
 	local Options = Options or {}
@@ -1222,8 +1225,8 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 		BackgroundTransparency = 1,
-		Position = UDim2.fromOffset(10, 0),
-		Size = UDim2.new(1, -24, 0, 0),
+		Position = UDim2.fromOffset(14, 0),
+		Size = UDim2.new(1, -28, 0, 0),
 	}, {
 		New("UIListLayout", {
 			SortOrder = Enum.SortOrder.LayoutOrder,
@@ -1248,6 +1251,18 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		},
 	})
 
+	-- barrinha de destaque na lateral esquerda, aparece suavemente no hover
+	Element.AccentBar = New("Frame", {
+		Size = UDim2.new(0, 3, 0.6, 0),
+		Position = UDim2.new(0, 0, 0.5, 0),
+		AnchorPoint = Vector2.new(0, 0.5),
+		BackgroundColor3 = Color3.fromRGB(0, 229, 204),
+		BackgroundTransparency = 1,
+		ZIndex = 5,
+	}, {
+		New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+	})
+
 	Element.Frame = New("TextButton", {
 		Visible = Options.Visible and Options.Visible or true,
 		Size = UDim2.new(1, 0, 0, 0),
@@ -1264,7 +1279,7 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		},
 	}, {
 		New("UICorner", {
-			CornerRadius = UDim.new(0, 8),
+			CornerRadius = UDim.new(0, 10),
 		}),
 		New("UIGradient", {
 			Rotation = 90,
@@ -1273,11 +1288,12 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 				ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 210, 210)),
 			}),
 			Transparency = NumberSequence.new({
-				NumberSequenceKeypoint.new(0, 0.94),
+				NumberSequenceKeypoint.new(0, 0.95),
 				NumberSequenceKeypoint.new(1, 1),
 			}),
 		}),
 		Element.Border,
+		Element.AccentBar,
 		Element.LabelHolder,
 	})
 
@@ -1328,15 +1344,25 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 
 	Element.Original.Text = Title
 
-	-- ── Borda com destaque sutil no hover (todos os elementos) ──
+	-- ── Hover premium: borda ganha tom ciano + barra lateral aparece ──
 	Creator.AddSignal(Element.Frame.MouseEnter, function()
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.15,
+			Color = Color3.fromRGB(0, 229, 204),
+		}):Play()
+		TweenService:Create(Element.AccentBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			BackgroundTransparency = 0.25,
+			Size = UDim2.new(0, 3, 0.7, 0),
 		}):Play()
 	end)
 	Creator.AddSignal(Element.Frame.MouseLeave, function()
 		TweenService:Create(Element.Border, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 0.35,
+			Color = Creator.GetThemeProperty("ElementBorder"),
+		}):Play()
+		TweenService:Create(Element.AccentBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			BackgroundTransparency = 1,
+			Size = UDim2.new(0, 3, 0.6, 0),
 		}):Play()
 	end)
 
@@ -1364,11 +1390,38 @@ Components.Element = function(Title, Desc, Parent, Hover, Options)
 		end)
 	end
 
+	-- ── Novidade: tag pra permitir busca/filtro global pela UI ──
+	Element.Frame:SetAttribute("FluentSearchTitle", tostring(Title or ""))
+
+	-- ── Novidade: animação de entrada em cascata (borda + barra lateral) ──
+	do
+		ElementStaggerCount = (ElementStaggerCount + 1) % 10
+		local Delay = ElementStaggerCount * 0.035
+
+		Element.Border.Transparency = 1
+
+		task.spawn(function()
+			task.wait(Delay)
+			TweenService:Create(Element.Border, TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+				Transparency = 0.35,
+			}):Play()
+			TweenService:Create(Element.AccentBar, TweenInfo.new(0.32, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+				BackgroundTransparency = 0.55,
+			}):Play()
+			task.wait(0.12)
+			TweenService:Create(Element.AccentBar, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				BackgroundTransparency = 1,
+				Size = UDim2.new(0, 3, 0.6, 0),
+			}):Play()
+		end)
+	end
+
 	return Element
 end
 
 Components.Section = function(Title, Parent)
 	local Section = {}
+	local Collapsed = false
 
 	Section.Layout = New("UIListLayout", {
 		Padding = UDim.new(0, 5),
@@ -1382,10 +1435,22 @@ Components.Section = function(Title, Parent)
 		Section.Layout,
 	})
 
-	Section.Root = New("Frame", {
+	local Chevron = New("ImageLabel", {
+		Image = "rbxassetid://10709790948", -- seta simples
+		Size = UDim2.fromOffset(12, 12),
+		Position = UDim2.new(1, -4, 0.5, 0),
+		AnchorPoint = Vector2.new(1, 0.5),
+		BackgroundTransparency = 1,
+		Rotation = 0,
+		ThemeTag = { ImageColor3 = "SubText" },
+	})
+
+	Section.Root = New("TextButton", {
 		BackgroundTransparency = 1,
 		Size = UDim2.new(1, 0, 0, 20),
 		LayoutOrder = 7,
+		Text = "",
+		AutoButtonColor = false,
 		Parent = Parent,
 	}, {
 		New("Frame", {
@@ -1405,19 +1470,45 @@ Components.Section = function(Title, Parent)
 			TextSize = 13,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
-			Size = UDim2.new(1, -18, 1, 0),
+			Size = UDim2.new(1, -30, 1, 0),
 			Position = UDim2.fromOffset(12, 0),
 			AutoLocalize = false,
 			ThemeTag = {
 				TextColor3 = "SubText",
 			},
 		}),
+		Chevron,
 		Section.Container,
 	})
 
+	Section.Root:SetAttribute("FluentIsSection", true)
+	Section.Root:SetAttribute("FluentSearchTitle", tostring(Title or ""))
+
+	local FullHeight = 45
 	Creator.AddSignal(Section.Layout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 		Section.Container.Size = UDim2.new(1, 0, 0, Section.Layout.AbsoluteContentSize.Y)
-		Section.Root.Size = UDim2.new(1, 0, 0, Section.Layout.AbsoluteContentSize.Y + 25)
+		FullHeight = Section.Layout.AbsoluteContentSize.Y + 25
+		if not Collapsed then
+			Section.Root.Size = UDim2.new(1, 0, 0, FullHeight)
+		end
+	end)
+
+	-- ── Novidade: seção recolhível clicando no cabeçalho ──
+	Creator.AddSignal(Section.Root.MouseButton1Click, function()
+		Collapsed = not Collapsed
+		if Collapsed then
+			TweenService:Create(Section.Root, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.new(1, 0, 0, 20),
+			}):Play()
+			TweenService:Create(Chevron, TweenInfo.new(0.2), { Rotation = -90 }):Play()
+			Section.Container.Visible = false
+		else
+			Section.Container.Visible = true
+			TweenService:Create(Section.Root, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.new(1, 0, 0, FullHeight),
+			}):Play()
+			TweenService:Create(Chevron, TweenInfo.new(0.2), { Rotation = 0 }):Play()
+		end
 	end)
 	
 	return Section
@@ -1977,8 +2068,20 @@ Components.Notification = (function()
 
 		--NewNotification.AcrylicPaint = Acrylic.AcrylicPaint()
 
+		local NotifTypeGlyphs = {
+			success = "✓",
+			error   = "✕",
+			warning = "!",
+		}
+		local NotifTypeColorsEarly = {
+			success = Color3.fromRGB(70, 200, 120),
+			error   = Color3.fromRGB(230, 80, 80),
+			warning = Color3.fromRGB(240, 180, 60),
+		}
+		local NotifGlyph = NotifTypeGlyphs[Config.Type]
+
 		NewNotification.Title = New("TextLabel", {
-			Position = UDim2.new(0, 14, 0, 17),
+			Position = UDim2.new(0, NotifGlyph and 34 or 14, 0, 17),
 			Text = Config.Title,
 			RichText = true,
 			TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -1987,7 +2090,7 @@ Components.Notification = (function()
 			TextSize = 13,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
-			Size = UDim2.new(1, -12, 0, 12),
+			Size = UDim2.new(1, NotifGlyph and -32 or -12, 0, 12),
 			TextWrapped = true,
 			BackgroundTransparency = 1,
 			AutoLocalize = false,
@@ -1995,6 +2098,19 @@ Components.Notification = (function()
 				TextColor3 = "Text",
 			},
 		})
+
+		if NotifGlyph then
+			New("TextLabel", {
+				Text = NotifGlyph,
+				Position = UDim2.new(0, 14, 0, 17),
+				Size = UDim2.fromOffset(16, 16),
+				BackgroundTransparency = 1,
+				TextColor3 = NotifTypeColorsEarly[Config.Type] or Color3.fromRGB(255, 255, 255),
+				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold),
+				TextSize = 14,
+				Parent = NewNotification.Title,
+			})
+		end
 
 		NewNotification.ContentLabel = New("TextLabel", {
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
@@ -2073,12 +2189,12 @@ Components.Notification = (function()
 		local NotifAccentColor = NotifTypeColors[Config.Type]
 
 		NewNotification.Root = New("Frame", {
-		    BackgroundTransparency = 0,
+		    BackgroundTransparency = 1,
 		    Size = UDim2.new(1, 0, 1, 0),
 		    Position = UDim2.fromScale(1, 0),
 		    ThemeTag = { BackgroundColor3 = "AcrylicMain" },
 		}, {
-		    New("UICorner", { CornerRadius = UDim.new(0, 5) }),
+		    New("UICorner", { CornerRadius = UDim.new(0, 10) }),
 		    New("UIStroke", {
 		        Transparency = 0.5,
 		        ThemeTag = { Color = "AcrylicBorder" },
@@ -2097,6 +2213,22 @@ Components.Notification = (function()
 		    NewNotification.CloseButton,
 		    NewNotification.LabelHolder,
 		})
+
+		-- ── Novidade: barra de progresso mostrando o tempo restante ──
+		local ProgressBar
+		if Config.Duration then
+			ProgressBar = New("Frame", {
+				Size = UDim2.new(1, 0, 0, 2),
+				Position = UDim2.new(0, 0, 1, 0),
+				AnchorPoint = Vector2.new(0, 1),
+				BackgroundColor3 = NotifAccentColor or Color3.fromRGB(0, 229, 204),
+				BackgroundTransparency = 0.2,
+				ThemeTag = not NotifAccentColor and { BackgroundColor3 = "Accent" } or nil,
+				Parent = NewNotification.Root,
+			}, {
+				New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			})
+		end
 
 		if Config.Content == "" then
 			NewNotification.ContentLabel.Visible = false
@@ -2131,6 +2263,10 @@ Components.Notification = (function()
 			local ContentSize = NewNotification.LabelHolder.AbsoluteSize.Y
 			NewNotification.Holder.Size = UDim2.new(1, 0, 0, 58 + ContentSize)
 
+			TweenService:Create(NewNotification.Root, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				BackgroundTransparency = 0,
+			}):Play()
+
 			RootMotor:setGoal({
 				Scale = Spring(0, { frequency = 5 }),
 				Offset = Spring(0, { frequency = 5 }),
@@ -2156,6 +2292,11 @@ Components.Notification = (function()
 
 		NewNotification:Open()
 		if Config.Duration then
+			if ProgressBar then
+				TweenService:Create(ProgressBar, TweenInfo.new(Config.Duration, Enum.EasingStyle.Linear), {
+					Size = UDim2.new(0, 0, 0, 2),
+				}):Play()
+			end
 			task.delay(Config.Duration, function()
 				NewNotification:Close()
 			end)
@@ -2748,12 +2889,59 @@ Components.Window = (function()
 			TextSize         = 22,
 			TextXAlignment   = Enum.TextXAlignment.Left,
 			TextYAlignment   = Enum.TextYAlignment.Center,
-			Size             = UDim2.new(1, -16, 0, 22),
+			Size             = UDim2.new(1, -176, 0, 22),
 			Position         = UDim2.fromOffset(Window.TabWidth + 26, 56),
 			BackgroundTransparency = 1,
 			AutoLocalize     = false,
 			ThemeTag         = { TextColor3 = "Text" },
 		})
+
+		-- ================================================================
+		-- NOVIDADE: BUSCA GLOBAL — filtra ao vivo os elementos da aba
+		-- atual pelo título, sem precisar rolar tudo pra achar um toggle.
+		-- ================================================================
+		local SearchBox = New("TextBox", {
+			Size = UDim2.fromOffset(150, 28),
+			Position = UDim2.new(1, -16, 0, 56),
+			AnchorPoint = Vector2.new(1, 0),
+			BackgroundColor3 = Color3.fromRGB(20, 20, 25),
+			BackgroundTransparency = 0.3,
+			PlaceholderText = "Buscar...",
+			Text = "",
+			ClearTextOnFocus = false,
+			FontFace = Font.new("rbxassetid://12187365364"),
+			TextSize = 13,
+			TextColor3 = Color3.fromRGB(230, 230, 235),
+			PlaceholderColor3 = Color3.fromRGB(130, 130, 138),
+		}, {
+			New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+			New("UIStroke", { Color = Color3.fromRGB(0, 229, 204), Thickness = 1, Transparency = 0.6 }),
+			New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10) }),
+		})
+
+		local SearchTabModuleRef = Components.Tab:Init(Window)
+		local function ApplySearchFilter()
+			if not SearchTabModuleRef then return end
+			local query = SearchBox.Text:lower()
+			local container = SearchTabModuleRef.Containers[SearchTabModuleRef.SelectedTab]
+			if not container then return end
+			for _, child in ipairs(container:GetChildren()) do
+				if child:GetAttribute("FluentIsSection") then
+					child.Visible = true
+				elseif child:GetAttribute("FluentSearchTitle") ~= nil then
+					if query == "" then
+						child.Visible = true
+					else
+						child.Visible = child:GetAttribute("FluentSearchTitle"):lower():find(query, 1, true) ~= nil
+					end
+				end
+			end
+		end
+		Creator.AddSignal(SearchBox:GetPropertyChangedSignal("Text"), ApplySearchFilter)
+		Creator.AddSignal(Window.TabDisplay:GetPropertyChangedSignal("Text"), function()
+			task.wait(0.05)
+			ApplySearchFilter()
+		end)
 
 		Window.ContainerHolder = New("Frame", {
 			Size             = UDim2.fromScale(1, 1),
@@ -2784,7 +2972,8 @@ Components.Window = (function()
 		        Rotation = 90,
 		        Color = ColorSequence.new({
 		            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-		            ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 210, 210)),
+		            ColorSequenceKeypoint.new(0.55, Color3.fromRGB(225, 225, 232)),
+		            ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 165, 175)),
 		        }),
 		        Transparency = NumberSequence.new({
 		            NumberSequenceKeypoint.new(0, 0),
@@ -2792,9 +2981,9 @@ Components.Window = (function()
 		        }),
 		    }),
 		    New("UIStroke", {
-		        Thickness = 1.5,
-		        Transparency = 0,
-		        Color = Color3.fromRGB(0, 0, 0),
+		        Thickness = 1.2,
+		        Transparency = 0.25,
+		        Color = Color3.fromRGB(0, 229, 204),
 		    }),
 		})
 		
@@ -2811,6 +3000,7 @@ Components.Window = (function()
 		    Position = Window.Position,
 		    Parent = Config.Parent,
 		}, {
+		    New("UIScale", { Scale = 0.92 }),
 		    New("ImageLabel", {
 		        Image = "rbxassetid://5028857084", -- soft glow/shadow
 		        ImageColor3 = Color3.fromRGB(255, 255, 255),
@@ -2827,10 +3017,22 @@ Components.Window = (function()
 		    AcrylicFrame,   -- ใช้ตัวแปร แทน Window.AcrylicPaint.Frame
 		    IconHolder,
 		    Window.TabDisplay,
+		    SearchBox,
 		    Window.ContainerCanvas,
 		    TabFrame,
 		    ResizeStartFrame,
 		})
+
+		-- ── Entrada premium: janela nasce com fade + scale suave ──
+		do
+			local EntranceScale = Window.Root.UIScale
+			task.spawn(function()
+				task.wait()
+				TweenService:Create(EntranceScale, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+					Scale = 1,
+				}):Play()
+			end)
+		end
 
 		Window.TitleBar = Components.TitleBar({
 			Title = Config.Title,
@@ -3150,6 +3352,17 @@ ElementsTable.Button = (function()
 			TweenService:Create(ButtonIco, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 				Size = UDim2.fromOffset(16, 16),
 				Position = UDim2.new(1, -10, 0.5, 0),
+			}):Play()
+		end)
+
+		Creator.AddSignal(ButtonFrame.Frame.MouseButton1Down, function()
+			TweenService:Create(ButtonIco, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Size = UDim2.fromOffset(14, 14),
+			}):Play()
+		end)
+		Creator.AddSignal(ButtonFrame.Frame.MouseButton1Up, function()
+			TweenService:Create(ButtonIco, TweenInfo.new(0.15, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+				Size = UDim2.fromOffset(19, 19),
 			}):Play()
 		end)
 
@@ -6984,7 +7197,8 @@ function Library:CreateKeySystem(Config)
 	local KeyBlur = Instance.new("BlurEffect")
 	KeyBlur.Size = 0
 	KeyBlur.Parent = game:GetService("Lighting")
-	TweenService:Create(KeyBlur, TweenInfo.new(0.4), { Size = 24 }):Play()
+	-- fosco de tela cheia removido a pedido do usuario (mantem o objeto sem aplicar blur)
+	TweenService:Create(KeyBlur, TweenInfo.new(0.4), { Size = 0 }):Play()
 
 	local KeyGui = New("Frame", {
 		Size = UDim2.fromScale(1, 1),
@@ -6993,13 +7207,14 @@ function Library:CreateKeySystem(Config)
 		ZIndex = 998,
 		Parent = GUI,
 	})
-	TweenService:Create(KeyGui, TweenInfo.new(0.35), { BackgroundTransparency = 0.55 }):Play()
+	-- fundo escurecido em 100% da tela removido: KeyGui so serve de container p/ centralizar o Card
+	TweenService:Create(KeyGui, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
 
 	-- vinheta radial de fundo (mesmo recurso usado na loading screen)
 	New("ImageLabel", {
 		Image = "rbxassetid://5028857084",
 		ImageColor3 = Color3.fromRGB(0, 0, 0),
-		ImageTransparency = 0.2,
+		ImageTransparency = 1, -- vinheta de tela cheia desativada
 		ScaleType = Enum.ScaleType.Slice,
 		SliceCenter = Rect.new(24, 24, 276, 276),
 		Size = UDim2.new(1, 260, 1, 260),
@@ -7011,34 +7226,84 @@ function Library:CreateKeySystem(Config)
 	})
 
 	local Card = New("Frame", {
-		Size = UDim2.fromOffset(340, LogoImage and 400 or 340),
+		Size = UDim2.fromOffset(360, LogoImage and 420 or 356),
 		Position = UDim2.fromScale(0.5, 0.5),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		BackgroundColor3 = Color3.fromRGB(18, 18, 22),
+		BackgroundColor3 = Color3.fromRGB(13, 13, 17),
 		BackgroundTransparency = 1,
 		ZIndex = 999,
 		Parent = KeyGui,
 	}, {
-		New("UICorner", { CornerRadius = UDim.new(0, 14) }),
-		New("UIStroke", { Color = Color3.fromRGB(50, 50, 58), Thickness = 1, Transparency = 0.3 }),
+		New("UICorner", { CornerRadius = UDim.new(0, 18) }),
+		New("UIStroke", { Color = Color3.fromRGB(0, 229, 204), Thickness = 1.5, Transparency = 0.35 }, {
+			New("UIGradient", {
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 229, 204)),
+					ColorSequenceKeypoint.new(0.5, Color3.fromRGB(90, 90, 110)),
+					ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 229, 204)),
+				}),
+				Rotation = 0,
+			}),
+		}),
 		New("UIScale", { Scale = 0.9 }),
 	})
 	local CardStroke = Card.UIStroke
 	local CardScale = Card.UIScale
+	local CardGradient = CardStroke.UIGradient
 
-	local ContentY = 28
+	-- gradiente da borda gira devagar pra dar um brilho premium "vivo"
+	task.spawn(function()
+		while Card and Card.Parent do
+			CardGradient.Rotation = (CardGradient.Rotation + 1) % 360
+			task.wait(0.03)
+		end
+	end)
+
+	-- brilho suave por trás do card (contido, nao cobre a tela)
+	New("ImageLabel", {
+		Image = "rbxassetid://5028857084",
+		ImageColor3 = Color3.fromRGB(0, 229, 204),
+		ImageTransparency = 0.75,
+		ScaleType = Enum.ScaleType.Slice,
+		SliceCenter = Rect.new(24, 24, 276, 276),
+		Size = UDim2.new(1, 60, 1, 60),
+		Position = UDim2.fromScale(0.5, 0.5),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1,
+		ZIndex = 998,
+		Parent = Card,
+	})
+
+	local ContentY = 32
 	if LogoImage and LogoImage ~= "" then
-		New("ImageLabel", {
-			Image = LogoImage,
-			ScaleType = Enum.ScaleType.Fit,
-			Size = UDim2.fromOffset(64, 64),
+		local LogoRing = New("Frame", {
+			Size = UDim2.fromOffset(72, 72),
 			Position = UDim2.new(0.5, 0, 0, ContentY),
 			AnchorPoint = Vector2.new(0.5, 0),
 			BackgroundTransparency = 1,
 			ZIndex = 1000,
 			Parent = Card,
 		})
-		ContentY = ContentY + 80
+		New("ImageLabel", {
+			Image = LogoImage,
+			ScaleType = Enum.ScaleType.Fit,
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ZIndex = 1000,
+			Parent = LogoRing,
+		})
+		-- logo "respira": pulso suave e continuo de escala
+		task.spawn(function()
+			local growing = true
+			while LogoRing and LogoRing.Parent do
+				TweenService:Create(LogoRing, TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+					Size = growing and UDim2.fromOffset(78, 78) or UDim2.fromOffset(72, 72),
+				}):Play()
+				growing = not growing
+				task.wait(1.4)
+			end
+		end)
+		ContentY = ContentY + 88
 	end
 
 	New("TextLabel", {
@@ -7108,7 +7373,7 @@ function Library:CreateKeySystem(Config)
 		Parent = InputBoxHolder,
 	})
 	KeyBox.Focused:Connect(function()
-		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(245, 166, 35), Transparency = 0 }):Play()
+		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(0, 229, 204), Transparency = 0 }):Play()
 	end)
 	KeyBox.FocusLost:Connect(function()
 		TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(60, 60, 68), Transparency = 0.4 }):Play()
@@ -7131,7 +7396,7 @@ function Library:CreateKeySystem(Config)
 	local SubmitBtn = New("TextButton", {
 		Text = "",
 		AutoButtonColor = false,
-		BackgroundColor3 = Color3.fromRGB(245, 166, 35),
+		BackgroundColor3 = Color3.fromRGB(0, 229, 204),
 		Size = UDim2.new(1, -48, 0, 38),
 		Position = UDim2.new(0.5, 0, 0, ContentY + 156),
 		AnchorPoint = Vector2.new(0.5, 0),
@@ -7154,7 +7419,7 @@ function Library:CreateKeySystem(Config)
 		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(255, 180, 60) }):Play()
 	end)
 	SubmitBtn.MouseLeave:Connect(function()
-		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(245, 166, 35) }):Play()
+		TweenService:Create(SubmitBtn, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(0, 229, 204) }):Play()
 	end)
 
 	local BottomY = ContentY + 156 + 46
@@ -7165,7 +7430,7 @@ function Library:CreateKeySystem(Config)
 			BackgroundTransparency = 1,
 			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
 			TextSize = 12,
-			TextColor3 = Color3.fromRGB(245, 166, 35),
+			TextColor3 = Color3.fromRGB(0, 229, 204),
 			Size = UDim2.new(1, -48, 0, 18),
 			Position = UDim2.new(0.5, 0, 0, BottomY),
 			AnchorPoint = Vector2.new(0.5, 0),
@@ -7254,7 +7519,8 @@ function Library:CreateWindow(Config)
 			local LoadingBlurInstance = Instance.new("BlurEffect")
 			LoadingBlurInstance.Size = 0
 			LoadingBlurInstance.Parent = game:GetService("Lighting")
-			TweenService:Create(LoadingBlurInstance, TweenInfo.new(0.4), { Size = 22 }):Play()
+			-- fosco de tela cheia removido a pedido do usuario (mantem o objeto sem aplicar blur)
+			TweenService:Create(LoadingBlurInstance, TweenInfo.new(0.4), { Size = 0 }):Play()
 			LoadingBlur = LoadingBlurInstance
 
 			LoadingGui = New("Frame", {
@@ -7264,13 +7530,14 @@ function Library:CreateWindow(Config)
 				ZIndex = 999,
 				Parent = GUI,
 			})
-			TweenService:Create(LoadingGui, TweenInfo.new(0.4), { BackgroundTransparency = 0.5 }):Play()
+			-- fundo escurecido em 100% da tela removido: LoadingGui so serve de container
+			TweenService:Create(LoadingGui, TweenInfo.new(0.4), { BackgroundTransparency = 1 }):Play()
 
 			-- vinheta radial sutil pra dar profundidade ao fundo
 			New("ImageLabel", {
 				Image = "rbxassetid://5028857084",
 				ImageColor3 = Color3.fromRGB(0, 0, 0),
-				ImageTransparency = 0.25,
+				ImageTransparency = 1, -- vinheta de tela cheia desativada
 				ScaleType = Enum.ScaleType.Slice,
 				SliceCenter = Rect.new(24, 24, 276, 276),
 				Size = UDim2.new(1, 220, 1, 220),
@@ -7284,7 +7551,7 @@ function Library:CreateWindow(Config)
 			-- dois "orbs" de glow suaves que respiram devagar no fundo,
 			-- pra tela de loading não ficar só preto chapado
 			for i, orbCfg in ipairs({
-				{ Pos = UDim2.fromScale(0.18, 0.28), Size = 260, Color = Color3.fromRGB(245, 166, 35) },
+				{ Pos = UDim2.fromScale(0.18, 0.28), Size = 260, Color = Color3.fromRGB(0, 229, 204) },
 				{ Pos = UDim2.fromScale(0.85, 0.78), Size = 300, Color = Color3.fromRGB(60, 110, 220) },
 			}) do
 				local Orb = New("ImageLabel", {
@@ -7335,7 +7602,7 @@ function Library:CreateWindow(Config)
 
 				LogoGlow = New("ImageLabel", {
 					Image = "rbxassetid://5028857084",
-					ImageColor3 = Color3.fromRGB(245, 166, 35),
+					ImageColor3 = Color3.fromRGB(0, 229, 204),
 					ImageTransparency = 1,
 					ScaleType = Enum.ScaleType.Slice,
 					SliceCenter = Rect.new(24, 24, 276, 276),
@@ -7361,7 +7628,7 @@ function Library:CreateWindow(Config)
 						}, {
 							New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 							New("UIStroke", {
-								Color = Color3.fromRGB(245, 166, 35),
+								Color = Color3.fromRGB(0, 229, 204),
 								Thickness = 2,
 								Transparency = 0.2,
 							}),
@@ -7438,7 +7705,7 @@ function Library:CreateWindow(Config)
 			}, {
 				New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 				New("UIGradient", {
-					Color = ColorSequence.new(Color3.fromRGB(245, 166, 35), Color3.fromRGB(255, 220, 150)),
+					Color = ColorSequence.new(Color3.fromRGB(0, 229, 204), Color3.fromRGB(140, 255, 240)),
 				}),
 			})
 
@@ -7848,6 +8115,153 @@ end
 
 function Library:Notify(Config)
 	return NotificationModule:New(Config)
+end
+
+-- ================================================================
+-- NOVIDADE: WATERMARK — card flutuante e arrastável com FPS/Ping
+-- e stats customizados ao vivo. Uso:
+--   local WM = Fluent:CreateWatermark({ Title = "Meu Hub" })
+--   WM:UpdateStat("Farm", "Ativo")
+-- ================================================================
+function Library:CreateWatermark(Config)
+	Config = Config or {}
+	local Title = Config.Title or "Watermark"
+	local ShowFPS = Config.FPS ~= false
+	local ShowPing = Config.Ping ~= false
+
+	local Watermark = {}
+	local StatOrder = {}
+	local StatLabels = {}
+
+	local Root = New("Frame", {
+		Size = UDim2.fromOffset(0, 30),
+		AutomaticSize = Enum.AutomaticSize.X,
+		Position = UDim2.fromOffset(16, 16),
+		BackgroundColor3 = Color3.fromRGB(13, 13, 17),
+		BackgroundTransparency = 0.08,
+		Active = true,
+		Parent = GUI,
+		ZIndex = 50,
+	}, {
+		New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		New("UIStroke", { Color = Color3.fromRGB(0, 229, 204), Thickness = 1, Transparency = 0.5 }),
+		New("UIPadding", {
+			PaddingLeft = UDim.new(0, 12),
+			PaddingRight = UDim.new(0, 12),
+		}),
+	})
+
+	New("UIListLayout", {
+		FillDirection = Enum.FillDirection.Horizontal,
+		VerticalAlignment = Enum.VerticalAlignment.Center,
+		Padding = UDim.new(0, 10),
+		SortOrder = Enum.SortOrder.LayoutOrder,
+		Parent = Root,
+	})
+
+	New("TextLabel", {
+		Text = Title,
+		FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+		TextColor3 = Color3.fromRGB(0, 229, 204),
+		TextSize = 13,
+		AutomaticSize = Enum.AutomaticSize.X,
+		Size = UDim2.new(0, 0, 1, 0),
+		BackgroundTransparency = 1,
+		Parent = Root,
+		LayoutOrder = 0,
+	})
+
+	local function AddStat(name, initial, order)
+		local Label = New("TextLabel", {
+			Text = name .. ": " .. tostring(initial),
+			FontFace = Font.new("rbxassetid://12187365364"),
+			TextColor3 = Color3.fromRGB(210, 210, 215),
+			TextSize = 12,
+			AutomaticSize = Enum.AutomaticSize.X,
+			Size = UDim2.new(0, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Parent = Root,
+			LayoutOrder = order,
+		})
+		StatLabels[name] = Label
+		table.insert(StatOrder, name)
+	end
+
+	if ShowFPS then AddStat("FPS", 0, 1) end
+	if ShowPing then AddStat("Ping", 0, 2) end
+	for i, s in ipairs(Config.Stats or {}) do
+		if not StatLabels[s] then AddStat(s, "-", 2 + i) end
+	end
+
+	-- arrastar o watermark pela tela
+	do
+		local dragging, dragStart, startPos = false, nil, nil
+		Root.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				dragging = true
+				dragStart = input.Position
+				startPos = Root.Position
+				local conn
+				conn = input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						dragging = false
+						conn:Disconnect()
+					end
+				end)
+			end
+		end)
+		Root.InputChanged:Connect(function(input)
+			if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+				local delta = input.Position - dragStart
+				Root.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+			end
+		end)
+	end
+
+	function Watermark:UpdateStat(name, value)
+		if StatLabels[name] then
+			StatLabels[name].Text = name .. ": " .. tostring(value)
+		end
+	end
+
+	function Watermark:SetVisible(bool)
+		Root.Visible = bool
+	end
+
+	function Watermark:Destroy()
+		Root:Destroy()
+	end
+
+	if ShowFPS then
+		task.spawn(function()
+			local frames, last = 0, tick()
+			while Root and Root.Parent do
+				frames = frames + 1
+				local now = tick()
+				if now - last >= 1 then
+					Watermark:UpdateStat("FPS", frames)
+					frames = 0
+					last = now
+				end
+				RunService.RenderStepped:Wait()
+			end
+		end)
+	end
+
+	if ShowPing then
+		task.spawn(function()
+			while Root and Root.Parent do
+				local ok, pingValue = pcall(function()
+					local item = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]
+					return math.floor(tonumber(item:GetValueString():match("%d+")))
+				end)
+				Watermark:UpdateStat("Ping", ok and pingValue or "-")
+				task.wait(1)
+			end
+		end)
+	end
+
+	return Watermark
 end
 
 if getgenv then
