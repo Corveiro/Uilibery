@@ -56,47 +56,47 @@ local r={
 Darker={
 Colors={
 Background=ColorSequence.new{
-ColorSequenceKeypoint.new(0.00,Color3.fromRGB(16,16,16)),
-ColorSequenceKeypoint.new(0.50,Color3.fromRGB(22,22,22)),
-ColorSequenceKeypoint.new(1.00,Color3.fromRGB(16,16,16))
+ColorSequenceKeypoint.new(0.00,Color3.fromRGB(29,31,33)),
+ColorSequenceKeypoint.new(0.50,Color3.fromRGB(34,36,38)),
+ColorSequenceKeypoint.new(1.00,Color3.fromRGB(29,31,33))
 },
-Primary=Color3.fromRGB(255,186,45),
+Primary=Color3.fromRGB(250,184,2),
 OnPrimary=Color3.fromRGB(70,70,70),
-ScrollBar=Color3.fromRGB(255,186,45),
-Stroke=Color3.fromRGB(45,45,45),
+ScrollBar=Color3.fromRGB(250,184,2),
+Stroke=Color3.fromRGB(52,53,55),
 
 Error=Color3.fromRGB(210,60,60),
 Icons=Color3.fromRGB(230,230,230),
 
-JoinButton=Color3.fromRGB(255,186,45),
-Link=Color3.fromRGB(255,205,110),
+JoinButton=Color3.fromRGB(250,184,2),
+Link=Color3.fromRGB(250,190,60),
 
 Dialog={
-Background=Color3.fromRGB(18,18,18)
+Background=Color3.fromRGB(32,34,36)
 },
 Buttons={
-Holding=Color3.fromRGB(36,36,36),
-Default=Color3.fromRGB(24,24,24)
+Holding=Color3.fromRGB(58,59,61),
+Default=Color3.fromRGB(46,47,49)
 },
 Border={
-Holding=Color3.fromRGB(90,90,90),
-Default=Color3.fromRGB(40,40,40),
+Holding=Color3.fromRGB(95,95,97),
+Default=Color3.fromRGB(56,57,59),
 },
 Text={
-Default=Color3.fromRGB(255,255,255),
-Dark=Color3.fromRGB(205,205,205),
-Darker=Color3.fromRGB(155,155,155),
+Default=Color3.fromRGB(245,245,246),
+Dark=Color3.fromRGB(190,190,192),
+Darker=Color3.fromRGB(140,141,143),
 },
 Slider={
-SliderBar=Color3.fromRGB(255,186,45),
+SliderBar=Color3.fromRGB(250,184,2),
 SliderNumber=Color3.fromRGB(230,230,230),
 },
 Dropdown={
-Holder=Color3.fromRGB(20,20,20),
+Holder=Color3.fromRGB(38,39,41),
 },
-Accent=Color3.fromRGB(255,186,45),
-AccentDim=Color3.fromRGB(120,95,35),
-Glow=Color3.fromRGB(255,186,45),
+Accent=Color3.fromRGB(250,184,2),
+AccentDim=Color3.fromRGB(120,95,10),
+Glow=Color3.fromRGB(250,184,2),
 },
 Icons={
 Error="rbxassetid://10709752996",
@@ -652,25 +652,31 @@ assert(type(av)=="string",`"Dialog.NewOption.Name". 'string' expected, got {type
 
 local ax=E("TextButton",{
 AutoButtonColor=false,
-Size=UDim2.fromScale(0.2,1),
-BackgroundTransparency=1,
+AutomaticSize=Enum.AutomaticSize.X,
+Size=UDim2.new(0,0,0.62,0),
+BackgroundTransparency=0,
 TextSize=10,
 Text=av,
 Elements={
-Corner=UDim.new(1,0)
+Corner=UDim.new(0,6),
+Stroke={
+Thickness=1,
+ThemeTag={
+Color="Colors.Border.Default"
+}
+},
+Padding={
+PaddingLeft=UDim.new(0,14),
+PaddingRight=UDim.new(0,14)
+}
 },
 ThemeTag={
 BackgroundColor3="Colors.Buttons.Default",
-TextColor3="Colors.Text.Dark",
-Font="Font.Normal"
+TextColor3="Colors.Text.Default",
+Font="Font.Bold"
 }
 })
 
-local ay=J(ax,"BackgroundTransparency",0,0.3)
-local az=J(ax,"BackgroundTransparency",1,0.3)
-
-u(ax.MouseLeave,function()az:Play()end)
-u(ax.MouseEnter,function()ay:Play()end)
 u(ax.Activated,function()G(aw)end)
 
 ax.Parent=aa.Template.Options
@@ -957,9 +963,6 @@ at.Position=UDim2.fromOffset(as and 25 or 15)end
 u(ar:GetPropertyChangedSignal"Image",as)
 as()
 
-u(ao.MouseEnter,function()J(ao,"BackgroundColor3",w(s.CurrentTheme,"Colors.Buttons.Holding"),0.18):Play()end)
-u(ao.MouseLeave,function()J(ao,"BackgroundColor3",w(s.CurrentTheme,"Colors.Buttons.Default"),0.22):Play()end)
-
 return ao,aq,ap,ar end local am=function(
 
 
@@ -1011,13 +1014,33 @@ AutoButtonColor=false,
 Text="",
 ThemeTag=au,
 Elements={
-Corner=UDim.new(0,6)
+Corner=UDim.new(0,8),
+Stroke={
+Thickness=1,
+ThemeTag={
+OBJECTS=ar,
+Color="Colors.Border.Default"
+}
+}
 },
 Childs={
+E("Frame","Notch",{
+Size=UDim2.new(0,3,1,-10),
+Position=UDim2.new(0,0,0.5,0),
+AnchorPoint=Vector2.new(0,0.5),
+Elements={
+Corner=UDim.new(1,0)
+},
+ThemeTag={
+OBJECTS=ar,
+BackgroundColor3="Colors.Border.Default"
+}
+}),
 E("Frame","Holder",{
 AutomaticSize=Enum.AutomaticSize.Y,
 BackgroundTransparency=1,
-Size=ap,
+Position=UDim2.new(0,6,0,0),
+Size=UDim2.new(ap.X.Scale,ap.X.Offset-6,ap.Y.Scale,ap.Y.Offset),
 Elements={
 ListLayout={
 SortOrder=Enum.SortOrder.LayoutOrder,
@@ -1034,28 +1057,7 @@ Childs={aq,at}
 }
 })
 
-local aw=av.Holder local ax=function(
-
-ax, ay)
-if ay then
-if _ then
-local az=w(s.CurrentTheme,"Colors.Buttons.Default")
-_.Theme.BackgroundColor3="Colors.Buttons.Default"
-J(_.Button,"BackgroundColor3",az,0.2):Play()
-end
-
-_={
-Button=av,
-Theme=au
-}
-end
-
-au.BackgroundColor3=ax
-J(av,"BackgroundColor3",w(s.CurrentTheme,ax),0.2):Play()end
-
-
-u(av.MouseLeave,function()ax("Colors.Buttons.Default",false)end)
-u(av.MouseEnter,function()ax("Colors.Buttons.Holding",true)end)
+local aw=av.Holder
 
 u(at:GetPropertyChangedSignal"Text",function()
 local ay=#at.Text>0
@@ -1482,9 +1484,6 @@ TextColor3="Colors.Text.Default"
 
 local a2=0
 
-u(a1.MouseEnter,function()J(a1,"BackgroundColor3",w(s.CurrentTheme,"Colors.Buttons.Holding"),0.15):Play()end)
-u(a1.MouseLeave,function()J(a1,"BackgroundColor3",w(s.CurrentTheme,"Colors.Buttons.Default"),0.2):Play()end)
-
 u(a1.Activated,function()
 if(tick()-a2)<0 then return end
 
@@ -1612,16 +1611,19 @@ assert(av==nil or type(av)=="string",`"Tab.AddSection[param 1]". 'string', or 'n
 av=av or""
 
 local aw=V[self]
+local aC=T[self].Container
 
-local ax=E("Frame","Option",T[self].Container,{
+local ax=E("TextButton","Section",aC,{
 Size=UDim2.new(1,0,0,26),
-BackgroundTransparency=1
+BackgroundTransparency=1,
+AutoButtonColor=false,
+Text=""
 })
 
 local ay=E("TextLabel",ax,{
 TextXAlignment=Enum.TextXAlignment.Left,
 TextTruncate=Enum.TextTruncate.AtEnd,
-Size=UDim2.new(1,-25,0,20),
+Size=UDim2.new(1,-40,0,20),
 Position=UDim2.new(0,5,0,0),
 BackgroundTransparency=1,
 TextSize=15,
@@ -1645,12 +1647,53 @@ BackgroundColor3="Colors.Primary"
 }
 })
 
+local aJTag={
+OBJECTS=aw,
+Image="Icons.Dropdown.Close",
+ImageColor3="Colors.Text.Darker"
+}
+
+local aK=E("ImageLabel",ax,{
+Size=UDim2.fromOffset(12,12),
+Position=UDim2.new(1,-8,0,13),
+AnchorPoint=Vector2.new(1,0.5),
+BackgroundTransparency=1,
+ThemeTag=aJTag
+})
+
+local aL=false
+
+local function aM()
+aL=not aL
+
+aJTag.Image=aL and"Icons.Dropdown.Open"or"Icons.Dropdown.Close"
+aK.Image=w(s.CurrentTheme,aJTag.Image)
+aK.Rotation=aL and-90 or 0
+
+local aN=false
+for _,aO in ipairs(aC:GetChildren())do
+if aO==ax then
+aN=true
+elseif aN and aO:IsA("GuiObject")then
+if aO.Name=="Section"then
+break
+end
+aO.Visible=not aL
+end
+end
+end
+
+u(ax.Activated,aM)
+
 return setmetatable({
 Title=av,
 
 DESTROY_ELEMENT=ax,
 VISIBLE_ELEMENT=ax,
 TITLE_LABEL=ay,
+
+Expanded=function()return not aL end,
+Toggle=aM,
 
 Kind="Section",
 Parent=self
@@ -1791,14 +1834,28 @@ local az=av.Debounce or av.Cooldown
 local aA=V[self]
 local aB,aC,aD=am(self,aw,ax,UDim2.new(1,-20,0,0))
 
-local aE=E("ImageLabel",aB,{
-Size=UDim2.new(0,14,0,14),
-Position=UDim2.new(1,-10,0.5),
+local aChip=E("Frame",aB,{
+Size=UDim2.new(0,22,0,22),
+Position=UDim2.new(1,-8,0.5),
 AnchorPoint=Vector2.new(1,0.5),
+Elements={
+Corner=UDim.new(0.5,0)
+},
+ThemeTag={
+OBJECTS=aA,
+BackgroundColor3="Colors.Buttons.Holding"
+}
+})
+
+local aE=E("ImageLabel",aChip,{
+Size=UDim2.new(0,12,0,12),
+Position=UDim2.fromScale(0.5,0.5),
+AnchorPoint=Vector2.new(0.5,0.5),
 BackgroundTransparency=1,
 ThemeTag={
 OBJECTS=aA,
-Image="Icons.Button"
+Image="Icons.Button",
+ImageColor3="Colors.Primary"
 }
 })
 
@@ -2008,10 +2065,17 @@ Position=UDim2.fromScale(0.5,0.5),
 AnchorPoint=Vector2.new(0.5,0.5),
 ThemeTag={
 OBJECTS=aE,
-BackgroundColor3="Colors.Stroke"
+BackgroundColor3="Colors.Buttons.Default"
 },
 Elements={
-Corner=UDim.new(0.5,0)
+Corner=UDim.new(0.5,0),
+Stroke={
+Thickness=1,
+ThemeTag={
+OBJECTS=aE,
+Color="Colors.Border.Default"
+}
+}
 }
 })
 
@@ -2028,23 +2092,45 @@ Corner=UDim.new(0.5,0)
 })
 
 local aM=E("Frame",aK,{
-Size=UDim2.new(0,6,0,12),
-BackgroundColor3=Color3.fromRGB(220,220,220),
+Size=UDim2.new(0,14,0,14),
 Position=UDim2.fromScale(0,0.5),
 AnchorPoint=Vector2.new(0.5,0.5),
-BackgroundTransparency=0.2,
 Elements={
-Corner=UDim.new(0,6)
+Corner=UDim.new(0.5,0),
+Stroke={
+Thickness=2,
+ThemeTag={
+OBJECTS=aE,
+Color="Colors.Primary"
+}
+}
+},
+ThemeTag={
+OBJECTS=aE,
+BackgroundColor3="Colors.Text.Default"
 }
 })
 
-local aN=E("TextLabel",aJ,{
-Size=UDim2.new(0,50,0,14),
+local aNBg=E("Frame",aJ,{
+Size=UDim2.new(0,46,0,17),
 AnchorPoint=Vector2.new(1,0.5),
 Position=UDim2.new(0,-1,0.5,0),
+Elements={
+Corner=UDim.new(0,5)
+},
+ThemeTag={
+OBJECTS=aE,
+BackgroundColor3="Colors.Buttons.Default"
+}
+})
+
+local aN=E("TextLabel",aNBg,{
+Size=UDim2.new(1,-6,1,0),
+Position=UDim2.fromScale(0.5,0.5),
+AnchorPoint=Vector2.new(0.5,0.5),
 BackgroundTransparency=1,
 TextSize=12,
-TextXAlignment=Enum.TextXAlignment.Right,
+TextXAlignment=Enum.TextXAlignment.Center,
 ThemeTag={
 OBJECTS=aE,
 TextColor3="Colors.Text.Default",
@@ -2133,18 +2219,6 @@ end
 A=false
 J(aM,"BackgroundTransparency",0.2,0.3):Play()
 aF.ScrollingEnabled=true
-end)
-
-u(aJ.MouseEnter,function()
-if A then return end
-J(aM,"BackgroundTransparency",0.05,0.2):Play()
-J(aM,"Size",UDim2.new(0,7,0,14),0.2):Play()
-end)
-
-u(aJ.MouseLeave,function()
-if A then return end
-J(aM,"BackgroundTransparency",0.2,0.2):Play()
-J(aM,"Size",UDim2.new(0,6,0,12),0.2):Play()
 end)
 
 u(aN:GetPropertyChangedSignal"Text",function()
@@ -2395,9 +2469,6 @@ Font="Font.Bold"
 })
 
 local aP=0
-
-u(aO.MouseEnter,function()J(aO,"BackgroundColor3",w(s.CurrentTheme,"Colors.JoinButton"):Lerp(Color3.new(1,1,1),0.15),0.15):Play()end)
-u(aO.MouseLeave,function()J(aO,"BackgroundColor3",w(s.CurrentTheme,"Colors.JoinButton"),0.2):Play()end)
 
 u(aO.Activated,function()
 if(tick()-aP)<0 then return end
@@ -3413,9 +3484,6 @@ Color="Colors.Background"
 }
 })
 
-u(aB.MouseEnter,function()J(aB:FindFirstChildOfClass"UIStroke","Transparency",0.1,0.2):Play()end)
-u(aB.MouseLeave,function()J(aB:FindFirstChildOfClass"UIStroke","Transparency",0.5,0.2):Play()end)
-
 local aC=E("UIScale",aA)
 
 local aD=E("Frame","Holder",aB,{
@@ -4111,11 +4179,8 @@ Title="No"
 }
 }
 
-u(aq.MouseEnter,function()J(aq,"BackgroundTransparency",0.55,0.18):Play()end)
-u(aq.MouseLeave,function()J(aq,"BackgroundTransparency",1.00,0.22):Play()end)
-
-u(ar.MouseEnter,function()J(ar,"BackgroundTransparency",0.45,0.18):Play()end)
-u(ar.MouseLeave,function()J(ar,"BackgroundTransparency",1.00,0.22):Play()end)
+aq.BackgroundTransparency=0.85
+ar.BackgroundTransparency=0.85
 
 as.SetUIScale=self.SetUIScale
 as.SUBTITLE_LABEL=ao.SubTitle
