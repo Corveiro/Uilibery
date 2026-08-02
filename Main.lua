@@ -573,6 +573,9 @@ local S={}
 local T={}
 local U={}
 local V={}
+local LayoutOrderCounter=setmetatable({},{__mode="k"})
+local SectionState=setmetatable({},{__mode="k"})
+local HomeGrids=setmetatable({},{__mode="k"})
 
 local W
 local X
@@ -882,7 +885,7 @@ Size=UDim2.new(1,0,0,24),
 AutoButtonColor=false,
 Text="",
 Elements={
-Corner=UDim.new(0,6)
+Corner=UDim.new(0,10)
 },
 ThemeTag={
 BackgroundColor3="Colors.Buttons.Default"
@@ -920,9 +923,9 @@ local aq=E("ScrollingFrame","Container",{
 Size=UDim2.new(1,0,1,0),
 Position=UDim2.new(0,0,1),
 AnchorPoint=Vector2.new(0,1),
-ScrollBarThickness=1.5,
+ScrollBarThickness=4,
 BackgroundTransparency=1,
-ScrollBarImageTransparency=0.2,
+ScrollBarImageTransparency=0.1,
 AutomaticCanvasSize=Enum.AutomaticSize.Y,
 ScrollingDirection=Enum.ScrollingDirection.Y,
 BorderSizePixel=0,
@@ -938,10 +941,12 @@ PaddingTop=UDim.new(0,10),
 PaddingBottom=UDim.new(0,10)
 },
 ListLayout={
-Padding=UDim.new(0,5)
+Padding=UDim.new(0,8)
 }
 }
 })
+
+aq.UIListLayout.SortOrder=Enum.SortOrder.LayoutOrder
 
 local ar=E("ImageLabel",ao,{
 Position=UDim2.new(0,8,0.5),
@@ -975,7 +980,7 @@ Size=UDim2.new(1,-20),
 Position=UDim2.fromScale(0,0.5),
 AnchorPoint=Vector2.new(0,0.5),
 BackgroundTransparency=1,
-TextSize=11,
+TextSize=13,
 ThemeTag={
 OBJECTS=C,
 TextColor3="Colors.Text.Default",
@@ -990,10 +995,10 @@ local at=E("TextLabel",{
 TextXAlignment=Enum.TextXAlignment.Left,
 AutomaticSize=Enum.AutomaticSize.Y,
 Size=UDim2.new(1,-20),
-Position=UDim2.new(0,12,0,15),
+Position=UDim2.new(0,12,0,17),
 BackgroundTransparency=1,
 TextWrapped=true,
-TextSize=8,
+TextSize=10,
 RichText=true,
 ThemeTag={
 OBJECTS=ar,
@@ -1007,14 +1012,18 @@ OBJECTS=ar,
 BackgroundColor3="Colors.Buttons.Default"
 }
 
+LayoutOrderCounter[am]=(LayoutOrderCounter[am]or 0)+1
+
 local av=E("TextButton","Option",{
+LayoutOrder=LayoutOrderCounter[am],
+Visible=not(SectionState[am]and SectionState[am].Collapsed),
 AutomaticSize=Enum.AutomaticSize.Y,
-Size=UDim2.new(1,0,0,25),
+Size=UDim2.new(1,0,0,32),
 AutoButtonColor=false,
 Text="",
 ThemeTag=au,
 Elements={
-Corner=UDim.new(0,8),
+Corner=UDim.new(0,14),
 Stroke={
 Thickness=1,
 ThemeTag={
@@ -1107,7 +1116,7 @@ return ap end local ap=function()
 local ap=160
 
 local aq={
-Corner=UDim.new(0,6),
+Corner=UDim.new(0,10),
 Stroke={
 ThemeTag={
 Color="Colors.Stroke"
@@ -1168,7 +1177,7 @@ PlaceholderText="Search...",
 ClearTextOnFocus=false,
 Text="",
 Elements={
-Corner=UDim.new(0,6)
+Corner=UDim.new(0,10)
 },
 ThemeTag={
 BackgroundColor3="Colors.Stroke",
@@ -1613,7 +1622,10 @@ av=av or""
 local aw=V[self]
 local aC=T[self].Container
 
+LayoutOrderCounter[self]=(LayoutOrderCounter[self]or 0)+1
+
 local ax=E("TextButton","Section",aC,{
+LayoutOrder=LayoutOrderCounter[self],
 Size=UDim2.new(1,0,0,26),
 BackgroundTransparency=1,
 AutoButtonColor=false,
@@ -1647,9 +1659,12 @@ BackgroundColor3="Colors.Primary"
 }
 })
 
+local aState={Collapsed=true}
+SectionState[self]=aState
+
 local aJTag={
 OBJECTS=aw,
-Image="Icons.Dropdown.Close",
+Image="Icons.Dropdown.Open",
 ImageColor3="Colors.Text.Darker"
 }
 
@@ -1658,17 +1673,16 @@ Size=UDim2.fromOffset(12,12),
 Position=UDim2.new(1,-8,0,13),
 AnchorPoint=Vector2.new(1,0.5),
 BackgroundTransparency=1,
+Rotation=-90,
 ThemeTag=aJTag
 })
 
-local aL=false
-
 local function aM()
-aL=not aL
+aState.Collapsed=not aState.Collapsed
 
-aJTag.Image=aL and"Icons.Dropdown.Open"or"Icons.Dropdown.Close"
+aJTag.Image=aState.Collapsed and"Icons.Dropdown.Open"or"Icons.Dropdown.Close"
 aK.Image=w(s.CurrentTheme,aJTag.Image)
-aK.Rotation=aL and-90 or 0
+aK.Rotation=aState.Collapsed and-90 or 0
 
 local aN=false
 for _,aO in ipairs(aC:GetChildren())do
@@ -1678,7 +1692,7 @@ elseif aN and aO:IsA("GuiObject")then
 if aO.Name=="Section"then
 break
 end
-aO.Visible=not aL
+aO.Visible=not aState.Collapsed
 end
 end
 end
@@ -1692,7 +1706,7 @@ DESTROY_ELEMENT=ax,
 VISIBLE_ELEMENT=ax,
 TITLE_LABEL=ay,
 
-Expanded=function()return not aL end,
+Expanded=function()return not aState.Collapsed end,
 Toggle=aM,
 
 Kind="Section",
@@ -1724,7 +1738,7 @@ BackgroundColor3="Colors.Buttons.Holding"
 }
 
 local aF=E("Frame",aC,{
-Size=UDim2.new(0,35,0,18),
+Size=UDim2.new(0,42,0,22),
 Position=UDim2.new(1,-10,0.5),
 AnchorPoint=Vector2.new(1,0.5),
 Elements={
@@ -1753,7 +1767,7 @@ BackgroundColor3="Colors.Icons"
 }
 
 local aI=E("Frame",aG,{
-Size=UDim2.new(0,12,0,12),
+Size=UDim2.new(0,15,0,15),
 Position=UDim2.new(0,0,0.5),
 AnchorPoint=Vector2.new(0,0.5),
 Elements={
@@ -1905,7 +1919,7 @@ az=ae[ay]
 end
 
 local aD=V[self]
-local aE,aF,aG=am(self,aw,ax,UDim2.new(1,-150,0,0))
+local aE,aF,aG=am(self,aw,ax,UDim2.new(1,-165,0,0))
 
 local aHStroke={
 OBJECTS=aD,
@@ -1913,7 +1927,7 @@ Color="Colors.Border.Default"
 }
 
 local aH=E("Frame",aE,{
-Size=UDim2.new(0,150,0,20),
+Size=UDim2.new(0,160,0,26),
 Position=UDim2.new(1,-10,0.5),
 AnchorPoint=Vector2.new(1,0.5),
 ThemeTag={
@@ -1921,7 +1935,7 @@ OBJECTS=aD,
 BackgroundColor3="Colors.Buttons.Default"
 },
 Elements={
-Corner=UDim.new(0,6),
+Corner=UDim.new(0,10),
 Stroke={
 Thickness=1,
 ThemeTag=aHStroke
@@ -2267,7 +2281,11 @@ end
 local aD=V[self]
 local aE=T[self].Container
 
+LayoutOrderCounter[self]=(LayoutOrderCounter[self]or 0)+1
+
 local aF=E("Frame","Option",aE,{
+LayoutOrder=LayoutOrderCounter[self],
+Visible=not(SectionState[self]and SectionState[self].Collapsed),
 BackgroundTransparency=1,
 Size=UDim2.new(1,0,0,148)
 })
@@ -2559,14 +2577,14 @@ aA=ae[ay]
 end
 
 local aD=V[self]
-local aE,aF,aG=am(self,aw,ax,UDim2.new(1,-150,0,0))
+local aE,aF,aG=am(self,aw,ax,UDim2.new(1,-165,0,0))
 
 local aH=E("Frame",aE,{
-Size=UDim2.new(0,150,0,20),
+Size=UDim2.new(0,160,0,26),
 Position=UDim2.new(1,-10,0.5),
 AnchorPoint=Vector2.new(1,0.5),
 Elements={
-Corner=UDim.new(0,6),
+Corner=UDim.new(0,10),
 Stroke={
 Thickness=1,
 ThemeTag={
@@ -3075,7 +3093,147 @@ J(aE,"Size",UDim2.fromOffset(3,4),aH)
 }
 
 local aK=C:new()
-V[ay]=aK local aL=function(
+V[ay]=aK
+
+if av.IsHomeTab then
+local aHome=V[ay]
+
+E("TextLabel",aD,{
+Size=UDim2.new(1,0,0,22),
+BackgroundTransparency=1,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextSize=20,
+Text="WELCOME TO",
+ThemeTag={
+OBJECTS=aHome,
+TextColor3="Colors.Text.Default",
+Font="Font.ExtraBold"
+}
+})
+
+E("TextLabel",aD,{
+Size=UDim2.new(1,0,0,22),
+BackgroundTransparency=1,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextSize=20,
+Text=string.upper(av.WindowTitle or"THE HUB"),
+ThemeTag={
+OBJECTS=aHome,
+TextColor3="Colors.Primary",
+Font="Font.ExtraBold"
+}
+})
+
+E("TextLabel",aD,{
+Size=UDim2.new(1,0,0,30),
+BackgroundTransparency=1,
+TextWrapped=true,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextYAlignment=Enum.TextYAlignment.Top,
+TextSize=11,
+Text="Obrigado por usar nossos serviços. Selecione uma página abaixo para começar.",
+ThemeTag={
+OBJECTS=aHome,
+TextColor3="Colors.Text.Dark",
+Font="Font.Medium"
+}
+})
+
+E("TextLabel",aD,{
+Size=UDim2.new(1,0,0,20),
+BackgroundTransparency=1,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextSize=13,
+Text="PAGES",
+ThemeTag={
+OBJECTS=aHome,
+TextColor3="Colors.Text.Darker",
+Font="Font.ExtraBold"
+}
+})
+
+local aGrid=E("Frame","Option",aD,{
+AutomaticSize=Enum.AutomaticSize.Y,
+Size=UDim2.new(1,0,0,0),
+BackgroundTransparency=1
+})
+
+E("UIGridLayout",aGrid,{
+CellSize=UDim2.new(0.315,0,0,90),
+CellPadding=UDim2.new(0.0275,0,0,10),
+FillDirectionMaxCells=3
+})
+
+HomeGrids[self]=aGrid
+elseif HomeGrids[self]then
+local aHome=V[ay]
+local aGrid=HomeGrids[self]
+
+local aCard=E("TextButton",aGrid,{
+AutoButtonColor=false,
+Text="",
+Elements={
+Corner=UDim.new(0,14),
+Stroke={
+Thickness=1,
+ThemeTag={
+OBJECTS=aHome,
+Color="Colors.Border.Default"
+}
+}
+},
+ThemeTag={
+OBJECTS=aHome,
+BackgroundColor3="Colors.Buttons.Default"
+}
+})
+
+E("TextLabel",aCard,{
+Size=UDim2.new(1,-16,0,18),
+Position=UDim2.new(0,10,0,10),
+BackgroundTransparency=1,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextTruncate=Enum.TextTruncate.AtEnd,
+TextSize=13,
+Text=aw,
+ThemeTag={
+OBJECTS=aHome,
+TextColor3="Colors.Text.Default",
+Font="Font.ExtraBold"
+}
+})
+
+local aBadge=E("Frame",aCard,{
+Size=UDim2.new(0,26,0,26),
+Position=UDim2.new(1,-10,1,-10),
+AnchorPoint=Vector2.new(1,1),
+Elements={
+Corner=UDim.new(0.5,0)
+},
+ThemeTag={
+OBJECTS=aHome,
+BackgroundColor3="Colors.Buttons.Holding"
+}
+})
+
+E("ImageLabel",aBadge,{
+Size=UDim2.new(0,14,0,14),
+Position=UDim2.fromScale(0.5,0.5),
+AnchorPoint=Vector2.new(0.5,0.5),
+BackgroundTransparency=1,
+Image=ay.Icon,
+ThemeTag={
+OBJECTS=aHome,
+ImageColor3="Colors.Primary"
+}
+})
+
+u(aCard.Activated,function()
+ay:Select()
+end)
+end
+
+local aL=function(
 
 aL)
 for aM=1,#aL do
@@ -3220,7 +3378,7 @@ Position=UDim2.fromScale(0.5,0.5),
 AnchorPoint=Vector2.new(0.5,0.5),
 Active=true,
 Elements={
-Corner=UDim.new(0,6),
+Corner=UDim.new(0,10),
 Gradient={
 Rotation=45,
 ThemeTag={
@@ -3980,7 +4138,7 @@ ThemeTag={
 BackgroundTransparency="BackgroundTransparency"
 },
 Elements={
-Corner=UDim.new(0,10),
+Corner=UDim.new(0,16),
 Stroke={
 Thickness=1,
 Transparency=0.35,
@@ -4016,29 +4174,41 @@ Size=UDim2.new(1,0,0,28),
 BackgroundTransparency=1
 })
 
+E("Frame","TitleAccent",an,{
+Size=UDim2.fromOffset(4,16),
+Position=UDim2.new(0,15,0.5,0),
+AnchorPoint=Vector2.new(0,0.5),
+Elements={
+Corner=UDim.new(1,0)
+},
+ThemeTag={
+BackgroundColor3="Colors.Primary"
+}
+})
+
 local ao=E("TextLabel","Title",an,{
 TextXAlignment=Enum.TextXAlignment.Left,
 AutomaticSize=Enum.AutomaticSize.XY,
-Position=UDim2.new(0,15,0.5,0),
+Position=UDim2.new(0,26,0.5,0),
 AnchorPoint=Vector2.new(0,0.5),
 Text=ae.Title,
-TextSize=12,
+TextSize=15,
 BackgroundTransparency=1,
 ThemeTag={
 TextColor3="Colors.Text.Default",
-Font="Font.Bold"
+Font="Font.ExtraBold"
 },
 Childs={
 E("TextLabel","SubTitle",{
 Size=UDim2.fromScale(0,1),
 AutomaticSize="X",
 AnchorPoint=Vector2.new(0,1),
-Position=UDim2.new(1,5,0.9),
+Position=UDim2.new(1,5,0.85),
 Text=ae.SubTitle,
 BackgroundTransparency=1,
 TextXAlignment="Left",
 TextYAlignment="Bottom",
-TextSize=8,
+TextSize=9,
 ThemeTag={
 TextColor3="Colors.Text.Dark",
 Font="Font.Normal"
@@ -4207,6 +4377,8 @@ end)
 u(ar.Activated,function()
 as:Dialog(aA)
 end)
+
+as:MakeTab({Name="Home",IsHomeTab=true,WindowTitle=ae.Title})
 
 return as
 end
