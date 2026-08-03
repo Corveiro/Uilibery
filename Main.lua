@@ -56,9 +56,9 @@ local r={
 Darker={
 Colors={
 Background=ColorSequence.new{
-ColorSequenceKeypoint.new(0.00,Color3.fromRGB(29,31,33)),
-ColorSequenceKeypoint.new(0.50,Color3.fromRGB(34,36,38)),
-ColorSequenceKeypoint.new(1.00,Color3.fromRGB(29,31,33))
+ColorSequenceKeypoint.new(0.00,Color3.fromRGB(20,21,23)),
+ColorSequenceKeypoint.new(0.50,Color3.fromRGB(26,28,30)),
+ColorSequenceKeypoint.new(1.00,Color3.fromRGB(20,21,23))
 },
 Primary=Color3.fromRGB(250,184,2),
 OnPrimary=Color3.fromRGB(70,70,70),
@@ -72,27 +72,27 @@ JoinButton=Color3.fromRGB(250,184,2),
 Link=Color3.fromRGB(250,190,60),
 
 Dialog={
-Background=Color3.fromRGB(32,34,36)
+Background=Color3.fromRGB(24,25,27)
 },
 Buttons={
-Holding=Color3.fromRGB(58,59,61),
-Default=Color3.fromRGB(46,47,49)
+Holding=Color3.fromRGB(64,65,68),
+Default=Color3.fromRGB(42,43,46)
 },
 Border={
-Holding=Color3.fromRGB(95,95,97),
-Default=Color3.fromRGB(56,57,59),
+Holding=Color3.fromRGB(100,100,103),
+Default=Color3.fromRGB(58,59,62),
 },
 Text={
-Default=Color3.fromRGB(245,245,246),
-Dark=Color3.fromRGB(190,190,192),
-Darker=Color3.fromRGB(140,141,143),
+Default=Color3.fromRGB(248,248,249),
+Dark=Color3.fromRGB(195,195,198),
+Darker=Color3.fromRGB(143,144,147),
 },
 Slider={
 SliderBar=Color3.fromRGB(250,184,2),
 SliderNumber=Color3.fromRGB(230,230,230),
 },
 Dropdown={
-Holder=Color3.fromRGB(38,39,41),
+Holder=Color3.fromRGB(30,31,34),
 },
 Accent=Color3.fromRGB(250,184,2),
 AccentDim=Color3.fromRGB(120,95,10),
@@ -576,6 +576,8 @@ local V={}
 local LayoutOrderCounter=setmetatable({},{__mode="k"})
 local SectionState=setmetatable({},{__mode="k"})
 local HomeGrids=setmetatable({},{__mode="k"})
+local HomeGridCount=setmetatable({},{__mode="k"})
+local PagesGrids=setmetatable({},{__mode="k"})
 
 local W
 local X
@@ -1626,30 +1628,44 @@ LayoutOrderCounter[self]=(LayoutOrderCounter[self]or 0)+1
 
 local ax=E("TextButton","Section",aC,{
 LayoutOrder=LayoutOrderCounter[self],
-Size=UDim2.new(1,0,0,26),
-BackgroundTransparency=1,
+Size=UDim2.new(1,0,0,34),
 AutoButtonColor=false,
-Text=""
+Text="",
+Elements={
+Corner=UDim.new(0,10),
+Stroke={
+Thickness=1,
+ThemeTag={
+OBJECTS=aw,
+Color="Colors.Border.Default"
+}
+}
+},
+ThemeTag={
+OBJECTS=aw,
+BackgroundColor3="Colors.Buttons.Default"
+}
 })
 
 local ay=E("TextLabel",ax,{
 TextXAlignment=Enum.TextXAlignment.Left,
 TextTruncate=Enum.TextTruncate.AtEnd,
-Size=UDim2.new(1,-40,0,20),
-Position=UDim2.new(0,5,0,0),
+Size=UDim2.new(1,-40,1,0),
+Position=UDim2.new(0,14,0,0),
 BackgroundTransparency=1,
-TextSize=15,
+TextSize=13,
 Text=string.upper(av),
 ThemeTag={
 OBJECTS=aw,
-TextColor3="Colors.Text.Darker",
+TextColor3="Colors.Text.Default",
 Font="Font.ExtraBold"
 }
 })
 
 E("Frame",ax,{
-Size=UDim2.new(0,18,0,2),
-Position=UDim2.new(0,5,1,-2),
+Size=UDim2.new(0,3,1,-14),
+Position=UDim2.new(0,0,0.5,0),
+AnchorPoint=Vector2.new(0,0.5),
 Elements={
 Corner=UDim.new(1,0)
 },
@@ -1670,7 +1686,7 @@ ImageColor3="Colors.Text.Darker"
 
 local aK=E("ImageLabel",ax,{
 Size=UDim2.fromOffset(12,12),
-Position=UDim2.new(1,-8,0,13),
+Position=UDim2.new(1,-12,0.5,0),
 AnchorPoint=Vector2.new(1,0.5),
 BackgroundTransparency=1,
 Rotation=-90,
@@ -3095,6 +3111,68 @@ J(aE,"Size",UDim2.fromOffset(3,4),aH)
 local aK=C:new()
 V[ay]=aK
 
+local function aMakeCard(aGrid,aHome,aTitle)
+local aCard=E("TextButton",aGrid,{
+AutoButtonColor=false,
+Text="",
+Elements={
+Corner=UDim.new(0,14),
+Stroke={
+Thickness=1,
+ThemeTag={
+OBJECTS=aHome,
+Color="Colors.Border.Default"
+}
+}
+},
+ThemeTag={
+OBJECTS=aHome,
+BackgroundColor3="Colors.Buttons.Default"
+}
+})
+
+E("TextLabel",aCard,{
+Size=UDim2.new(1,-16,0,18),
+Position=UDim2.new(0,10,0,8),
+BackgroundTransparency=1,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextTruncate=Enum.TextTruncate.AtEnd,
+TextSize=13,
+Text=aTitle,
+ThemeTag={
+OBJECTS=aHome,
+TextColor3="Colors.Text.Default",
+Font="Font.ExtraBold"
+}
+})
+
+local aBadge=E("Frame",aCard,{
+Size=UDim2.new(0,44,0,44),
+Position=UDim2.new(1,-10,1,-10),
+AnchorPoint=Vector2.new(1,1),
+Elements={
+Corner=UDim.new(0.5,0)
+},
+ThemeTag={
+OBJECTS=aHome,
+BackgroundColor3="Colors.Buttons.Holding"
+}
+})
+
+local aIcon=E("ImageLabel",aBadge,{
+Size=UDim2.new(0,26,0,26),
+Position=UDim2.fromScale(0.5,0.5),
+AnchorPoint=Vector2.new(0.5,0.5),
+BackgroundTransparency=1,
+ThemeTag={
+OBJECTS=aHome,
+ImageColor3="Colors.Primary"
+}
+})
+
+return aCard,aIcon
+end
+
 if av.IsHomeTab then
 local aHome=V[ay]
 
@@ -3144,7 +3222,7 @@ Size=UDim2.new(1,0,0,20),
 BackgroundTransparency=1,
 TextXAlignment=Enum.TextXAlignment.Left,
 TextSize=13,
-Text="PAGES",
+Text="DESTAQUES",
 ThemeTag={
 OBJECTS=aHome,
 TextColor3="Colors.Text.Darker",
@@ -3159,43 +3237,22 @@ BackgroundTransparency=1
 })
 
 E("UIGridLayout",aGrid,{
-CellSize=UDim2.new(0.315,0,0,90),
+CellSize=UDim2.new(0.315,0,0,110),
 CellPadding=UDim2.new(0.0275,0,0,10),
 FillDirectionMaxCells=3
 })
 
 HomeGrids[self]=aGrid
-elseif HomeGrids[self]then
+HomeGridCount[self]=0
+elseif av.IsPagesTab then
 local aHome=V[ay]
-local aGrid=HomeGrids[self]
 
-local aCard=E("TextButton",aGrid,{
-AutoButtonColor=false,
-Text="",
-Elements={
-Corner=UDim.new(0,14),
-Stroke={
-Thickness=1,
-ThemeTag={
-OBJECTS=aHome,
-Color="Colors.Border.Default"
-}
-}
-},
-ThemeTag={
-OBJECTS=aHome,
-BackgroundColor3="Colors.Buttons.Default"
-}
-})
-
-E("TextLabel",aCard,{
-Size=UDim2.new(1,-16,0,18),
-Position=UDim2.new(0,10,0,10),
+E("TextLabel",aD,{
+Size=UDim2.new(1,0,0,26),
 BackgroundTransparency=1,
 TextXAlignment=Enum.TextXAlignment.Left,
-TextTruncate=Enum.TextTruncate.AtEnd,
-TextSize=13,
-Text=aw,
+TextSize=20,
+Text="TODAS AS PÁGINAS",
 ThemeTag={
 OBJECTS=aHome,
 TextColor3="Colors.Text.Default",
@@ -3203,34 +3260,38 @@ Font="Font.ExtraBold"
 }
 })
 
-local aBadge=E("Frame",aCard,{
-Size=UDim2.new(0,26,0,26),
-Position=UDim2.new(1,-10,1,-10),
-AnchorPoint=Vector2.new(1,1),
-Elements={
-Corner=UDim.new(0.5,0)
-},
-ThemeTag={
-OBJECTS=aHome,
-BackgroundColor3="Colors.Buttons.Holding"
-}
+local aGrid=E("Frame","Option",aD,{
+AutomaticSize=Enum.AutomaticSize.Y,
+Size=UDim2.new(1,0,0,0),
+BackgroundTransparency=1
 })
 
-E("ImageLabel",aBadge,{
-Size=UDim2.new(0,14,0,14),
-Position=UDim2.fromScale(0.5,0.5),
-AnchorPoint=Vector2.new(0.5,0.5),
-BackgroundTransparency=1,
-Image=ay.Icon,
-ThemeTag={
-OBJECTS=aHome,
-ImageColor3="Colors.Primary"
-}
+E("UIGridLayout",aGrid,{
+CellSize=UDim2.new(0.315,0,0,110),
+CellPadding=UDim2.new(0.0275,0,0,10),
+FillDirectionMaxCells=3
 })
 
+PagesGrids[self]=aGrid
+else
+local aHome=V[ay]
+
+if PagesGrids[self]then
+local aCard,aIcon=aMakeCard(PagesGrids[self],aHome,aw)
+aIcon.Image=ay.Icon
 u(aCard.Activated,function()
 ay:Select()
 end)
+end
+
+if HomeGrids[self]and(HomeGridCount[self]or 0)<3 then
+local aCard,aIcon=aMakeCard(HomeGrids[self],aHome,aw)
+aIcon.Image=ay.Icon
+u(aCard.Activated,function()
+ay:Select()
+end)
+HomeGridCount[self]=HomeGridCount[self]+1
+end
 end
 
 local aL=function(
@@ -3826,9 +3887,9 @@ R.Window=ag
 end local aa=function(
 
 aa, ab)
-local ac=ab.Size.Y.Offset
-local ad=UDim2.new(0,aa.TabSize or s.Default.TabSize,1,-ac)
-local ae=UDim2.new(1,-ad.X.Offset,1,-ac)
+local ac=ab.Size.Y.Offset+34
+local ad=UDim2.new(0,0,1,-ac)
+local ae=UDim2.new(1,0,1,-ac)
 
 local af=E("ScrollingFrame","TabsScroll",{
 AutomaticCanvasSize=Enum.AutomaticSize.Y,
@@ -3840,6 +3901,7 @@ BackgroundTransparency=1,
 ScrollBarImageTransparency=0.2,
 CanvasSize=UDim2.new(),
 BorderSizePixel=0,
+Visible=false,
 Size=ad,
 ThemeTag={
 ScrollBarImageColor3="Colors.ScrollBar"
@@ -4260,6 +4322,92 @@ local at,au=aa(af,an)
 at.Parent=al
 au.Parent=al
 
+local aHomeTabRef,aPagesTabRef
+
+local aNavBar=E("Frame","NavBar",al,{
+Size=UDim2.new(1,0,0,34),
+Position=UDim2.new(0,0,0,28),
+ThemeTag={
+BackgroundColor3="Colors.Dialog.Background"
+},
+Elements={
+Padding={
+PaddingLeft=UDim.new(0,15),
+PaddingRight=UDim.new(0,15)
+},
+ListLayout={
+FillDirection=Enum.FillDirection.Horizontal,
+VerticalAlignment=Enum.VerticalAlignment.Center,
+Padding=UDim.new(0,8)
+}
+}
+})
+
+E("Frame","Divider",aNavBar,{
+Size=UDim2.new(1,30,0,1),
+Position=UDim2.new(0,-15,1,0),
+ThemeTag={
+BackgroundColor3="Colors.Border.Default"
+}
+})
+
+local function aMakeNavButton(aLabel)
+local aBtn=E("TextButton",aNavBar,{
+AutomaticSize=Enum.AutomaticSize.X,
+Size=UDim2.new(0,0,0,24),
+AutoButtonColor=false,
+Text="",
+Elements={
+Corner=UDim.new(0,8),
+Padding={
+PaddingLeft=UDim.new(0,14),
+PaddingRight=UDim.new(0,14)
+}
+},
+ThemeTag={
+BackgroundColor3="Colors.Buttons.Default"
+}
+})
+
+local aTxt=E("TextLabel",aBtn,{
+Size=UDim2.fromScale(1,1),
+BackgroundTransparency=1,
+TextXAlignment=Enum.TextXAlignment.Center,
+TextSize=12,
+Text=string.upper(aLabel),
+ThemeTag={
+TextColor3="Colors.Text.Dark",
+Font="Font.ExtraBold"
+}
+})
+
+return aBtn,aTxt
+end
+
+local aHomeBtn,aHomeTxt=aMakeNavButton("Home")
+local aPagesBtn,aPagesTxt=aMakeNavButton("Pages")
+
+local function aRefreshNav()
+aHomeBtn.BackgroundColor3=(aHomeTabRef and aHomeTabRef.Selected)and w(s.CurrentTheme,"Colors.Buttons.Holding")or w(s.CurrentTheme,"Colors.Buttons.Default")
+aHomeTxt.TextColor3=(aHomeTabRef and aHomeTabRef.Selected)and w(s.CurrentTheme,"Colors.Primary")or w(s.CurrentTheme,"Colors.Text.Dark")
+aPagesBtn.BackgroundColor3=(aPagesTabRef and aPagesTabRef.Selected)and w(s.CurrentTheme,"Colors.Buttons.Holding")or w(s.CurrentTheme,"Colors.Buttons.Default")
+aPagesTxt.TextColor3=(aPagesTabRef and aPagesTabRef.Selected)and w(s.CurrentTheme,"Colors.Primary")or w(s.CurrentTheme,"Colors.Text.Dark")
+end
+
+u(aHomeBtn.Activated,function()
+if aHomeTabRef then
+aHomeTabRef:Select()
+aRefreshNav()
+end
+end)
+
+u(aPagesBtn.Activated,function()
+if aPagesTabRef then
+aPagesTabRef:Select()
+aRefreshNav()
+end
+end)
+
 local av=table.freeze{
 ContainerHolder=au,
 TabsContainer=at,
@@ -4378,7 +4526,9 @@ u(ar.Activated,function()
 as:Dialog(aA)
 end)
 
-as:MakeTab({Name="Home",IsHomeTab=true,WindowTitle=ae.Title})
+aHomeTabRef=as:MakeTab({Name="Home",IsHomeTab=true,WindowTitle=ae.Title})
+aPagesTabRef=as:MakeTab({Name="Pages",IsPagesTab=true})
+aRefreshNav()
 
 return as
 end
