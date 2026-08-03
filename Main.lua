@@ -3111,7 +3111,7 @@ J(aE,"Size",UDim2.fromOffset(3,4),aH)
 local aK=C:new()
 V[ay]=aK
 
-local function aMakeCard(aGrid,aHome,aTitle)
+local function aMakeCard(aGrid,aHome,aTitle,aDesc)
 local aCard=E("TextButton",aGrid,{
 AutoButtonColor=false,
 Text="",
@@ -3146,23 +3146,26 @@ Font="Font.ExtraBold"
 }
 })
 
-local aBadge=E("Frame",aCard,{
-Size=UDim2.new(0,44,0,44),
-Position=UDim2.new(1,-10,1,-10),
-AnchorPoint=Vector2.new(1,1),
-Elements={
-Corner=UDim.new(0.5,0)
-},
+E("TextLabel",aCard,{
+Size=UDim2.new(1,-56,0,32),
+Position=UDim2.new(0,10,0,28),
+BackgroundTransparency=1,
+TextWrapped=true,
+TextXAlignment=Enum.TextXAlignment.Left,
+TextYAlignment=Enum.TextYAlignment.Top,
+TextSize=10,
+Text=aDesc or"Toque para abrir",
 ThemeTag={
 OBJECTS=aHome,
-BackgroundColor3="Colors.Buttons.Holding"
+TextColor3="Colors.Text.Dark",
+Font="Font.Medium"
 }
 })
 
-local aIcon=E("ImageLabel",aBadge,{
-Size=UDim2.new(0,26,0,26),
-Position=UDim2.fromScale(0.5,0.5),
-AnchorPoint=Vector2.new(0.5,0.5),
+local aIcon=E("ImageLabel",aCard,{
+Size=UDim2.new(0,40,0,40),
+Position=UDim2.new(1,-12,1,-10),
+AnchorPoint=Vector2.new(1,1),
 BackgroundTransparency=1,
 ThemeTag={
 OBJECTS=aHome,
@@ -3277,7 +3280,7 @@ else
 local aHome=V[ay]
 
 if PagesGrids[self]then
-local aCard,aIcon=aMakeCard(PagesGrids[self],aHome,aw)
+local aCard,aIcon=aMakeCard(PagesGrids[self],aHome,aw,av.Description)
 aIcon.Image=ay.Icon
 u(aCard.Activated,function()
 ay:Select()
@@ -3285,7 +3288,7 @@ end)
 end
 
 if HomeGrids[self]and(HomeGridCount[self]or 0)<3 then
-local aCard,aIcon=aMakeCard(HomeGrids[self],aHome,aw)
+local aCard,aIcon=aMakeCard(HomeGrids[self],aHome,aw,av.Description)
 aIcon.Image=ay.Icon
 u(aCard.Activated,function()
 ay:Select()
@@ -4196,6 +4199,7 @@ local ak=E("Frame","Window",I,{
 Position=UDim2.new(0.5,-ah.X.Offset/2,0.5,-ah.Y.Offset/2),
 Active=true,
 Size=ah,
+ClipsDescendants=true,
 ThemeTag={
 BackgroundTransparency="BackgroundTransparency"
 },
@@ -4356,25 +4360,16 @@ local aBtn=E("TextButton",aNavBar,{
 AutomaticSize=Enum.AutomaticSize.X,
 Size=UDim2.new(0,0,0,24),
 AutoButtonColor=false,
-Text="",
-Elements={
-Corner=UDim.new(0,8),
-Padding={
-PaddingLeft=UDim.new(0,14),
-PaddingRight=UDim.new(0,14)
-}
-},
-ThemeTag={
-BackgroundColor3="Colors.Buttons.Default"
-}
+BackgroundTransparency=1,
+Text=""
 })
 
 local aTxt=E("TextLabel",aBtn,{
 Size=UDim2.fromScale(1,1),
 BackgroundTransparency=1,
 TextXAlignment=Enum.TextXAlignment.Center,
-TextSize=12,
-Text=string.upper(aLabel),
+TextSize=13,
+Text=aLabel,
 ThemeTag={
 TextColor3="Colors.Text.Dark",
 Font="Font.ExtraBold"
@@ -4388,9 +4383,7 @@ local aHomeBtn,aHomeTxt=aMakeNavButton("Home")
 local aPagesBtn,aPagesTxt=aMakeNavButton("Pages")
 
 local function aRefreshNav()
-aHomeBtn.BackgroundColor3=(aHomeTabRef and aHomeTabRef.Selected)and w(s.CurrentTheme,"Colors.Buttons.Holding")or w(s.CurrentTheme,"Colors.Buttons.Default")
 aHomeTxt.TextColor3=(aHomeTabRef and aHomeTabRef.Selected)and w(s.CurrentTheme,"Colors.Primary")or w(s.CurrentTheme,"Colors.Text.Dark")
-aPagesBtn.BackgroundColor3=(aPagesTabRef and aPagesTabRef.Selected)and w(s.CurrentTheme,"Colors.Buttons.Holding")or w(s.CurrentTheme,"Colors.Buttons.Default")
 aPagesTxt.TextColor3=(aPagesTabRef and aPagesTabRef.Selected)and w(s.CurrentTheme,"Colors.Primary")or w(s.CurrentTheme,"Colors.Text.Dark")
 end
 
