@@ -61,39 +61,39 @@ local Themes = {
 	},
 Domadic = {
 	Name = "Domadic",
-	Accent = Color3.fromRGB(163, 53, 238),
-	AcrylicMain = Color3.fromRGB(16, 16, 21),
-	AcrylicBorder = Color3.fromRGB(34, 34, 42),
-	AcrylicGradient = ColorSequence.new(Color3.fromRGB(19, 19, 25), Color3.fromRGB(13, 13, 17)),
+	Accent = Color3.fromRGB(170, 60, 245),
+	AcrylicMain = Color3.fromRGB(8, 8, 12),
+	AcrylicBorder = Color3.fromRGB(28, 28, 36),
+	AcrylicGradient = ColorSequence.new(Color3.fromRGB(12, 12, 16), Color3.fromRGB(6, 6, 9)),
 	AcrylicNoise = 0.95,
-	TitleBarLine = Color3.fromRGB(34, 34, 42),
-	Tab = Color3.fromRGB(21, 21, 27),
-	Element = Color3.fromRGB(27, 27, 34),
-	ElementBorder = Color3.fromRGB(15, 15, 20),
-	InElementBorder = Color3.fromRGB(44, 44, 53),
+	TitleBarLine = Color3.fromRGB(28, 28, 36),
+	Tab = Color3.fromRGB(14, 14, 19),
+	Element = Color3.fromRGB(18, 18, 24),
+	ElementBorder = Color3.fromRGB(9, 9, 13),
+	InElementBorder = Color3.fromRGB(40, 40, 50),
 	ElementTransparency = 0,
-	ToggleSlider = Color3.fromRGB(52, 52, 60),
+	ToggleSlider = Color3.fromRGB(46, 46, 55),
 	ToggleToggled = Color3.fromRGB(255, 255, 255),
-	SliderRail = Color3.fromRGB(44, 44, 53),
-	DropdownFrame = Color3.fromRGB(30, 30, 37),
-	DropdownHolder = Color3.fromRGB(23, 23, 29),
-	DropdownBorder = Color3.fromRGB(15, 15, 20),
-	DropdownOption = Color3.fromRGB(33, 33, 41),
-	Keybind = Color3.fromRGB(30, 30, 37),
-	Input = Color3.fromRGB(30, 30, 37),
-	InputFocused = Color3.fromRGB(23, 23, 29),
-	InputIndicator = Color3.fromRGB(163, 53, 238),
-	Dialog = Color3.fromRGB(20, 20, 26),
-	DialogHolder = Color3.fromRGB(15, 15, 20),
-	DialogHolderLine = Color3.fromRGB(10, 10, 14),
-	DialogButton = Color3.fromRGB(30, 30, 37),
-	DialogButtonBorder = Color3.fromRGB(44, 44, 53),
-	DialogBorder = Color3.fromRGB(34, 34, 42),
-	DialogInput = Color3.fromRGB(30, 30, 37),
-	DialogInputLine = Color3.fromRGB(163, 53, 238),
+	SliderRail = Color3.fromRGB(38, 38, 48),
+	DropdownFrame = Color3.fromRGB(21, 21, 28),
+	DropdownHolder = Color3.fromRGB(16, 16, 21),
+	DropdownBorder = Color3.fromRGB(9, 9, 13),
+	DropdownOption = Color3.fromRGB(24, 24, 31),
+	Keybind = Color3.fromRGB(21, 21, 28),
+	Input = Color3.fromRGB(21, 21, 28),
+	InputFocused = Color3.fromRGB(16, 16, 21),
+	InputIndicator = Color3.fromRGB(170, 60, 245),
+	Dialog = Color3.fromRGB(13, 13, 18),
+	DialogHolder = Color3.fromRGB(9, 9, 13),
+	DialogHolderLine = Color3.fromRGB(6, 6, 9),
+	DialogButton = Color3.fromRGB(21, 21, 28),
+	DialogButtonBorder = Color3.fromRGB(40, 40, 50),
+	DialogBorder = Color3.fromRGB(28, 28, 36),
+	DialogInput = Color3.fromRGB(21, 21, 28),
+	DialogInputLine = Color3.fromRGB(170, 60, 245),
 	Text = Color3.fromRGB(245, 245, 248),
-	SubText = Color3.fromRGB(148, 148, 158),
-	Hover = Color3.fromRGB(40, 40, 48),
+	SubText = Color3.fromRGB(138, 138, 150),
+	Hover = Color3.fromRGB(32, 32, 40),
 	HoverChange = 0.08,
 },
 
@@ -4642,12 +4642,14 @@ Components.Window = (function()
 			Size = UDim2.new(1, 0, 1, 0),
 			Position = UDim2.new(0, 0, 0, 0),
 			BackgroundTransparency = 1,
-			ScrollBarImageTransparency = 1,
-			ScrollBarThickness = 0,
+			ScrollBarImageTransparency = 0.5,
+			ScrollBarImageColor3 = Color3.fromRGB(170, 60, 245),
+			ScrollBarThickness = 2,
 			BorderSizePixel = 0,
 			CanvasSize = UDim2.fromScale(0, 0),
 			ScrollingDirection = Enum.ScrollingDirection.X,
 			AutomaticCanvasSize = Enum.AutomaticSize.X,
+			ElasticBehavior = Enum.ElasticBehavior.Never,
 		}, {
 			New("UIListLayout", {
 				Padding = UDim.new(0, 4),
@@ -4748,6 +4750,15 @@ Components.Window = (function()
 		}, {
 			Window.TabHolder,
 			Selector,
+			New("Frame", {
+				AnchorPoint = Vector2.new(0, 1),
+				Position = UDim2.new(0, 0, 1, 0),
+				Size = UDim2.new(1, 0, 0, 1),
+				BorderSizePixel = 0,
+				ThemeTag = {
+					BackgroundColor3 = "TitleBarLine",
+				},
+			}),
 		})
 
 		Window.TabFrame = TabFrame
@@ -6523,9 +6534,18 @@ ElementsTable.Slider = (function()
 			Position = UDim2.new(0, -7, 0.5, 0),
 			Size = UDim2.fromOffset(14, 14),
 			Image = "http://www.roblox.com/asset/?id=12266946128",
-			ThemeTag = {
-				ImageColor3 = "Accent",
-			},
+			ImageColor3 = Color3.fromRGB(255, 255, 255),
+		}, {
+			New("UICorner", {
+				CornerRadius = UDim.new(1, 0),
+			}),
+			New("UIStroke", {
+				Thickness = 2,
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				ThemeTag = {
+					Color = "Accent",
+				},
+			}),
 		})
 
 		local SliderRail = New("Frame", {
@@ -6548,19 +6568,31 @@ ElementsTable.Slider = (function()
 		})
 
 		local SliderDisplay = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
 			Text = "Value",
 			TextSize = 12,
 			TextWrapped = true,
-			TextXAlignment = Enum.TextXAlignment.Right,
-			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-			BackgroundTransparency = 1,
-			Size = UDim2.new(0, 100, 0, 14),
+			TextXAlignment = Enum.TextXAlignment.Center,
+			BackgroundTransparency = 0,
+			Size = UDim2.new(0, 40, 0, 20),
 			Position = UDim2.new(0, -4, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
 			ThemeTag = {
-				TextColor3 = "SubText",
+				TextColor3 = "Text",
+				BackgroundColor3 = "DropdownFrame",
 			},
+		}, {
+			New("UICorner", {
+				CornerRadius = UDim.new(0, 5),
+			}),
+			New("UIStroke", {
+				Thickness = 1,
+				Transparency = 0.6,
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				ThemeTag = {
+					Color = "Accent",
+				},
+			}),
 		})
 
 		local SliderInput = New("TextBox", {
