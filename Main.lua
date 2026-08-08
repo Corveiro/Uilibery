@@ -2715,8 +2715,7 @@ Components.ResolveColumnParent = function(Holder, Side)
 
 	if not Holder.ColumnsHolder then
 		Holder.ColumnsHolder = New("Frame", {
-			Size = UDim2.new(1, 0, 0, 0),
-			AutomaticSize = Enum.AutomaticSize.Y,
+			Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 1,
 			Parent = Holder.Container,
 		}, {
@@ -2728,11 +2727,17 @@ Components.ResolveColumnParent = function(Holder, Side)
 			}),
 		})
 
-		Holder.LeftColumn = New("Frame", {
-			Size = UDim2.new(0.5, -5, 0, 0),
-			AutomaticSize = Enum.AutomaticSize.Y,
+		Holder.LeftColumn = New("ScrollingFrame", {
+			Size = UDim2.new(0.5, -5, 1, 0),
 			BackgroundTransparency = 1,
 			LayoutOrder = 1,
+			BorderSizePixel = 0,
+			ScrollBarThickness = 3,
+			ScrollBarImageTransparency = 0.6,
+			ScrollingDirection = Enum.ScrollingDirection.Y,
+			AutomaticCanvasSize = Enum.AutomaticSize.Y,
+			CanvasSize = UDim2.fromScale(0, 0),
+			ClipsDescendants = true,
 			Parent = Holder.ColumnsHolder,
 		}, {
 			New("UIListLayout", {
@@ -2741,11 +2746,17 @@ Components.ResolveColumnParent = function(Holder, Side)
 			}),
 		})
 
-		Holder.RightColumn = New("Frame", {
-			Size = UDim2.new(0.5, -5, 0, 0),
-			AutomaticSize = Enum.AutomaticSize.Y,
+		Holder.RightColumn = New("ScrollingFrame", {
+			Size = UDim2.new(0.5, -5, 1, 0),
 			BackgroundTransparency = 1,
 			LayoutOrder = 2,
+			BorderSizePixel = 0,
+			ScrollBarThickness = 3,
+			ScrollBarImageTransparency = 0.6,
+			ScrollingDirection = Enum.ScrollingDirection.Y,
+			AutomaticCanvasSize = Enum.AutomaticSize.Y,
+			CanvasSize = UDim2.fromScale(0, 0),
+			ClipsDescendants = true,
 			Parent = Holder.ColumnsHolder,
 		}, {
 			New("UIListLayout", {
@@ -5564,6 +5575,8 @@ ElementsTable.Toggle = (function()
 			):Play()
 			ToggleCircle.ImageTransparency = Toggle.Value and 0 or 0.5
 
+			Creator.OverrideTag(ToggleFrame.TitleLabel, { TextColor3 = Toggle.Value and "Text" or "SubText" })
+
 			Library:SafeCallback(Toggle.Callback, Toggle.Value)
 			Library:SafeCallback(Toggle.Changed, Toggle.Value)
 		end
@@ -5645,6 +5658,7 @@ ElementsTable.Dropdown = (function()
 			Position = UDim2.new(0, 8, 0.5, 0),
 			AnchorPoint = Vector2.new(0, 0.5),
 			BackgroundTransparency = 1,
+			Active = false,
 			TextTruncate = Enum.TextTruncate.AtEnd,
 			ThemeTag = {
 				TextColor3 = "Text",
@@ -5661,6 +5675,7 @@ ElementsTable.Dropdown = (function()
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -8, 0.5, 0),
 			BackgroundTransparency = 1,
+			Active = false,
 			Rotation = initialRotation,
 			ThemeTag = {
 				ImageColor3 = "SubText",
@@ -6107,7 +6122,7 @@ ElementsTable.Dropdown = (function()
 				Input.UserInputType == Enum.UserInputType.MouseButton1
 				or Input.UserInputType == Enum.UserInputType.Touch
 			then
-				local mousePos = Input.UserInputType == Enum.UserInputType.MouseButton1 and Vector2.new(Mouse.X, Mouse.Y) or Input.Position
+				local mousePos = Input.Position
 				local AbsPos, AbsSize = DropdownHolderFrame.AbsolutePosition, DropdownHolderFrame.AbsoluteSize
 				local innerAbsPos, innerAbsSize = DropdownInner.AbsolutePosition, DropdownInner.AbsoluteSize
 				
