@@ -4301,7 +4301,7 @@ Components.Window = (function()
 				Window.Root.Position = Window.Position
 			end
 		end
-		Window.TabWidth = Config.TabWidth
+		Window.TabWidth = Config.TabWidth or 170
 
 		local Selector = New("Frame", {
 			Size = UDim2.fromOffset(4, 0),
