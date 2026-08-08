@@ -2193,7 +2193,7 @@ function AcrylicPaint()
 			}),
 
 			New("Frame", {
-				BackgroundTransparency = 0.45,
+				BackgroundTransparency = 0,
 				Size = UDim2.fromScale(1, 1),
 				Name = "Background",
 				ThemeTag = {
@@ -2207,7 +2207,7 @@ function AcrylicPaint()
 
 			New("Frame", {
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-				BackgroundTransparency = 0.4,
+				BackgroundTransparency = 1,
 				Size = UDim2.fromScale(1, 1),
 			}, {
 				New("UICorner", {
@@ -2809,9 +2809,24 @@ Components.Tab = (function()
 			end
 		end
 
+		local Underline = New("Frame", {
+			AnchorPoint = Vector2.new(0, 1),
+			Position = UDim2.new(0, 0, 1, 1),
+			Size = UDim2.new(1, 0, 0, 2),
+			BackgroundTransparency = 1,
+			ZIndex = 12,
+			ThemeTag = {
+				BackgroundColor3 = "Accent",
+			},
+		})
+
+		Tab.Underline = Underline
+
 		Tab.Frame = New("TextButton", {
-			Size = UDim2.new(1, 0, 0, 34),
+			AutomaticSize = Enum.AutomaticSize.X,
+			Size = UDim2.new(0, 0, 1, 0),
 			BackgroundTransparency = 0.92,
+			Text = "",
 			Parent = Parent,
 			ZIndex = 10,
 			ThemeTag = {
@@ -2819,41 +2834,55 @@ Components.Tab = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 8),
+				CornerRadius = UDim.new(0, 6),
 			}),
-			New("TextLabel", {
-				AnchorPoint = Vector2.new(0, 0.5),
-				Position = not fischbypass and Icon and UDim2.new(0, 30, 0.5, 0) or UDim2.new(0, 12, 0.5, 0),
-				Text = Title,
-				RichText = true,
-				TextColor3 = Color3.fromRGB(255, 255, 255),
-				TextTransparency = 0,
-				FontFace = Font.new(
-					"rbxasset://fonts/families/GothamSSm.json",
-					Enum.FontWeight.Regular,
-					Enum.FontStyle.Normal
-				),
-				TextSize = 12,
-				TextXAlignment = "Left",
-				TextYAlignment = "Center",
-				Size = UDim2.new(1, -12, 1, 0),
+			New("Frame", {
+				AutomaticSize = Enum.AutomaticSize.X,
+				Size = UDim2.new(0, 0, 1, 0),
 				BackgroundTransparency = 1,
-				ZIndex = 11,
-				ThemeTag = {
-					TextColor3 = "Text",
-				},
+			}, {
+				New("UIPadding", {
+					PaddingLeft = UDim.new(0, 6),
+					PaddingRight = UDim.new(0, 6),
+				}),
+				New("UIListLayout", {
+					FillDirection = Enum.FillDirection.Horizontal,
+					VerticalAlignment = Enum.VerticalAlignment.Center,
+					SortOrder = Enum.SortOrder.LayoutOrder,
+					Padding = UDim.new(0, 6),
+				}),
+				(not fischbypass and Icon) and New("ImageLabel", {
+					Size = UDim2.fromOffset(14, 14),
+					BackgroundTransparency = 1,
+					Image = Icon,
+					LayoutOrder = 1,
+					ZIndex = 11,
+					ThemeTag = {
+						ImageColor3 = "Text",
+					},
+				}) or nil,
+				New("TextLabel", {
+					Text = Title,
+					RichText = true,
+					AutomaticSize = Enum.AutomaticSize.X,
+					Size = UDim2.new(0, 0, 1, 0),
+					BackgroundTransparency = 1,
+					LayoutOrder = 2,
+					FontFace = Font.new(
+						"rbxasset://fonts/families/GothamSSm.json",
+						Enum.FontWeight.Medium,
+						Enum.FontStyle.Normal
+					),
+					TextSize = 13,
+					TextXAlignment = "Left",
+					TextYAlignment = "Center",
+					ZIndex = 11,
+					ThemeTag = {
+						TextColor3 = "Text",
+					},
+				}),
 			}),
-			New("ImageLabel", {
-				AnchorPoint = Vector2.new(0, 0.5),
-				Size = UDim2.fromOffset(16, 16),
-				Position = UDim2.new(0, 8, 0.5, 0),
-				BackgroundTransparency = 1,
-				Image = Icon and Icon or nil,
-				ZIndex = 11,
-				ThemeTag = {
-					ImageColor3 = "Text",
-				},
-			}),
+			Underline,
 		})
 
 		local ContainerLayout = New("UIListLayout", {
@@ -3383,9 +3412,15 @@ Components.Tab = (function()
 		for _, TabObject in next, TabModule.Tabs do
 			TabObject.SetTransparency(0.92)
 			TabObject.Selected = false
+			if TabObject.Underline then
+				TabObject.Underline.BackgroundTransparency = 1
+			end
 		end
 		TabModule.Tabs[Tab].SetTransparency(0.89)
 		TabModule.Tabs[Tab].Selected = true
+		if TabModule.Tabs[Tab].Underline then
+			TabModule.Tabs[Tab].Underline.BackgroundTransparency = 0
+		end
 
 		Window.TabDisplay.Text = TabModule.Tabs[Tab].Name
 		Window.SelectorPosMotor:setGoal(Spring(TabModule:GetCurrentTabPos(), { frequency = 6 }))
@@ -4309,6 +4344,7 @@ Components.Window = (function()
 			Position = UDim2.fromOffset(0, (Window.TabHolderTop or 45) + 0),
 			AnchorPoint = Vector2.new(0, 0.5),
 			ZIndex = 1,
+			Visible = false,
 			ThemeTag = {
 				BackgroundColor3 = "Accent",
 			},
@@ -4592,17 +4628,21 @@ Components.Window = (function()
 		Window.TabHolderTop = tabHolderTop
 
 		Window.TabHolder = New("ScrollingFrame", {
-			Size = UDim2.new(1, 0, 1, -(tabHolderTop + 6)),
-			Position = UDim2.new(0, 0, 0, tabHolderTop),
+			Size = UDim2.new(1, 0, 1, 0),
+			Position = UDim2.new(0, 0, 0, 0),
 			BackgroundTransparency = 1,
 			ScrollBarImageTransparency = 1,
 			ScrollBarThickness = 0,
 			BorderSizePixel = 0,
 			CanvasSize = UDim2.fromScale(0, 0),
-			ScrollingDirection = Enum.ScrollingDirection.Y,
+			ScrollingDirection = Enum.ScrollingDirection.X,
+			AutomaticCanvasSize = Enum.AutomaticSize.X,
 		}, {
 			New("UIListLayout", {
 				Padding = UDim.new(0, 4),
+				FillDirection = Enum.FillDirection.Horizontal,
+				SortOrder = Enum.SortOrder.LayoutOrder,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
 			}),
 		})
 
@@ -4687,14 +4727,14 @@ Components.Window = (function()
 		local searchHeight = 28
 		local totalOffset = (Window.ShowSearch and searchHeight or 0) + imageOffset
 
+		local TabBarHeight = 38
+
 		local TabFrame = New("Frame", {
-			Size = UDim2.new(0, Window.TabWidth, 1, Window.ShowSearch and -63 or -31),
-			Position = UDim2.new(0, 12, 0, Window.ShowSearch and 54 or 19),
+			Size = UDim2.new(1, -24, 0, TabBarHeight),
+			Position = UDim2.new(0, 12, 0, 44),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
-			ImageFrame,
-			SearchFrame,
 			Window.TabHolder,
 			Selector,
 		})
@@ -4704,13 +4744,14 @@ Components.Window = (function()
 		Window.TabDisplay = New("TextLabel", {
 			RichText = true,
 			Text = "Tab",
+			Visible = false,
 			TextTransparency = 0,
 			FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
 			TextSize = 28,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
 			Size = UDim2.new(1, -16, 0, 28),
-			Position = UDim2.fromOffset(Window.TabWidth + 26, 56),
+			Position = UDim2.fromOffset(12, 56),
 			BackgroundTransparency = 1,
 			ThemeTag = {
 				TextColor3 = "Text",
@@ -4729,8 +4770,8 @@ Components.Window = (function()
 		})
 
 		Window.ContainerCanvas = New("Frame", {
-			Size = UDim2.new(1, -Window.TabWidth - 32, 1, -102),
-			Position = UDim2.fromOffset(Window.TabWidth + 26, 90),
+			Size = UDim2.new(1, -24, 1, -(44 + TabBarHeight + 12)),
+			Position = UDim2.fromOffset(12, 44 + TabBarHeight + 6),
 			BackgroundTransparency = 1,
 			ClipsDescendants = true,
 		}, {
@@ -4740,7 +4781,7 @@ Components.Window = (function()
 
 		local backgroundTransparency = Config.BackgroundTransparency
 		if backgroundTransparency == nil then
-			backgroundTransparency = 0.5
+			backgroundTransparency = 0
 		end
 		Window.BackgroundTransparency = backgroundTransparency
 
@@ -5164,17 +5205,7 @@ Components.Window = (function()
 			end
 		end)
 
-		Creator.AddSignal(Window.TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-			if Window.TabHolder and Window.TabHolder.UIListLayout then
-				local padding = Window.TabHolder:FindFirstChild("UIPadding")
-				local paddingTop = padding and padding.PaddingTop.Offset or 6
-				local paddingBottom = padding and padding.PaddingBottom.Offset or 6
-				local contentSize = Window.TabHolder.UIListLayout.AbsoluteContentSize.Y + paddingTop + paddingBottom
-				if contentSize > 0 then
-					Window.TabHolder.CanvasSize = UDim2.new(0, 0, 0, contentSize)
-				end
-			end
-		end)
+		-- CanvasSize agora é gerenciado automaticamente (AutomaticCanvasSize = X) na TabHolder horizontal
 
 		Creator.AddSignal(UserInputService.InputBegan, function(Input)
 			if
@@ -5640,14 +5671,14 @@ ElementsTable.Dropdown = (function()
 			Size = UDim2.fromOffset(160, 30),
 			Position = UDim2.new(1, -10, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
-			BackgroundTransparency = 0.9,
+			BackgroundTransparency = 0,
 			Parent = DropdownFrame.Frame,
 			ThemeTag = {
 				BackgroundColor3 = "DropdownFrame",
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 5),
+				CornerRadius = UDim.new(0, 0),
 			}),
 			New("UIStroke", {
 				Transparency = 0.5,
@@ -5693,7 +5724,7 @@ ElementsTable.Dropdown = (function()
 				ThemeTag = { BackgroundColor3 = "Element" },
 				ZIndex = 24,
 			}, {
-				New("UICorner", { CornerRadius = UDim.new(0, 4) }),
+				New("UICorner", { CornerRadius = UDim.new(0, 0) }),
 			})
 
 			SearchBox = New("TextBox", {
@@ -5769,7 +5800,7 @@ ElementsTable.Dropdown = (function()
 			SearchBar,
 			DropdownScrollFrame,
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 7),
+				CornerRadius = UDim.new(0, 0),
 			}),
 			New("UIStroke", {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -6245,7 +6276,7 @@ ElementsTable.Dropdown = (function()
 					ButtonSelector,
 					ButtonLabel,
 					New("UICorner", {
-						CornerRadius = UDim.new(0, 6),
+						CornerRadius = UDim.new(0, 0),
 					}),
 				})
 
@@ -9853,12 +9884,8 @@ Library.CreateWindow = function(self, Config)
 	Library.Theme = Config.Theme or "Domadic"
 	Creator.Theme = Library.Theme
 
-	if Config.BackgroundImage == nil then
-		Config.BackgroundImage = "rbxassetid://13196113628"
-	end
-
 	if Config.BackgroundTransparency == nil then
-		Config.BackgroundTransparency = 0.5
+		Config.BackgroundTransparency = 0
 	end
 
 
