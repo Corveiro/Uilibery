@@ -2350,7 +2350,7 @@ Components.Element = (function()
 		local Options = Options or {}
 
 		Element.TitleLabel = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
 			Text = Title,
 			TextColor3 = Color3.fromRGB(240, 240, 240),
 			TextSize = 13,
@@ -2402,7 +2402,7 @@ Components.Element = (function()
 		Element.TitleLabel.Parent = Element.Header
 
 		Element.DescLabel = New("TextLabel", {
-			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
+			FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal),
 			Text = Desc,
 			TextColor3 = Color3.fromRGB(200, 200, 200),
 			TextSize = 12,
@@ -2889,8 +2889,9 @@ Components.Tab = (function()
 					TextYAlignment = "Center",
 					ZIndex = 11,
 					ThemeTag = {
-						TextColor3 = "Text",
+						TextColor3 = "SubText",
 					},
+					Name = "TabLabel",
 				}),
 			}),
 			Underline,
@@ -3426,11 +3427,19 @@ Components.Tab = (function()
 			if TabObject.Underline then
 				TabObject.Underline.BackgroundTransparency = 1
 			end
+			local label = TabObject.Frame:FindFirstChild("TabLabel", true)
+			if label then
+				Creator.OverrideTag(label, { TextColor3 = "SubText" })
+			end
 		end
 		TabModule.Tabs[Tab].SetTransparency(0.89)
 		TabModule.Tabs[Tab].Selected = true
 		if TabModule.Tabs[Tab].Underline then
 			TabModule.Tabs[Tab].Underline.BackgroundTransparency = 0
+		end
+		local selectedLabel = TabModule.Tabs[Tab].Frame:FindFirstChild("TabLabel", true)
+		if selectedLabel then
+			Creator.OverrideTag(selectedLabel, { TextColor3 = "Text" })
 		end
 
 		Window.TabDisplay.Text = TabModule.Tabs[Tab].Name
@@ -6551,7 +6560,7 @@ ElementsTable.Slider = (function()
 		local SliderRail = New("Frame", {
 			BackgroundTransparency = 1,
 			Position = UDim2.fromOffset(7, 0),
-			Size = UDim2.new(1, -14, 1, 0),
+			Size = UDim2.new(1, -60, 1, 0),
 		}, {
 			SliderDot,
 		})
@@ -6575,7 +6584,7 @@ ElementsTable.Slider = (function()
 			TextXAlignment = Enum.TextXAlignment.Center,
 			BackgroundTransparency = 0,
 			Size = UDim2.new(0, 40, 0, 20),
-			Position = UDim2.new(0, -4, 0.5, 0),
+			Position = UDim2.new(1, 0, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
 			ThemeTag = {
 				TextColor3 = "Text",
@@ -6603,7 +6612,7 @@ ElementsTable.Slider = (function()
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 0.8,
 			Size = UDim2.new(0, 0, 0, 14),
-			Position = UDim2.new(0, -4, 0.5, 0),
+			Position = UDim2.new(1, 0, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
 			PlaceholderText = "Value",
 			ClearTextOnFocus = false,
