@@ -2437,7 +2437,7 @@ Components.Element = (function()
 		})
 
 		Element.Border = New("UIStroke", {
-			Transparency = 0.85,
+			Transparency = 0.7,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Color = Color3.fromRGB(0, 0, 0),
 			ThemeTag = {
@@ -2460,7 +2460,7 @@ Components.Element = (function()
 			},
 		}, {
 			New("UICorner", {
-				CornerRadius = UDim.new(0, 8),
+				CornerRadius = UDim.new(0, 10),
 			}),
 			Element.Border,
 			Element.LabelHolder,
@@ -2897,7 +2897,7 @@ Components.Tab = (function()
 		})
 
 		local ContainerLayout = New("UIListLayout", {
-			Padding = UDim.new(0, 5),
+			Padding = UDim.new(0, 7),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		})
 
@@ -5637,7 +5637,9 @@ ElementsTable.Dropdown = (function()
 		end
 
 		local DropdownFrame = Components.Element(Config.Title, Config.Description, self.Container, false, Config)
+		DropdownFrame.Frame.Active = false
 		DropdownFrame.DescLabel.Size = UDim2.new(1, -170, 0, 14)
+		DropdownFrame.Frame.Active = false
 
 		Dropdown.SetTitle = DropdownFrame.SetTitle
 		Dropdown.SetDesc = DropdownFrame.SetDesc
@@ -6089,21 +6091,11 @@ ElementsTable.Dropdown = (function()
 			RecalculateListPosition()
 		end)
 
-		Creator.AddSignal(DropdownInner.MouseButton1Click, function()
+		Creator.AddSignal(DropdownInner.Activated, function()
 			if Dropdown.Opened then
 				Dropdown:Close()
 			else
 				Dropdown:Open()
-			end
-		end)
-
-		Creator.AddSignal(DropdownInner.InputBegan, function(Input)
-			if Input.UserInputType == Enum.UserInputType.Touch then
-				if Dropdown.Opened then
-					Dropdown:Close()
-				else
-					Dropdown:Open()
-				end
 			end
 		end)
 
