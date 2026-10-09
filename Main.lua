@@ -1,5835 +1,12606 @@
--- generated using SL | Source Leak
--- https://discord.gg/x7YbZeezpm
-
+return function(C0)
+local player = game:GetService("Players").LocalPlayer
+local CoreGui = game:GetService("CoreGui")
 local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-game:GetService("TextService")
-local color = Color3.fromRGB(16, 18, 19)
-local color2 = Color3.fromRGB(64, 70, 82)
-local color3 = Color3.fromRGB(59, 130, 246)
-local color4 = Color3.fromRGB(255, 255, 255)
-local n = 0.95
-local n2 = 0.45
-local n3 = 0.07
-local n4 = 0.2
-local n5 = 0.5
-local n6 = 0.62
-local url = "rbxassetid://8992230903"
-local url2 = "rbxassetid://1316045217"
-
-local tbl1 = {
-	info = { tint = Color3.fromRGB(59, 130, 246), art = "rbxassetid://124560466474914" },
-	good = { tint = Color3.fromRGB(52, 199, 123), art = "rbxassetid://85262178816537" },
-	warn = { tint = Color3.fromRGB(245, 158, 11), art = "rbxassetid://125920361880643" },
-	bad = { tint = Color3.fromRGB(244, 63, 94), art = "rbxassetid://76821953846248" },
+local GuiService = game:GetService("GuiService")
+local camera = workspace.CurrentCamera
+assert(player, "ChilliLibrary chi co the chay mot lan o phia client")
+local playerGui = player:WaitForChild("PlayerGui")
+local Runtime = {}
+Runtime.Theme = {
+    Window = Color3.fromRGB(22, 22, 30),
+    TopBar = Color3.fromRGB(32, 32, 45),
+    TopBarGlow = Color3.fromRGB(42, 42, 58),
+    Dock = Color3.fromRGB(28, 28, 39),
+    Row = Color3.fromRGB(34, 34, 47),
+    Field = Color3.fromRGB(24, 24, 33),
+    Item = Color3.fromRGB(30, 30, 42),
+    ItemHover = Color3.fromRGB(46, 46, 64),
+    ItemChosen = Color3.fromRGB(60, 62, 104),
+    Stroke = Color3.fromRGB(58, 58, 80),
+    Accent = Color3.fromRGB(104, 112, 255),
+    AccentLight = Color3.fromRGB(128, 136, 255),
+    AccentDark = Color3.fromRGB(80, 88, 220),
+    TabIdle = Color3.fromRGB(36, 36, 50),
+    TabIdleText = Color3.fromRGB(178, 180, 204),
+    ToggleOff = Color3.fromRGB(62, 62, 82),
+    Knob = Color3.fromRGB(246, 246, 252),
+    KnobEdge = Color3.fromRGB(205, 205, 220),
+    Text = Color3.fromRGB(242, 242, 250),
+    Muted = Color3.fromRGB(150, 152, 176),
+    Danger = Color3.fromRGB(236, 82, 98),
+    DangerLight = Color3.fromRGB(246, 112, 124),
+    DangerDark = Color3.fromRGB(176, 52, 68),
+    CornerWindow = 14,
+    Corner = 8,
+    CornerSmall = 6,
 }
-
-local function func1(flag1)
-	return Font.fromName("BuilderSans", flag1 or Enum.FontWeight.Regular)
+function Runtime.addCorner(target, radius)
+    local corner = target:FindFirstChildOfClass("UICorner")
+    if not corner then
+        corner = Instance.new("UICorner")
+        corner.Parent = target
+    end
+    if typeof(radius) == "UDim" then
+        corner.CornerRadius = radius
+    else
+        corner.CornerRadius = UDim.new(0, radius or Runtime.Theme.CornerSmall)
+    end
+    return corner
 end
 
-local function func2(param1, list1, parent)
-	local instance = Instance.new(param1)
+local ROOT_GUI_NAME = "Settings"
+local LAUNCHER_GUI_NAME = "ChilliLeftCenter"
+local OWNER_ATTRIBUTE = "ChilliLibraryOwned"
+local parent = CoreGui
+local parentName = "CoreGui"
+do
+    local hiddenOk, hiddenParent = pcall(function()
+        return gethui()
+    end)
+    if hiddenOk and typeof(hiddenParent) == "Instance" then
+        parent = hiddenParent
+        parentName = "HiddenUI"
+    end
 
-	for k, value1 in pairs(list1) do
-		if k ~= "Parent" then
-			instance[k] = value1
-		end
-	end
-
-	instance.Parent = parent
-	return instance
+    local ok, problem = pcall(function()
+        local probe = Instance.new("ScreenGui")
+        probe.Name = "ChilliLibraryUIProbe"
+        probe.Parent = parent
+        probe:Destroy()
+    end)
+    if not ok then
+        error(
+            "ChilliLibrary requires write access to "
+                .. parentName
+                .. "; PlayerGui fallback is disabled: "
+                .. tostring(problem),
+            0
+        )
+    end
 end
 
-local function func3(param2, flag2)
-	return func2("UICorner", { CornerRadius = UDim.new(0, flag2 or 8) }, param2)
+local function createEmbeddedSpider()
+    local spider = Instance.new("MeshPart")
+    spider.Name = "Spider"
+    spider.Archivable = true
+    spider.Anchored = true
+    spider.BackSurface = Enum.SurfaceType.Smooth
+    spider.BottomSurface = Enum.SurfaceType.Smooth
+    spider.BrickColor = BrickColor.new("Institutional white")
+    spider.CanCollide = false
+    spider.CanQuery = false
+    spider.CanTouch = false
+    spider.CastShadow = true
+    spider.Color = Color3.new(1, 1, 1)
+    spider.FrontSurface = Enum.SurfaceType.Smooth
+    spider.LeftSurface = Enum.SurfaceType.Smooth
+    spider.Massless = true
+    spider.Material = Enum.Material.Plastic
+    spider.Reflectance = 0
+    spider.RightSurface = Enum.SurfaceType.Smooth
+    spider.RootPriority = -5
+    spider.Size = Vector3.new(
+        0.9052265286445618,
+        0.24434703588485718,
+        0.9125359058380127
+    )
+    spider.TopSurface = Enum.SurfaceType.Smooth
+    spider.Transparency = 0
+    spider.MeshId = "rbxassetid://135715081992798"
+    spider.TextureID = ""
+    spider.DoubleSided = false
+    spider.RenderFidelity = Enum.RenderFidelity.Automatic
+    spider.CollisionFidelity = Enum.CollisionFidelity.Box
+    spider.CFrame = CFrame.new()
+
+    local headAttachment = Instance.new("Attachment")
+    headAttachment.Name = "HeadAttachment"
+    headAttachment.CFrame = CFrame.new(
+        0.72625732421875,
+        -0.504150390625,
+        0.3289794921875,
+        0.7071012258529663,
+        -0.7068588733673096,
+        -0.01893438585102558,
+        -0.000011771917343139648,
+        0.026765286922454834,
+        -0.9996418952941895,
+        0.7071123719215393,
+        0.70684814453125,
+        0.018917446956038475
+    )
+    headAttachment.Parent = spider
+
+    return spider
 end
 
-local function func4(param3, flag3, flag4)
-	return func2("UIStroke", {
-		Color = flag3 or color2,
-		Thickness = 1,
-		Transparency = flag4 or 0,
-		ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-	}, param3)
-end
 
-local function func5(param4, param5, flag5, flag6, flag7)
-	return func2("UIPadding", {
-		PaddingTop = UDim.new(0, param5),
-		PaddingRight = UDim.new(0, flag5 or param5),
-		PaddingBottom = UDim.new(0, flag6 or param5),
-		PaddingLeft = UDim.new(0, flag7 or flag5 or param5),
-	}, param4)
-end
 
-local function func6(param6, flag8, flag9)
-	return func2("UIListLayout", {
-		Padding = UDim.new(0, flag8 or 6),
-		FillDirection = flag9 or Enum.FillDirection.Vertical,
-		SortOrder = Enum.SortOrder.LayoutOrder,
-	}, param6)
-end
-
-local function func7(param7, param8)
-	param7.BackgroundTransparency = 1
-	param7.TextColor3 = param7.TextColor3 or color4
-	param7.FontFace = param7.FontFace or func1()
-	param7.TextXAlignment = param7.TextXAlignment or Enum.TextXAlignment.Left
-	return func2("TextLabel", param7, param8)
-end
-
-local function func8(param9, flag10)
-	return func2("TextButton", {
-		Name = "Hit",
-		Size = UDim2.fromScale(1, 1),
-		BackgroundTransparency = 1,
-		AutoButtonColor = false,
-		Text = "",
-		ZIndex = flag10 or 5,
-	}, param9)
-end
-
-local tbl2 = {
-	["a-arrow-down"] = "rbxassetid://92867583610071",
-	["a-arrow-up"] = "rbxassetid://132318504999733",
-	["a-large-small"] = "rbxassetid://111491496660216",
-	accessibility = "rbxassetid://114029945302017",
-	activity = "rbxassetid://94212016861936",
-	["air-vent"] = "rbxassetid://81517226012329",
-	airplay = "rbxassetid://115020759309179",
-	["alarm-clock-check"] = "rbxassetid://76437352099157",
-	["alarm-clock-minus"] = "rbxassetid://77364179863205",
-	["alarm-clock-off"] = "rbxassetid://97904885874823",
-	["alarm-clock-plus"] = "rbxassetid://80468822979214",
-	["alarm-clock"] = "rbxassetid://126259032907535",
-	["alarm-smoke"] = "rbxassetid://96965448419685",
-	album = "rbxassetid://127358331163602",
-	["align-center-horizontal"] = "rbxassetid://81570549209434",
-	["align-center-vertical"] = "rbxassetid://118470463752466",
-	["align-end-horizontal"] = "rbxassetid://139502909745427",
-	["align-end-vertical"] = "rbxassetid://96528869059554",
-	["align-horizontal-distribute-center"] = "rbxassetid://97220086126656",
-	["align-horizontal-distribute-end"] = "rbxassetid://106128590702022",
-	["align-horizontal-distribute-start"] = "rbxassetid://76074660002997",
-	["align-horizontal-justify-center"] = "rbxassetid://75732302772427",
-	["align-horizontal-justify-end"] = "rbxassetid://129167626402283",
-	["align-horizontal-justify-start"] = "rbxassetid://130161830325281",
-	["align-horizontal-space-around"] = "rbxassetid://91646106782950",
-	["align-horizontal-space-between"] = "rbxassetid://103886093046990",
-	["align-start-horizontal"] = "rbxassetid://125674804697729",
-	["align-start-vertical"] = "rbxassetid://105020230154823",
-	["align-vertical-distribute-center"] = "rbxassetid://93791183635525",
-	["align-vertical-distribute-end"] = "rbxassetid://139354223511433",
-	["align-vertical-distribute-start"] = "rbxassetid://74961997822126",
-	["align-vertical-justify-center"] = "rbxassetid://134754696166569",
-	["align-vertical-justify-end"] = "rbxassetid://92569381441969",
-	["align-vertical-justify-start"] = "rbxassetid://99692844572718",
-	["align-vertical-space-around"] = "rbxassetid://96206012459190",
-	["align-vertical-space-between"] = "rbxassetid://124998077349706",
-	ambulance = "rbxassetid://78599995190651",
-	ampersand = "rbxassetid://75272915739209",
-	ampersands = "rbxassetid://126947193455996",
-	amphora = "rbxassetid://137370389604364",
-	anchor = "rbxassetid://92181172123618",
-	angry = "rbxassetid://74237056000103",
-	annoyed = "rbxassetid://80064369052011",
-	antenna = "rbxassetid://99628923540956",
-	anvil = "rbxassetid://100203029845919",
-	aperture = "rbxassetid://83396154449972",
-	["app-window-mac"] = "rbxassetid://79587216113811",
-	["app-window"] = "rbxassetid://93142176757189",
-	apple = "rbxassetid://104349242902442",
-	["archive-restore"] = "rbxassetid://78956681942188",
-	["archive-x"] = "rbxassetid://75830115088395",
-	archive = "rbxassetid://122180020814574",
-	armchair = "rbxassetid://105384358373973",
-	["arrow-big-down-dash"] = "rbxassetid://137987229582002",
-	["arrow-big-down"] = "rbxassetid://81081164158885",
-	["arrow-big-left-dash"] = "rbxassetid://97827621354677",
-	["arrow-big-left"] = "rbxassetid://85973092492641",
-	["arrow-big-right-dash"] = "rbxassetid://117825834972403",
-	["arrow-big-right"] = "rbxassetid://82960676755590",
-	["arrow-big-up-dash"] = "rbxassetid://99260194327483",
-	["arrow-big-up"] = "rbxassetid://93136954756149",
-	["arrow-down-0-1"] = "rbxassetid://120961896217875",
-	["arrow-down-1-0"] = "rbxassetid://93474255891850",
-	["arrow-down-a-z"] = "rbxassetid://99554596207900",
-	["arrow-down-from-line"] = "rbxassetid://132045845807798",
-	["arrow-down-left"] = "rbxassetid://102899325237364",
-	["arrow-down-narrow-wide"] = "rbxassetid://129105261655061",
-	["arrow-down-right"] = "rbxassetid://123109928624974",
-	["arrow-down-to-dot"] = "rbxassetid://101675355931221",
-	["arrow-down-to-line"] = "rbxassetid://87050478931254",
-	["arrow-down-up"] = "rbxassetid://85780258549577",
-	["arrow-down-wide-narrow"] = "rbxassetid://88461733425991",
-	["arrow-down-z-a"] = "rbxassetid://76115279362232",
-	["arrow-down"] = "rbxassetid://98764963621439",
-	["arrow-left-from-line"] = "rbxassetid://87857914437603",
-	["arrow-left-right"] = "rbxassetid://131324733048447",
-	["arrow-left-to-line"] = "rbxassetid://118645136026970",
-	["arrow-left"] = "rbxassetid://102531941843733",
-	["arrow-right-from-line"] = "rbxassetid://74073639809355",
-	["arrow-right-left"] = "rbxassetid://77015754304300",
-	["arrow-right-to-line"] = "rbxassetid://78632510329852",
-	["arrow-right"] = "rbxassetid://113692007244654",
-	["arrow-up-0-1"] = "rbxassetid://105257823943016",
-	["arrow-up-1-0"] = "rbxassetid://134175521693798",
-	["arrow-up-a-z"] = "rbxassetid://77763416595160",
-	["arrow-up-down"] = "rbxassetid://81019887641527",
-	["arrow-up-from-dot"] = "rbxassetid://124408496673275",
-	["arrow-up-from-line"] = "rbxassetid://95777664626453",
-	["arrow-up-left"] = "rbxassetid://123490598231261",
-	["arrow-up-narrow-wide"] = "rbxassetid://73006024672636",
-	["arrow-up-right"] = "rbxassetid://129280608535523",
-	["arrow-up-to-line"] = "rbxassetid://108818207813537",
-	["arrow-up-wide-narrow"] = "rbxassetid://87437426951568",
-	["arrow-up-z-a"] = "rbxassetid://107546173611884",
-	["arrow-up"] = "rbxassetid://89282378235317",
-	["arrows-up-from-line"] = "rbxassetid://133710016938621",
-	asterisk = "rbxassetid://88552752106723",
-	["at-sign"] = "rbxassetid://79059152889146",
-	atom = "rbxassetid://73167696981648",
-	["audio-lines"] = "rbxassetid://70930641819242",
-	["audio-waveform"] = "rbxassetid://86462036665209",
-	award = "rbxassetid://132740088158419",
-	axe = "rbxassetid://132405197863294",
-	["axis-3d"] = "rbxassetid://122438676546804",
-	baby = "rbxassetid://93472926933440",
-	backpack = "rbxassetid://140420225386018",
-	["badge-alert"] = "rbxassetid://101829200081951",
-	["badge-cent"] = "rbxassetid://133345018873154",
-	["badge-check"] = "rbxassetid://76078495178149",
-	["badge-dollar-sign"] = "rbxassetid://127139803581141",
-	["badge-euro"] = "rbxassetid://120016477674659",
-	["badge-indian-rupee"] = "rbxassetid://75659682309981",
-	["badge-info"] = "rbxassetid://131995373201472",
-	["badge-japanese-yen"] = "rbxassetid://99081574588615",
-	["badge-minus"] = "rbxassetid://140321561183881",
-	["badge-percent"] = "rbxassetid://121359224294885",
-	["badge-plus"] = "rbxassetid://100325578561866",
-	["badge-pound-sterling"] = "rbxassetid://119688217279444",
-	["badge-question-mark"] = "rbxassetid://121464963737502",
-	["badge-russian-ruble"] = "rbxassetid://108839463659864",
-	["badge-swiss-franc"] = "rbxassetid://91447608372740",
-	["badge-turkish-lira"] = "rbxassetid://137839965873529",
-	["badge-x"] = "rbxassetid://122931434733842",
-	badge = "rbxassetid://116620312917084",
-	["baggage-claim"] = "rbxassetid://86922213051957",
-	ban = "rbxassetid://90767043015246",
-	banana = "rbxassetid://140713420056179",
-	bandage = "rbxassetid://129660129590770",
-	["banknote-arrow-down"] = "rbxassetid://139366449345199",
-	["banknote-arrow-up"] = "rbxassetid://133758343082529",
-	["banknote-x"] = "rbxassetid://95348701438065",
-	banknote = "rbxassetid://104840231536668",
-	barcode = "rbxassetid://118473018143689",
-	barrel = "rbxassetid://130647115622774",
-	baseline = "rbxassetid://124677132511270",
-	bath = "rbxassetid://76031400297942",
-	["battery-charging"] = "rbxassetid://80139357470047",
-	["battery-full"] = "rbxassetid://70906718268972",
-	["battery-low"] = "rbxassetid://139659256984314",
-	["battery-medium"] = "rbxassetid://105934079398915",
-	["battery-plus"] = "rbxassetid://91931341486966",
-	["battery-warning"] = "rbxassetid://115230083817257",
-	battery = "rbxassetid://70765800346189",
-	beaker = "rbxassetid://80902539995520",
-	["bean-off"] = "rbxassetid://98164436608714",
-	bean = "rbxassetid://89491967076869",
-	["bed-double"] = "rbxassetid://73820193212911",
-	["bed-single"] = "rbxassetid://113423940880634",
-	bed = "rbxassetid://97726529032925",
-	beef = "rbxassetid://105850162318915",
-	["beer-off"] = "rbxassetid://120333134736361",
-	beer = "rbxassetid://116404978807744",
-	["bell-dot"] = "rbxassetid://93161277118810",
-	["bell-electric"] = "rbxassetid://100277767266983",
-	["bell-minus"] = "rbxassetid://126334890449727",
-	["bell-off"] = "rbxassetid://78560046118930",
-	["bell-plus"] = "rbxassetid://77014333795836",
-	["bell-ring"] = "rbxassetid://94612128913941",
-	bell = "rbxassetid://97392696311902",
-	["between-horizontal-end"] = "rbxassetid://81602774794322",
-	["between-horizontal-start"] = "rbxassetid://76112384929846",
-	["between-vertical-end"] = "rbxassetid://72817612571631",
-	["between-vertical-start"] = "rbxassetid://85278312190301",
-	["biceps-flexed"] = "rbxassetid://82004462003936",
-	bike = "rbxassetid://102930322246035",
-	binary = "rbxassetid://91751953950088",
-	binoculars = "rbxassetid://101460003267896",
-	biohazard = "rbxassetid://95956532900432",
-	bird = "rbxassetid://132284145117371",
-	birdhouse = "rbxassetid://83999157401433",
-	bitcoin = "rbxassetid://95459240442938",
-	blend = "rbxassetid://111679612185257",
-	blinds = "rbxassetid://71164165283925",
-	blocks = "rbxassetid://72212693357737",
-	["bluetooth-connected"] = "rbxassetid://96315134002985",
-	["bluetooth-off"] = "rbxassetid://80600044218117",
-	["bluetooth-searching"] = "rbxassetid://100673019606426",
-	bluetooth = "rbxassetid://90506573139443",
-	bold = "rbxassetid://116141470019166",
-	bolt = "rbxassetid://102881251417484",
-	bomb = "rbxassetid://139223800924636",
-	bone = "rbxassetid://111242153474115",
-	["book-a"] = "rbxassetid://104067275658465",
-	["book-alert"] = "rbxassetid://124159928044853",
-	["book-audio"] = "rbxassetid://109208148317037",
-	["book-check"] = "rbxassetid://115999656081696",
-	["book-copy"] = "rbxassetid://108543407492005",
-	["book-dashed"] = "rbxassetid://127430784795958",
-	["book-down"] = "rbxassetid://101011730128222",
-	["book-headphones"] = "rbxassetid://108670200799574",
-	["book-heart"] = "rbxassetid://112788845135284",
-	["book-image"] = "rbxassetid://80808285757226",
-	["book-key"] = "rbxassetid://116024426170705",
-	["book-lock"] = "rbxassetid://118765061220571",
-	["book-marked"] = "rbxassetid://73211024251780",
-	["book-minus"] = "rbxassetid://112724962046282",
-	["book-open-check"] = "rbxassetid://130848362492667",
-	["book-open-text"] = "rbxassetid://100629528672195",
-	["book-open"] = "rbxassetid://129845326810392",
-	["book-plus"] = "rbxassetid://140267785051233",
-	["book-text"] = "rbxassetid://94011772484232",
-	["book-type"] = "rbxassetid://97817304725443",
-	["book-up-2"] = "rbxassetid://130161620853665",
-	["book-up"] = "rbxassetid://98640174079190",
-	["book-user"] = "rbxassetid://128489189240523",
-	["book-x"] = "rbxassetid://118754548186537",
-	book = "rbxassetid://125383279695672",
-	["bookmark-check"] = "rbxassetid://93940443347986",
-	["bookmark-minus"] = "rbxassetid://96807096039910",
-	["bookmark-plus"] = "rbxassetid://121469724491615",
-	["bookmark-x"] = "rbxassetid://112272342584706",
-	bookmark = "rbxassetid://121093149326239",
-	["boom-box"] = "rbxassetid://99901322535868",
-	["bot-message-square"] = "rbxassetid://96145330292478",
-	["bot-off"] = "rbxassetid://140417690560013",
-	bot = "rbxassetid://80451686744860",
-	["bottle-wine"] = "rbxassetid://131675403196921",
-	["bow-arrow"] = "rbxassetid://124089655150375",
-	box = "rbxassetid://101768155599700",
-	boxes = "rbxassetid://136372617578355",
-	braces = "rbxassetid://117761094704041",
-	brackets = "rbxassetid://74368995728099",
-	["brain-circuit"] = "rbxassetid://70547962410202",
-	["brain-cog"] = "rbxassetid://132039205501538",
-	brain = "rbxassetid://92424107303177",
-	["brick-wall-fire"] = "rbxassetid://92980588705520",
-	["brick-wall-shield"] = "rbxassetid://75954432775071",
-	["brick-wall"] = "rbxassetid://112878522258821",
-	["briefcase-business"] = "rbxassetid://129135125207283",
-	["briefcase-conveyor-belt"] = "rbxassetid://108665725653714",
-	["briefcase-medical"] = "rbxassetid://119917756334087",
-	briefcase = "rbxassetid://96754188164225",
-	["bring-to-front"] = "rbxassetid://132975903553748",
-	["brush-cleaning"] = "rbxassetid://71728977448805",
-	brush = "rbxassetid://127035535799640",
-	bubbles = "rbxassetid://106183424168227",
-	["bug-off"] = "rbxassetid://88020025049245",
-	["bug-play"] = "rbxassetid://80107955888092",
-	bug = "rbxassetid://83626408925438",
-	["building-2"] = "rbxassetid://77873775611951",
-	building = "rbxassetid://110616258983082",
-	["bus-front"] = "rbxassetid://89863432456045",
-	bus = "rbxassetid://133798469717463",
-	["cable-car"] = "rbxassetid://128643682205596",
-	cable = "rbxassetid://128449944504901",
-	["cake-slice"] = "rbxassetid://136769828413242",
-	cake = "rbxassetid://103131590503275",
-	calculator = "rbxassetid://74915716529646",
-	["calendar-1"] = "rbxassetid://98458364171044",
-	["calendar-arrow-down"] = "rbxassetid://108415736543437",
-	["calendar-arrow-up"] = "rbxassetid://70574654109118",
-	["calendar-check-2"] = "rbxassetid://120231170248276",
-	["calendar-check"] = "rbxassetid://71551019465748",
-	["calendar-clock"] = "rbxassetid://119132152594595",
-	["calendar-cog"] = "rbxassetid://122402172360287",
-	["calendar-days"] = "rbxassetid://99072017568595",
-	["calendar-fold"] = "rbxassetid://117368871270394",
-	["calendar-heart"] = "rbxassetid://88839008103676",
-	["calendar-minus-2"] = "rbxassetid://98846170279891",
-	["calendar-minus"] = "rbxassetid://137354318924383",
-	["calendar-off"] = "rbxassetid://109726151749217",
-	["calendar-plus-2"] = "rbxassetid://112264562093883",
-	["calendar-plus"] = "rbxassetid://125266115249843",
-	["calendar-range"] = "rbxassetid://103641849247576",
-	["calendar-search"] = "rbxassetid://92010083223634",
-	["calendar-sync"] = "rbxassetid://78082218499697",
-	["calendar-x-2"] = "rbxassetid://107518051061147",
-	["calendar-x"] = "rbxassetid://106703374806500",
-	calendar = "rbxassetid://114792700814035",
-	["camera-off"] = "rbxassetid://81057636835256",
-	camera = "rbxassetid://79950339943067",
-	["candy-cane"] = "rbxassetid://71689468772492",
-	["candy-off"] = "rbxassetid://110232752314832",
-	candy = "rbxassetid://107812129154678",
-	cannabis = "rbxassetid://98792006538601",
-	["captions-off"] = "rbxassetid://105223545364193",
-	captions = "rbxassetid://104960225031445",
-	["car-front"] = "rbxassetid://87380942739063",
-	["car-taxi-front"] = "rbxassetid://122455403384057",
-	car = "rbxassetid://121065933462582",
-	caravan = "rbxassetid://120070979471783",
-	["card-sim"] = "rbxassetid://134490550095771",
-	carrot = "rbxassetid://119118221444304",
-	["case-lower"] = "rbxassetid://129303130603241",
-	["case-sensitive"] = "rbxassetid://125410273293056",
-	["case-upper"] = "rbxassetid://111633433531325",
-	["cassette-tape"] = "rbxassetid://137065788934157",
-	cast = "rbxassetid://98202245922071",
-	castle = "rbxassetid://119275077187784",
-	cat = "rbxassetid://124252153404931",
-	cctv = "rbxassetid://99979894766624",
-	["chart-area"] = "rbxassetid://123446436762366",
-	["chart-bar-big"] = "rbxassetid://72336824986044",
-	["chart-bar-decreasing"] = "rbxassetid://107217459044963",
-	["chart-bar-increasing"] = "rbxassetid://88268905998571",
-	["chart-bar-stacked"] = "rbxassetid://98478751113024",
-	["chart-bar"] = "rbxassetid://105389816384108",
-	["chart-candlestick"] = "rbxassetid://125676898615697",
-	["chart-column-big"] = "rbxassetid://98598733210787",
-	["chart-column-decreasing"] = "rbxassetid://73586137373563",
-	["chart-column-increasing"] = "rbxassetid://120421615068601",
-	["chart-column-stacked"] = "rbxassetid://86031449675105",
-	["chart-column"] = "rbxassetid://97915995538580",
-	["chart-gantt"] = "rbxassetid://88811660555940",
-	["chart-line"] = "rbxassetid://101833156055618",
-	["chart-network"] = "rbxassetid://104027882693561",
-	["chart-no-axes-column-decreasing"] = "rbxassetid://123371717192542",
-	["chart-no-axes-column-increasing"] = "rbxassetid://140383830943049",
-	["chart-no-axes-column"] = "rbxassetid://94078751170351",
-	["chart-no-axes-combined"] = "rbxassetid://121424233161912",
-	["chart-no-axes-gantt"] = "rbxassetid://131936541106368",
-	["chart-pie"] = "rbxassetid://113412261630136",
-	["chart-scatter"] = "rbxassetid://108217585014571",
-	["chart-spline"] = "rbxassetid://90307460742494",
-	["check-check"] = "rbxassetid://95183312173858",
-	["check-line"] = "rbxassetid://115122343485290",
-	check = "rbxassetid://93898873302694",
-	["chef-hat"] = "rbxassetid://121744015002573",
-	cherry = "rbxassetid://139519182403183",
-	["chess-bishop"] = "rbxassetid://121701705580238",
-	["chess-king"] = "rbxassetid://90885687223462",
-	["chess-knight"] = "rbxassetid://96467707042169",
-	["chess-pawn"] = "rbxassetid://111318574652751",
-	["chess-queen"] = "rbxassetid://98304702099749",
-	["chess-rook"] = "rbxassetid://76223925830262",
-	["chevron-down"] = "rbxassetid://134243273101015",
-	["chevron-first"] = "rbxassetid://105243363790238",
-	["chevron-last"] = "rbxassetid://89268452603731",
-	["chevron-left"] = "rbxassetid://73780377692148",
-	["chevron-right"] = "rbxassetid://92473583511724",
-	["chevron-up"] = "rbxassetid://122444883127455",
-	["chevrons-down-up"] = "rbxassetid://139404716013205",
-	["chevrons-down"] = "rbxassetid://100524612205956",
-	["chevrons-left-right-ellipsis"] = "rbxassetid://125035817741526",
-	["chevrons-left-right"] = "rbxassetid://87910685945204",
-	["chevrons-left"] = "rbxassetid://82617201744347",
-	["chevrons-right-left"] = "rbxassetid://87149546686569",
-	["chevrons-right"] = "rbxassetid://139121276490483",
-	["chevrons-up-down"] = "rbxassetid://131833120209646",
-	["chevrons-up"] = "rbxassetid://100467452364672",
-	chromium = "rbxassetid://128165143739006",
-	church = "rbxassetid://113714744350666",
-	["cigarette-off"] = "rbxassetid://77797883078452",
-	["circle-alert"] = "rbxassetid://83898160590116",
-	["circle-arrow-down"] = "rbxassetid://95901860261344",
-	["circle-arrow-left"] = "rbxassetid://102148876968988",
-	["circle-arrow-out-down-left"] = "rbxassetid://140598097856694",
-	["circle-arrow-out-down-right"] = "rbxassetid://119952801379305",
-	["circle-arrow-out-up-left"] = "rbxassetid://132858212688303",
-	["circle-arrow-out-up-right"] = "rbxassetid://81783743753173",
-	["circle-arrow-right"] = "rbxassetid://70786767999559",
-	["circle-arrow-up"] = "rbxassetid://84395128546494",
-	["circle-check-big"] = "rbxassetid://93202927221730",
-	["circle-check"] = "rbxassetid://85262178816537",
-	["circle-chevron-down"] = "rbxassetid://137069490345718",
-	["circle-chevron-left"] = "rbxassetid://130250009740827",
-	["circle-chevron-right"] = "rbxassetid://125943696958495",
-	["circle-chevron-up"] = "rbxassetid://111223574026321",
-	["circle-dashed"] = "rbxassetid://126799443883746",
-	["circle-divide"] = "rbxassetid://106398997754208",
-	["circle-dollar-sign"] = "rbxassetid://91106238890387",
-	["circle-dot-dashed"] = "rbxassetid://111451232827180",
-	["circle-dot"] = "rbxassetid://82947033619201",
-	["circle-ellipsis"] = "rbxassetid://91687150884779",
-	["circle-equal"] = "rbxassetid://95133963751438",
-	["circle-fading-arrow-up"] = "rbxassetid://104648212910336",
-	["circle-fading-plus"] = "rbxassetid://91847890443490",
-	["circle-gauge"] = "rbxassetid://108157549473765",
-	["circle-minus"] = "rbxassetid://133556159576809",
-	["circle-off"] = "rbxassetid://97923456918886",
-	["circle-parking-off"] = "rbxassetid://128369410981252",
-	["circle-parking"] = "rbxassetid://124034962915196",
-	["circle-pause"] = "rbxassetid://139337739700879",
-	["circle-percent"] = "rbxassetid://133311912860256",
-	["circle-play"] = "rbxassetid://120408917249739",
-	["circle-plus"] = "rbxassetid://113157136350384",
-	["circle-pound-sterling"] = "rbxassetid://105476153083828",
-	["circle-power"] = "rbxassetid://140676030155098",
-	["circle-question-mark"] = "rbxassetid://97516698664325",
-	["circle-slash-2"] = "rbxassetid://136766902186549",
-	["circle-slash"] = "rbxassetid://125206439913049",
-	["circle-small"] = "rbxassetid://73685402843600",
-	["circle-star"] = "rbxassetid://120318414957104",
-	["circle-stop"] = "rbxassetid://87400503942659",
-	["circle-user-round"] = "rbxassetid://95489465399880",
-	["circle-user"] = "rbxassetid://136220511671311",
-	["circle-x"] = "rbxassetid://76821953846248",
-	circle = "rbxassetid://130359823580534",
-	["circuit-board"] = "rbxassetid://107695264369312",
-	citrus = "rbxassetid://139018222976433",
-	clapperboard = "rbxassetid://132660667070200",
-	["clipboard-check"] = "rbxassetid://92649798577170",
-	["clipboard-clock"] = "rbxassetid://123957515687745",
-	["clipboard-copy"] = "rbxassetid://125851897718493",
-	["clipboard-list"] = "rbxassetid://96460215958908",
-	["clipboard-minus"] = "rbxassetid://107968008485671",
-	["clipboard-paste"] = "rbxassetid://74382068849983",
-	["clipboard-pen-line"] = "rbxassetid://77711589791615",
-	["clipboard-pen"] = "rbxassetid://75290966822953",
-	["clipboard-plus"] = "rbxassetid://134285318675662",
-	["clipboard-type"] = "rbxassetid://89949374318028",
-	["clipboard-x"] = "rbxassetid://102222456890103",
-	clipboard = "rbxassetid://89601995828423",
-	["clock-1"] = "rbxassetid://129363225422045",
-	["clock-10"] = "rbxassetid://104332695855541",
-	["clock-11"] = "rbxassetid://119023205186105",
-	["clock-12"] = "rbxassetid://117789618723068",
-	["clock-2"] = "rbxassetid://134710777209413",
-	["clock-3"] = "rbxassetid://136385631189327",
-	["clock-4"] = "rbxassetid://121808839832144",
-	["clock-5"] = "rbxassetid://85082019959457",
-	["clock-6"] = "rbxassetid://71009733505593",
-	["clock-7"] = "rbxassetid://103111188546225",
-	["clock-8"] = "rbxassetid://110059272125337",
-	["clock-9"] = "rbxassetid://77610027126437",
-	["clock-alert"] = "rbxassetid://97157344465162",
-	["clock-arrow-down"] = "rbxassetid://92349314416042",
-	["clock-arrow-up"] = "rbxassetid://111484286332629",
-	["clock-check"] = "rbxassetid://85231630218857",
-	["clock-fading"] = "rbxassetid://93205297285245",
-	["clock-plus"] = "rbxassetid://93367709263150",
-	clock = "rbxassetid://121808839832144",
-	["closed-caption"] = "rbxassetid://99832644030788",
-	["cloud-alert"] = "rbxassetid://91967273658626",
-	["cloud-check"] = "rbxassetid://97318598202432",
-	["cloud-cog"] = "rbxassetid://96497764065749",
-	["cloud-download"] = "rbxassetid://121435581993566",
-	["cloud-drizzle"] = "rbxassetid://139525315752605",
-	["cloud-fog"] = "rbxassetid://76650233148776",
-	["cloud-hail"] = "rbxassetid://72320462748242",
-	["cloud-lightning"] = "rbxassetid://133517088924849",
-	["cloud-moon-rain"] = "rbxassetid://127667837827018",
-	["cloud-moon"] = "rbxassetid://71938114737914",
-	["cloud-off"] = "rbxassetid://131907154501444",
-	["cloud-rain-wind"] = "rbxassetid://107414583736721",
-	["cloud-rain"] = "rbxassetid://105547081967408",
-	["cloud-snow"] = "rbxassetid://72307126270226",
-	["cloud-sun-rain"] = "rbxassetid://99041604425705",
-	["cloud-sun"] = "rbxassetid://86114208148727",
-	["cloud-upload"] = "rbxassetid://93307473217005",
-	cloud = "rbxassetid://121226497050352",
-	cloudy = "rbxassetid://105360479023346",
-	clover = "rbxassetid://74925550436750",
-	club = "rbxassetid://108490365816628",
-	["code-xml"] = "rbxassetid://130150477351734",
-	code = "rbxassetid://107380207681249",
-	codepen = "rbxassetid://135643965971885",
-	codesandbox = "rbxassetid://106911852964823",
-	coffee = "rbxassetid://106864403231093",
-	cog = "rbxassetid://116544501716299",
-	coins = "rbxassetid://116510979641930",
-	["columns-2"] = "rbxassetid://113004100221850",
-	["columns-3-cog"] = "rbxassetid://121589691981064",
-	["columns-3"] = "rbxassetid://115223357399375",
-	["columns-4"] = "rbxassetid://130807991968419",
-	combine = "rbxassetid://79908476334048",
-	command = "rbxassetid://93648221906330",
-	compass = "rbxassetid://115123411028382",
-	component = "rbxassetid://110027788875080",
-	computer = "rbxassetid://77480056459407",
-	["concierge-bell"] = "rbxassetid://140384259310436",
-	cone = "rbxassetid://97759550688437",
-	construction = "rbxassetid://106539489968173",
-	["contact-round"] = "rbxassetid://71907624112229",
-	contact = "rbxassetid://75868297719012",
-	container = "rbxassetid://91507237573499",
-	contrast = "rbxassetid://112796643981497",
-	cookie = "rbxassetid://73159504540002",
-	["cooking-pot"] = "rbxassetid://94959783129799",
-	["copy-check"] = "rbxassetid://91177247988892",
-	["copy-minus"] = "rbxassetid://109524509933035",
-	["copy-plus"] = "rbxassetid://113618379616952",
-	["copy-slash"] = "rbxassetid://93805787810390",
-	["copy-x"] = "rbxassetid://106557557978061",
-	copy = "rbxassetid://78979572434545",
-	copyleft = "rbxassetid://78559055698593",
-	copyright = "rbxassetid://129433635747111",
-	["corner-down-left"] = "rbxassetid://90473561177832",
-	["corner-down-right"] = "rbxassetid://86512767702085",
-	["corner-left-down"] = "rbxassetid://139876989150630",
-	["corner-left-up"] = "rbxassetid://126228268096099",
-	["corner-right-down"] = "rbxassetid://89237035551302",
-	["corner-right-up"] = "rbxassetid://112851237026705",
-	["corner-up-left"] = "rbxassetid://84669279763024",
-	["corner-up-right"] = "rbxassetid://115099889693145",
-	cpu = "rbxassetid://77549309870247",
-	["creative-commons"] = "rbxassetid://90408210735312",
-	["credit-card"] = "rbxassetid://99163352872346",
-	croissant = "rbxassetid://130710485559420",
-	crop = "rbxassetid://116344601101413",
-	cross = "rbxassetid://101833377863588",
-	crosshair = "rbxassetid://134242818164054",
-	crown = "rbxassetid://127843403295538",
-	cuboid = "rbxassetid://75618807946111",
-	["cup-soda"] = "rbxassetid://121098640829562",
-	currency = "rbxassetid://90551250119972",
-	cylinder = "rbxassetid://90569677179169",
-	dam = "rbxassetid://76874486231393",
-	["database-backup"] = "rbxassetid://103403210984699",
-	["database-zap"] = "rbxassetid://131199921258418",
-	database = "rbxassetid://126791525623846",
-	["decimals-arrow-left"] = "rbxassetid://120198500638749",
-	["decimals-arrow-right"] = "rbxassetid://118263047146797",
-	delete = "rbxassetid://126279426372342",
-	dessert = "rbxassetid://71508133278830",
-	diameter = "rbxassetid://97429051503783",
-	["diamond-minus"] = "rbxassetid://128989071438290",
-	["diamond-percent"] = "rbxassetid://107717860105959",
-	["diamond-plus"] = "rbxassetid://134701163723675",
-	diamond = "rbxassetid://105846996304890",
-	["dice-1"] = "rbxassetid://112650149591038",
-	["dice-2"] = "rbxassetid://112278274566793",
-	["dice-3"] = "rbxassetid://118526270626312",
-	["dice-4"] = "rbxassetid://113365650364004",
-	["dice-5"] = "rbxassetid://72768312430593",
-	["dice-6"] = "rbxassetid://85376239182543",
-	dices = "rbxassetid://81268120302865",
-	diff = "rbxassetid://135052708609715",
-	["disc-2"] = "rbxassetid://91419420404185",
-	["disc-3"] = "rbxassetid://135470554736048",
-	["disc-album"] = "rbxassetid://74693460404344",
-	disc = "rbxassetid://101908120120777",
-	divide = "rbxassetid://136678191878278",
-	["dna-off"] = "rbxassetid://89612426361540",
-	dna = "rbxassetid://74007982981741",
-	dock = "rbxassetid://121997427160252",
-	dog = "rbxassetid://71920105558570",
-	["dollar-sign"] = "rbxassetid://127320961224019",
-	donut = "rbxassetid://72204922742657",
-	["door-closed-locked"] = "rbxassetid://74027613267551",
-	["door-closed"] = "rbxassetid://136249099949073",
-	["door-open"] = "rbxassetid://91306356501736",
-	dot = "rbxassetid://137321056643916",
-	download = "rbxassetid://134814648082393",
-	["drafting-compass"] = "rbxassetid://99701976182841",
-	drama = "rbxassetid://110297795801577",
-	dribbble = "rbxassetid://80231809663849",
-	drill = "rbxassetid://108644821412796",
-	drone = "rbxassetid://117299095794783",
-	["droplet-off"] = "rbxassetid://119365002225172",
-	droplet = "rbxassetid://100597455015098",
-	droplets = "rbxassetid://140111846025180",
-	drum = "rbxassetid://136979060344890",
-	drumstick = "rbxassetid://104662462521709",
-	dumbbell = "rbxassetid://80277236776212",
-	["ear-off"] = "rbxassetid://87421916192807",
-	ear = "rbxassetid://121894949934209",
-	["earth-lock"] = "rbxassetid://88814147073745",
-	earth = "rbxassetid://76231597751076",
-	eclipse = "rbxassetid://114829622118222",
-	["egg-fried"] = "rbxassetid://90622538210545",
-	["egg-off"] = "rbxassetid://92288321309285",
-	egg = "rbxassetid://117851493400222",
-	["ellipsis-vertical"] = "rbxassetid://117978708573781",
-	ellipsis = "rbxassetid://140019550645825",
-	["equal-approximately"] = "rbxassetid://105382689698323",
-	["equal-not"] = "rbxassetid://76864449458032",
-	equal = "rbxassetid://123467780715624",
-	eraser = "rbxassetid://133957773112410",
-	["ethernet-port"] = "rbxassetid://75391715149314",
-	euro = "rbxassetid://72229646524456",
-	["ev-charger"] = "rbxassetid://97906158859623",
-	expand = "rbxassetid://137492887754537",
-	["external-link"] = "rbxassetid://129331830773832",
-	["eye-closed"] = "rbxassetid://111063268625789",
-	["eye-off"] = "rbxassetid://135928786788378",
-	eye = "rbxassetid://100033680381365",
-	facebook = "rbxassetid://72098528632192",
-	factory = "rbxassetid://102170024318039",
-	fan = "rbxassetid://78391400440696",
-	["fast-forward"] = "rbxassetid://121615540167909",
-	feather = "rbxassetid://91872927606406",
-	fence = "rbxassetid://123451565578029",
-	["ferris-wheel"] = "rbxassetid://79729205796176",
-	figma = "rbxassetid://134182122852301",
-	["file-archive"] = "rbxassetid://77018106869967",
-	["file-axis-3d"] = "rbxassetid://133912328009885",
-	["file-badge"] = "rbxassetid://74564895394477",
-	["file-box"] = "rbxassetid://119264004071690",
-	["file-braces-corner"] = "rbxassetid://77253337986109",
-	["file-braces"] = "rbxassetid://95314128621234",
-	["file-chart-column-increasing"] = "rbxassetid://134449481172067",
-	["file-chart-column"] = "rbxassetid://82048481252560",
-	["file-chart-line"] = "rbxassetid://71954360551345",
-	["file-chart-pie"] = "rbxassetid://81072193564497",
-	["file-check-corner"] = "rbxassetid://76295552859171",
-	["file-check"] = "rbxassetid://82604001452455",
-	["file-clock"] = "rbxassetid://102325208830990",
-	["file-code-corner"] = "rbxassetid://78293841184371",
-	["file-code"] = "rbxassetid://130978036895504",
-	["file-cog"] = "rbxassetid://101385347151368",
-	["file-diff"] = "rbxassetid://96147216772241",
-	["file-digit"] = "rbxassetid://89220220354580",
-	["file-down"] = "rbxassetid://120650154178290",
-	["file-exclamation-point"] = "rbxassetid://102821865889635",
-	["file-headphone"] = "rbxassetid://100533735901986",
-	["file-heart"] = "rbxassetid://132214916401696",
-	["file-image"] = "rbxassetid://123334057511782",
-	["file-input"] = "rbxassetid://124728604166044",
-	["file-key"] = "rbxassetid://118790255921100",
-	["file-lock"] = "rbxassetid://72170228691242",
-	["file-minus-corner"] = "rbxassetid://119263271735124",
-	["file-minus"] = "rbxassetid://111014798459222",
-	["file-music"] = "rbxassetid://134948051536671",
-	["file-output"] = "rbxassetid://92146832572911",
-	["file-pen-line"] = "rbxassetid://104622936345006",
-	["file-pen"] = "rbxassetid://79556179730240",
-	["file-play"] = "rbxassetid://89006821567838",
-	["file-plus-corner"] = "rbxassetid://76544604043974",
-	["file-plus"] = "rbxassetid://78881710800060",
-	["file-question-mark"] = "rbxassetid://127617422859576",
-	["file-scan"] = "rbxassetid://129480105228213",
-	["file-search-corner"] = "rbxassetid://90974165234008",
-	["file-search"] = "rbxassetid://97780235974933",
-	["file-signal"] = "rbxassetid://122070252538165",
-	["file-sliders"] = "rbxassetid://85787771732439",
-	["file-spreadsheet"] = "rbxassetid://134501869359270",
-	["file-stack"] = "rbxassetid://138929929862605",
-	["file-symlink"] = "rbxassetid://91865722036510",
-	["file-terminal"] = "rbxassetid://116757454755476",
-	["file-text"] = "rbxassetid://90496405707281",
-	["file-type-corner"] = "rbxassetid://124902230275209",
-	["file-type"] = "rbxassetid://115272552799361",
-	["file-up"] = "rbxassetid://131173039312748",
-	["file-user"] = "rbxassetid://99552018455009",
-	["file-video-camera"] = "rbxassetid://81719056173960",
-	["file-volume"] = "rbxassetid://111264764438958",
-	["file-x-corner"] = "rbxassetid://87554136773609",
-	["file-x"] = "rbxassetid://107333775515154",
-	file = "rbxassetid://74748492079329",
-	files = "rbxassetid://102806336233202",
-	film = "rbxassetid://120978945609706",
-	fingerprint = "rbxassetid://112173305232811",
-	["fire-extinguisher"] = "rbxassetid://111643493006960",
-	["fish-off"] = "rbxassetid://89756724887508",
-	["fish-symbol"] = "rbxassetid://118475177681618",
-	fish = "rbxassetid://124360663785796",
-	["flag-off"] = "rbxassetid://112944528856799",
-	["flag-triangle-left"] = "rbxassetid://88045221285272",
-	["flag-triangle-right"] = "rbxassetid://108292480304566",
-	flag = "rbxassetid://78183383236196",
-	["flame-kindling"] = "rbxassetid://139728976917928",
-	flame = "rbxassetid://98218034436456",
-	["flashlight-off"] = "rbxassetid://79780362871740",
-	flashlight = "rbxassetid://100286985600444",
-	["flask-conical-off"] = "rbxassetid://112597970025298",
-	["flask-conical"] = "rbxassetid://128406680901165",
-	["flask-round"] = "rbxassetid://127508287324940",
-	["flip-horizontal-2"] = "rbxassetid://103726993598186",
-	["flip-horizontal"] = "rbxassetid://122937530107837",
-	["flip-vertical-2"] = "rbxassetid://103836358956328",
-	["flip-vertical"] = "rbxassetid://108003917346888",
-	["flower-2"] = "rbxassetid://72934574245145",
-	flower = "rbxassetid://86129438272762",
-	focus = "rbxassetid://87493973153317",
-	["fold-horizontal"] = "rbxassetid://92835712442240",
-	["fold-vertical"] = "rbxassetid://108873727253656",
-	["folder-archive"] = "rbxassetid://97312009460206",
-	["folder-check"] = "rbxassetid://128492920904557",
-	["folder-clock"] = "rbxassetid://111964836738545",
-	["folder-closed"] = "rbxassetid://118286209350843",
-	["folder-code"] = "rbxassetid://70624096349370",
-	["folder-cog"] = "rbxassetid://85299519462846",
-	["folder-dot"] = "rbxassetid://138687772725278",
-	["folder-down"] = "rbxassetid://118044108459225",
-	["folder-git-2"] = "rbxassetid://101394054141166",
-	["folder-git"] = "rbxassetid://121885778095158",
-	["folder-heart"] = "rbxassetid://79104747211105",
-	["folder-input"] = "rbxassetid://90699920697871",
-	["folder-kanban"] = "rbxassetid://78313285104072",
-	["folder-key"] = "rbxassetid://85270407596791",
-	["folder-lock"] = "rbxassetid://119201572260567",
-	["folder-minus"] = "rbxassetid://85648718999010",
-	["folder-open-dot"] = "rbxassetid://74741494767354",
-	["folder-open"] = "rbxassetid://76018996254888",
-	["folder-output"] = "rbxassetid://101532447937612",
-	["folder-pen"] = "rbxassetid://112770491173911",
-	["folder-plus"] = "rbxassetid://91865663406119",
-	["folder-root"] = "rbxassetid://103333751154693",
-	["folder-search-2"] = "rbxassetid://71276453442655",
-	["folder-search"] = "rbxassetid://110568075123861",
-	["folder-symlink"] = "rbxassetid://127485747227189",
-	["folder-sync"] = "rbxassetid://91544602659796",
-	["folder-tree"] = "rbxassetid://85577554337861",
-	["folder-up"] = "rbxassetid://72008269765857",
-	["folder-x"] = "rbxassetid://91699618247635",
-	folder = "rbxassetid://80846616596607",
-	folders = "rbxassetid://110351216219061",
-	footprints = "rbxassetid://139192589041315",
-	forklift = "rbxassetid://72030930983101",
-	forward = "rbxassetid://97545944739523",
-	frame = "rbxassetid://109080612832751",
-	framer = "rbxassetid://108384807262391",
-	frown = "rbxassetid://124407301067982",
-	fuel = "rbxassetid://106447647274511",
-	fullscreen = "rbxassetid://77793665526178",
-	["funnel-plus"] = "rbxassetid://100780233821928",
-	["funnel-x"] = "rbxassetid://70984385812555",
-	funnel = "rbxassetid://108829540827529",
-	["gallery-horizontal-end"] = "rbxassetid://74672430161161",
-	["gallery-horizontal"] = "rbxassetid://80004001442122",
-	["gallery-thumbnails"] = "rbxassetid://136219289862706",
-	["gallery-vertical-end"] = "rbxassetid://106461402088317",
-	["gallery-vertical"] = "rbxassetid://119299431466725",
-	["gamepad-2"] = "rbxassetid://92483947987410",
-	["gamepad-directional"] = "rbxassetid://84342305212226",
-	gamepad = "rbxassetid://121607283959010",
-	gauge = "rbxassetid://110273524101447",
-	gavel = "rbxassetid://78952298198456",
-	gem = "rbxassetid://112904952151156",
-	["georgian-lari"] = "rbxassetid://98084432591687",
-	ghost = "rbxassetid://113822048130017",
-	gift = "rbxassetid://109855212076373",
-	["git-branch-minus"] = "rbxassetid://97385010649411",
-	["git-branch-plus"] = "rbxassetid://125944221134316",
-	["git-branch"] = "rbxassetid://90490195516649",
-	["git-commit-horizontal"] = "rbxassetid://133646041800147",
-	["git-commit-vertical"] = "rbxassetid://122098032990350",
-	["git-compare-arrows"] = "rbxassetid://84874426520216",
-	["git-compare"] = "rbxassetid://91945124438792",
-	["git-fork"] = "rbxassetid://89954992404765",
-	["git-graph"] = "rbxassetid://86166832019304",
-	["git-merge"] = "rbxassetid://131833355158059",
-	["git-pull-request-arrow"] = "rbxassetid://94507974577439",
-	["git-pull-request-closed"] = "rbxassetid://78070600389091",
-	["git-pull-request-create-arrow"] = "rbxassetid://127422677061091",
-	["git-pull-request-create"] = "rbxassetid://105929577383926",
-	["git-pull-request-draft"] = "rbxassetid://76173459869943",
-	["git-pull-request"] = "rbxassetid://138463010991471",
-	github = "rbxassetid://120349554354380",
-	gitlab = "rbxassetid://114054627192933",
-	["glass-water"] = "rbxassetid://115526102400988",
-	glasses = "rbxassetid://87936407455373",
-	["globe-lock"] = "rbxassetid://134065526704402",
-	globe = "rbxassetid://114238209622913",
-	goal = "rbxassetid://120517954878160",
-	gpu = "rbxassetid://95577823614219",
-	["graduation-cap"] = "rbxassetid://93771896340220",
-	grape = "rbxassetid://134760640415561",
-	["grid-2x2-check"] = "rbxassetid://138468840220821",
-	["grid-2x2-plus"] = "rbxassetid://91811610580247",
-	["grid-2x2-x"] = "rbxassetid://72407303981388",
-	["grid-2x2"] = "rbxassetid://99050491897640",
-	["grid-3x2"] = "rbxassetid://95528684210010",
-	["grid-3x3"] = "rbxassetid://70419024781206",
-	["grip-horizontal"] = "rbxassetid://136255899715930",
-	["grip-vertical"] = "rbxassetid://137183678565296",
-	grip = "rbxassetid://109058783556768",
-	group = "rbxassetid://107643418926671",
-	guitar = "rbxassetid://75915531867926",
-	ham = "rbxassetid://74465607934635",
-	hamburger = "rbxassetid://93086916815495",
-	hammer = "rbxassetid://83545120140895",
-	["hand-coins"] = "rbxassetid://126990543175462",
-	["hand-fist"] = "rbxassetid://83341608917591",
-	["hand-grab"] = "rbxassetid://88867162163985",
-	["hand-heart"] = "rbxassetid://117507367668412",
-	["hand-helping"] = "rbxassetid://89897738419446",
-	["hand-metal"] = "rbxassetid://113619498548713",
-	["hand-platter"] = "rbxassetid://88594727743168",
-	hand = "rbxassetid://130703864968637",
-	handbag = "rbxassetid://135675846264061",
-	handshake = "rbxassetid://78442115255814",
-	["hard-drive-download"] = "rbxassetid://73913801230614",
-	["hard-drive-upload"] = "rbxassetid://85762133615118",
-	["hard-drive"] = "rbxassetid://88183305858463",
-	["hard-hat"] = "rbxassetid://128050846767382",
-	hash = "rbxassetid://82890331678520",
-	["hat-glasses"] = "rbxassetid://101165538224815",
-	haze = "rbxassetid://108857561768901",
-	["hdmi-port"] = "rbxassetid://103693661037020",
-	["heading-1"] = "rbxassetid://118129315662110",
-	["heading-2"] = "rbxassetid://110209069670094",
-	["heading-3"] = "rbxassetid://90267885237062",
-	["heading-4"] = "rbxassetid://129625620307602",
-	["heading-5"] = "rbxassetid://120386663181267",
-	["heading-6"] = "rbxassetid://90959079775093",
-	heading = "rbxassetid://129254312067735",
-	["headphone-off"] = "rbxassetid://85038251615641",
-	headphones = "rbxassetid://118833729589183",
-	headset = "rbxassetid://129269236787694",
-	["heart-crack"] = "rbxassetid://110987638564119",
-	["heart-handshake"] = "rbxassetid://111483078692002",
-	["heart-minus"] = "rbxassetid://96827380163326",
-	["heart-off"] = "rbxassetid://89748414415617",
-	["heart-plus"] = "rbxassetid://94877796283249",
-	["heart-pulse"] = "rbxassetid://129352925579546",
-	heart = "rbxassetid://116559368303288",
-	heater = "rbxassetid://140478466880916",
-	helicopter = "rbxassetid://111557171735930",
-	hexagon = "rbxassetid://127592089339199",
-	highlighter = "rbxassetid://77411555641113",
-	history = "rbxassetid://123980022019922",
-	["hop-off"] = "rbxassetid://103386036934034",
-	hop = "rbxassetid://82778923997672",
-	hospital = "rbxassetid://105868763850707",
-	hotel = "rbxassetid://132283390859718",
-	hourglass = "rbxassetid://86160434939203",
-	["house-heart"] = "rbxassetid://136054771868597",
-	["house-plug"] = "rbxassetid://71438263712075",
-	["house-plus"] = "rbxassetid://118495165208309",
-	["house-wifi"] = "rbxassetid://126495519725698",
-	house = "rbxassetid://98755624629571",
-	["ice-cream-bowl"] = "rbxassetid://124867218454386",
-	["ice-cream-cone"] = "rbxassetid://90751397288639",
-	["id-card-lanyard"] = "rbxassetid://90761480469224",
-	["id-card"] = "rbxassetid://75354294622640",
-	["image-down"] = "rbxassetid://78972295741235",
-	["image-minus"] = "rbxassetid://101066016918565",
-	["image-off"] = "rbxassetid://81934811700938",
-	["image-play"] = "rbxassetid://129501806784210",
-	["image-plus"] = "rbxassetid://70391970623917",
-	["image-up"] = "rbxassetid://126610009605241",
-	["image-upscale"] = "rbxassetid://106963545024679",
-	images = "rbxassetid://79350649395557",
-	import = "rbxassetid://116545008906029",
-	inbox = "rbxassetid://112591360302868",
-	["indian-rupee"] = "rbxassetid://113038778381805",
-	infinity = "rbxassetid://98083086936965",
-	info = "rbxassetid://124560466474914",
-	["inspection-panel"] = "rbxassetid://70905313146088",
-	instagram = "rbxassetid://119864798614855",
-	italic = "rbxassetid://96220378864282",
-	["iteration-ccw"] = "rbxassetid://140221832794083",
-	["iteration-cw"] = "rbxassetid://95534489554662",
-	["japanese-yen"] = "rbxassetid://106362863465813",
-	joystick = "rbxassetid://99416790224739",
-	kanban = "rbxassetid://125934100055431",
-	kayak = "rbxassetid://136107544609389",
-	["key-round"] = "rbxassetid://83619031955390",
-	["key-square"] = "rbxassetid://94621420033649",
-	key = "rbxassetid://96510194465420",
-	["keyboard-music"] = "rbxassetid://121058541758636",
-	["keyboard-off"] = "rbxassetid://92466375369772",
-	keyboard = "rbxassetid://121474456068237",
-	["lamp-ceiling"] = "rbxassetid://80032758469141",
-	["lamp-desk"] = "rbxassetid://85290686983238",
-	["lamp-floor"] = "rbxassetid://104585881375892",
-	["lamp-wall-down"] = "rbxassetid://91271394132073",
-	["lamp-wall-up"] = "rbxassetid://132141464337445",
-	lamp = "rbxassetid://110730830653382",
-	["land-plot"] = "rbxassetid://96449039620294",
-	landmark = "rbxassetid://76885079756393",
-	languages = "rbxassetid://90816903776498",
-	["laptop-minimal-check"] = "rbxassetid://114352019833865",
-	["laptop-minimal"] = "rbxassetid://136705765566068",
-	laptop = "rbxassetid://111387063244975",
-	["lasso-select"] = "rbxassetid://105609719912753",
-	lasso = "rbxassetid://121072936884007",
-	laugh = "rbxassetid://104491311361166",
-	["layers-2"] = "rbxassetid://70536710516357",
-	layers = "rbxassetid://81973586053257",
-	["layout-dashboard"] = "rbxassetid://139929981863901",
-	["layout-grid"] = "rbxassetid://81344910161871",
-	["layout-list"] = "rbxassetid://87462136296578",
-	["layout-panel-left"] = "rbxassetid://125092469751491",
-	["layout-panel-top"] = "rbxassetid://91943941515944",
-	["layout-template"] = "rbxassetid://115564446417985",
-	leaf = "rbxassetid://119951075637174",
-	["leafy-green"] = "rbxassetid://105146290493154",
-	lectern = "rbxassetid://106166425183862",
-	["library-big"] = "rbxassetid://106794530191412",
-	library = "rbxassetid://114334671982047",
-	["life-buoy"] = "rbxassetid://81168450671956",
-	ligature = "rbxassetid://111397873269411",
-	["lightbulb-off"] = "rbxassetid://83795722296178",
-	lightbulb = "rbxassetid://103871245626488",
-	["line-squiggle"] = "rbxassetid://109555164424447",
-	["link-2-off"] = "rbxassetid://76885956296867",
-	["link-2"] = "rbxassetid://86072351557466",
-	link = "rbxassetid://131607023382430",
-	linkedin = "rbxassetid://132842789255788",
-	["list-check"] = "rbxassetid://72374358471156",
-	["list-checks"] = "rbxassetid://99809353635593",
-	["list-chevrons-down-up"] = "rbxassetid://137409641500711",
-	["list-chevrons-up-down"] = "rbxassetid://81825351389084",
-	["list-collapse"] = "rbxassetid://124505247702401",
-	["list-end"] = "rbxassetid://77650610048119",
-	["list-filter-plus"] = "rbxassetid://96385120752336",
-	["list-filter"] = "rbxassetid://103321376129527",
-	["list-indent-decrease"] = "rbxassetid://137879979228193",
-	["list-indent-increase"] = "rbxassetid://79051053161201",
-	["list-minus"] = "rbxassetid://138507965142671",
-	["list-music"] = "rbxassetid://126380635781840",
-	["list-ordered"] = "rbxassetid://83212528113913",
-	["list-plus"] = "rbxassetid://112384738137814",
-	["list-restart"] = "rbxassetid://91703153577421",
-	["list-start"] = "rbxassetid://84828348299727",
-	["list-todo"] = "rbxassetid://132980603752108",
-	["list-tree"] = "rbxassetid://97685396239010",
-	["list-video"] = "rbxassetid://93648525452489",
-	["list-x"] = "rbxassetid://113025303988861",
-	list = "rbxassetid://113179976918783",
-	["loader-circle"] = "rbxassetid://116535712789945",
-	["loader-pinwheel"] = "rbxassetid://108513357940900",
-	loader = "rbxassetid://78408734580845",
-	["locate-fixed"] = "rbxassetid://137367361548433",
-	["locate-off"] = "rbxassetid://73729216338137",
-	locate = "rbxassetid://84467676590391",
-	["lock-keyhole-open"] = "rbxassetid://110863509313073",
-	["lock-keyhole"] = "rbxassetid://78672912777756",
-	["lock-open"] = "rbxassetid://93597915325122",
-	lock = "rbxassetid://134724289526879",
-	["log-in"] = "rbxassetid://103768533135201",
-	["log-out"] = "rbxassetid://84895399304975",
-	logs = "rbxassetid://89772091251787",
-	lollipop = "rbxassetid://84681611583044",
-	luggage = "rbxassetid://76619236486400",
-	magnet = "rbxassetid://135162361226972",
-	["mail-check"] = "rbxassetid://86921536259917",
-	["mail-minus"] = "rbxassetid://81989813236553",
-	["mail-open"] = "rbxassetid://122785416858638",
-	["mail-plus"] = "rbxassetid://104886401588341",
-	["mail-question-mark"] = "rbxassetid://126540170949819",
-	["mail-search"] = "rbxassetid://135616173775287",
-	["mail-warning"] = "rbxassetid://81495303676089",
-	["mail-x"] = "rbxassetid://74607841705644",
-	mail = "rbxassetid://103945161245599",
-	mailbox = "rbxassetid://82765503320335",
-	mails = "rbxassetid://90673453450080",
-	["map-minus"] = "rbxassetid://129525760577747",
-	["map-pin-check-inside"] = "rbxassetid://107130529843809",
-	["map-pin-check"] = "rbxassetid://118110914690154",
-	["map-pin-house"] = "rbxassetid://80546885029816",
-	["map-pin-minus-inside"] = "rbxassetid://79005529692964",
-	["map-pin-minus"] = "rbxassetid://74518762643623",
-	["map-pin-off"] = "rbxassetid://82474689391020",
-	["map-pin-pen"] = "rbxassetid://113515395277504",
-	["map-pin-plus-inside"] = "rbxassetid://134639656514430",
-	["map-pin-plus"] = "rbxassetid://91875228967029",
-	["map-pin-x-inside"] = "rbxassetid://126235934252379",
-	["map-pin-x"] = "rbxassetid://101085273547316",
-	["map-pin"] = "rbxassetid://84279202219901",
-	["map-pinned"] = "rbxassetid://103963788475034",
-	["map-plus"] = "rbxassetid://129388826743495",
-	map = "rbxassetid://95107167260947",
-	["mars-stroke"] = "rbxassetid://131973193186828",
-	mars = "rbxassetid://111287112372511",
-	martini = "rbxassetid://82977695401058",
-	["maximize-2"] = "rbxassetid://73085922906397",
-	maximize = "rbxassetid://76045941763188",
-	medal = "rbxassetid://79016002264450",
-	["megaphone-off"] = "rbxassetid://124280774193935",
-	megaphone = "rbxassetid://118759541854879",
-	meh = "rbxassetid://132197867028557",
-	["memory-stick"] = "rbxassetid://93212591343119",
-	menu = "rbxassetid://77021539815611",
-	merge = "rbxassetid://126201866476775",
-	["message-circle-code"] = "rbxassetid://112865244991651",
-	["message-circle-dashed"] = "rbxassetid://81525157881897",
-	["message-circle-heart"] = "rbxassetid://101990756073677",
-	["message-circle-more"] = "rbxassetid://92856823884663",
-	["message-circle-off"] = "rbxassetid://134955643890328",
-	["message-circle-plus"] = "rbxassetid://106562979649273",
-	["message-circle-question-mark"] = "rbxassetid://107700302759934",
-	["message-circle-reply"] = "rbxassetid://137071749508334",
-	["message-circle-warning"] = "rbxassetid://119020096067894",
-	["message-circle-x"] = "rbxassetid://126843387725536",
-	["message-circle"] = "rbxassetid://127255077587058",
-	["message-square-code"] = "rbxassetid://110968863152123",
-	["message-square-dashed"] = "rbxassetid://107653455516238",
-	["message-square-diff"] = "rbxassetid://75472190472625",
-	["message-square-dot"] = "rbxassetid://127806382463916",
-	["message-square-heart"] = "rbxassetid://75612811742074",
-	["message-square-lock"] = "rbxassetid://81268215619563",
-	["message-square-more"] = "rbxassetid://120139782405970",
-	["message-square-off"] = "rbxassetid://99961019005789",
-	["message-square-plus"] = "rbxassetid://76934450256199",
-	["message-square-quote"] = "rbxassetid://116670768629340",
-	["message-square-reply"] = "rbxassetid://130985622754637",
-	["message-square-share"] = "rbxassetid://131017005324026",
-	["message-square-text"] = "rbxassetid://94899503194205",
-	["message-square-warning"] = "rbxassetid://138432903962261",
-	["message-square-x"] = "rbxassetid://137285463279462",
-	["message-square"] = "rbxassetid://83881670383280",
-	["messages-square"] = "rbxassetid://97532166733358",
-	["mic-off"] = "rbxassetid://82123034444822",
-	["mic-vocal"] = "rbxassetid://99082286164362",
-	mic = "rbxassetid://89640799126523",
-	microchip = "rbxassetid://73937907669903",
-	microscope = "rbxassetid://116875530102782",
-	microwave = "rbxassetid://108411735353008",
-	milestone = "rbxassetid://101618292325920",
-	["milk-off"] = "rbxassetid://72388480962742",
-	milk = "rbxassetid://96221903896918",
-	["minimize-2"] = "rbxassetid://116269596042539",
-	minimize = "rbxassetid://121304296213645",
-	minus = "rbxassetid://118026365011536",
-	["monitor-check"] = "rbxassetid://86651948439229",
-	["monitor-cloud"] = "rbxassetid://85931096038318",
-	["monitor-cog"] = "rbxassetid://94345128715799",
-	["monitor-dot"] = "rbxassetid://130394010063680",
-	["monitor-down"] = "rbxassetid://97466933743423",
-	["monitor-off"] = "rbxassetid://74395526657953",
-	["monitor-pause"] = "rbxassetid://76002184067562",
-	["monitor-play"] = "rbxassetid://133018824306217",
-	["monitor-smartphone"] = "rbxassetid://84335680433378",
-	["monitor-speaker"] = "rbxassetid://81744810060380",
-	["monitor-stop"] = "rbxassetid://98708958984757",
-	["monitor-up"] = "rbxassetid://96035360858377",
-	["monitor-x"] = "rbxassetid://126265210441423",
-	monitor = "rbxassetid://72664649203050",
-	["moon-star"] = "rbxassetid://82782200506348",
-	moon = "rbxassetid://83380517901735",
-	motorbike = "rbxassetid://94580787368233",
-	["mountain-snow"] = "rbxassetid://105315495740588",
-	mountain = "rbxassetid://73269957566415",
-	["mouse-off"] = "rbxassetid://75267871697595",
-	["mouse-pointer-2-off"] = "rbxassetid://104701076865632",
-	["mouse-pointer-2"] = "rbxassetid://117093892862228",
-	["mouse-pointer-ban"] = "rbxassetid://106849413057133",
-	["mouse-pointer-click"] = "rbxassetid://107150227368485",
-	["mouse-pointer"] = "rbxassetid://72322454962935",
-	mouse = "rbxassetid://73096068864710",
-	["move-3d"] = "rbxassetid://103365982054003",
-	["move-diagonal-2"] = "rbxassetid://117298577948096",
-	["move-diagonal"] = "rbxassetid://101433481954184",
-	["move-down-left"] = "rbxassetid://102819433534567",
-	["move-down-right"] = "rbxassetid://101479760041877",
-	["move-down"] = "rbxassetid://70510115135583",
-	["move-horizontal"] = "rbxassetid://88513523439149",
-	["move-left"] = "rbxassetid://137614740247980",
-	["move-right"] = "rbxassetid://132455779472989",
-	["move-up-left"] = "rbxassetid://139079815540148",
-	["move-up-right"] = "rbxassetid://105885140592646",
-	["move-up"] = "rbxassetid://84505444262658",
-	["move-vertical"] = "rbxassetid://86234730730899",
-	move = "rbxassetid://116138709011735",
-	["music-2"] = "rbxassetid://134397426600888",
-	["music-3"] = "rbxassetid://94466120066498",
-	["music-4"] = "rbxassetid://132459323665838",
-	music = "rbxassetid://113343203848535",
-	["navigation-2-off"] = "rbxassetid://116569611780763",
-	["navigation-2"] = "rbxassetid://81889066747907",
-	["navigation-off"] = "rbxassetid://87003270290777",
-	navigation = "rbxassetid://79308213542922",
-	network = "rbxassetid://127410729922644",
-	newspaper = "rbxassetid://123479530460544",
-	nfc = "rbxassetid://76822396542242",
-	["non-binary"] = "rbxassetid://78442360386235",
-	["notebook-pen"] = "rbxassetid://140380614761023",
-	["notebook-tabs"] = "rbxassetid://127371085570083",
-	["notebook-text"] = "rbxassetid://93061585217270",
-	notebook = "rbxassetid://136132108664987",
-	["notepad-text-dashed"] = "rbxassetid://135793446376219",
-	["notepad-text"] = "rbxassetid://93404682958966",
-	["nut-off"] = "rbxassetid://78795397311573",
-	nut = "rbxassetid://127146410705656",
-	["octagon-alert"] = "rbxassetid://140438367956051",
-	["octagon-minus"] = "rbxassetid://74720436795421",
-	["octagon-pause"] = "rbxassetid://103161463909039",
-	["octagon-x"] = "rbxassetid://90498161006311",
-	octagon = "rbxassetid://120803515514852",
-	omega = "rbxassetid://70414080018786",
-	option = "rbxassetid://100776883894054",
-	orbit = "rbxassetid://108926136860562",
-	origami = "rbxassetid://136020626667101",
-	["package-2"] = "rbxassetid://70394974762575",
-	["package-check"] = "rbxassetid://102374216055130",
-	["package-minus"] = "rbxassetid://114492858789692",
-	["package-open"] = "rbxassetid://132890233237818",
-	["package-plus"] = "rbxassetid://129261988138366",
-	["package-search"] = "rbxassetid://95465120894145",
-	["package-x"] = "rbxassetid://70818501607442",
-	package = "rbxassetid://97261141732706",
-	["paint-bucket"] = "rbxassetid://124275586663284",
-	["paint-roller"] = "rbxassetid://115248074358348",
-	["paintbrush-vertical"] = "rbxassetid://105151296591292",
-	paintbrush = "rbxassetid://125572663700289",
-	palette = "rbxassetid://86350350950064",
-	panda = "rbxassetid://132509022802512",
-	["panel-bottom-close"] = "rbxassetid://74287004071159",
-	["panel-bottom-dashed"] = "rbxassetid://131084651621603",
-	["panel-bottom-open"] = "rbxassetid://107768659586540",
-	["panel-bottom"] = "rbxassetid://132127145048511",
-	["panel-left-close"] = "rbxassetid://126579818823552",
-	["panel-left-dashed"] = "rbxassetid://75536606374585",
-	["panel-left-open"] = "rbxassetid://111075816195767",
-	["panel-left-right-dashed"] = "rbxassetid://110100707973959",
-	["panel-left"] = "rbxassetid://97419752870313",
-	["panel-right-close"] = "rbxassetid://139528655524132",
-	["panel-right-dashed"] = "rbxassetid://94959793877311",
-	["panel-right-open"] = "rbxassetid://118114419142794",
-	["panel-right"] = "rbxassetid://116365035443156",
-	["panel-top-bottom-dashed"] = "rbxassetid://134737235653344",
-	["panel-top-close"] = "rbxassetid://83578325777808",
-	["panel-top-dashed"] = "rbxassetid://70522913169237",
-	["panel-top-open"] = "rbxassetid://137959875507454",
-	["panel-top"] = "rbxassetid://75838479462875",
-	["panels-left-bottom"] = "rbxassetid://72996856149149",
-	["panels-right-bottom"] = "rbxassetid://90659068960726",
-	["panels-top-left"] = "rbxassetid://79858853850600",
-	paperclip = "rbxassetid://92088291163453",
-	parentheses = "rbxassetid://78950955173096",
-	["parking-meter"] = "rbxassetid://84652733960568",
-	["party-popper"] = "rbxassetid://111626795712193",
-	pause = "rbxassetid://74873705394436",
-	["paw-print"] = "rbxassetid://112218825427601",
-	["pc-case"] = "rbxassetid://122978648019101",
-	["pen-line"] = "rbxassetid://109108135755303",
-	["pen-off"] = "rbxassetid://84807123119438",
-	["pen-tool"] = "rbxassetid://106145404953445",
-	pen = "rbxassetid://72037878096321",
-	["pencil-line"] = "rbxassetid://88392917053533",
-	["pencil-off"] = "rbxassetid://103330927652832",
-	["pencil-ruler"] = "rbxassetid://110120288284597",
-	pencil = "rbxassetid://137986121120732",
-	pentagon = "rbxassetid://79184802179890",
-	percent = "rbxassetid://130155041032013",
-	["person-standing"] = "rbxassetid://125020872044147",
-	["philippine-peso"] = "rbxassetid://91173798254675",
-	["phone-call"] = "rbxassetid://70555587592860",
-	["phone-forwarded"] = "rbxassetid://113269614319737",
-	["phone-incoming"] = "rbxassetid://82863576359288",
-	["phone-missed"] = "rbxassetid://130156165198376",
-	["phone-off"] = "rbxassetid://133318623553383",
-	["phone-outgoing"] = "rbxassetid://104576478735825",
-	phone = "rbxassetid://128804946640049",
-	pi = "rbxassetid://74936036243146",
-	piano = "rbxassetid://85008880789520",
-	pickaxe = "rbxassetid://105888023317688",
-	["picture-in-picture-2"] = "rbxassetid://112803319544468",
-	["picture-in-picture"] = "rbxassetid://80579597835123",
-	["piggy-bank"] = "rbxassetid://79498575790721",
-	["pilcrow-left"] = "rbxassetid://103803000849583",
-	["pilcrow-right"] = "rbxassetid://104881733911870",
-	pilcrow = "rbxassetid://139512780392871",
-	["pill-bottle"] = "rbxassetid://118394692404597",
-	pill = "rbxassetid://73280534813448",
-	["pin-off"] = "rbxassetid://127696372451750",
-	pin = "rbxassetid://120978111007514",
-	pipette = "rbxassetid://133167932934404",
-	pizza = "rbxassetid://126964453193501",
-	["plane-landing"] = "rbxassetid://122555692211889",
-	["plane-takeoff"] = "rbxassetid://117179478829575",
-	plane = "rbxassetid://126985561580989",
-	play = "rbxassetid://135609604299893",
-	["plug-2"] = "rbxassetid://97912386476366",
-	["plug-zap"] = "rbxassetid://74506269884055",
-	plug = "rbxassetid://99782373064495",
-	plus = "rbxassetid://111774323017047",
-	["pocket-knife"] = "rbxassetid://134075428063965",
-	pocket = "rbxassetid://136686762542964",
-	podcast = "rbxassetid://109577075549215",
-	["pointer-off"] = "rbxassetid://95488389312794",
-	pointer = "rbxassetid://92615117311099",
-	popcorn = "rbxassetid://139446511232750",
-	popsicle = "rbxassetid://112696318077073",
-	["pound-sterling"] = "rbxassetid://127482649469130",
-	["power-off"] = "rbxassetid://118768311012214",
-	power = "rbxassetid://96479131758775",
-	presentation = "rbxassetid://106134583757890",
-	["printer-check"] = "rbxassetid://130273549443689",
-	printer = "rbxassetid://76080649734247",
-	projector = "rbxassetid://103281856385283",
-	proportions = "rbxassetid://130046855997237",
-	puzzle = "rbxassetid://136837798892463",
-	pyramid = "rbxassetid://107811442374127",
-	["qr-code"] = "rbxassetid://105329945723350",
-	quote = "rbxassetid://103271711590001",
-	rabbit = "rbxassetid://98580518804206",
-	radar = "rbxassetid://138528222906635",
-	radiation = "rbxassetid://104499586848433",
-	radical = "rbxassetid://132758286926047",
-	["radio-receiver"] = "rbxassetid://129598303378835",
-	["radio-tower"] = "rbxassetid://93958663130054",
-	radio = "rbxassetid://85611589536956",
-	radius = "rbxassetid://89814505307129",
-	["rail-symbol"] = "rbxassetid://134295386306962",
-	rainbow = "rbxassetid://132488862841895",
-	rat = "rbxassetid://127400975953159",
-	ratio = "rbxassetid://126369423897295",
-	["receipt-cent"] = "rbxassetid://91557573925201",
-	["receipt-euro"] = "rbxassetid://94015722210295",
-	["receipt-indian-rupee"] = "rbxassetid://89718170439990",
-	["receipt-japanese-yen"] = "rbxassetid://132472560758851",
-	["receipt-pound-sterling"] = "rbxassetid://73934967569625",
-	["receipt-russian-ruble"] = "rbxassetid://105164576936853",
-	["receipt-swiss-franc"] = "rbxassetid://72503668620116",
-	["receipt-text"] = "rbxassetid://138483536013737",
-	["receipt-turkish-lira"] = "rbxassetid://91950765836342",
-	receipt = "rbxassetid://77877895901792",
-	["rectangle-circle"] = "rbxassetid://100642423153903",
-	["rectangle-ellipsis"] = "rbxassetid://112919953980965",
-	["rectangle-goggles"] = "rbxassetid://98605436666727",
-	["rectangle-horizontal"] = "rbxassetid://90224199814966",
-	["rectangle-vertical"] = "rbxassetid://117277050590967",
-	recycle = "rbxassetid://140417023381961",
-	["redo-2"] = "rbxassetid://70451039017914",
-	["redo-dot"] = "rbxassetid://94252981719732",
-	redo = "rbxassetid://116150342119054",
-	["refresh-ccw-dot"] = "rbxassetid://106702246753270",
-	["refresh-ccw"] = "rbxassetid://117913330389477",
-	["refresh-cw-off"] = "rbxassetid://140179498843054",
-	["refresh-cw"] = "rbxassetid://138133190015277",
-	refrigerator = "rbxassetid://102614042652753",
-	regex = "rbxassetid://100727200791841",
-	["remove-formatting"] = "rbxassetid://112833162022628",
-	["repeat-1"] = "rbxassetid://130144534857095",
-	["repeat-2"] = "rbxassetid://85927537182704",
-	["repeat"] = "rbxassetid://121886242955173",
-	["replace-all"] = "rbxassetid://127862728198635",
-	replace = "rbxassetid://128404082279430",
-	["reply-all"] = "rbxassetid://71723137343562",
-	reply = "rbxassetid://109788633497028",
-	rewind = "rbxassetid://95205297521988",
-	ribbon = "rbxassetid://94265331526851",
-	rocket = "rbxassetid://87412317685854",
-	["rocking-chair"] = "rbxassetid://110420269495360",
-	["roller-coaster"] = "rbxassetid://112426178972099",
-	rose = "rbxassetid://126336840238769",
-	["rotate-3d"] = "rbxassetid://76300551576392",
-	["rotate-ccw-key"] = "rbxassetid://74976035240976",
-	["rotate-ccw-square"] = "rbxassetid://90515853170424",
-	["rotate-ccw"] = "rbxassetid://110116685948665",
-	["rotate-cw-square"] = "rbxassetid://77095448159303",
-	["rotate-cw"] = "rbxassetid://84183336178654",
-	["route-off"] = "rbxassetid://106350402024079",
-	route = "rbxassetid://89968303228953",
-	router = "rbxassetid://102130331994471",
-	["rows-2"] = "rbxassetid://112556185960101",
-	["rows-3"] = "rbxassetid://117215586961375",
-	["rows-4"] = "rbxassetid://125646021959055",
-	rss = "rbxassetid://131789058984793",
-	["ruler-dimension-line"] = "rbxassetid://70673861371412",
-	ruler = "rbxassetid://81432445547423",
-	["russian-ruble"] = "rbxassetid://126357936542156",
-	sailboat = "rbxassetid://87110567187540",
-	salad = "rbxassetid://128864507821603",
-	sandwich = "rbxassetid://104573187458917",
-	["satellite-dish"] = "rbxassetid://136742443888305",
-	satellite = "rbxassetid://134967053164645",
-	["saudi-riyal"] = "rbxassetid://102282769104635",
-	["save-all"] = "rbxassetid://116946975799440",
-	["save-off"] = "rbxassetid://87085435778560",
-	save = "rbxassetid://126116963775616",
-	["scale-3d"] = "rbxassetid://72414199620352",
-	scale = "rbxassetid://108203682317477",
-	scaling = "rbxassetid://122360365318466",
-	["scan-barcode"] = "rbxassetid://96889457154761",
-	["scan-eye"] = "rbxassetid://99244790601968",
-	["scan-face"] = "rbxassetid://109959345069668",
-	["scan-heart"] = "rbxassetid://106280819776142",
-	["scan-line"] = "rbxassetid://126544908146540",
-	["scan-qr-code"] = "rbxassetid://105409149549927",
-	["scan-search"] = "rbxassetid://80009010551347",
-	["scan-text"] = "rbxassetid://73702396787766",
-	scan = "rbxassetid://123104789658180",
-	school = "rbxassetid://76351530290068",
-	["scissors-line-dashed"] = "rbxassetid://122237447974173",
-	scissors = "rbxassetid://118665510911274",
-	["screen-share-off"] = "rbxassetid://107677572669805",
-	["screen-share"] = "rbxassetid://85137895705653",
-	["scroll-text"] = "rbxassetid://97321022666868",
-	scroll = "rbxassetid://74072101474951",
-	["search-check"] = "rbxassetid://75442076191356",
-	["search-code"] = "rbxassetid://117114794592802",
-	["search-slash"] = "rbxassetid://96483932261041",
-	["search-x"] = "rbxassetid://137319957522951",
-	search = "rbxassetid://121018724060431",
-	section = "rbxassetid://91732188298948",
-	["send-horizontal"] = "rbxassetid://111734392411664",
-	["send-to-back"] = "rbxassetid://75340312862253",
-	send = "rbxassetid://127751956873796",
-	["separator-horizontal"] = "rbxassetid://84864453699927",
-	["separator-vertical"] = "rbxassetid://84031801478581",
-	["server-cog"] = "rbxassetid://138470287250966",
-	["server-crash"] = "rbxassetid://132810618000212",
-	["server-off"] = "rbxassetid://114048751507723",
-	server = "rbxassetid://92188766517878",
-	["settings-2"] = "rbxassetid://135684703553372",
-	settings = "rbxassetid://80758916183665",
-	shapes = "rbxassetid://129989433311409",
-	["share-2"] = "rbxassetid://71210767962065",
-	share = "rbxassetid://87340985053299",
-	sheet = "rbxassetid://134902122480171",
-	shell = "rbxassetid://140212943563599",
-	["shield-alert"] = "rbxassetid://114995877719925",
-	["shield-ban"] = "rbxassetid://108765041044649",
-	["shield-check"] = "rbxassetid://87354736164608",
-	["shield-ellipsis"] = "rbxassetid://114794739892123",
-	["shield-half"] = "rbxassetid://117842634172647",
-	["shield-minus"] = "rbxassetid://89965059528921",
-	["shield-off"] = "rbxassetid://133426959132690",
-	["shield-plus"] = "rbxassetid://100664857995498",
-	["shield-question-mark"] = "rbxassetid://135722075265150",
-	["shield-user"] = "rbxassetid://124832775645347",
-	["shield-x"] = "rbxassetid://73370117343811",
-	shield = "rbxassetid://110987169760162",
-	["ship-wheel"] = "rbxassetid://130797795829448",
-	ship = "rbxassetid://83995100553930",
-	shirt = "rbxassetid://106579555405966",
-	["shopping-bag"] = "rbxassetid://71885477293226",
-	["shopping-basket"] = "rbxassetid://138646411956433",
-	["shopping-cart"] = "rbxassetid://128420521375441",
-	shovel = "rbxassetid://102465000512056",
-	["shower-head"] = "rbxassetid://75884944024117",
-	shredder = "rbxassetid://122125164414463",
-	shrimp = "rbxassetid://102625900815307",
-	shrink = "rbxassetid://90953687918880",
-	shrub = "rbxassetid://127326280714343",
-	shuffle = "rbxassetid://132382786975101",
-	sigma = "rbxassetid://126884244870899",
-	["signal-high"] = "rbxassetid://130436670012270",
-	["signal-low"] = "rbxassetid://73674683500458",
-	["signal-medium"] = "rbxassetid://125003021367019",
-	["signal-zero"] = "rbxassetid://130045332414754",
-	signal = "rbxassetid://78424889355261",
-	signature = "rbxassetid://114402748013000",
-	["signpost-big"] = "rbxassetid://115780185675001",
-	signpost = "rbxassetid://106584743791433",
-	siren = "rbxassetid://134210267818039",
-	["skip-back"] = "rbxassetid://70466132711334",
-	["skip-forward"] = "rbxassetid://124844823753990",
-	skull = "rbxassetid://137726256442333",
-	slack = "rbxassetid://96089719516736",
-	slash = "rbxassetid://117792185664263",
-	slice = "rbxassetid://95810504278179",
-	["sliders-horizontal"] = "rbxassetid://85538382643347",
-	["sliders-vertical"] = "rbxassetid://101190569086853",
-	["smartphone-charging"] = "rbxassetid://102837532613995",
-	["smartphone-nfc"] = "rbxassetid://82326425754446",
-	smartphone = "rbxassetid://96623008834511",
-	["smile-plus"] = "rbxassetid://131981881472144",
-	smile = "rbxassetid://105880397565283",
-	snail = "rbxassetid://70904536548363",
-	snowflake = "rbxassetid://101235206534566",
-	["soap-dispenser-droplet"] = "rbxassetid://77258480479465",
-	sofa = "rbxassetid://114427687218324",
-	["solar-panel"] = "rbxassetid://132448188047921",
-	soup = "rbxassetid://115092551871618",
-	space = "rbxassetid://87072088914178",
-	spade = "rbxassetid://131444449466462",
-	sparkle = "rbxassetid://111044800239623",
-	sparkles = "rbxassetid://138635884129147",
-	speaker = "rbxassetid://96227183003618",
-	speech = "rbxassetid://87013139446349",
-	["spell-check-2"] = "rbxassetid://81556731785534",
-	["spell-check"] = "rbxassetid://91913483031334",
-	["spline-pointer"] = "rbxassetid://84842840956804",
-	spline = "rbxassetid://129406685807412",
-	split = "rbxassetid://105112438805988",
-	spool = "rbxassetid://124541981347743",
-	spotlight = "rbxassetid://77571742539344",
-	["spray-can"] = "rbxassetid://128372039366326",
-	sprout = "rbxassetid://100091687832508",
-	["square-activity"] = "rbxassetid://89496630185293",
-	["square-arrow-down-left"] = "rbxassetid://108194680296901",
-	["square-arrow-down-right"] = "rbxassetid://99403846801050",
-	["square-arrow-down"] = "rbxassetid://135962519626588",
-	["square-arrow-left"] = "rbxassetid://111671474549238",
-	["square-arrow-out-down-left"] = "rbxassetid://125714881756353",
-	["square-arrow-out-down-right"] = "rbxassetid://89971003001390",
-	["square-arrow-out-up-left"] = "rbxassetid://103759986579087",
-	["square-arrow-out-up-right"] = "rbxassetid://91221896066807",
-	["square-arrow-right"] = "rbxassetid://113920471701361",
-	["square-arrow-up-left"] = "rbxassetid://112424670290693",
-	["square-arrow-up-right"] = "rbxassetid://76602291406940",
-	["square-arrow-up"] = "rbxassetid://106998604646718",
-	["square-asterisk"] = "rbxassetid://89186832353625",
-	["square-bottom-dashed-scissors"] = "rbxassetid://79076980104803",
-	["square-chart-gantt"] = "rbxassetid://104034017316411",
-	["square-check-big"] = "rbxassetid://115320390907184",
-	["square-check"] = "rbxassetid://134682053539509",
-	["square-chevron-down"] = "rbxassetid://91032307924592",
-	["square-chevron-left"] = "rbxassetid://73143404829510",
-	["square-chevron-right"] = "rbxassetid://90612077729930",
-	["square-chevron-up"] = "rbxassetid://85565910197337",
-	["square-code"] = "rbxassetid://81604576616881",
-	["square-dashed-bottom-code"] = "rbxassetid://100354801563230",
-	["square-dashed-bottom"] = "rbxassetid://101102319625624",
-	["square-dashed-kanban"] = "rbxassetid://90388067649847",
-	["square-dashed-mouse-pointer"] = "rbxassetid://121016142178467",
-	["square-dashed-top-solid"] = "rbxassetid://117157577548540",
-	["square-dashed"] = "rbxassetid://136905537847606",
-	["square-divide"] = "rbxassetid://99894657101970",
-	["square-dot"] = "rbxassetid://116613421354866",
-	["square-equal"] = "rbxassetid://110283363706707",
-	["square-function"] = "rbxassetid://86075219551088",
-	["square-kanban"] = "rbxassetid://114537101260131",
-	["square-library"] = "rbxassetid://73810931222081",
-	["square-m"] = "rbxassetid://117662700410577",
-	["square-menu"] = "rbxassetid://104067089444415",
-	["square-minus"] = "rbxassetid://116764432015770",
-	["square-mouse-pointer"] = "rbxassetid://76141850603920",
-	["square-parking-off"] = "rbxassetid://100857293535141",
-	["square-parking"] = "rbxassetid://133116656122387",
-	["square-pause"] = "rbxassetid://86608552787615",
-	["square-pen"] = "rbxassetid://120239476110475",
-	["square-percent"] = "rbxassetid://87111930314567",
-	["square-pi"] = "rbxassetid://75383328781618",
-	["square-pilcrow"] = "rbxassetid://131854284699367",
-	["square-play"] = "rbxassetid://108186325238481",
-	["square-plus"] = "rbxassetid://114713264461873",
-	["square-power"] = "rbxassetid://129240437805187",
-	["square-radical"] = "rbxassetid://132645931868292",
-	["square-round-corner"] = "rbxassetid://104592745113567",
-	["square-scissors"] = "rbxassetid://110601255612411",
-	["square-sigma"] = "rbxassetid://113231244246816",
-	["square-slash"] = "rbxassetid://105477013908757",
-	["square-split-horizontal"] = "rbxassetid://76095370148660",
-	["square-split-vertical"] = "rbxassetid://88589192032058",
-	["square-square"] = "rbxassetid://136555087357875",
-	["square-stack"] = "rbxassetid://100463396619394",
-	["square-star"] = "rbxassetid://94506958703720",
-	["square-stop"] = "rbxassetid://80018708472943",
-	["square-terminal"] = "rbxassetid://83969264476798",
-	["square-user-round"] = "rbxassetid://86484997229302",
-	["square-user"] = "rbxassetid://70771214183445",
-	["square-x"] = "rbxassetid://125136183850190",
-	square = "rbxassetid://86304921356806",
-	["squares-exclude"] = "rbxassetid://102345385822324",
-	["squares-intersect"] = "rbxassetid://120869602570119",
-	["squares-subtract"] = "rbxassetid://131484650948795",
-	["squares-unite"] = "rbxassetid://96673080107843",
-	["squircle-dashed"] = "rbxassetid://129936702532522",
-	squircle = "rbxassetid://82426632573807",
-	squirrel = "rbxassetid://112864252085343",
-	stamp = "rbxassetid://92370779813368",
-	["star-half"] = "rbxassetid://117449275562979",
-	["star-off"] = "rbxassetid://75742832732503",
-	star = "rbxassetid://136141469398409",
-	["step-back"] = "rbxassetid://108672750005121",
-	["step-forward"] = "rbxassetid://126131872136145",
-	stethoscope = "rbxassetid://122331031702148",
-	sticker = "rbxassetid://79938203791608",
-	["sticky-note"] = "rbxassetid://111894074643919",
-	store = "rbxassetid://90338129673705",
-	["stretch-horizontal"] = "rbxassetid://87665042192343",
-	["stretch-vertical"] = "rbxassetid://95265463417122",
-	strikethrough = "rbxassetid://103417324549613",
-	subscript = "rbxassetid://74553514785183",
-	["sun-dim"] = "rbxassetid://129141645592715",
-	["sun-medium"] = "rbxassetid://130278807964710",
-	["sun-moon"] = "rbxassetid://75752898854559",
-	["sun-snow"] = "rbxassetid://112791898014579",
-	sun = "rbxassetid://110150589884127",
-	sunrise = "rbxassetid://134705665494098",
-	sunset = "rbxassetid://75904872203588",
-	superscript = "rbxassetid://96887696590118",
-	["swatch-book"] = "rbxassetid://126786244872453",
-	["swiss-franc"] = "rbxassetid://113497920041625",
-	["switch-camera"] = "rbxassetid://76841154349737",
-	sword = "rbxassetid://124448418211665",
-	swords = "rbxassetid://81872698913435",
-	syringe = "rbxassetid://123891270479254",
-	["table-2"] = "rbxassetid://95751552281545",
-	["table-cells-merge"] = "rbxassetid://95363715175258",
-	["table-cells-split"] = "rbxassetid://114799086088649",
-	["table-columns-split"] = "rbxassetid://111011625447949",
-	["table-of-contents"] = "rbxassetid://135044763275414",
-	["table-properties"] = "rbxassetid://125062886015372",
-	["table-rows-split"] = "rbxassetid://96443733673997",
-	table = "rbxassetid://109109148250737",
-	["tablet-smartphone"] = "rbxassetid://133680859813404",
-	tablet = "rbxassetid://128403991264386",
-	tablets = "rbxassetid://80835787970735",
-	tag = "rbxassetid://129104970103940",
-	tags = "rbxassetid://107179263080798",
-	["tally-1"] = "rbxassetid://115301298241643",
-	["tally-2"] = "rbxassetid://110363186864027",
-	["tally-3"] = "rbxassetid://97655344572540",
-	["tally-4"] = "rbxassetid://102633494371890",
-	["tally-5"] = "rbxassetid://88031817475886",
-	tangent = "rbxassetid://123263132981724",
-	target = "rbxassetid://87563802520297",
-	telescope = "rbxassetid://91755049143647",
-	["tent-tree"] = "rbxassetid://76698322463977",
-	tent = "rbxassetid://109779587826330",
-	terminal = "rbxassetid://106783148545356",
-	["test-tube-diagonal"] = "rbxassetid://75662704378840",
-	["test-tube"] = "rbxassetid://98801015650164",
-	["test-tubes"] = "rbxassetid://92555361447433",
-	["text-align-center"] = "rbxassetid://84051028246390",
-	["text-align-end"] = "rbxassetid://130041738343555",
-	["text-align-justify"] = "rbxassetid://80279880143030",
-	["text-align-start"] = "rbxassetid://134489585487649",
-	["text-cursor-input"] = "rbxassetid://107551944047171",
-	["text-cursor"] = "rbxassetid://115984654447300",
-	["text-initial"] = "rbxassetid://129458097472087",
-	["text-quote"] = "rbxassetid://139278366448736",
-	["text-search"] = "rbxassetid://92345384671606",
-	["text-select"] = "rbxassetid://117087320884956",
-	["text-wrap"] = "rbxassetid://114804318314018",
-	theater = "rbxassetid://108558145549163",
-	["thermometer-snowflake"] = "rbxassetid://121876188028425",
-	["thermometer-sun"] = "rbxassetid://106693240074310",
-	thermometer = "rbxassetid://106546011492311",
-	["thumbs-down"] = "rbxassetid://87794009914015",
-	["thumbs-up"] = "rbxassetid://111137070767020",
-	["ticket-check"] = "rbxassetid://105428777212507",
-	["ticket-minus"] = "rbxassetid://78966299769328",
-	["ticket-percent"] = "rbxassetid://80834774406405",
-	["ticket-plus"] = "rbxassetid://110086734392189",
-	["ticket-slash"] = "rbxassetid://89045681172265",
-	["ticket-x"] = "rbxassetid://88674114109926",
-	ticket = "rbxassetid://126527071492145",
-	["tickets-plane"] = "rbxassetid://100367018248695",
-	tickets = "rbxassetid://135268612687833",
-	["timer-off"] = "rbxassetid://110916370767271",
-	["timer-reset"] = "rbxassetid://110052125369932",
-	timer = "rbxassetid://85473888890506",
-	["toggle-left"] = "rbxassetid://85887872573050",
-	["toggle-right"] = "rbxassetid://90411952142550",
-	toilet = "rbxassetid://80930782432931",
-	["tool-case"] = "rbxassetid://87533537832522",
-	tornado = "rbxassetid://88358291515768",
-	torus = "rbxassetid://70855707283051",
-	["touchpad-off"] = "rbxassetid://78784008075456",
-	touchpad = "rbxassetid://74882354908014",
-	["tower-control"] = "rbxassetid://95937619060532",
-	["toy-brick"] = "rbxassetid://86293483924633",
-	tractor = "rbxassetid://103376704722051",
-	["traffic-cone"] = "rbxassetid://74110220470369",
-	["train-front-tunnel"] = "rbxassetid://105194827005114",
-	["train-front"] = "rbxassetid://125237934215370",
-	["train-track"] = "rbxassetid://77451032453723",
-	["tram-front"] = "rbxassetid://93315182364998",
-	transgender = "rbxassetid://135530817673639",
-	["trash-2"] = "rbxassetid://109843431391323",
-	trash = "rbxassetid://106723740584310",
-	["tree-deciduous"] = "rbxassetid://123124389219004",
-	["tree-palm"] = "rbxassetid://103846705893963",
-	["tree-pine"] = "rbxassetid://124662547202594",
-	trees = "rbxassetid://121203841375919",
-	trello = "rbxassetid://130987241149527",
-	["trending-down"] = "rbxassetid://139309232226438",
-	["trending-up-down"] = "rbxassetid://85083293981691",
-	["trending-up"] = "rbxassetid://81819858538839",
-	["triangle-alert"] = "rbxassetid://125920361880643",
-	["triangle-dashed"] = "rbxassetid://124324079103935",
-	["triangle-right"] = "rbxassetid://116930791412791",
-	triangle = "rbxassetid://126330486745540",
-	trophy = "rbxassetid://131545003268773",
-	["truck-electric"] = "rbxassetid://111873446387359",
-	truck = "rbxassetid://86662707764771",
-	["turkish-lira"] = "rbxassetid://114589876174070",
-	turntable = "rbxassetid://129870346487856",
-	turtle = "rbxassetid://118295081560334",
-	["tv-minimal-play"] = "rbxassetid://99201833426972",
-	["tv-minimal"] = "rbxassetid://100382201729427",
-	tv = "rbxassetid://135687724791776",
-	twitch = "rbxassetid://71383308134888",
-	twitter = "rbxassetid://88791703276842",
-	["type-outline"] = "rbxassetid://80108627791690",
-	type = "rbxassetid://133543553793564",
-	["umbrella-off"] = "rbxassetid://72395143739955",
-	umbrella = "rbxassetid://127502210274589",
-	underline = "rbxassetid://123709229216544",
-	["undo-2"] = "rbxassetid://113885292059932",
-	["undo-dot"] = "rbxassetid://132055277744844",
-	undo = "rbxassetid://111258459077271",
-	["unfold-horizontal"] = "rbxassetid://117128358526398",
-	["unfold-vertical"] = "rbxassetid://116593025265499",
-	ungroup = "rbxassetid://106674800451003",
-	university = "rbxassetid://84652528263642",
-	["unlink-2"] = "rbxassetid://128131898892572",
-	unlink = "rbxassetid://139835795227752",
-	unplug = "rbxassetid://90171381619874",
-	upload = "rbxassetid://138212042425501",
-	usb = "rbxassetid://117230058949613",
-	["user-check"] = "rbxassetid://81775205032725",
-	["user-cog"] = "rbxassetid://92795491530865",
-	["user-lock"] = "rbxassetid://78892639693821",
-	["user-minus"] = "rbxassetid://126976941957511",
-	["user-pen"] = "rbxassetid://87445472574836",
-	["user-plus"] = "rbxassetid://118514469915884",
-	["user-round-check"] = "rbxassetid://118794737621941",
-	["user-round-cog"] = "rbxassetid://78239503290053",
-	["user-round-minus"] = "rbxassetid://98944176636447",
-	["user-round-pen"] = "rbxassetid://108155244324878",
-	["user-round-plus"] = "rbxassetid://113301899567470",
-	["user-round-search"] = "rbxassetid://71565774381870",
-	["user-round-x"] = "rbxassetid://122367980560930",
-	["user-round"] = "rbxassetid://136485052187963",
-	["user-search"] = "rbxassetid://101335649828115",
-	["user-star"] = "rbxassetid://98777846316000",
-	["user-x"] = "rbxassetid://139748155894754",
-	user = "rbxassetid://81589895647169",
-	["users-round"] = "rbxassetid://103005444008339",
-	users = "rbxassetid://115398113982385",
-	["utensils-crossed"] = "rbxassetid://109520762270383",
-	utensils = "rbxassetid://139952569804235",
-	["utility-pole"] = "rbxassetid://101965541238242",
-	variable = "rbxassetid://104743088438151",
-	vault = "rbxassetid://108049164599845",
-	["vector-square"] = "rbxassetid://86713728565344",
-	vegan = "rbxassetid://119489190688082",
-	["venetian-mask"] = "rbxassetid://102636443033920",
-	["venus-and-mars"] = "rbxassetid://120227752103771",
-	venus = "rbxassetid://82891342220859",
-	["vibrate-off"] = "rbxassetid://113446447326246",
-	vibrate = "rbxassetid://108330910738733",
-	["video-off"] = "rbxassetid://132239189859305",
-	video = "rbxassetid://107587444636945",
-	videotape = "rbxassetid://114816894323398",
-	view = "rbxassetid://118717253976805",
-	voicemail = "rbxassetid://134313454010227",
-	volleyball = "rbxassetid://83889351124153",
-	["volume-1"] = "rbxassetid://98514588731639",
-	["volume-2"] = "rbxassetid://89344380902620",
-	["volume-off"] = "rbxassetid://103047478058767",
-	["volume-x"] = "rbxassetid://139252359189540",
-	volume = "rbxassetid://103236289817396",
-	vote = "rbxassetid://89409762851246",
-	["wallet-cards"] = "rbxassetid://129728715308337",
-	["wallet-minimal"] = "rbxassetid://137800448816116",
-	wallet = "rbxassetid://132331555762628",
-	wallpaper = "rbxassetid://74682121235494",
-	["wand-sparkles"] = "rbxassetid://82546429942392",
-	wand = "rbxassetid://114580617777835",
-	warehouse = "rbxassetid://78388887451080",
-	["washing-machine"] = "rbxassetid://104194127573858",
-	watch = "rbxassetid://130544621618405",
-	["waves-ladder"] = "rbxassetid://101808619355514",
-	waves = "rbxassetid://96340135183647",
-	waypoints = "rbxassetid://102450133666017",
-	webcam = "rbxassetid://104148487911129",
-	["webhook-off"] = "rbxassetid://96370548093471",
-	webhook = "rbxassetid://112812457747322",
-	weight = "rbxassetid://103860559844854",
-	["wheat-off"] = "rbxassetid://133294844612307",
-	wheat = "rbxassetid://85261952080359",
-	["whole-word"] = "rbxassetid://90111083954485",
-	["wifi-cog"] = "rbxassetid://110500263326209",
-	["wifi-high"] = "rbxassetid://81954601342139",
-	["wifi-low"] = "rbxassetid://138217335635913",
-	["wifi-off"] = "rbxassetid://74113634330106",
-	["wifi-pen"] = "rbxassetid://91290205064712",
-	["wifi-sync"] = "rbxassetid://84043971055177",
-	["wifi-zero"] = "rbxassetid://124286465246123",
-	wifi = "rbxassetid://104669375183960",
-	["wind-arrow-down"] = "rbxassetid://127753987414870",
-	wind = "rbxassetid://114551690399915",
-	["wine-off"] = "rbxassetid://108294164302317",
-	wine = "rbxassetid://115743721332829",
-	workflow = "rbxassetid://99186544029189",
-	worm = "rbxassetid://115752311548091",
-	wrench = "rbxassetid://112148279212860",
-	x = "rbxassetid://110786993356448",
-	youtube = "rbxassetid://123663668456341",
-	["zap-off"] = "rbxassetid://81385483183652",
-	zap = "rbxassetid://130551565616516",
-	["zoom-in"] = "rbxassetid://127956924984803",
-	["zoom-out"] = "rbxassetid://108334162607319",
-	balloon = "rbxassetid://97489111621526",
-	["beef-off"] = "rbxassetid://99869959725200",
-	["book-search"] = "rbxassetid://132585409504950",
-	calendars = "rbxassetid://130944763042289",
-	["cannabis-off"] = "rbxassetid://101938500363812",
-	["cctv-off"] = "rbxassetid://75925370187295",
-	cigarette = "rbxassetid://137149549886852",
-	["circle-pile"] = "rbxassetid://116353155251541",
-	["cloud-backup"] = "rbxassetid://111649579696132",
-	["cloud-sync"] = "rbxassetid://79393911188593",
-	["database-search"] = "rbxassetid://92017137080138",
-	ellipse = "rbxassetid://71559658267482",
-	["fingerprint-pattern"] = "rbxassetid://80934710831288",
-	["fishing-hook"] = "rbxassetid://121038780855899",
-	["fishing-rod"] = "rbxassetid://71754848048049",
-	form = "rbxassetid://72999643971000",
-	["git-merge-conflict"] = "rbxassetid://85677801675703",
-	["globe-off"] = "rbxassetid://77775243585824",
-	["globe-x"] = "rbxassetid://109268097029296",
-	hd = "rbxassetid://71682790698278",
-	image = "rbxassetid://112751259236831",
-	["layers-plus"] = "rbxassetid://77587765623057",
-	["lens-concave"] = "rbxassetid://94819631937027",
-	["lens-convex"] = "rbxassetid://74736504195474",
-	["line-dot-right-horizontal"] = "rbxassetid://104718593155221",
-	["line-style"] = "rbxassetid://90176717785772",
-	["map-pin-search"] = "rbxassetid://89065012915078",
-	["message-circle-check"] = "rbxassetid://132772297689418",
-	["message-square-check"] = "rbxassetid://125789987055668",
-	metronome = "rbxassetid://101991829345965",
-	["mirror-rectangular"] = "rbxassetid://109046769760336",
-	["mirror-round"] = "rbxassetid://121534049429097",
-	["mouse-left"] = "rbxassetid://99144293708743",
-	["mouse-right"] = "rbxassetid://88331710212594",
-	["printer-x"] = "rbxassetid://103002721801548",
-	["radio-off"] = "rbxassetid://80359258046586",
-	road = "rbxassetid://120251329173530",
-	scooter = "rbxassetid://100035452787934",
-	["search-alert"] = "rbxassetid://127597984617505",
-	["shelving-unit"] = "rbxassetid://80116568514793",
-	["shield-cog-corner"] = "rbxassetid://111694066132698",
-	["shield-cog"] = "rbxassetid://129235695057857",
-	["sport-shoe"] = "rbxassetid://120495992692630",
-	["square-arrow-right-enter"] = "rbxassetid://138867831495334",
-	["square-arrow-right-exit"] = "rbxassetid://133688575845430",
-	["square-centerline-dashed-horizontal"] = "rbxassetid://77780104374341",
-	["square-centerline-dashed-vertical"] = "rbxassetid://107878435803525",
-	stone = "rbxassetid://135161057497830",
-	toolbox = "rbxassetid://85341033903792",
-	["towel-rack"] = "rbxassetid://125223915620991",
-	["user-key"] = "rbxassetid://105403041782190",
-	["user-round-key"] = "rbxassetid://124547549008939",
-	van = "rbxassetid://122066377022942",
-	["waves-arrow-down"] = "rbxassetid://129215220911792",
-	["waves-arrow-up"] = "rbxassetid://102314705716217",
-	["weight-tilde"] = "rbxassetid://112081212176951",
-	["x-line-top"] = "rbxassetid://140592656289509",
-	["zodiac-aquarius"] = "rbxassetid://74560047770362",
-	["zodiac-aries"] = "rbxassetid://73255859670234",
-	["zodiac-cancer"] = "rbxassetid://131985162532947",
-	["zodiac-capricorn"] = "rbxassetid://97859568140652",
-	["zodiac-gemini"] = "rbxassetid://80997588122992",
-	["zodiac-leo"] = "rbxassetid://75509406718106",
-	["zodiac-libra"] = "rbxassetid://113222735060218",
-	["zodiac-ophiuchus"] = "rbxassetid://129180108892480",
-	["zodiac-pisces"] = "rbxassetid://95845819440327",
-	["zodiac-sagittarius"] = "rbxassetid://82651026742181",
-	["zodiac-scorpio"] = "rbxassetid://113640924054631",
-	["zodiac-taurus"] = "rbxassetid://123053219704400",
-	["zodiac-virgo"] = "rbxassetid://99462994613661",
+local cleanupNames = {
+    [ROOT_GUI_NAME] = true,
+    [LAUNCHER_GUI_NAME] = true,
+    ChilliLibrarySettings = true,
+    ChilliLibraryLauncher = true,
 }
+local function cleanupOldUiScreens(excludedRoot, excludedLauncher)
+    for _, old in ipairs(parent:GetChildren()) do
+        if old ~= excludedRoot
+            and old ~= excludedLauncher
+            and old:IsA("ScreenGui")
+            and cleanupNames[old.Name]
+        then
+            local restorePosition = old:GetAttribute(
+                "HudRestorePosition"
+            )
+            local hiddenByLibrary = old:GetAttribute(
+                "LeftCenterHiddenByLibrary"
+            ) == true
+            local screenDisabledByLibrary = old:GetAttribute(
+                "LeftCenterScreenDisabledByLibrary"
+            ) == true
+            if typeof(restorePosition) == "UDim2"
+                or hiddenByLibrary
+                or screenDisabledByLibrary
+            then
+                local oldLeftCenterScreen = playerGui:FindFirstChild(
+                    "LeftCenter"
+                )
+                local oldLeftCenter = oldLeftCenterScreen
+                    and oldLeftCenterScreen:FindFirstChild("LeftCenter")
+                if oldLeftCenter then
+                    if typeof(restorePosition) == "UDim2" then
+                        while restorePosition.X.Scale <= -0.5 do
+                            restorePosition = UDim2.new(
+                                restorePosition.X.Scale + 1,
+                                restorePosition.X.Offset,
+                                restorePosition.Y.Scale,
+                                restorePosition.Y.Offset
+                            )
+                        end
+                        oldLeftCenter.Position = restorePosition
+                    end
+                    if hiddenByLibrary then
+                        oldLeftCenter.Visible = true
+                    end
+                end
+                if screenDisabledByLibrary
+                    and oldLeftCenterScreen
+                    and oldLeftCenterScreen:IsA("ScreenGui")
+                then
+                    oldLeftCenterScreen.Enabled = true
+                end
+            end
+            old:Destroy()
+        end
+    end
+end
+cleanupOldUiScreens()
 
-local obj = setmetatable({
-	component = tbl2.component,
-	dashed = tbl2["square-dashed"],
-	caret = tbl2["chevron-down"],
-	close = tbl2.x,
-	minus = tbl2.minus,
-	square = tbl2.square,
-	search = tbl2.search,
-	crown = tbl2.crown,
-	user = tbl2.user,
-	click = tbl2["mouse-pointer-click"],
-	sliders = tbl2["sliders-horizontal"],
-	eye = tbl2.eye,
-	command = tbl2.command,
-	toggle = tbl2["toggle-left"],
-	keyboard = tbl2.keyboard,
-	pipette = tbl2.pipette,
-	textField = tbl2["text-cursor-input"],
-	columns2 = tbl2["columns-2"],
-	columns3 = tbl2["columns-3"],
-	quote = tbl2.quote,
-	bell = tbl2.bell,
-	check = tbl2.check,
-	play = tbl2.play,
-	pen = tbl2["square-pen"],
-}, { __index = tbl2 })
 
-local function func9()
-	local RunService2 = game:GetService("RunService")
-	local n7 = 0.0008
-	local tbl3 = {}
-	local connection = nil
 
-	local tbl4 = {
-		number = {
-			open = function(tbl5)
-				return tbl5[1]
-			end,
-			pack = function(param10)
-				return { param10 }
-			end,
-		},
-		UDim = {
-			open = function(tbl6)
-				return UDim.new(tbl6[1], tbl6[2])
-			end,
-			pack = function(param11)
-				return { param11.Scale, param11.Offset }
-			end,
-		},
-		UDim2 = {
-			open = function(tbl7)
-				return UDim2.new(tbl7[1], tbl7[2], tbl7[3], tbl7[4])
-			end,
-			pack = function(param12)
-				return { param12.X.Scale, param12.X.Offset, param12.Y.Scale, param12.Y.Offset }
-			end,
-		},
-		Vector2 = {
-			open = function(tbl8)
-				return Vector2.new(tbl8[1], tbl8[2])
-			end,
-			pack = function(param13)
-				return { param13.X, param13.Y }
-			end,
-		},
-		Color3 = {
-			open = function(tbl9)
-				local clamp = math.clamp
-				local third1 = tbl9[3]
-				return Color3.new(math.clamp(tbl9[1], 0, 1), math.clamp(tbl9[2], 0, 1), clamp(third1, 0, 1))
-			end,
-			pack = function(param14)
-				return { param14.R, param14.G, param14.B }
-			end,
-		},
-	}
 
-	local function func10(param15)
-		local kind = typeof(param15)
-		if kind == "number" then
-			return tbl4.number
-		end
-		return tbl4[kind]
-	end
+local function chilliSetProperty(instance, key, value)
+    instance[key] = value
+end
+local objects = {}
 
-	local tbl10 = { curve = function(param16, param17, param18, param19)
-		local function func11(num1, num2, num3)
-			return (((1 - 3 * num3 + 3 * num2) * num1 + 3 * num3 - 6 * num2) * num1 + 3 * num2) * num1
-		end
+objects.obj1 = Instance.new("ScreenGui")
+pcall(chilliSetProperty, objects.obj1, "Name", ROOT_GUI_NAME)
+pcall(chilliSetProperty, objects.obj1, "Archivable", true)
+objects.obj1:SetAttribute("MenuSize", UDim2.new(0.44999998807907104,0,0.550000011920929,0))
+objects.obj1:SetAttribute(OWNER_ATTRIBUTE, true)
+objects.obj1.Parent = parent
 
-		local function func12(num4, num5, num6)
-			return 3 * (1 - 3 * num6 + 3 * num5) * num4 * num4 + 2 * (3 * num6 - 6 * num5) * num4 + 3 * num5
-		end
+objects.obj2 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj2, "Name", "Frame")
+pcall(chilliSetProperty, objects.obj2, "Archivable", true)
+pcall(chilliSetProperty, objects.obj2, "Visible", true)
+pcall(chilliSetProperty, objects.obj2, "Active", false)
+pcall(chilliSetProperty, objects.obj2, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj2, "BackgroundColor3", Runtime.Theme.Window)
+pcall(chilliSetProperty, objects.obj2, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj2, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj2, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj2, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj2, "Position", UDim2.new(0.5,0,0.4749999940395355,0))
+pcall(chilliSetProperty, objects.obj2, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj2, "Selectable", false)
+pcall(chilliSetProperty, objects.obj2, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj2, "Size", UDim2.new(0.44999998807907104,0,0.550000011920929,0))
+pcall(chilliSetProperty, objects.obj2, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj2, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj2, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj2, "LayoutOrder", 0)
+objects.obj2.Parent = objects.obj1
+Runtime.addCorner(objects.obj2, Runtime.Theme.CornerWindow)
 
-		return function(num7)
-			if num7 <= 0 then
-				return 0
-			end
+objects.obj3 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj3, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj3, "Archivable", true)
+pcall(chilliSetProperty, objects.obj3, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
+pcall(chilliSetProperty, objects.obj3, "Color", Runtime.Theme.Stroke)
+pcall(chilliSetProperty, objects.obj3, "Enabled", true)
+pcall(chilliSetProperty, objects.obj3, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj3, "Thickness", 0.004)
+pcall(chilliSetProperty, objects.obj3, "Transparency", 0)
+objects.obj3.Parent = objects.obj2
 
-			if num7 >= 1 then
-				return 1
-			end
-			local value2 = num7
+objects.obj4 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj4, "Name", "Top")
+pcall(chilliSetProperty, objects.obj4, "Archivable", true)
+pcall(chilliSetProperty, objects.obj4, "Visible", true)
+pcall(chilliSetProperty, objects.obj4, "Active", false)
+pcall(chilliSetProperty, objects.obj4, "AnchorPoint", Vector2.new(0.5,0))
+pcall(chilliSetProperty, objects.obj4, "BackgroundColor3", Runtime.Theme.TopBar)
+pcall(chilliSetProperty, objects.obj4, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj4, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj4, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj4, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj4, "Position", UDim2.new(0.5,0,0,0))
+pcall(chilliSetProperty, objects.obj4, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj4, "Selectable", false)
+pcall(chilliSetProperty, objects.obj4, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj4, "Size", UDim2.new(1,0,0.13500000536441803,0))
+pcall(chilliSetProperty, objects.obj4, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj4, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj4, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj4, "LayoutOrder", 0)
+objects.obj4.Parent = objects.obj2
+Runtime.addCorner(objects.obj4, Runtime.Theme.CornerWindow)
 
-			for i = 1, 8 do
-				local n8 = func11(value2, param16, param18) - num7
+objects.obj5 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj5, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj5, "Archivable", true)
+pcall(chilliSetProperty, objects.obj5, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
+pcall(chilliSetProperty, objects.obj5, "Color", Runtime.Theme.Stroke)
+pcall(chilliSetProperty, objects.obj5, "Enabled", true)
+pcall(chilliSetProperty, objects.obj5, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj5, "Thickness", 0.03)
+pcall(chilliSetProperty, objects.obj5, "Transparency", 0)
+objects.obj5.Parent = objects.obj4
 
-				if not (math.abs(n8) < 1e-05) then
-					local num8 = func12(value2, param16, param18)
-					if not (math.abs(num8) < 1e-06) then
-						value2 -= n8 / num8
-						continue
-					end
-				end
+objects.obj6 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj6, "Name", "Color")
+pcall(chilliSetProperty, objects.obj6, "Archivable", true)
+pcall(chilliSetProperty, objects.obj6, "Visible", true)
+pcall(chilliSetProperty, objects.obj6, "Active", false)
+pcall(chilliSetProperty, objects.obj6, "AnchorPoint", Vector2.new(0.5,0))
+pcall(chilliSetProperty, objects.obj6, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj6, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj6, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj6, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj6, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj6, "Position", UDim2.new(0.5,0,0,0))
+pcall(chilliSetProperty, objects.obj6, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj6, "Selectable", false)
+pcall(chilliSetProperty, objects.obj6, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj6, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj6, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj6, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj6, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj6, "LayoutOrder", 0)
+objects.obj6.Parent = objects.obj4
+Runtime.addCorner(objects.obj6, Runtime.Theme.CornerWindow)
 
-				break
-			end
+objects.obj7 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj7, "Name", "Transparent")
+pcall(chilliSetProperty, objects.obj7, "Archivable", true)
+pcall(chilliSetProperty, objects.obj7, "Visible", true)
+pcall(chilliSetProperty, objects.obj7, "Active", false)
+pcall(chilliSetProperty, objects.obj7, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj7, "BackgroundColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj7, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj7, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj7, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj7, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj7, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj7, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj7, "Selectable", false)
+pcall(chilliSetProperty, objects.obj7, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj7, "Size", UDim2.new(0.9879999756813049,0,0.8700000047683716,0))
+pcall(chilliSetProperty, objects.obj7, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj7, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj7, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj7, "LayoutOrder", 0)
+objects.obj7.Parent = objects.obj6
 
-			return func11(value2, param17, param19)
-		end
-	end }
+objects.obj8 = Instance.new("ImageLabel")
+pcall(chilliSetProperty, objects.obj8, "Name", "Pattern")
+pcall(chilliSetProperty, objects.obj8, "Archivable", true)
+pcall(chilliSetProperty, objects.obj8, "Visible", true)
+pcall(chilliSetProperty, objects.obj8, "Active", false)
+pcall(chilliSetProperty, objects.obj8, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj8, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj8, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj8, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj8, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj8, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj8, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj8, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj8, "Selectable", false)
+pcall(chilliSetProperty, objects.obj8, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj8, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj8, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj8, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj8, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj8, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj8, "Image", "")
+pcall(chilliSetProperty, objects.obj8, "ImageColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj8, "ImageTransparency", 0.5)
+pcall(chilliSetProperty, objects.obj8, "ScaleType", Enum.ScaleType.Tile)
+pcall(chilliSetProperty, objects.obj8, "SliceCenter", Rect.new(0,0,0,0))
+pcall(chilliSetProperty, objects.obj8, "SliceScale", 1)
+pcall(chilliSetProperty, objects.obj8, "TileSize", UDim2.new(0.15000000596046448,0,2,0))
+pcall(chilliSetProperty, objects.obj8, "ResampleMode", Enum.ResamplerMode.Default)
+objects.obj8.Parent = objects.obj7
 
-	local function func13(num9)
-		return function(num10)
-			local n8 = num10 - 1
-			return 1 + (num9 + 1) * n8 * n8 * n8 + num9 * n8 * n8
-		end
-	end
+objects.obj9 = Instance.new("TextLabel")
+pcall(chilliSetProperty, objects.obj9, "Name", "Label")
+pcall(chilliSetProperty, objects.obj9, "Archivable", true)
+pcall(chilliSetProperty, objects.obj9, "Visible", true)
+pcall(chilliSetProperty, objects.obj9, "Active", false)
+pcall(chilliSetProperty, objects.obj9, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj9, "BackgroundColor3", Color3.fromRGB(239,220,203))
+pcall(chilliSetProperty, objects.obj9, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj9, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj9, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj9, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj9, "Position", UDim2.new(0.5687711238861084,0,0.5,0))
+pcall(chilliSetProperty, objects.obj9, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj9, "Selectable", false)
+pcall(chilliSetProperty, objects.obj9, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj9, "Size", UDim2.new(0.8620089292526245,0,0.7499999403953552,0))
+pcall(chilliSetProperty, objects.obj9, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj9, "ZIndex", 6)
+pcall(chilliSetProperty, objects.obj9, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj9, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj9, "Text", "Chilli Hub")
+pcall(chilliSetProperty, objects.obj9, "TextColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj9, "TextTransparency", 0)
+pcall(chilliSetProperty, objects.obj9, "TextStrokeColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj9, "TextStrokeTransparency", 1)
+pcall(chilliSetProperty, objects.obj9, "TextSize", 14)
+pcall(chilliSetProperty, objects.obj9, "TextScaled", true)
+pcall(chilliSetProperty, objects.obj9, "TextWrapped", true)
+pcall(chilliSetProperty, objects.obj9, "TextXAlignment", Enum.TextXAlignment.Left)
+pcall(chilliSetProperty, objects.obj9, "TextYAlignment", Enum.TextYAlignment.Center)
+pcall(chilliSetProperty, objects.obj9, "Font", Enum.Font.FredokaOne)
+pcall(chilliSetProperty, objects.obj9, "RichText", false)
+pcall(chilliSetProperty, objects.obj9, "LineHeight", 1)
+pcall(chilliSetProperty, objects.obj9, "MaxVisibleGraphemes", -1)
+objects.obj9.Parent = objects.obj6
 
-	local function func14(num11)
-		return function(num12)
-			return (num11 + 1) * num12 * num12 * num12 - num11 * num12 * num12
-		end
-	end
+objects.obj10 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj10, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj10, "Archivable", true)
+pcall(chilliSetProperty, objects.obj10, "ApplyStrokeMode", Enum.ApplyStrokeMode.Contextual)
+pcall(chilliSetProperty, objects.obj10, "Color", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj10, "Enabled", true)
+pcall(chilliSetProperty, objects.obj10, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj10, "Thickness", 0.07999999821186066)
+pcall(chilliSetProperty, objects.obj10, "Transparency", 1)
+objects.obj10.Parent = objects.obj9
 
-	tbl10.ease = {
-		linear = function(param20)
-			return param20
-		end,
-		inOut = tbl10.curve(0.4, 0, 0.2, 1),
-		out = tbl10.curve(0.16, 1, 0.3, 1),
-		outSoft = tbl10.curve(0.25, 0.8, 0.25, 1),
-		outSnap = tbl10.curve(0.05, 0.9, 0.1, 1),
-		back = func13(1.36),
-		backSoft = func13(0.9),
-		backIn = func14(1.1),
-	}
+objects.obj11 = Instance.new("UIGradient")
+pcall(chilliSetProperty, objects.obj11, "Name", "UIGradient")
+pcall(chilliSetProperty, objects.obj11, "Archivable", true)
+pcall(chilliSetProperty, objects.obj11, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,Runtime.Theme.TopBarGlow),ColorSequenceKeypoint.new(1,Runtime.Theme.TopBar)}))
+pcall(chilliSetProperty, objects.obj11, "Enabled", true)
+pcall(chilliSetProperty, objects.obj11, "Offset", Vector2.new(0,0))
+pcall(chilliSetProperty, objects.obj11, "Rotation", 90)
+pcall(chilliSetProperty, objects.obj11, "Transparency", NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,0,0)}))
+objects.obj11.Parent = objects.obj6
 
-	tbl10.preset = {
-		snappy = { spring = true, stiff = 320, damp = 1 },
-		soft = { spring = true, stiff = 170, damp = 1 },
-		tight = { spring = true, stiff = 600, damp = 1 },
-		bouncy = { spring = true, stiff = 320, damp = 0.62 },
-		lazy = { spring = true, stiff = 95, damp = 1 },
-		pop = { spring = true, stiff = 420, damp = 1 },
-	}
+objects.obj12 = Instance.new("ImageLabel")
+pcall(chilliSetProperty, objects.obj12, "Name", "Icon")
+pcall(chilliSetProperty, objects.obj12, "Archivable", true)
+pcall(chilliSetProperty, objects.obj12, "Visible", true)
+pcall(chilliSetProperty, objects.obj12, "Active", false)
+pcall(chilliSetProperty, objects.obj12, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj12, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj12, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj12, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj12, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj12, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj12, "Position", UDim2.new(0.06700000166893005,0,0.44999998807907104,0))
+pcall(chilliSetProperty, objects.obj12, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj12, "Selectable", false)
+pcall(chilliSetProperty, objects.obj12, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj12, "Size", UDim2.new(0.11656716465950012,0,1.1833335161209106,0))
+pcall(chilliSetProperty, objects.obj12, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj12, "ZIndex", 4)
+pcall(chilliSetProperty, objects.obj12, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj12, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj12, "Image", "")
+pcall(chilliSetProperty, objects.obj12, "ImageColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj12, "ImageTransparency", 0)
+pcall(chilliSetProperty, objects.obj12, "ScaleType", Enum.ScaleType.Fit)
+pcall(chilliSetProperty, objects.obj12, "SliceCenter", Rect.new(0,0,0,0))
+pcall(chilliSetProperty, objects.obj12, "SliceScale", 1)
+pcall(chilliSetProperty, objects.obj12, "TileSize", UDim2.new(0,60,0,60))
+pcall(chilliSetProperty, objects.obj12, "ResampleMode", Enum.ResamplerMode.Default)
+objects.obj12.Parent = objects.obj4
 
-	local function func15(num13, num14, num15, param21, num16, num17)
-		local num18 = math.sqrt(param21)
-		local n8 = num13 - num15
+objects.obj13 = Instance.new("UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj13, "Name", "UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj13, "Archivable", true)
+pcall(chilliSetProperty, objects.obj13, "AspectRatio", 1)
+pcall(chilliSetProperty, objects.obj13, "AspectType", Enum.AspectType.FitWithinMaxSize)
+pcall(chilliSetProperty, objects.obj13, "DominantAxis", Enum.DominantAxis.Width)
+objects.obj13.Parent = objects.obj12
 
-		if num16 < 1 then
-			local n9 = num18 * math.sqrt(1 - num16 * num16)
-			local num19 = math.exp(-num16 * num18 * num17)
-			local n10 = (num14 + num16 * num18 * n8) / n9
-			local num20 = math.cos(n9 * num17)
-			local num21 = math.sin(n9 * num17)
-			return num15 + num19 * (n8 * num20 + n10 * num21), num19 * ((n10 * n9 - num16 * num18 * n8) * num20 - (n8 * n9 + num16 * num18 * n10) * num21)
-		end
+objects.obj14 = Instance.new("TextButton")
+pcall(chilliSetProperty, objects.obj14, "Name", "Close")
+pcall(chilliSetProperty, objects.obj14, "Archivable", true)
+pcall(chilliSetProperty, objects.obj14, "Visible", true)
+pcall(chilliSetProperty, objects.obj14, "Active", true)
+pcall(chilliSetProperty, objects.obj14, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj14, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj14, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj14, "BorderColor3", Color3.fromRGB(27,42,53))
+pcall(chilliSetProperty, objects.obj14, "BorderSizePixel", 1)
+pcall(chilliSetProperty, objects.obj14, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj14, "Position", UDim2.new(0.9549999833106995,0,0.4339999854564667,0))
+pcall(chilliSetProperty, objects.obj14, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj14, "Selectable", true)
+pcall(chilliSetProperty, objects.obj14, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj14, "Size", UDim2.new(0.06637302041053772,0,0.6588137149810791,0))
+pcall(chilliSetProperty, objects.obj14, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj14, "ZIndex", 99)
+pcall(chilliSetProperty, objects.obj14, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj14, "LayoutOrder", 1)
+pcall(chilliSetProperty, objects.obj14, "Text", "")
+pcall(chilliSetProperty, objects.obj14, "TextColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj14, "TextTransparency", 0)
+pcall(chilliSetProperty, objects.obj14, "TextStrokeColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj14, "TextStrokeTransparency", 1)
+pcall(chilliSetProperty, objects.obj14, "TextSize", 14)
+pcall(chilliSetProperty, objects.obj14, "TextScaled", false)
+pcall(chilliSetProperty, objects.obj14, "TextWrapped", false)
+pcall(chilliSetProperty, objects.obj14, "TextXAlignment", Enum.TextXAlignment.Center)
+pcall(chilliSetProperty, objects.obj14, "TextYAlignment", Enum.TextYAlignment.Center)
+pcall(chilliSetProperty, objects.obj14, "Font", Enum.Font.SourceSans)
+pcall(chilliSetProperty, objects.obj14, "RichText", false)
+pcall(chilliSetProperty, objects.obj14, "LineHeight", 1)
+pcall(chilliSetProperty, objects.obj14, "AutoButtonColor", true)
+pcall(chilliSetProperty, objects.obj14, "Modal", false)
+objects.obj14.Parent = objects.obj4
 
-		if num16 == 1 then
-			local num22 = math.exp(-num18 * num17)
-			local n9 = num14 + num18 * n8
-			return num15 + (n8 + n9 * num17) * num22, (n9 - num18 * (n8 + n9 * num17)) * num22
-		end
+objects.obj15 = Instance.new("UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj15, "Name", "UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj15, "Archivable", true)
+pcall(chilliSetProperty, objects.obj15, "AspectRatio", 1)
+pcall(chilliSetProperty, objects.obj15, "AspectType", Enum.AspectType.FitWithinMaxSize)
+pcall(chilliSetProperty, objects.obj15, "DominantAxis", Enum.DominantAxis.Width)
+objects.obj15.Parent = objects.obj14
 
-		local n9 = num18 * math.sqrt(num16 * num16 - 1)
-		local n10 = -num16 * num18 + n9
-		local n11 = -num16 * num18 - n9
-		local n12 = (num14 - n10 * n8) / (n11 - n10)
-		local n13 = n8 - n12
-		return num15 + n13 * math.exp(n10 * num17) + n12 * math.exp(n11 * num17), n13 * n10 * math.exp(n10 * num17) + n12 * n11 * math.exp(n11 * num17)
-	end
+objects.obj16 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj16, "Name", "Main")
+pcall(chilliSetProperty, objects.obj16, "Archivable", true)
+pcall(chilliSetProperty, objects.obj16, "Visible", true)
+pcall(chilliSetProperty, objects.obj16, "Active", false)
+pcall(chilliSetProperty, objects.obj16, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj16, "BackgroundColor3", Runtime.Theme.DangerDark)
+pcall(chilliSetProperty, objects.obj16, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj16, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj16, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj16, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj16, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj16, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj16, "Selectable", false)
+pcall(chilliSetProperty, objects.obj16, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj16, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj16, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj16, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj16, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj16, "LayoutOrder", 0)
+objects.obj16.Parent = objects.obj14
+Runtime.addCorner(objects.obj16, Runtime.Theme.Corner)
 
-	local function func16(param22)
-		return (pcall(function()
-			param22.target[param22.prop] = param22.kind.open(param22.now)
-		end))
-	end
+objects.obj17 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj17, "Name", "Color")
+pcall(chilliSetProperty, objects.obj17, "Archivable", true)
+pcall(chilliSetProperty, objects.obj17, "Visible", true)
+pcall(chilliSetProperty, objects.obj17, "Active", false)
+pcall(chilliSetProperty, objects.obj17, "AnchorPoint", Vector2.new(0.5,0))
+pcall(chilliSetProperty, objects.obj17, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj17, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj17, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj17, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj17, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj17, "Position", UDim2.new(0.5,0,0,0))
+pcall(chilliSetProperty, objects.obj17, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj17, "Selectable", false)
+pcall(chilliSetProperty, objects.obj17, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj17, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj17, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj17, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj17, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj17, "LayoutOrder", 0)
+objects.obj17.Parent = objects.obj16
+Runtime.addCorner(objects.obj17, Runtime.Theme.Corner)
 
-	local function func17(param23, param24)
-		local entry1 = tbl3[param23]
-		if not entry1 then
-			return
-		end
-		entry1[param24] = nil
+objects.obj18 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj18, "Name", "Transparent")
+pcall(chilliSetProperty, objects.obj18, "Archivable", true)
+pcall(chilliSetProperty, objects.obj18, "Visible", true)
+pcall(chilliSetProperty, objects.obj18, "Active", false)
+pcall(chilliSetProperty, objects.obj18, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj18, "BackgroundColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj18, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj18, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj18, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj18, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj18, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj18, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj18, "Selectable", false)
+pcall(chilliSetProperty, objects.obj18, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj18, "Size", UDim2.new(0.9599999785423279,0,0.8799999952316284,0))
+pcall(chilliSetProperty, objects.obj18, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj18, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj18, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj18, "LayoutOrder", 0)
+objects.obj18.Parent = objects.obj17
 
-		if next(entry1) == nil then
-			tbl3[param23] = nil
-		end
-	end
+objects.obj19 = Instance.new("ImageLabel")
+pcall(chilliSetProperty, objects.obj19, "Name", "Pattern")
+pcall(chilliSetProperty, objects.obj19, "Archivable", true)
+pcall(chilliSetProperty, objects.obj19, "Visible", true)
+pcall(chilliSetProperty, objects.obj19, "Active", false)
+pcall(chilliSetProperty, objects.obj19, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj19, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj19, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj19, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj19, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj19, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj19, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj19, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj19, "Selectable", false)
+pcall(chilliSetProperty, objects.obj19, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj19, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj19, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj19, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj19, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj19, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj19, "Image", "")
+pcall(chilliSetProperty, objects.obj19, "ImageColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj19, "ImageTransparency", 0.5)
+pcall(chilliSetProperty, objects.obj19, "ScaleType", Enum.ScaleType.Tile)
+pcall(chilliSetProperty, objects.obj19, "SliceCenter", Rect.new(0,0,0,0))
+pcall(chilliSetProperty, objects.obj19, "SliceScale", 1)
+pcall(chilliSetProperty, objects.obj19, "TileSize", UDim2.new(2,0,2,0))
+pcall(chilliSetProperty, objects.obj19, "ResampleMode", Enum.ResamplerMode.Default)
+objects.obj19.Parent = objects.obj18
 
-	local function func18(deltaTime)
-		local n8 = math.min(deltaTime, 0.05)
-		local flag11 = true
+objects.obj20 = Instance.new("TextLabel")
+pcall(chilliSetProperty, objects.obj20, "Name", "Label")
+pcall(chilliSetProperty, objects.obj20, "Archivable", true)
+pcall(chilliSetProperty, objects.obj20, "Visible", true)
+pcall(chilliSetProperty, objects.obj20, "Active", false)
+pcall(chilliSetProperty, objects.obj20, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj20, "BackgroundColor3", Color3.fromRGB(239,220,203))
+pcall(chilliSetProperty, objects.obj20, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj20, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj20, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj20, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj20, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj20, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj20, "Selectable", false)
+pcall(chilliSetProperty, objects.obj20, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj20, "Size", UDim2.new(0.949999988079071,0,0.800000011920929,0))
+pcall(chilliSetProperty, objects.obj20, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj20, "ZIndex", 6)
+pcall(chilliSetProperty, objects.obj20, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj20, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj20, "Text", "X")
+pcall(chilliSetProperty, objects.obj20, "TextColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj20, "TextTransparency", 0)
+pcall(chilliSetProperty, objects.obj20, "TextStrokeColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj20, "TextStrokeTransparency", 1)
+pcall(chilliSetProperty, objects.obj20, "TextSize", 14)
+pcall(chilliSetProperty, objects.obj20, "TextScaled", true)
+pcall(chilliSetProperty, objects.obj20, "TextWrapped", true)
+pcall(chilliSetProperty, objects.obj20, "TextXAlignment", Enum.TextXAlignment.Center)
+pcall(chilliSetProperty, objects.obj20, "TextYAlignment", Enum.TextYAlignment.Center)
+pcall(chilliSetProperty, objects.obj20, "Font", Enum.Font.FredokaOne)
+pcall(chilliSetProperty, objects.obj20, "RichText", false)
+pcall(chilliSetProperty, objects.obj20, "LineHeight", 1)
+pcall(chilliSetProperty, objects.obj20, "MaxVisibleGraphemes", -1)
+objects.obj20.Parent = objects.obj17
 
-		for k, value3 in pairs(tbl3) do
-			for k2, value4 in pairs(value3) do
-				local flag12
+objects.obj21 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj21, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj21, "Archivable", true)
+pcall(chilliSetProperty, objects.obj21, "ApplyStrokeMode", Enum.ApplyStrokeMode.Contextual)
+pcall(chilliSetProperty, objects.obj21, "Color", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj21, "Enabled", true)
+pcall(chilliSetProperty, objects.obj21, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj21, "Thickness", 0.10999999940395355)
+pcall(chilliSetProperty, objects.obj21, "Transparency", 0)
+objects.obj21.Parent = objects.obj20
 
-				if value4.mode == "spring" then
-					flag12 = true
-					-- 𝚂𝚘𝚞𝚛𝚌𝚎 𝙻𝚎𝚊𝚔 // discord.gg/x7YbZeezpm
+objects.obj22 = Instance.new("UIGradient")
+pcall(chilliSetProperty, objects.obj22, "Name", "UIGradient")
+pcall(chilliSetProperty, objects.obj22, "Archivable", true)
+pcall(chilliSetProperty, objects.obj22, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,Runtime.Theme.DangerLight),ColorSequenceKeypoint.new(1,Runtime.Theme.Danger)}))
+pcall(chilliSetProperty, objects.obj22, "Enabled", true)
+pcall(chilliSetProperty, objects.obj22, "Offset", Vector2.new(0,0))
+pcall(chilliSetProperty, objects.obj22, "Rotation", 90)
+pcall(chilliSetProperty, objects.obj22, "Transparency", NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,0,0)}))
+objects.obj22.Parent = objects.obj17
 
-					for i = 1, #value4.now do
-						local num23, n9 = func15(value4.now[i], value4.vel[i], value4.goal[i], value4.stiff, value4.damp, n8)
+objects.obj23 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj23, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj23, "Archivable", true)
+pcall(chilliSetProperty, objects.obj23, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
+pcall(chilliSetProperty, objects.obj23, "Color", Runtime.Theme.DangerDark)
+pcall(chilliSetProperty, objects.obj23, "Enabled", true)
+pcall(chilliSetProperty, objects.obj23, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj23, "Thickness", 0.09000000357627869)
+pcall(chilliSetProperty, objects.obj23, "Transparency", 0)
+objects.obj23.Parent = objects.obj16
 
-						if math.abs(num23 - value4.goal[i]) > n7 or math.abs(n9) > n7 then
-							flag12 = false
-						else
-							num23 = value4.goal[i]
-							n9 = 0
-						end
+objects.obj24 = Instance.new("UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj24, "Name", "UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj24, "Archivable", true)
+pcall(chilliSetProperty, objects.obj24, "AspectRatio", 1.340000033378601)
+pcall(chilliSetProperty, objects.obj24, "AspectType", Enum.AspectType.FitWithinMaxSize)
+pcall(chilliSetProperty, objects.obj24, "DominantAxis", Enum.DominantAxis.Width)
+objects.obj24.Parent = objects.obj2
 
-						local vel = value4.vel
-						value4.now[i] = num23
-						vel[i] = n9
-					end
-				else
-					value4.clock = value4.clock + n8
-					local n9 = math.clamp(value4.clock / value4.span, 0, 1)
-					local num24 = value4.ease(n9)
+objects.obj25 = Instance.new("ScrollingFrame")
+pcall(chilliSetProperty, objects.obj25, "Name", "List")
+pcall(chilliSetProperty, objects.obj25, "Archivable", true)
+pcall(chilliSetProperty, objects.obj25, "Visible", true)
+pcall(chilliSetProperty, objects.obj25, "Active", true)
+pcall(chilliSetProperty, objects.obj25, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj25, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj25, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj25, "BorderColor3", Color3.fromRGB(27,42,53))
+pcall(chilliSetProperty, objects.obj25, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj25, "ClipsDescendants", true)
+pcall(chilliSetProperty, objects.obj25, "Position", UDim2.new(0.5000000596046448,0,0.5701961517333984,0))
+pcall(chilliSetProperty, objects.obj25, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj25, "Selectable", true)
+pcall(chilliSetProperty, objects.obj25, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj25, "Size", UDim2.new(0.9900000095367432,0,0.8296076059341431,0))
+pcall(chilliSetProperty, objects.obj25, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj25, "ZIndex", 5)
+pcall(chilliSetProperty, objects.obj25, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj25, "LayoutOrder", 1)
+pcall(chilliSetProperty, objects.obj25, "CanvasPosition", Vector2.new(0,0))
+pcall(chilliSetProperty, objects.obj25, "CanvasSize", UDim2.new(0,0,0,642))
+pcall(chilliSetProperty, objects.obj25, "AutomaticCanvasSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj25, "ScrollBarThickness", 6)
+pcall(chilliSetProperty, objects.obj25, "ScrollBarImageColor3", Runtime.Theme.Accent)
+pcall(chilliSetProperty, objects.obj25, "ScrollBarImageTransparency", 0)
+pcall(chilliSetProperty, objects.obj25, "ScrollingDirection", Enum.ScrollingDirection.XY)
+pcall(chilliSetProperty, objects.obj25, "ScrollingEnabled", true)
+pcall(chilliSetProperty, objects.obj25, "VerticalScrollBarInset", Enum.ScrollBarInset.None)
+pcall(chilliSetProperty, objects.obj25, "HorizontalScrollBarInset", Enum.ScrollBarInset.None)
+objects.obj25.Parent = objects.obj2
 
-					for i = 1, #value4.now do
-						local num25 = value4.now[i]
-						value4.now[i] = value4.from[i] + (value4.goal[i] - value4.from[i]) * num24
-						value4.vel[i] = n8 > 0 and (value4.now[i] - num25) / n8 or 0
-					end
 
-					flag12 = n9 >= 1
-				end
 
-				if not func16(value4) then
-					func17(k, k2)
-					flag11 = false
-				else
-					flag11 = false
 
-					if flag12 then
-						func17(k, k2)
 
-						if value4.done then
-							task.spawn(value4.done)
-						end
-					end
-				end
-			end
-		end
 
-		if flag11 and connection then
-			connection:Disconnect()
-			connection = nil
-		end
-	end
 
-	local function func19()
-		if connection then
-			return
-		end
-		connection = RunService2.RenderStepped:Connect(func18)
-	end
 
-	local function func20(tbl11, param25, param26)
-		local flag13 = func10(param26)
-		if not flag13 then
-			return nil
-		end
-		local entry2 = tbl3[tbl11]
+local rootGui = objects.obj1
+local mainFrame = objects.obj2
+local topBar = objects.obj4
+local closeButton = objects.obj14
 
-		if not entry2 then
-			entry2 = {}
-			tbl3[tbl11] = entry2
-		end
+local Protected = {}
 
-		local entry3 = entry2[param25]
+local rootConnections = {}
 
-		if not entry3 then
-			local ok, result = pcall(function()
-				return tbl11[param25]
-			end)
-
-			if not ok then
-				return nil
-			end
-			entry3 = { target = tbl11, prop = param25, kind = flag13, now = flag13.pack(result), vel = {} }
-
-			for i = 1, #entry3.now do
-				entry3.vel[i] = 0
-			end
-
-			entry2[param25] = entry3
-		end
-
-		entry3.kind = flag13
-		entry3.goal = flag13.pack(param26)
-		return entry3
-	end
-
-	tbl10.spring = function(param27, list2, flag14)
-		local snappy = flag14 or tbl10.preset.snappy
-
-		for k, value5 in pairs(list2) do
-			local value6 = func20(param27, k, value5)
-
-			if value6 then
-				value6.mode = "spring"
-				value6.stiff = snappy.stiff or 260
-				value6.damp = snappy.damp or 1
-				value6.done = snappy.done
-			end
-		end
-
-		func19()
-	end
-
-	tbl10.tween = function(param28, list3, flag15)
-		local tbl12 = flag15 or {}
-
-		for k, value7 in pairs(list3) do
-			local value8 = func20(param28, k, value7)
-
-			if value8 then
-				value8.mode = "tween"
-				value8.span = math.max(tbl12.time or 0.2, 0.0041666666666666666)
-				value8.ease = tbl12.ease or tbl10.ease.out
-				value8.clock = 0
-				value8.from = table.clone(value8.now)
-				value8.done = tbl12.done
-			end
-		end
-
-		func19()
-	end
-
-	tbl10.shove = function(param29, param30, param31)
-		local entry4 = tbl3[param29]
-		entry4 = entry4 and entry4[param30]
-		if not entry4 then
-			return
-		end
-		local flag16 = func10(param31)
-		if not flag16 then
-			return
-		end
-		local packed1 = flag16.pack(param31)
-
-		for i = 1, math.min(#entry4.vel, #packed1) do
-			entry4.vel[i] = entry4.vel[i] + packed1[i]
-		end
-
-		func19()
-	end
-
-	tbl10.stop = function(param32, param33)
-		if not tbl3[param32] then
-			return
-		end
-
-		if param33 then
-			func17(param32, param33)
-		else
-			tbl3[param32] = nil
-		end
-	end
-
-	tbl10.set = function(tbl13, list4)
-		for k, value9 in pairs(list4) do
-			tbl10.stop(tbl13, k)
-
-			pcall(function()
-				tbl13[k] = value9
-			end)
-		end
-	end
-
-	return tbl10
+local function trackRootConnection(connection)
+    table.insert(rootConnections, connection)
+    return connection
 end
 
-local result1 = func9()
-local index = {}
-index.__index = index
-local index2 = {}
-index2.__index = index2
-local handlers = {}
-handlers.__index = handlers
-local tbl14 = { time = 0.14, ease = result1.ease.out }
-local snappy = result1.preset.snappy
-local bouncy = result1.preset.bouncy
-local tbl15 = { spring = true, stiff = 260, damp = 1 }
-local tbl16 = { spring = true, stiff = 1500, damp = 1 }
-local tbl17 = { spring = true, stiff = 420, damp = 1 }
-local tbl18 = { spring = true, stiff = 430, damp = 1 }
-
-local function func21(param34, param35, param36)
-	if param35.spring then
-		result1.spring(param34, param36, param35)
-	else
-		result1.tween(param34, param36, param35)
-	end
+local function disconnectRootConnections()
+    for index = #rootConnections, 1, -1 do
+        local connection = rootConnections[index]
+        if connection and connection.Connected then
+            connection:Disconnect()
+        end
+        rootConnections[index] = nil
+    end
 end
 
-local function func22(param37, param38, flag17)
-	local Frame = func2("Frame", {
-		Name = "IconBox",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 9, 0.5, 0),
-		Size = UDim2.fromOffset(param38, param38),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-	}, param37)
+rootGui.ResetOnSpawn = false
 
-	func3(Frame, flag17 or 7)
-	func4(Frame, color2, 0.4)
 
-	func2("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.58, 0.58),
-		BackgroundTransparency = 1,
-		Image = "",
-		ImageTransparency = 0.1,
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame)
 
-	return Frame
+rootGui.IgnoreGuiInset = true
+rootGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+do
+    local ROUNDABLE = {
+        Frame = true,
+        TextButton = true,
+        TextBox = true,
+        TextLabel = true,
+        ImageLabel = true,
+        ImageButton = true,
+    }
+    local function polishRounding(inst)
+        if not ROUNDABLE[inst.ClassName] then
+            return
+        end
+        if inst.BackgroundTransparency >= 1 or inst.ClipsDescendants then
+            return
+        end
+        if inst:FindFirstChildOfClass("UICorner") then
+            return
+        end
+        Runtime.addCorner(inst, Runtime.Theme.CornerSmall)
+    end
+    for _, descendant in ipairs(rootGui:GetDescendants()) do
+        polishRounding(descendant)
+    end
+    trackRootConnection(rootGui.DescendantAdded:Connect(polishRounding))
 end
 
-local function func23()
-	if RunService:IsStudio() then
-		local localPlayer = Players.LocalPlayer
 
-		if localPlayer then
-			local playerGui = localPlayer:FindFirstChildOfClass("PlayerGui")
-			if playerGui then
-				return playerGui
-			end
-		end
 
-		return game:GetService("StarterGui")
-	end
 
-	local ok, result = pcall(function()
-		return gethui and gethui()
-	end)
+do
+    local managedNames = {
+        ChilliAutoGetTargetPanel = true,
+        ChilliAutoGetBarGui = true,
+        ChilliFpsPingGui = true,
+    }
+    local boundTargets = setmetatable({}, { __mode = "k" })
 
-	if ok and result then
-		return result
-	end
+    local function bindTarget(screen, target)
+        if boundTargets[target] or not target:IsA("GuiObject") then
+            return
+        end
+        boundTargets[target] = true
+        local applying = false
 
-	local ok2, result2 = pcall(function()
-		return game:GetService("CoreGui")
-	end)
+        local function applyBounds()
+            if applying or not target.Parent or not screen.Parent then
+                return
+            end
+            local region = screen.AbsoluteSize
+            if region.X <= 0 or region.Y <= 0 then
+                return
+            end
+            local position = target.Position
+            local x = position.X.Scale + position.X.Offset / region.X
+            local y = position.Y.Scale + position.Y.Offset / region.Y
+            local width = math.max(target.AbsoluteSize.X / region.X, 0)
+            local height = math.max(target.AbsoluteSize.Y / region.Y, 0)
+            local anchor = target.AnchorPoint
+            local minX = width * anchor.X
+            local maxX = 0.998 - width * (1 - anchor.X)
+            local minY = height * anchor.Y
+            
+            
+            local maxY = 0.98 + height * anchor.Y
+            local nextX = math.clamp(x, math.min(minX, maxX), math.max(minX, maxX))
+            local nextY = math.clamp(y, math.min(minY, maxY), math.max(minY, maxY))
+            if math.abs(nextX - x) > 0.00001
+                or math.abs(nextY - y) > 0.00001
+            then
+                applying = true
+                target.Position = UDim2.fromScale(nextX, nextY)
+                applying = false
+            end
+        end
 
-	if ok2 and result2 then
-		return result2
-	end
-	local localPlayer = Players.LocalPlayer
-	return localPlayer and localPlayer:FindFirstChildOfClass("PlayerGui")
+        trackRootConnection(target:GetPropertyChangedSignal("Position"):Connect(
+            applyBounds
+        ))
+        trackRootConnection(target:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+            applyBounds
+        ))
+        task.defer(applyBounds)
+    end
+
+    local function bindScreen(screen)
+        if not screen:IsA("ScreenGui") or not managedNames[screen.Name] then
+            return
+        end
+        screen.IgnoreGuiInset = true
+        local function consider(child)
+            if child:IsA("Frame") then
+                bindTarget(screen, child)
+            end
+        end
+        trackRootConnection(screen.ChildAdded:Connect(consider))
+        for _, child in ipairs(screen:GetChildren()) do
+            consider(child)
+        end
+    end
+
+    trackRootConnection(parent.ChildAdded:Connect(bindScreen))
+    for _, child in ipairs(parent:GetChildren()) do
+        bindScreen(child)
+    end
 end
 
-local obj1
 
-obj1 = {
-	Version = "2.0.0",
-	Options = {},
-	Windows = {},
-	Unloaded = false,
-	Motion = result1,
-	Icons = obj,
-	GetIcon = function(param39, flag18)
-		if type(flag18) ~= "string" or flag18 == "" then
-			return nil
-		end
+local function findLeftCenterSources()
+    local screen = playerGui:FindFirstChild("LeftCenter")
+    local frame = screen and screen:FindFirstChild("LeftCenter")
+    local buttons = frame and frame:FindFirstChild("Buttons")
+    local shop = buttons and buttons:FindFirstChild("Shop")
+    local icon = shop and shop:FindFirstChild("Icon")
+    local text = shop and shop:FindFirstChild("Txt")
+    if not (screen and frame and buttons and shop and icon and text) then
+        return nil
+    end
 
-		if string.sub(flag18, 1, 3) == "rbx" then
-			return flag18
-		end
-		return obj[flag18]
-	end,
-	Round = function(param40, num26, num27)
-		if num27 == 0 then
-			return math.floor(num26 + 0.5)
-		end
-		local n7 = 10 ^ num27
-		return math.floor(num26 * n7 + 0.5) / n7
-	end,
-	Guard = function(param41, flag19, ...)
-		if not flag19 then
-			return
-		end
-		local func24 = pcall
-		local packed2 = table.pack(...)
-		packed2.n = 2 + packed2.n - 1
-		table.move(packed2, 1, packed2.n, 2, packed2)
-		packed2[1] = flag19
-		local value10, value11 = func24(table.unpack(packed2, 1, packed2.n))
-		if value10 then
-			return
-		end
-		local foundAt = string.find(tostring(value11), ":%d+: ")
-
-		obj1:Notify({
-			Kind = "bad",
-			Title = "Callback error",
-			Content = foundAt and string.sub(value11, string.find(value11, ": ", foundAt) + 2) or tostring(value11),
-			Duration = 6,
-		})
-	end,
-}
-
-local result3 = func23()
-
-for _, child in ipairs(result3:GetChildren()) do
-	if child.Name == "NightHub" and child:IsA("ScreenGui") then
-		child:Destroy()
-	end
+    return screen, frame, buttons, shop, icon, text
 end
 
-local ScreenGui = func2("ScreenGui", {
-	Name = "NightHub",
-	ResetOnSpawn = false,
-	IgnoreGuiInset = true,
-	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-	DisplayOrder = 9999,
-}, result3)
+local sourceLeftCenterScreen
+local sourceLeftCenter
+local sourceButtons
+local sourceShop
+local sourceShopIcon
+local sourceShopText
+sourceLeftCenterScreen, sourceLeftCenter, sourceButtons,
+    sourceShop, sourceShopIcon, sourceShopText = findLeftCenterSources()
+
+local leftCenterFrame = sourceLeftCenter
+local hudRestorePosition = leftCenterFrame
+    and sourceLeftCenter.Position
+    or UDim2.fromScale(0, 0.5)
+local hudTween = nil
+local hudTweenConnection = nil
+local hudAnimationSerial = 0
+Runtime.chilliIsOpen = false
+
+local function cancelHudTween()
+    if hudTweenConnection then
+        hudTweenConnection:Disconnect()
+        hudTweenConnection = nil
+    end
+    if hudTween then
+        hudTween:Cancel()
+        hudTween = nil
+    end
+end
+
+local launcherGui = Instance.new("ScreenGui")
+launcherGui.Name = LAUNCHER_GUI_NAME
+launcherGui.ResetOnSpawn = false
+launcherGui.IgnoreGuiInset = sourceLeftCenterScreen
+    and sourceLeftCenterScreen.IgnoreGuiInset
+    or false
+launcherGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+launcherGui.DisplayOrder = sourceLeftCenterScreen
+    and sourceLeftCenterScreen.DisplayOrder
+    or 0
+launcherGui:SetAttribute(OWNER_ATTRIBUTE, true)
+if sourceLeftCenterScreen then
+    pcall(function()
+        launcherGui.ScreenInsets = sourceLeftCenterScreen.ScreenInsets
+        launcherGui.SafeAreaCompatibility = sourceLeftCenterScreen.SafeAreaCompatibility
+        launcherGui.ClipToDeviceSafeArea = sourceLeftCenterScreen.ClipToDeviceSafeArea
+    end)
+end
+local gameId = game.GameId
+if gameId ~= 7709344486 then
+    launcherGui.Enabled = false
+end
+launcherGui.Parent = parent
+
+local launcherRoot = Instance.new("Frame")
+launcherRoot.Name = "LeftCenter"
+launcherRoot.AnchorPoint = sourceLeftCenter
+    and sourceLeftCenter.AnchorPoint
+    or Vector2.new(0, 0.5)
+launcherRoot.Position = sourceLeftCenter
+    and sourceLeftCenter.Position
+    or UDim2.fromScale(0, 0.5)
+launcherRoot.Size = sourceLeftCenter
+    and sourceLeftCenter.Size
+    or UDim2.fromScale(1, 1)
+launcherRoot.BackgroundTransparency = 1
+launcherRoot.BorderSizePixel = 0
+launcherRoot.Parent = launcherGui
+
+local sourceRootAspect = sourceLeftCenter
+    and sourceLeftCenter:FindFirstChildOfClass("UIAspectRatioConstraint")
+local launcherRootAspect = Instance.new("UIAspectRatioConstraint")
+launcherRootAspect.AspectRatio = sourceRootAspect and sourceRootAspect.AspectRatio or 2.15
+launcherRootAspect.AspectType = sourceRootAspect and sourceRootAspect.AspectType or Enum.AspectType.FitWithinMaxSize
+launcherRootAspect.DominantAxis = sourceRootAspect and sourceRootAspect.DominantAxis or Enum.DominantAxis.Width
+launcherRootAspect.Parent = launcherRoot
+
+local launcherButtons = Instance.new("Frame")
+launcherButtons.Name = "Buttons"
+launcherButtons.AnchorPoint = sourceButtons
+    and sourceButtons.AnchorPoint
+    or Vector2.new(0, 0.5)
+launcherButtons.Position = sourceButtons
+    and sourceButtons.Position
+    or UDim2.fromScale(0.015625, 0.5)
+launcherButtons.Size = sourceButtons
+    and sourceButtons.Size
+    or UDim2.fromScale(0.062, 0.38)
+launcherButtons.BackgroundTransparency = 1
+launcherButtons.BorderSizePixel = 0
+launcherButtons.Parent = launcherRoot
+
+local sourceButtonsAspect = sourceButtons
+    and sourceButtons:FindFirstChildOfClass("UIAspectRatioConstraint")
+local launcherButtonsAspect = Instance.new("UIAspectRatioConstraint")
+launcherButtonsAspect.AspectRatio = sourceButtonsAspect and sourceButtonsAspect.AspectRatio or 0.3
+launcherButtonsAspect.AspectType = sourceButtonsAspect and sourceButtonsAspect.AspectType or Enum.AspectType.FitWithinMaxSize
+launcherButtonsAspect.DominantAxis = sourceButtonsAspect and sourceButtonsAspect.DominantAxis or Enum.DominantAxis.Width
+launcherButtonsAspect.Parent = launcherButtons
+
+local chilliButton = Instance.new("ImageButton")
+chilliButton.Name = "Chilli"
+chilliButton.AnchorPoint = Vector2.new(0.5, 0.5)
+chilliButton.Position = sourceShop
+    and UDim2.fromScale(0.5, 0)
+    or UDim2.fromScale(0.42, -0.1885267)
+chilliButton.Size = sourceShop
+    and UDim2.fromScale(1, 0.3)
+    or UDim2.fromScale(1, 0.3015267)
+chilliButton.BackgroundColor3 = sourceShop
+    and sourceShop.BackgroundColor3
+    or Color3.fromRGB(255, 255, 255)
+chilliButton.BackgroundTransparency = sourceShop
+    and sourceShop.BackgroundTransparency
+    or 1
+chilliButton.BorderSizePixel = 0
+chilliButton.AutoButtonColor = sourceShop == nil or sourceShop.AutoButtonColor
+chilliButton.Image = sourceShop
+    and sourceShop.Image
+    or "rbxassetid://88734015663903"
+chilliButton.HoverImage = sourceShop
+    and sourceShop.HoverImage
+    or "rbxassetid://119376130178381"
+chilliButton.PressedImage = sourceShop and sourceShop.PressedImage or ""
+chilliButton.ImageColor3 = sourceShop
+    and sourceShop.ImageColor3
+    or Color3.fromRGB(255, 255, 255)
+chilliButton.ImageTransparency = sourceShop
+    and sourceShop.ImageTransparency
+    or 0
+chilliButton.ImageRectOffset = sourceShop
+    and sourceShop.ImageRectOffset
+    or Vector2.new()
+chilliButton.ImageRectSize = sourceShop
+    and sourceShop.ImageRectSize
+    or Vector2.new()
+chilliButton.ResampleMode = sourceShop
+    and sourceShop.ResampleMode
+    or Enum.ResamplerMode.Default
+chilliButton.ScaleType = sourceShop
+    and sourceShop.ScaleType
+    or Enum.ScaleType.Fit
+chilliButton.SliceCenter = sourceShop
+    and sourceShop.SliceCenter
+    or Rect.new()
+chilliButton.SliceScale = sourceShop and sourceShop.SliceScale or 1
+chilliButton.ZIndex = sourceShop and sourceShop.ZIndex or 2
+chilliButton.Parent = launcherButtons
+
+local fallbackButtonGradient = Instance.new("UIGradient")
+fallbackButtonGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(111, 145, 161)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(52, 72, 84)),
+})
+fallbackButtonGradient.Rotation = 90
+fallbackButtonGradient.Enabled = false
+fallbackButtonGradient.Parent = chilliButton
+
+local fallbackButtonStroke = Instance.new("UIStroke")
+fallbackButtonStroke.Color = Color3.fromRGB(34, 45, 52)
+fallbackButtonStroke.Thickness = 0.025
+fallbackButtonStroke.Enabled = false
+pcall(function()
+    fallbackButtonStroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+end)
+fallbackButtonStroke.Parent = chilliButton
+
+local chilliViewport = Instance.new("ViewportFrame")
+chilliViewport.Name = "ChilliViewport"
+chilliViewport.AnchorPoint = sourceShopIcon and sourceShopIcon.AnchorPoint
+    or Vector2.new(0.5, 0.5)
+chilliViewport.Position = sourceShopIcon and sourceShopIcon.Position
+    or UDim2.fromScale(0.5, 0.5)
+chilliViewport.Size = sourceShopIcon and sourceShopIcon.Size
+    or UDim2.fromScale(0.76055, 0.76055)
+chilliViewport.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+chilliViewport.BackgroundTransparency = 1
+chilliViewport.BorderSizePixel = 0
+chilliViewport.Ambient = Color3.fromRGB(255, 255, 255)
+chilliViewport.LightColor = Color3.fromRGB(255, 255, 255)
+chilliViewport.LightDirection = Vector3.new(-1, -1, -1)
+chilliViewport.ImageColor3 = Color3.fromRGB(255, 255, 255)
+chilliViewport.ImageTransparency = 0
+chilliViewport.LayoutOrder = 0
+chilliViewport.ZIndex = sourceShopIcon and sourceShopIcon.ZIndex or 0
+chilliViewport.Visible = true
+chilliViewport.Active = false
+pcall(function()
+    chilliViewport.Interactable = false
+end)
+chilliViewport.Parent = chilliButton
+
+local chilliWorldModel = Instance.new("WorldModel")
+chilliWorldModel.Name = "WorldModel"
+chilliWorldModel.Parent = chilliViewport
+
+local chilliSpider = createEmbeddedSpider()
+chilliSpider.Parent = chilliWorldModel
+chilliSpider.CFrame = CFrame.Angles(
+    math.rad(82.5),
+    math.rad(-153.95),
+    math.rad(0)
+)
+
+local chilliViewportCamera = Instance.new("Camera")
+chilliViewportCamera.Name = "Camera"
+chilliViewportCamera.CameraType = Enum.CameraType.Fixed
+chilliViewportCamera.FieldOfView = 50
+chilliViewportCamera.FieldOfViewMode = Enum.FieldOfViewMode.Vertical
+chilliViewportCamera.Parent = chilliViewport
+chilliViewport.CurrentCamera = chilliViewportCamera
+
+local function frameChilliSpider()
+    local boxCFrame = chilliSpider.CFrame
+    local right = boxCFrame.RightVector
+    local up = boxCFrame.UpVector
+    local look = boxCFrame.LookVector
+    local size = chilliSpider.Size
+    local boxSize = Vector3.new(
+        math.abs(right.X) * size.X
+            + math.abs(up.X) * size.Y
+            + math.abs(look.X) * size.Z,
+        math.abs(right.Y) * size.X
+            + math.abs(up.Y) * size.Y
+            + math.abs(look.Y) * size.Z,
+        math.abs(right.Z) * size.X
+            + math.abs(up.Z) * size.Y
+            + math.abs(look.Z) * size.Z
+    )
+
+    local verticalFieldOfView = math.rad(chilliViewportCamera.FieldOfView)
+    local viewportSize = chilliViewport.AbsoluteSize
+    local aspectRatio = 1
+    if viewportSize.X > 0 and viewportSize.Y > 0 then
+        aspectRatio = viewportSize.X / viewportSize.Y
+    end
+    local horizontalFieldOfView = 2 * math.atan(
+        math.tan(verticalFieldOfView * 0.5) * aspectRatio
+    )
+    local verticalDistance = boxSize.Y
+        / (2 * math.tan(verticalFieldOfView * 0.5))
+    local horizontalDistance = boxSize.X
+        / (2 * math.tan(horizontalFieldOfView * 0.5))
+    local distance = math.max(verticalDistance, horizontalDistance)
+        + boxSize.Z * 0.5
+    distance = distance * 3
+
+    local target = boxCFrame.Position
+    local cameraPosition = target + Vector3.new(0, boxSize.Y * 0.04, distance)
+    chilliViewportCamera.CFrame = CFrame.lookAt(cameraPosition, target)
+    chilliViewportCamera.Focus = CFrame.new(target)
+end
+
+frameChilliSpider()
+task.defer(function()
+    RunService.RenderStepped:Wait()
+    frameChilliSpider()
+end)
+
+local chilliText = Instance.new("TextLabel")
+chilliText.Name = "Txt"
+chilliText.AnchorPoint = sourceShopText and sourceShopText.AnchorPoint or Vector2.new(0.5, 0.5)
+chilliText.Position = sourceShopText and sourceShopText.Position or UDim2.fromScale(0.5, 0.9367089)
+chilliText.Size = sourceShopText and sourceShopText.Size or UDim2.fromScale(1, 0.2278481)
+chilliText.BackgroundTransparency = 1
+chilliText.BorderSizePixel = 0
+chilliText.FontFace = sourceShopText and sourceShopText.FontFace or Font.new(
+    "rbxasset://fonts/families/GothamSSm.json",
+    Enum.FontWeight.ExtraBold
+)
+chilliText.Text = "Chilli Hub"
+chilliText.TextColor3 = sourceShopText and sourceShopText.TextColor3 or Color3.fromRGB(255, 255, 255)
+chilliText.TextTransparency = sourceShopText and sourceShopText.TextTransparency or 0
+chilliText.TextScaled = sourceShopText == nil or sourceShopText.TextScaled
+chilliText.TextWrapped = sourceShopText == nil or sourceShopText.TextWrapped
+chilliText.TextXAlignment = sourceShopText and sourceShopText.TextXAlignment or Enum.TextXAlignment.Center
+chilliText.TextYAlignment = sourceShopText and sourceShopText.TextYAlignment or Enum.TextYAlignment.Center
+chilliText.ZIndex = sourceShopText and sourceShopText.ZIndex or 1
+chilliText.Parent = chilliButton
+
+local sourceTextStroke = sourceShopText and sourceShopText:FindFirstChildOfClass("UIStroke")
+local chilliTextStroke = Instance.new("UIStroke")
+chilliTextStroke.ApplyStrokeMode = sourceTextStroke and sourceTextStroke.ApplyStrokeMode or Enum.ApplyStrokeMode.Contextual
+chilliTextStroke.Color = sourceTextStroke and sourceTextStroke.Color or Color3.fromRGB(0, 0, 0)
+chilliTextStroke.LineJoinMode = sourceTextStroke and sourceTextStroke.LineJoinMode or Enum.LineJoinMode.Round
+chilliTextStroke.Thickness = sourceTextStroke and sourceTextStroke.Thickness or 2
+chilliTextStroke.Transparency = sourceTextStroke and sourceTextStroke.Transparency or 0.35
+if sourceTextStroke then
+    local originalThickness = sourceTextStroke:GetAttribute("OriginalThickness")
+    if originalThickness ~= nil then
+        chilliTextStroke:SetAttribute("OriginalThickness", originalThickness)
+    end
+end
+chilliTextStroke.Parent = chilliText
+
+local function getLiveVerticalStep()
+    if not (sourceButtons and sourceButtons.Parent and sourceShop and sourceShop.Parent) then
+        return nil
+    end
+
+    local shopPosition = sourceShop.AbsolutePosition
+    local shopSize = sourceShop.AbsoluteSize
+    local bestStep = nil
+
+    for _, child in ipairs(sourceButtons:GetChildren()) do
+        if child ~= sourceShop and child:IsA("GuiButton") and child.Visible then
+            local deltaX = math.abs(child.AbsolutePosition.X - shopPosition.X)
+            local deltaY = child.AbsolutePosition.Y - shopPosition.Y
+            if deltaX <= shopSize.X * 0.25 and deltaY > 0 then
+                if not bestStep or deltaY < bestStep then
+                    bestStep = deltaY
+                end
+            end
+        end
+    end
+
+    if bestStep then
+        return bestStep
+    end
+
+    local grid = sourceButtons:FindFirstChildOfClass("UIGridLayout")
+    if grid then
+        return grid.AbsoluteCellSize.Y
+            + grid.CellPadding.Y.Scale * sourceButtons.AbsoluteSize.Y
+            + grid.CellPadding.Y.Offset
+    end
+
+    return shopSize.Y
+end
+
+local function updateChilliLauncherLayout()
+    if not (sourceButtons and sourceButtons.Parent and sourceShop and sourceShop.Parent) then
+        return
+    end
+
+    local buttonsSize = sourceButtons.AbsoluteSize
+    local shopSize = sourceShop.AbsoluteSize
+    if buttonsSize.X <= 0 or buttonsSize.Y <= 0 or shopSize.X <= 0 or shopSize.Y <= 0 then
+        return
+    end
+
+    local buttonsPosition = sourceButtons.AbsolutePosition
+    local shopPosition = sourceShop.AbsolutePosition
+    local verticalStep = getLiveVerticalStep()
+    if not verticalStep then
+        return
+    end
+    local centerX = shopPosition.X + shopSize.X * 0.5
+    local centerY = shopPosition.Y - verticalStep + shopSize.Y * 0.5
+
+    chilliButton.Position = UDim2.fromScale(
+        (centerX - buttonsPosition.X) / buttonsSize.X,
+        (centerY - buttonsPosition.Y) / buttonsSize.Y
+    )
+    chilliButton.Size = UDim2.fromScale(
+        shopSize.X / buttonsSize.X,
+        shopSize.Y / buttonsSize.Y
+    )
+end
+
+local launcherLayoutQueued = false
+local function queueChilliLauncherLayout()
+    
+    
+    if hudTween or launcherLayoutQueued then
+        return
+    end
+    launcherLayoutQueued = true
+    task.defer(function()
+        RunService.RenderStepped:Wait()
+        launcherLayoutQueued = false
+        if launcherGui.Parent then
+            updateChilliLauncherLayout()
+        end
+    end)
+end
+
+local sourceConnections = {}
+local sourceBound = false
+
+local function disconnectSourceConnections()
+    for _, connection in ipairs(sourceConnections) do
+        connection:Disconnect()
+    end
+    table.clear(sourceConnections)
+    sourceBound = false
+end
+
+local function connectSource(signal, callback)
+    local connection = signal:Connect(callback)
+    table.insert(sourceConnections, connection)
+end
+
+local function shiftOneScreenLeft(position)
+    return UDim2.new(
+        position.X.Scale - 1,
+        position.X.Offset,
+        position.Y.Scale,
+        position.Y.Offset
+    )
+end
+
+local function refreshEffectiveLeftCenterHidden()
+    local unavailable = not sourceLeftCenterScreen
+        or not sourceLeftCenterScreen.Parent
+        or not sourceLeftCenterScreen.Enabled
+        or not leftCenterFrame
+        or not leftCenterFrame.Parent
+        or not leftCenterFrame.Visible
+    local shiftedLeft = false
+    if leftCenterFrame and leftCenterFrame.Parent then
+        local currentX = leftCenterFrame.Position.X
+        local restoreX = hudRestorePosition.X
+        shiftedLeft = currentX.Scale < restoreX.Scale - 0.05
+            or (
+                math.abs(currentX.Scale - restoreX.Scale) <= 0.05
+                and currentX.Offset < restoreX.Offset - 4
+            )
+    end
+    local effectiveHidden =
+        launcherGui:GetAttribute("QuickHudHidden") == true
+        or Runtime.chilliIsOpen
+        or unavailable
+        or shiftedLeft
+    if launcherGui:GetAttribute("EffectiveLeftCenterHidden")
+        ~= effectiveHidden
+    then
+        launcherGui:SetAttribute(
+            "EffectiveLeftCenterHidden",
+            effectiveHidden
+        )
+    end
+end
+
+local function adoptLeftCenterSources(screen, frame, buttons, shop, icon, text)
+    if sourceBound
+        or not (screen and frame and buttons and shop and icon and text)
+    then
+        return false
+    end
+
+    sourceBound = true
+
+    sourceLeftCenterScreen = screen
+    sourceLeftCenter = frame
+    sourceButtons = buttons
+    sourceShop = shop
+    sourceShopIcon = icon
+    sourceShopText = text
+    sourceTextStroke = sourceShopText:FindFirstChildOfClass("UIStroke")
+
+    launcherGui.IgnoreGuiInset = sourceLeftCenterScreen.IgnoreGuiInset
+    launcherGui.DisplayOrder = sourceLeftCenterScreen.DisplayOrder
+    pcall(function()
+        launcherGui.ScreenInsets = sourceLeftCenterScreen.ScreenInsets
+        launcherGui.SafeAreaCompatibility = sourceLeftCenterScreen.SafeAreaCompatibility
+        launcherGui.ClipToDeviceSafeArea = sourceLeftCenterScreen.ClipToDeviceSafeArea
+    end)
+
+    launcherRoot.AnchorPoint = sourceLeftCenter.AnchorPoint
+    launcherRoot.Size = sourceLeftCenter.Size
+    sourceRootAspect = sourceLeftCenter:FindFirstChildOfClass("UIAspectRatioConstraint")
+    if sourceRootAspect then
+        launcherRootAspect.AspectRatio = sourceRootAspect.AspectRatio
+        launcherRootAspect.AspectType = sourceRootAspect.AspectType
+        launcherRootAspect.DominantAxis = sourceRootAspect.DominantAxis
+    end
+
+    launcherButtons.AnchorPoint = sourceButtons.AnchorPoint
+    launcherButtons.Position = sourceButtons.Position
+    launcherButtons.Size = sourceButtons.Size
+    sourceButtonsAspect = sourceButtons:FindFirstChildOfClass("UIAspectRatioConstraint")
+    if sourceButtonsAspect then
+        launcherButtonsAspect.AspectRatio = sourceButtonsAspect.AspectRatio
+        launcherButtonsAspect.AspectType = sourceButtonsAspect.AspectType
+        launcherButtonsAspect.DominantAxis = sourceButtonsAspect.DominantAxis
+    end
+
+    chilliButton.BackgroundColor3 = sourceShop.BackgroundColor3
+    chilliButton.BackgroundTransparency = sourceShop.BackgroundTransparency
+    chilliButton.AutoButtonColor = sourceShop.AutoButtonColor
+    chilliButton.Image = sourceShop.Image
+    chilliButton.HoverImage = sourceShop.HoverImage
+    chilliButton.PressedImage = sourceShop.PressedImage
+    chilliButton.ImageColor3 = sourceShop.ImageColor3
+    chilliButton.ImageTransparency = sourceShop.ImageTransparency
+    chilliButton.ImageRectOffset = sourceShop.ImageRectOffset
+    chilliButton.ImageRectSize = sourceShop.ImageRectSize
+    chilliButton.ResampleMode = sourceShop.ResampleMode
+    chilliButton.ScaleType = sourceShop.ScaleType
+    chilliButton.SliceCenter = sourceShop.SliceCenter
+    chilliButton.SliceScale = sourceShop.SliceScale
+    chilliButton.ZIndex = sourceShop.ZIndex
+    fallbackButtonGradient.Enabled = false
+    fallbackButtonStroke.Enabled = false
+
+    chilliViewport.AnchorPoint = sourceShopIcon.AnchorPoint
+    chilliViewport.Position = sourceShopIcon.Position
+    chilliViewport.Size = sourceShopIcon.Size
+    chilliViewport.ZIndex = sourceShopIcon.ZIndex
+
+    chilliText.AnchorPoint = sourceShopText.AnchorPoint
+    chilliText.Position = sourceShopText.Position
+    chilliText.Size = sourceShopText.Size
+    chilliText.FontFace = sourceShopText.FontFace
+    chilliText.TextColor3 = sourceShopText.TextColor3
+    chilliText.TextTransparency = sourceShopText.TextTransparency
+    chilliText.TextScaled = sourceShopText.TextScaled
+    chilliText.TextWrapped = sourceShopText.TextWrapped
+    chilliText.TextXAlignment = sourceShopText.TextXAlignment
+    chilliText.TextYAlignment = sourceShopText.TextYAlignment
+    chilliText.ZIndex = sourceShopText.ZIndex
+
+    if sourceTextStroke then
+        local boundStroke = sourceTextStroke
+        chilliTextStroke.ApplyStrokeMode = boundStroke.ApplyStrokeMode
+        chilliTextStroke.Color = boundStroke.Color
+        chilliTextStroke.LineJoinMode = boundStroke.LineJoinMode
+        chilliTextStroke.Thickness = boundStroke.Thickness
+        chilliTextStroke.Transparency = boundStroke.Transparency
+        connectSource(
+            boundStroke:GetPropertyChangedSignal("Thickness"),
+            function()
+                chilliTextStroke.Thickness = boundStroke.Thickness
+            end
+        )
+        connectSource(
+            boundStroke:GetPropertyChangedSignal("Transparency"),
+            function()
+                chilliTextStroke.Transparency = boundStroke.Transparency
+            end
+        )
+    end
+
+    leftCenterFrame = sourceLeftCenter
+    hudAnimationSerial = hudAnimationSerial + 1
+    cancelHudTween()
+    local savedRestorePosition = launcherGui:GetAttribute(
+        "HudRestorePosition"
+    )
+    if typeof(savedRestorePosition) == "UDim2" then
+        hudRestorePosition = savedRestorePosition
+    else
+        hudRestorePosition = leftCenterFrame.Position
+    end
+    
+    
+    while hudRestorePosition.X.Scale <= -0.5 do
+        hudRestorePosition = UDim2.new(
+            hudRestorePosition.X.Scale + 1,
+            hudRestorePosition.X.Offset,
+            hudRestorePosition.Y.Scale,
+            hudRestorePosition.Y.Offset
+        )
+    end
+    if Runtime.chilliIsOpen
+        or launcherGui:GetAttribute("QuickHudHidden") == true
+    then
+        leftCenterFrame.Position = shiftOneScreenLeft(
+            hudRestorePosition
+        )
+        launcherGui:SetAttribute(
+            "HudRestorePosition",
+            hudRestorePosition
+        )
+        if launcherGui:GetAttribute("QuickHudHidden") == true then
+            leftCenterFrame.Visible = false
+            sourceLeftCenterScreen.Enabled = false
+            launcherGui:SetAttribute("LeftCenterHiddenByLibrary", true)
+            launcherGui:SetAttribute(
+                "LeftCenterScreenDisabledByLibrary",
+                true
+            )
+        end
+    else
+        leftCenterFrame.Position = hudRestorePosition
+        launcherGui:SetAttribute("HudRestorePosition", nil)
+    end
+    launcherRoot.Position = Runtime.chilliIsOpen
+        and shiftOneScreenLeft(hudRestorePosition)
+        or hudRestorePosition
+
+    connectSource(
+        leftCenterFrame:GetPropertyChangedSignal("Position"),
+        function()
+            local shouldStayHidden =
+                launcherGui:GetAttribute("QuickHudHidden") == true
+                or Runtime.chilliIsOpen
+            if shouldStayHidden then
+                
+                
+                
+                if not hudTween then
+                    local hiddenPosition = shiftOneScreenLeft(
+                        hudRestorePosition
+                    )
+                    if leftCenterFrame.Position ~= hiddenPosition then
+                        leftCenterFrame.Position = hiddenPosition
+                    end
+                end
+                refreshEffectiveLeftCenterHidden()
+                return
+            end
+            launcherRoot.Position = leftCenterFrame.Position
+            refreshEffectiveLeftCenterHidden()
+        end
+    )
+    connectSource(
+        leftCenterFrame:GetPropertyChangedSignal("Visible"),
+        function()
+            if launcherGui:GetAttribute("QuickHudHidden") == true
+                and leftCenterFrame.Visible
+            then
+                leftCenterFrame.Visible = false
+            end
+            refreshEffectiveLeftCenterHidden()
+        end
+    )
+    connectSource(
+        sourceLeftCenterScreen:GetPropertyChangedSignal("Enabled"),
+        function()
+            if launcherGui:GetAttribute("QuickHudHidden") == true
+                and sourceLeftCenterScreen.Enabled
+            then
+                sourceLeftCenterScreen.Enabled = false
+            end
+            refreshEffectiveLeftCenterHidden()
+        end
+    )
+    for _, instance in ipairs({ sourceLeftCenter, sourceButtons, sourceShop }) do
+        connectSource(
+            instance:GetPropertyChangedSignal("AbsolutePosition"),
+            queueChilliLauncherLayout
+        )
+        connectSource(
+            instance:GetPropertyChangedSignal("AbsoluteSize"),
+            queueChilliLauncherLayout
+        )
+    end
+    connectSource(sourceButtons.ChildAdded, queueChilliLauncherLayout)
+    connectSource(sourceButtons.ChildRemoved, queueChilliLauncherLayout)
+
+    queueChilliLauncherLayout()
+    refreshEffectiveLeftCenterHidden()
+    task.defer(frameChilliSpider)
+    return true
+end
+
+if sourceLeftCenterScreen then
+    adoptLeftCenterSources(
+        sourceLeftCenterScreen,
+        sourceLeftCenter,
+        sourceButtons,
+        sourceShop,
+        sourceShopIcon,
+        sourceShopText
+    )
+else
+    task.spawn(function()
+        local retryDeadline = os.clock() + 10
+        while launcherGui.Parent
+            and not sourceBound
+            and os.clock() < retryDeadline
+        do
+            local screen, frame, buttons, shop, icon, text =
+                findLeftCenterSources()
+            if adoptLeftCenterSources(
+                screen,
+                frame,
+                buttons,
+                shop,
+                icon,
+                text
+            ) then
+                break
+            end
+            task.wait(0.25)
+        end
+    end)
+end
+
+
+
+trackRootConnection(playerGui.DescendantAdded:Connect(function()
+    local screen, frame, buttons, shop, icon, text = findLeftCenterSources()
+    if frame
+        and (frame ~= leftCenterFrame or screen ~= sourceLeftCenterScreen)
+    then
+        disconnectSourceConnections()
+        adoptLeftCenterSources(screen, frame, buttons, shop, icon, text)
+    end
+end))
+
+
+
+
+local HUD_RENDER_GUARD_NAME = "ChilliLibraryLeftCenterRenderGuard"
+
+local function enforceHiddenLeftCenterBeforeRender()
+    if not rootGui.Parent
+        or not leftCenterFrame
+        or not leftCenterFrame.Parent
+    then
+        return
+    end
+
+    local manuallyHidden =
+        launcherGui:GetAttribute("QuickHudHidden") == true
+    if manuallyHidden and not hudTween then
+        if leftCenterFrame.Visible then
+            leftCenterFrame.Visible = false
+        end
+        if sourceLeftCenterScreen and sourceLeftCenterScreen.Enabled then
+            sourceLeftCenterScreen.Enabled = false
+        end
+        launcherGui:SetAttribute("LeftCenterHiddenByLibrary", true)
+        launcherGui:SetAttribute(
+            "LeftCenterScreenDisabledByLibrary",
+            true
+        )
+    elseif not manuallyHidden
+        and launcherGui:GetAttribute("LeftCenterHiddenByLibrary") == true
+    then
+        leftCenterFrame.Visible = true
+        launcherGui:SetAttribute("LeftCenterHiddenByLibrary", nil)
+        if sourceLeftCenterScreen
+            and launcherGui:GetAttribute(
+                "LeftCenterScreenDisabledByLibrary"
+            ) == true
+        then
+            sourceLeftCenterScreen.Enabled = true
+            launcherGui:SetAttribute(
+                "LeftCenterScreenDisabledByLibrary",
+                nil
+            )
+        end
+    end
+
+    if hudTween then
+        return
+    end
+
+    local shouldStayHidden = manuallyHidden or Runtime.chilliIsOpen
+    if not shouldStayHidden then
+        return
+    end
+
+    local hiddenPosition = shiftOneScreenLeft(hudRestorePosition)
+    if leftCenterFrame.Position ~= hiddenPosition then
+        leftCenterFrame.Position = hiddenPosition
+    end
+end
 
 pcall(function()
-	ScreenGui.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
+    RunService:UnbindFromRenderStep(HUD_RENDER_GUARD_NAME)
+end)
+RunService:BindToRenderStep(
+    HUD_RENDER_GUARD_NAME,
+    Enum.RenderPriority.Last.Value + 10000,
+    enforceHiddenLeftCenterBeforeRender
+)
+
+rootGui.Destroying:Connect(function()
+    pcall(function()
+        RunService:UnbindFromRenderStep(HUD_RENDER_GUARD_NAME)
+    end)
+    disconnectRootConnections()
+    disconnectSourceConnections()
 end)
 
-obj1.GUI = ScreenGui
-
-local Frame = func2("Frame", {
-	Name = "Notes",
-	AnchorPoint = Vector2.new(1, 0),
-	Position = UDim2.new(1, -16, 0, 16),
-	Size = UDim2.fromOffset(272, 0),
-	BackgroundTransparency = 1,
-	ZIndex = 80,
-}, ScreenGui)
-
-local function func25()
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = "Note",
-		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, 0, 0, 0),
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundColor3 = color,
-		BackgroundTransparency = 0.04,
-		BorderSizePixel = 0,
-		GroupTransparency = 0,
-		ZIndex = 81,
-	}, Frame)
-
-	func3(CanvasGroup, 11)
-	func4(CanvasGroup, color2)
-	func2("UISizeConstraint", { MinSize = Vector2.new(0, 62) }, CanvasGroup)
-
-	func3(func2("Frame", {
-		Name = "Bar",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 7, 0.5, 0),
-		Size = UDim2.new(0, 3, 1, -22),
-		BackgroundColor3 = color3,
-		BorderSizePixel = 0,
-		ZIndex = 82,
-	}, CanvasGroup), 2)
-
-	local Frame2 = func2("Frame", {
-		Name = "Pip",
-		Position = UDim2.fromOffset(18, 13),
-		Size = UDim2.fromOffset(26, 26),
-		BackgroundColor3 = color3,
-		BackgroundTransparency = 0.84,
-		BorderSizePixel = 0,
-		ZIndex = 82,
-	}, CanvasGroup)
-
-	func3(Frame2, 8)
-
-	func2("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.58, 0.58),
-		BackgroundTransparency = 1,
-		Image = "",
-		ImageColor3 = color3,
-		ScaleType = Enum.ScaleType.Fit,
-		ZIndex = 83,
-	}, Frame2)
-
-	local Frame3 = func2("Frame", {
-		Name = "Body",
-		Position = UDim2.fromOffset(52, 11),
-		Size = UDim2.new(1, -64, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundTransparency = 1,
-		ZIndex = 82,
-	}, CanvasGroup)
-
-	func5(Frame3, 0, 0, 12, 0)
-	func6(Frame3, 2)
-
-	func7({
-		Name = "Title",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Text = "Notification",
-		TextSize = 12,
-		TextWrapped = true,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		LayoutOrder = 1,
-		FontFace = func1(Enum.FontWeight.Bold),
-		ZIndex = 83,
-	}, Frame3)
-
-	func7({
-		Name = "Desc",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Text = "",
-		TextSize = 11,
-		TextTransparency = n4,
-		TextWrapped = true,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		LayoutOrder = 2,
-		ZIndex = 83,
-	}, Frame3)
-
-	func2("Frame", {
-		Name = "Fuse",
-		AnchorPoint = Vector2.new(0, 1),
-		Position = UDim2.new(0, 0, 1, 0),
-		Size = UDim2.new(1, 0, 0, 2),
-		BackgroundColor3 = color3,
-		BackgroundTransparency = 0.3,
-		BorderSizePixel = 0,
-		ZIndex = 84,
-	}, CanvasGroup)
-
-	func8(CanvasGroup, 85)
-	return CanvasGroup
+local function applyOriginalStrokeSizing()
+    
+    
+    
+    
+    pcall(function()
+        for _, inst in ipairs(rootGui:GetDescendants()) do
+            if inst:IsA("UIStroke") then
+                inst.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+                inst.BorderStrokePosition = Enum.BorderStrokePosition.Outer
+                inst.BorderOffset = UDim.new(0, 0)
+            end
+        end
+    end)
 end
 
-local list5 = {}
-local n7 = 4
--- deobfuscated by 𝐒𝐋 -> https://discord.gg/x7YbZeezpm
+local function makeDraggable(handle, target, canStart, moved)
+    handle.Active = true
 
-local function func26()
-	local n8 = 0
+    local dragging = false
+    local dragInput = nil
+    local dragStart = Vector2.new(0, 0)
+    local startPosition = Vector2.new(0, 0)
 
-	for i, item in ipairs(list5) do
-		item.ZIndex = 140 - i
-		result1.spring(item, { Position = UDim2.new(1, 0, 0, n8) }, tbl18)
-		n8 = n8 + item.AbsoluteSize.Y + 8
-	end
+    local function cancelDrag()
+        dragging = false
+        dragInput = nil
+    end
+
+    trackRootConnection(handle.InputBegan:Connect(function(input)
+        if dragging or input.UserInputState ~= Enum.UserInputState.Begin then
+            return
+        end
+        if input.UserInputType ~= Enum.UserInputType.MouseButton1
+            and input.UserInputType ~= Enum.UserInputType.Touch
+        then
+            return
+        end
+        if canStart and not canStart() then
+            return
+        end
+
+        local region = rootGui.AbsoluteSize
+        if region.X <= 0 or region.Y <= 0 then
+            return
+        end
+
+        local pointer = Vector2.new(input.Position.X, input.Position.Y)
+        local handlePosition = handle.AbsolutePosition
+        local handleSize = handle.AbsoluteSize
+        if pointer.X < handlePosition.X
+            or pointer.X > handlePosition.X + handleSize.X
+            or pointer.Y < handlePosition.Y
+            or pointer.Y > handlePosition.Y + handleSize.Y
+        then
+            return
+        end
+        
+        
+        for _, child in ipairs(handle:GetDescendants()) do
+            if child:IsA("GuiButton") and child.Visible then
+                local childPosition = child.AbsolutePosition
+                local childSize = child.AbsoluteSize
+                if pointer.X >= childPosition.X
+                    and pointer.X <= childPosition.X + childSize.X
+                    and pointer.Y >= childPosition.Y
+                    and pointer.Y <= childPosition.Y + childSize.Y
+                then
+                    return
+                end
+            end
+        end
+
+        dragging = true
+        dragInput = input.UserInputType == Enum.UserInputType.Touch
+            and input
+            or nil
+        dragStart = pointer
+        startPosition = Vector2.new(
+            target.Position.X.Scale + target.Position.X.Offset / region.X,
+            target.Position.Y.Scale + target.Position.Y.Offset / region.Y
+        )
+    end))
+
+    trackRootConnection(UserInputService.InputChanged:Connect(function(input)
+        if not dragging then
+            return
+        end
+        local inputMoved = (dragInput and input == dragInput)
+            or (not dragInput
+                and input.UserInputType == Enum.UserInputType.MouseMovement)
+        if not inputMoved then
+            return
+        end
+
+        local region = rootGui.AbsoluteSize
+        if region.X <= 0 or region.Y <= 0 then
+            return
+        end
+
+        local delta = Vector2.new(input.Position.X, input.Position.Y)
+            - dragStart
+        local targetFraction = Vector2.new(
+            target.AbsoluteSize.X / region.X,
+            target.AbsoluteSize.Y / region.Y
+        )
+        local anchor = target.AnchorPoint
+        local minX = targetFraction.X * anchor.X
+        local maxX = 0.998 - targetFraction.X * (1 - anchor.X)
+        local minY = targetFraction.Y * anchor.Y
+        
+        
+        
+        local maxY = 0.98 + targetFraction.Y * anchor.Y
+
+        target.Position = UDim2.fromScale(
+            math.clamp(
+                startPosition.X + delta.X / region.X,
+                math.min(minX, maxX),
+                math.max(minX, maxX)
+            ),
+            math.clamp(
+                startPosition.Y + delta.Y / region.Y,
+                math.min(minY, maxY),
+                math.max(minY, maxY)
+            )
+        )
+        if moved then
+            moved(target.Position)
+        end
+    end))
+
+    trackRootConnection(UserInputService.InputEnded:Connect(function(input)
+        if not dragging then
+            return
+        end
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input == dragInput
+        then
+            cancelDrag()
+        end
+    end))
+
+    return {
+        Cancel = cancelDrag,
+        IsDragging = function()
+            return dragging
+        end,
+    }
 end
 
-local function func27(part)
-	local value12 = nil
 
-	for i, item2 in ipairs(list5) do
-		if item2 == part then
-			value12 = i
-			break
-		else
-			value12 = nil
-		end
-	end
 
-	if not value12 then
-		return
-	end
-	table.remove(list5, value12)
-	result1.stop(part.Fuse, "Size")
-	result1.tween(part, { GroupTransparency = 1 }, { time = 0.16, ease = result1.ease.out })
 
-	local tbl19 = {
-		time = 0.22,
-		ease = result1.ease.backIn,
-		done = function()
-			part:Destroy()
-		end,
-	}
+local SAFE_TOUCH_TAP_DISTANCE = 10
+local safeTouchPresses = setmetatable({}, { __mode = "k" })
 
-	result1.tween(part, { Position = UDim2.new(1, 52, 0, part.Position.Y.Offset) }, tbl19)
-	func26()
+local function pointInsideGui(guiObject, point)
+    if not guiObject or not guiObject.Parent or not guiObject.Visible then
+        return false
+    end
+    local position = guiObject.AbsolutePosition
+    local size = guiObject.AbsoluteSize
+    return point.X >= position.X
+        and point.X <= position.X + size.X
+        and point.Y >= position.Y
+        and point.Y <= position.Y + size.Y
 end
 
-obj1.Notify = function(self, flag20)
-	local tbl20 = flag20 or {}
-	local info = tbl1[tbl20.Kind] or tbl1.info
-	local result4 = func25()
-	result4.Bar.BackgroundColor3 = info.tint
-	result4.Pip.BackgroundColor3 = info.tint
-	result4.Pip.Art.Image = info.art
-	result4.Pip.Art.ImageColor3 = info.tint
-	result4.Fuse.BackgroundColor3 = info.tint
-	result4.Body.Title.Text = tbl20.Title or "Notification"
-	result4.Body.Desc.Text = tbl20.Content or ""
-	result4.Body.Desc.Visible = (tbl20.Content or "") ~= ""
-	table.insert(list5, 1, result4)
-	result1.set(result4, { GroupTransparency = 1, Position = UDim2.new(1, 52, 0, 0) })
-	func26()
-	task.defer(func26)
-	result1.tween(result4, { GroupTransparency = 0 }, { time = 0.2, ease = result1.ease.out })
-	local duration = tbl20.Duration or 4
-	result1.set(result4.Fuse, { Size = UDim2.new(1, 0, 0, 2) })
-	local tbl21 = { time = duration, ease = result1.ease.linear }
-	result1.tween(result4.Fuse, { Size = UDim2.new(0, 0, 0, 2) }, tbl21)
+trackRootConnection(UserInputService.InputChanged:Connect(function(input)
+    local press = safeTouchPresses[input]
+    if not press then
+        return
+    end
+    local point = Vector2.new(input.Position.X, input.Position.Y)
+    press.Position = point
+    if (point - press.Start).Magnitude > SAFE_TOUCH_TAP_DISTANCE then
+        press.Cancelled = true
+    end
+end))
 
-	result4.Hit.MouseButton1Click:Connect(function()
-		func27(result4)
-	end)
+trackRootConnection(UserInputService.InputEnded:Connect(function(input)
+    local press = safeTouchPresses[input]
+    if not press then
+        return
+    end
+    local point = Vector2.new(input.Position.X, input.Position.Y)
+    press.Position = point
+    press.Ended = true
+    if (point - press.Start).Magnitude > SAFE_TOUCH_TAP_DISTANCE
+        or not pointInsideGui(press.Button, point)
+    then
+        press.Cancelled = true
+    end
+    
+    
+    task.delay(0.2, function()
+        if safeTouchPresses[input] == press then
+            safeTouchPresses[input] = nil
+        end
+    end)
+end))
 
-	task.delay(duration, function()
-		if result4.Parent then
-			func27(result4)
-		end
-	end)
+local function connectSafeActivation(button, callback)
+    button.Active = true
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType ~= Enum.UserInputType.Touch
+            or input.UserInputState ~= Enum.UserInputState.Begin
+        then
+            return
+        end
+        local point = Vector2.new(input.Position.X, input.Position.Y)
+        if not pointInsideGui(button, point) then
+            return
+        end
+        safeTouchPresses[input] = {
+            Button = button,
+            Start = point,
+            Position = point,
+            Cancelled = false,
+            Ended = false,
+        }
+    end)
 
-	while n7 < #list5 do
-		func27(list5[#list5])
-	end
-
-	return { Close = function()
-		func27(result4)
-	end }
+    return button.Activated:Connect(function(input)
+        if input and input.UserInputType == Enum.UserInputType.Touch then
+            local press = safeTouchPresses[input]
+            if not press
+                or press.Button ~= button
+                or press.Cancelled
+                or not pointInsideGui(button, press.Position)
+            then
+                return
+            end
+        end
+        callback()
+    end)
 end
 
-local function func28(param42, param43, param44, param45, param46, param47, param48)
-	func2("ImageLabel", {
-		Name = param43,
-		BackgroundTransparency = 1,
-		Image = url,
-		ImageColor3 = param44,
-		ImageTransparency = param48,
-		ScaleType = Enum.ScaleType.Stretch,
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(param45, param46),
-		Size = UDim2.fromOffset(param47, param47),
-		ZIndex = 1,
-	}, param42)
+local function makeButtonFeedback(button)
+    local normalSize = button.Size
+    local hovered = false
+    local activeTween = nil
+
+    local function scaledSize(multiplier)
+        return UDim2.new(
+            normalSize.X.Scale * multiplier,
+            normalSize.X.Offset * multiplier,
+            normalSize.Y.Scale * multiplier,
+            normalSize.Y.Offset * multiplier
+        )
+    end
+
+    local function tweenSize(size, duration)
+        if activeTween then
+            activeTween:Cancel()
+        end
+        activeTween = TweenService:Create(
+            button,
+            TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            { Size = size }
+        )
+        activeTween:Play()
+    end
+
+    button.MouseEnter:Connect(function()
+        hovered = true
+        tweenSize(scaledSize(1.04), 0.12)
+    end)
+
+    button.MouseLeave:Connect(function()
+        hovered = false
+        tweenSize(normalSize, 0.12)
+    end)
+
+    button.MouseButton1Down:Connect(function()
+        tweenSize(scaledSize(0.96), 0.06)
+    end)
+
+    button.MouseButton1Up:Connect(function()
+        tweenSize(hovered and scaledSize(1.04) or normalSize, 0.09)
+    end)
 end
 
-local function func29(param49)
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = "Backdrop",
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n3,
-		BorderSizePixel = 0,
-		ZIndex = 0,
-	}, param49)
+Runtime.menuSize = rootGui:GetAttribute("MenuSize") or mainFrame.Size
+local defaultOpenPosition = UDim2.fromScale(0.5, 0.475)
+Runtime.windowRestPosition = defaultOpenPosition
+Runtime.windowDragController = nil
+local function offsetWindowPosition(position, yScale)
+    return UDim2.new(
+        position.X.Scale,
+        position.X.Offset,
+        position.Y.Scale + yScale,
+        position.Y.Offset
+    )
+end
+local function openingWindowPosition()
+    return offsetWindowPosition(Runtime.windowRestPosition, 0.245)
+end
+local function closedWindowPosition()
+    return UDim2.new(
+        Runtime.windowRestPosition.X.Scale,
+        Runtime.windowRestPosition.X.Offset,
+        1.55,
+        0
+    )
+end
+local WINDOW_OPEN_DURATION = 0.34
+local WINDOW_CLOSE_DURATION = 0.26
+local animationLocked = false
+local windowTween = nil
+local windowTweenConnection = nil
+local windowAnimationSerial = 0
 
-	func3(CanvasGroup, 14)
-	func28(CanvasGroup, "Dawn", Color3.fromRGB(59, 130, 246), 0.06, 0.08, 620, 0.42)
-	func28(CanvasGroup, "Dusk", Color3.fromRGB(139, 92, 246), 0.96, 0.24, 560, 0.55)
-	func28(CanvasGroup, "Reef", Color3.fromRGB(34, 176, 200), 0.18, 1.02, 500, 0.7)
-	func28(CanvasGroup, "Deep", Color3.fromRGB(79, 70, 229), 0.78, 1.04, 560, 0.6)
 
-	local Frame2 = func2("Frame", {
-		Name = "Veil",
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = color,
-		BackgroundTransparency = 0.4,
-		BorderSizePixel = 0,
-		ZIndex = 40,
-	}, CanvasGroup)
+Runtime.windowAnimating = false
 
-	local func30 = func2
-	local tbl22 = { Rotation = 90 }
-	local numberSequence = NumberSequence.new
-	local value13 = NumberSequenceKeypoint.new(0, 1)
-	local value14 = NumberSequenceKeypoint.new(0.45, 0.55)
-	local new = NumberSequenceKeypoint.new
-	local tbl23 = { value13, value14 }
 
-	do
-		local values = table.pack(new(1, 0))
-		table.move(values, 1, values.n, 3, tbl23)
-	end
 
-	tbl22.Transparency = numberSequence(tbl23)
-	func30("UIGradient", tbl22, Frame2)
 
-	local Frame3 = func2("Frame", {
-		Name = "Sheen",
-		Size = UDim2.new(1, 0, 0, 1),
-		BackgroundColor3 = color4,
-		BackgroundTransparency = 0.86,
-		BorderSizePixel = 0,
-		ZIndex = 45,
-	}, CanvasGroup)
 
-	local func31 = func2
-	local tbl24 = {}
-	local numberSequence2 = NumberSequence.new
-	local value15 = NumberSequenceKeypoint.new(0, 1)
-	local value16 = NumberSequenceKeypoint.new(0.5, 0)
-	local new2 = NumberSequenceKeypoint.new
-	local tbl25 = { value15, value16 }
 
-	do
-		local values = table.pack(new2(1, 1))
-		table.move(values, 1, values.n, 3, tbl25)
-	end
 
-	tbl24.Transparency = numberSequence2(tbl25)
-	func31("UIGradient", tbl24, Frame3)
-	return CanvasGroup
+
+
+
+
+
+
+
+
+
+
+
+
+
+local ContentScale = {
+    Base = Runtime.menuSize,
+    Listeners = {},
+    ReflowTabs = nil,
+    X = 1,
+    Y = 1,
+}
+
+
+function ContentScale.OnChanged(callback)
+    table.insert(ContentScale.Listeners, callback)
+    callback(ContentScale.X, ContentScale.Y)
+    return callback
 end
 
-local function func32(param50, param51, param52, param53)
-	local TextButton = func2("TextButton", {
-		Name = param51,
-		Size = UDim2.fromOffset(26, 26),
-		Position = UDim2.fromOffset(param53, 0),
-		BackgroundColor3 = color4,
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		AutoButtonColor = false,
-		Text = "",
-	}, param50)
+function ContentScale.Refresh()
+    local function axisScale(baseValue, currentValue)
+        if baseValue > 0 and currentValue > 0 then
+            return math.max(1, currentValue / baseValue)
+        end
+        return 1
+    end
 
-	func3(TextButton, 7)
+    local nextX = axisScale(
+        ContentScale.Base.X.Scale,
+        Runtime.menuSize.X.Scale
+    )
+    local nextY = axisScale(
+        ContentScale.Base.Y.Scale,
+        Runtime.menuSize.Y.Scale
+    )
+    if math.abs(nextX - ContentScale.X) < 0.0001
+        and math.abs(nextY - ContentScale.Y) < 0.0001
+    then
+        return
+    end
+    ContentScale.X = nextX
+    ContentScale.Y = nextY
 
-	func2("ImageLabel", {
-		Name = "Glyph",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(14, 14),
-		BackgroundTransparency = 1,
-		Image = param52,
-		ImageColor3 = color4,
-		ImageTransparency = 0.45,
-		ScaleType = Enum.ScaleType.Fit,
-	}, TextButton)
-
-	TextButton.MouseEnter:Connect(function()
-		func21(TextButton, tbl14, { BackgroundTransparency = 0.9 })
-		func21(TextButton.Glyph, tbl14, { ImageTransparency = 0.1 })
-	end)
-
-	TextButton.MouseLeave:Connect(function()
-		func21(TextButton, tbl14, { BackgroundTransparency = 1 })
-		func21(TextButton.Glyph, tbl14, { ImageTransparency = 0.45 })
-	end)
-
-	return TextButton
+    for index = #ContentScale.Listeners, 1, -1 do
+        local callback = ContentScale.Listeners[index]
+        local ok, keep = pcall(callback, nextX, nextY)
+        if not ok then
+        elseif keep == false then
+            table.remove(ContentScale.Listeners, index)
+        end
+    end
+    if ContentScale.ReflowTabs then
+        ContentScale.ReflowTabs()
+    end
 end
 
-obj1.CreateWindow = function(param54, flag21)
-	local tbl26 = flag21 or {}
-	local offset = tbl26.Size and tbl26.Size.X.Offset or 500
-	local offset2 = tbl26.Size and tbl26.Size.Y.Offset or 405
-	local tabWidth = tbl26.TabWidth or 132
 
-	local window = setmetatable({
-		Tabs = {},
-		Pages = {},
-		Current = nil,
-		Count = 0,
-		Folded = false,
-		Rail = tabWidth,
-		BaseW = offset,
-		BaseH = offset2,
-	}, index)
 
-	local ImageLabel = func2("ImageLabel", {
-		Name = "Halo",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(offset + 64, offset2 + 64),
-		BackgroundTransparency = 1,
-		Image = url2,
-		ImageColor3 = Color3.fromRGB(0, 0, 0),
-		ImageTransparency = 0.46,
-		ScaleType = Enum.ScaleType.Stretch,
-		ZIndex = 0,
-	}, ScreenGui)
 
-	local UIScale = func2("UIScale", { Scale = 1 }, ImageLabel)
 
-	local Frame2 = func2("Frame", {
-		Name = "Window",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(offset, offset2),
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		ClipsDescendants = true,
-	}, ScreenGui)
 
-	local UIScale2 = func2("UIScale", { Name = "Scale", Scale = 1 }, Frame2)
-	func3(Frame2, 14)
-	func4(Frame2, color2)
-	func29(Frame2)
 
-	local function func33()
-		ImageLabel.Position = Frame2.Position
-		ImageLabel.Size = UDim2.new(0, Frame2.Size.X.Offset + 64, 0, Frame2.Size.Y.Offset + 64)
-		UIScale.Scale = UIScale2.Scale
-		ImageLabel.Visible = Frame2.Visible
-	end
 
-	Frame2:GetPropertyChangedSignal("Position"):Connect(func33)
-	Frame2:GetPropertyChangedSignal("Size"):Connect(func33)
-	Frame2:GetPropertyChangedSignal("Visible"):Connect(func33)
-	UIScale2:GetPropertyChangedSignal("Scale"):Connect(func33)
-	local Frame3 = func2("Frame", { Name = "Top", Size = UDim2.new(1, 0, 0, 50), BackgroundTransparency = 1 }, Frame2)
-	local func34 = func2
 
-	local ImageLabel2 = func34("ImageLabel", {
-		Name = "Logo",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 14, 0.5, 0),
-		Size = UDim2.fromOffset(28, 28),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-		Image = tbl26.Logo or "rbxassetid://98448650971303",
-		ImageColor3 = color4,
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame3)
-
-	func3(ImageLabel2, 9)
-	func4(ImageLabel2, color2, 0.4)
-
-	func7({
-		Name = "Title",
-		Position = UDim2.fromOffset(52, 11),
-		Size = UDim2.fromOffset(150, 17),
-		Text = string.upper(tbl26.Title or "NIGHT HUB"),
-		TextSize = 13,
-		FontFace = func1(Enum.FontWeight.Bold),
-	}, Frame3)
-
-	func7({
-		Name = "Sub",
-		Position = UDim2.fromOffset(52, 26),
-		Size = UDim2.fromOffset(150, 13),
-		Text = tbl26.SubTitle or "",
-		TextSize = 10,
-		TextTransparency = n6,
-		TextTruncate = Enum.TextTruncate.AtEnd,
-		Visible = (tbl26.SubTitle or "") ~= "",
-	}, Frame3)
-
-	local Frame4 = func2("Frame", {
-		Name = "Search",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -106, 0.5, 0),
-		Size = UDim2.fromOffset(148, 28),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-	}, Frame3)
-
-	func3(Frame4, 8)
-	local value17 = func4(Frame4, color2, 0.45)
-	local func35 = func2
-
-	func35("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 9, 0.5, 0),
-		Size = UDim2.fromOffset(13, 13),
-		BackgroundTransparency = 1,
-		Image = obj.search or "",
-		ImageColor3 = color4,
-		ImageTransparency = 0.5,
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame4)
-
-	local TextBox = func2("TextBox", {
-		Name = "Field",
-		Position = UDim2.fromOffset(27, 0),
-		Size = UDim2.new(1, -50, 1, 0),
-		BackgroundTransparency = 1,
-		ClearTextOnFocus = false,
-		Text = "",
-		PlaceholderText = "Search",
-		PlaceholderColor3 = color4,
-		TextColor3 = color4,
-		TextSize = 11,
-		TextXAlignment = Enum.TextXAlignment.Left,
-		FontFace = func1(),
-	}, Frame4)
-
-	local TextButton = func2("TextButton", {
-		Name = "Clear",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -6, 0.5, 0),
-		Size = UDim2.fromOffset(16, 16),
-		BackgroundColor3 = color4,
-		BackgroundTransparency = 0.9,
-		BorderSizePixel = 0,
-		AutoButtonColor = false,
-		Text = "",
-		Visible = false,
-	}, Frame4)
-
-	func3(TextButton, 5)
-	-- Source Leak (SL) | https://discord.gg/x7YbZeezpm
-
-	func2("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(9, 9),
-		BackgroundTransparency = 1,
-		Image = obj.close,
-		ImageColor3 = color4,
-		ImageTransparency = 0.25,
-		ScaleType = Enum.ScaleType.Fit,
-	}, TextButton)
-
-	TextBox.Focused:Connect(function()
-		func21(value17, tbl14, { Transparency = 0 })
-		func21(value17, tbl14, { Color = color3 })
-	end)
-
-	TextBox.FocusLost:Connect(function()
-		func21(value17, tbl14, { Transparency = 0.45 })
-		func21(value17, tbl14, { Color = color2 })
-	end)
-
-	TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-		window:Sift(TextBox.Text)
-	end)
-
-	TextButton.MouseButton1Click:Connect(function()
-		TextBox.Text = ""
-	end)
-
-	TextButton.MouseEnter:Connect(function()
-		func21(TextButton, tbl14, { BackgroundTransparency = 0.82 })
-	end)
-
-	TextButton.MouseLeave:Connect(function()
-		func21(TextButton, tbl14, { BackgroundTransparency = 0.9 })
-	end)
-
-	local Frame5 = func2("Frame", {
-		Name = "Tools",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -10, 0.5, 0),
-		Size = UDim2.fromOffset(92, 26),
-		BackgroundTransparency = 1,
-	}, Frame3)
-
-	local mini = func32(Frame5, "Mini", obj.minus, 0)
-	local max = func32(Frame5, "Max", obj.square, 33)
-	local close = func32(Frame5, "Close", obj.close, 66)
-
-	local Frame6 = func2("Frame", {
-		Name = "Body",
-		Position = UDim2.fromOffset(0, 50),
-		Size = UDim2.new(1, 0, 1, -50),
-		BackgroundTransparency = 1,
-	}, Frame2)
-
-	local Frame7 = func2("Frame", { Name = "Side", Size = UDim2.new(0, tabWidth, 1, 0), BackgroundTransparency = 1 }, Frame6)
-
-	local ScrollingFrame = func2("ScrollingFrame", {
-		Name = "Tabs",
-		Position = UDim2.fromOffset(10, 4),
-		Size = UDim2.new(1, -20, 1, -60),
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		CanvasSize = UDim2.new(),
-		AutomaticCanvasSize = Enum.AutomaticSize.Y,
-		ScrollingDirection = Enum.ScrollingDirection.Y,
-		ScrollBarThickness = 0,
-		ElasticBehavior = Enum.ElasticBehavior.Never,
-	}, Frame7)
-
-	func5(ScrollingFrame, 3, 5, 3, 13)
-	func6(ScrollingFrame, 4)
-
-	local Frame8 = func2("Frame", {
-		Name = "Foot",
-		AnchorPoint = Vector2.new(0, 1),
-		Position = UDim2.new(0, 0, 1, 0),
-		Size = UDim2.new(1, 0, 0, 52),
-		BackgroundTransparency = 1,
-	}, Frame7)
-
-	func2("Frame", {
-		Name = "Split",
-		Size = UDim2.new(1, -20, 0, 1),
-		Position = UDim2.fromOffset(10, 0),
-		BackgroundColor3 = color2,
-		BorderSizePixel = 0,
-	}, Frame8)
-
-	local Frame9 = func2("Frame", {
-		Name = "Mark",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 12, 0.5, 2),
-		Size = UDim2.fromOffset(22, 22),
-		BackgroundColor3 = Color3.fromRGB(24, 29, 38),
-		BorderSizePixel = 0,
-	}, Frame8)
-
-	func3(Frame9, 6)
-	local value18 = func4(Frame9, color2, 0.4)
-
-	func2("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.6, 0.6),
-		BackgroundTransparency = 1,
-		Image = "",
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame9)
-
-	local value19 = func7({
-		Name = "Brand",
-		Position = UDim2.fromOffset(41, 14),
-		Size = UDim2.new(1, -48, 0, 14),
-		Text = string.upper(tbl26.Title or "NIGHT HUB"),
-		TextSize = 11,
-		FontFace = func1(Enum.FontWeight.Bold),
-	}, Frame8)
-
-	local UIGradient = func2("UIGradient", {
-		Name = "Shine",
-		Enabled = false,
-		Rotation = 10,
-		Color = ColorSequence.new(Color3.fromRGB(254, 236, 170), Color3.fromRGB(229, 155, 20)),
-	}, value19)
-
-	local value20 = func7({
-		Name = "Plan",
-		Position = UDim2.fromOffset(41, 28),
-		Size = UDim2.new(1, -48, 0, 12),
-		Text = "Plan  -  Free",
-		TextSize = 9,
-		TextTransparency = n6,
-		TextTruncate = Enum.TextTruncate.AtEnd,
-	}, Frame8)
-
-	local Frame10 = func2("Frame", {
-		Name = "Stage",
-		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, 0, 0, 0),
-		Size = UDim2.new(1, -tabWidth, 1, 0),
-		BackgroundTransparency = 1,
-		ClipsDescendants = true,
-	}, Frame6)
-
-	window.Gui = ScreenGui
-	window.Root = Frame2
-	window.Scale = UIScale2
-	window.Top = Frame3
-	window.Side = Frame7
-	window.TabHolder = ScrollingFrame
-	window.Stage = Frame10
-	window.Foot = Frame8
-	window.Field = TextBox
-	window.Wipe = TextButton
-
-	window.SetPlan = function(param55, flag22, param56)
-		local enabled = flag22 == "Pro"
-		Frame9.Art.Image = enabled and obj.crown or obj.user
-		Frame9.Art.ImageColor3 = enabled and Color3.fromRGB(250, 204, 21) or Color3.fromRGB(236, 240, 246)
-		Frame9.BackgroundColor3 = enabled and Color3.fromRGB(46, 36, 12) or Color3.fromRGB(24, 29, 38)
-		value18.Color = enabled and Color3.fromRGB(126, 96, 26) or color2
-		value19.TextColor3 = enabled and Color3.fromRGB(250, 204, 21) or Color3.fromRGB(236, 240, 246)
-		UIGradient.Enabled = enabled
-		local value21 = value20
-		local str1
-
-		if param56 then
-			str1 = param56
-		else
-			str1 = enabled and "Lifetime" or "Free"
-		end
-
-		value21.Text = "Plan  -  " .. str1
-	end
-
-	window:SetPlan(tbl26.Plan and tbl26.Plan.Tier or "Free", tbl26.Plan and tbl26.Plan.Term)
-
-	local function func36()
-		local currentCamera = workspace.CurrentCamera
-		if not currentCamera then
-			return
-		end
-		local viewportSize = currentCamera.ViewportSize
-		window.Rest = math.max(math.min(viewportSize.X / (offset + 40), viewportSize.Y / (offset2 + 40), 1), 0.62)
-
-		if not window.Folded then
-			UIScale2.Scale = window.Rest
-		end
-	end
-
-	local function func37()
-		local visible = Frame2.Size.X.Offset >= 470
-		Frame7.Visible = visible
-		Frame10.Size = visible and UDim2.new(1, -tabWidth, 1, 0) or UDim2.fromScale(1, 1)
-		Frame4.Visible = Frame2.Size.X.Offset >= 430
-	end
-
-	Frame2:GetPropertyChangedSignal("Size"):Connect(func37)
-	local currentCamera = workspace.CurrentCamera
-
-	if currentCamera then
-		currentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(func36)
-	end
-
-	func36()
-	func37()
-	func33()
-	window.Rest = UIScale2.Scale
-	result1.set(UIScale2, { Scale = window.Rest * 0.86 })
-	result1.tween(UIScale2, { Scale = window.Rest }, { time = 0.46, ease = result1.ease.back })
-	local flag23 = false
-	local position = nil
-	local position2 = nil
-
-	Frame3.InputBegan:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		flag23 = true
-		position = input.Position
-		position2 = Frame2.Position
-
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				flag23 = false
-			end
-		end)
-	end)
-
-	UserInputService.InputChanged:Connect(function(input)
-		if not flag23 then
-			return
-		end
-
-		if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		local n8 = input.Position - position
-		Frame2.Position = UDim2.new(position2.X.Scale, position2.X.Offset + n8.X, position2.Y.Scale, position2.Y.Offset + n8.Y)
-	end)
-
-	local ImageButton = func2("ImageButton", {
-		Name = "Bubble",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 20, 0.5, 0),
-		Size = UDim2.fromOffset(48, 48),
-		BackgroundColor3 = color,
-		BackgroundTransparency = 0.05,
-		BorderSizePixel = 0,
-		AutoButtonColor = false,
-		Image = "",
-		Visible = false,
-		ZIndex = 150,
-	}, ScreenGui)
-
-	func3(ImageButton, 24)
-	local value22 = func4(ImageButton, color3, 0.45)
-	local UIScale3 = func2("UIScale", { Name = "Pop", Scale = 1 }, ImageButton)
-
-	local ImageLabel3 = func2("ImageLabel", {
-		Name = "Glow",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(120, 120),
-		BackgroundTransparency = 1,
-		Image = url,
-		ImageColor3 = color3,
-		ImageTransparency = 0.6,
-		ScaleType = Enum.ScaleType.Stretch,
-		ZIndex = 149,
-	}, ImageButton)
-
-	local func38 = func2
-
-	local ImageLabel4 = func38("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.56, 0.56),
-		BackgroundTransparency = 1,
-		Image = tbl26.Logo or "rbxassetid://98448650971303",
-		ImageColor3 = color4,
-		ScaleType = Enum.ScaleType.Fit,
-		ZIndex = 151,
-	}, ImageButton)
-
-	window.Bubble = ImageButton
-
-	ImageButton.MouseEnter:Connect(function()
-		if not window.Folded then
-			return
-		end
-		result1.spring(UIScale3, { Scale = 1.08 }, snappy)
-		func21(value22, tbl14, { Transparency = 0.1 })
-	end)
-
-	ImageButton.MouseLeave:Connect(function()
-		if not window.Folded then
-			return
-		end
-		result1.spring(UIScale3, { Scale = 1 }, snappy)
-		func21(value22, tbl14, { Transparency = 0.45 })
-	end)
-
-	window.Fold = function(param57)
-		if param57.Folded then
-			return
-		end
-		param57.Folded = true
-
-		result1.tween(UIScale2, { Scale = param57.Rest * 0.86 }, {
-			time = 0.18,
-			ease = result1.ease.backIn,
-			done = function()
-				if param57.Folded then
-					Frame2.Visible = false
-				end
-			end,
-		})
-
-		ImageButton.Visible = true
-		result1.set(UIScale3, { Scale = 0.4 })
-		result1.set(ImageButton, { BackgroundTransparency = 1 })
-		result1.set(ImageLabel4, { ImageTransparency = 1 })
-		result1.set(ImageLabel3, { ImageTransparency = 1 })
-		result1.set(value22, { Transparency = 1 })
-		result1.spring(UIScale3, { Scale = 1 }, { spring = true, stiff = 520, damp = 0.68 })
-		result1.tween(ImageButton, { BackgroundTransparency = 0.05 }, { time = 0.22, ease = result1.ease.out })
-		result1.tween(ImageLabel4, { ImageTransparency = 0 }, { time = 0.26, ease = result1.ease.out })
-		result1.tween(ImageLabel3, { ImageTransparency = 0.6 }, { time = 0.3, ease = result1.ease.out })
-		result1.tween(value22, { Transparency = 0.45 }, { time = 0.26, ease = result1.ease.out })
-	end
-	-- join us: https://discord.gg/x7YbZeezpm
-
-	window.Unfold = function(flag24)
-		if not flag24.Folded then
-			return
-		end
-		flag24.Folded = false
-		result1.tween(UIScale3, { Scale = 0.4 }, { time = 0.16, ease = result1.ease.backIn })
-		result1.tween(ImageButton, { BackgroundTransparency = 1 }, { time = 0.16, ease = result1.ease.out })
-		result1.tween(ImageLabel4, { ImageTransparency = 1 }, { time = 0.14, ease = result1.ease.out })
-		result1.tween(ImageLabel3, { ImageTransparency = 1 }, { time = 0.14, ease = result1.ease.out })
-		result1.tween(value22, { Transparency = 1 }, { time = 0.14, ease = result1.ease.out })
-
-		task.delay(0.2, function()
-			if flag24.Folded then
-				return
-			end
-			ImageButton.Visible = false
-			result1.stop(value22)
-			result1.stop(UIScale3)
-			value22.Transparency = 1
-			UIScale3.Scale = 1
-		end)
-
-		Frame2.Visible = true
-		result1.set(UIScale2, { Scale = flag24.Rest * 0.88 })
-		result1.tween(UIScale2, { Scale = flag24.Rest }, { time = 0.4, ease = result1.ease.back })
-	end
-
-	ImageButton.MouseButton1Click:Connect(function()
-		window:Unfold()
-	end)
-
-	mini.MouseButton1Click:Connect(function()
-		window:Fold()
-	end)
-
-	max.MouseButton1Click:Connect(function()
-		window.Wide = not window.Wide
-		local viewportSize = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1280, 720)
-		local wide = window.Wide
-
-		if wide then
-			local min = math.min
-			local n8 = viewportSize.Y - 60
-			wide = UDim2.fromOffset(math.min(viewportSize.X - 60, 900), min(n8, 620))
-		end
-
-		result1.spring(Frame2, { Size = wide or UDim2.fromOffset(offset, offset2) }, tbl15)
-	end)
-
-	close.MouseButton1Click:Connect(function()
-		window:Close()
-	end)
-
-	window.Key = tbl26.Key or Enum.KeyCode.RightControl
-	window.Shown = true
-
-	window.SetKey = function(param58, key)
-		if typeof(key) == "EnumItem" then
-			param58.Key = key
-			return true
-		end
-
-		local ok, key2 = pcall(function()
-			return Enum.KeyCode[key]
-		end)
-
-		if not ok or not key2 then
-			return false
-		end
-		param58.Key = key2
-		return true
-	end
-
-	UserInputService.InputBegan:Connect(function(input, gameProcessed)
-		if gameProcessed then
-			return
-		end
-
-		if input.KeyCode == window.Key then
-			window:Toggle()
-		end
-	end)
-
-	window.Body = Frame6
-	table.insert(obj1.Windows, window)
-	obj1.Window = window
-
-	if tbl26.Settings then
-		obj1.Settings = tbl26.Settings
-
-		if tbl26.Settings.Save then
-			task.delay(0.4, function()
-				if obj1.Loaded then
-					return
-				end
-				obj1.Loaded = true
-				obj1:LoadConfig(true)
-			end)
-		end
-	end
-
-	return window
+do
+    local aspectConstraint = objects.obj24
+    local ratio = aspectConstraint.AspectRatio
+    
+    
+    
+    
+    aspectConstraint.Parent = nil
+
+    
+    
+    local viewport = camera and camera.ViewportSize or Vector2.new(1280, 720)
+    if viewport.X < 1 or viewport.Y < 1 then
+        viewport = Vector2.new(1280, 720)
+    end
+
+    local topLeftInset, bottomRightInset = Vector2.new(0, 0), Vector2.new(0, 0)
+    pcall(function()
+        topLeftInset, bottomRightInset = GuiService:GetGuiInset()
+    end)
+
+    local regionX = math.max(
+        viewport.X - topLeftInset.X - bottomRightInset.X,
+        1
+    )
+    local regionY = math.max(
+        viewport.Y - topLeftInset.Y - bottomRightInset.Y,
+        1
+    )
+
+    local width = Runtime.menuSize.X.Scale * regionX
+    local height = Runtime.menuSize.Y.Scale * regionY
+    if ratio > 0 then
+        if width / height > ratio then
+            width = height * ratio
+        else
+            height = width / ratio
+        end
+    end
+
+    
+    
+    
+    if UserInputService.TouchEnabled
+        and not UserInputService.KeyboardEnabled
+        and not UserInputService.MouseEnabled
+    then
+        local mobileMultiplier = math.min(
+            1.3,
+            (regionX * 0.98) / math.max(width, 1),
+            (regionY * 0.98) / math.max(height, 1)
+        )
+        width = width * mobileMultiplier
+        height = height * mobileMultiplier
+    end
+
+    Runtime.menuSize = UDim2.fromScale(width / regionX, height / regionY)
+    rootGui:SetAttribute("MenuSize", Runtime.menuSize)
+    mainFrame.Size = Runtime.menuSize
+    ContentScale.Base = Runtime.menuSize
 end
 
-index.Toggle = function(self)
-	self.Shown = not self.Shown
+local function setLeftCenterHidden(hidden)
+    hudAnimationSerial = hudAnimationSerial + 1
+    local serial = hudAnimationSerial
+    cancelHudTween()
 
-	if self.Shown then
-		if self.Folded then
-			self.Bubble.Visible = true
-			return
-		end
-		self.Root.Visible = true
-		result1.set(self.Scale, { Scale = self.Rest * 0.9 })
-		result1.spring(self.Scale, { Scale = self.Rest }, snappy)
-		return
-	end
+    if hidden then
+        
+        
+        
+        local savedRestorePosition = launcherGui:GetAttribute(
+            "HudRestorePosition"
+        )
+        if typeof(savedRestorePosition) == "UDim2" then
+            hudRestorePosition = savedRestorePosition
+        end
+        while hudRestorePosition.X.Scale <= -0.5 do
+            hudRestorePosition = UDim2.new(
+                hudRestorePosition.X.Scale + 1,
+                hudRestorePosition.X.Offset,
+                hudRestorePosition.Y.Scale,
+                hudRestorePosition.Y.Offset
+            )
+        end
+        launcherGui:SetAttribute(
+            "HudRestorePosition",
+            hudRestorePosition
+        )
+    elseif leftCenterFrame
+        and launcherGui:GetAttribute("LeftCenterHiddenByLibrary") == true
+    then
+        leftCenterFrame.Visible = true
+        launcherGui:SetAttribute("LeftCenterHiddenByLibrary", nil)
+        if sourceLeftCenterScreen
+            and launcherGui:GetAttribute(
+                "LeftCenterScreenDisabledByLibrary"
+            ) == true
+        then
+            sourceLeftCenterScreen.Enabled = true
+            launcherGui:SetAttribute(
+                "LeftCenterScreenDisabledByLibrary",
+                nil
+            )
+        end
+    end
 
-	self.Bubble.Visible = false
+    local target = hidden
+        and shiftOneScreenLeft(hudRestorePosition)
+        or hudRestorePosition
+    refreshEffectiveLeftCenterHidden()
+    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quint)
 
-	result1.tween(self.Scale, { Scale = self.Rest * 0.9 }, {
-		time = 0.16,
-		ease = result1.ease.backIn,
-		done = function()
-			if not self.Shown then
-				self.Root.Visible = false
-			end
-		end,
-	})
+    if leftCenterFrame then
+        hudTween = TweenService:Create(
+            leftCenterFrame,
+            tweenInfo,
+            { Position = target }
+        )
+        
+        
+        TweenService:Create(
+            launcherRoot,
+            tweenInfo,
+            {
+                Position = hudRestorePosition,
+            }
+        ):Play()
+    else
+        
+        hudTween = TweenService:Create(
+            launcherRoot,
+            tweenInfo,
+            {
+                Position = hudRestorePosition,
+            }
+        )
+    end
+    local activeHudTween = hudTween
+    hudTweenConnection = activeHudTween.Completed:Connect(function()
+        if serial ~= hudAnimationSerial
+            or hudTween ~= activeHudTween
+        then
+            return
+        end
+        
+        
+        if hudTweenConnection then
+            hudTweenConnection:Disconnect()
+            hudTweenConnection = nil
+        end
+        hudTween = nil
+
+        local manuallyHidden =
+            launcherGui:GetAttribute("QuickHudHidden") == true
+        local shouldStayHidden = manuallyHidden or Runtime.chilliIsOpen
+        if shouldStayHidden then
+            if leftCenterFrame then
+                leftCenterFrame.Position = shiftOneScreenLeft(
+                    hudRestorePosition
+                )
+                if manuallyHidden then
+                    leftCenterFrame.Visible = false
+                    launcherGui:SetAttribute(
+                        "LeftCenterHiddenByLibrary",
+                        true
+                    )
+                end
+            end
+            launcherGui:SetAttribute(
+                "HudRestorePosition",
+                hudRestorePosition
+            )
+            if manuallyHidden and sourceLeftCenterScreen then
+                sourceLeftCenterScreen.Enabled = false
+                launcherGui:SetAttribute(
+                    "LeftCenterScreenDisabledByLibrary",
+                    true
+                )
+            end
+        else
+            if leftCenterFrame then
+                leftCenterFrame.Position = hudRestorePosition
+                if launcherGui:GetAttribute(
+                    "LeftCenterHiddenByLibrary"
+                ) == true then
+                    leftCenterFrame.Visible = true
+                    launcherGui:SetAttribute(
+                        "LeftCenterHiddenByLibrary",
+                        nil
+                    )
+                end
+            end
+            if sourceLeftCenterScreen
+                and launcherGui:GetAttribute(
+                    "LeftCenterScreenDisabledByLibrary"
+                ) == true
+            then
+                sourceLeftCenterScreen.Enabled = true
+                launcherGui:SetAttribute(
+                    "LeftCenterScreenDisabledByLibrary",
+                    nil
+                )
+            end
+            launcherGui:SetAttribute("HudRestorePosition", nil)
+        end
+        launcherRoot.Position = hudRestorePosition
+        refreshEffectiveLeftCenterHidden()
+        queueChilliLauncherLayout()
+    end)
+    activeHudTween:Play()
 end
 
-index.Close = function(self)
-	result1.tween(self.Scale, { Scale = 0.9 }, {
-		time = 0.16,
-		ease = result1.ease.backIn,
-		done = function()
-			obj1:Destroy()
-		end,
-	})
+local function cancelWindowTween()
+    windowAnimationSerial = windowAnimationSerial + 1
+    if windowTweenConnection then
+        windowTweenConnection:Disconnect()
+        windowTweenConnection = nil
+    end
+    if windowTween then
+        windowTween:Cancel()
+        windowTween = nil
+    end
 end
 
-obj1.Destroy = function()
-	obj1.Unloaded = true
-
-	if obj1.GUI then
-		obj1.GUI:Destroy()
-	end
+local function tweenWindowPosition(target, info, completed)
+    cancelWindowTween()
+    local serial = windowAnimationSerial
+    local tween = TweenService:Create(mainFrame, info, {
+        Position = target,
+    })
+    windowTween = tween
+    windowTweenConnection = tween.Completed:Connect(function(playbackState)
+        if serial ~= windowAnimationSerial or windowTween ~= tween then
+            return
+        end
+        if windowTweenConnection then
+            windowTweenConnection:Disconnect()
+            windowTweenConnection = nil
+        end
+        windowTween = nil
+        if playbackState == Enum.PlaybackState.Completed then
+            completed()
+        end
+    end)
+    tween:Play()
 end
 
-local tbl27 = { time = 0.17, ease = result1.ease.out }
+local function playOpenAnimation(completed)
+    if Runtime.chilliIsOpen then
+        return
+    end
+    local resumeFromCurrentPosition = windowTween ~= nil
+    animationLocked = true
+    Runtime.windowAnimating = true
+    Runtime.chilliIsOpen = true
+    setLeftCenterHidden(true)
 
-local function func39(obj3)
-	local uiSizeConstraint = obj3:FindFirstChildOfClass("UISizeConstraint")
+    if not resumeFromCurrentPosition then
+        mainFrame.Position = openingWindowPosition()
+    end
+    mainFrame.Size = Runtime.menuSize
 
-	if uiSizeConstraint then
-		if not obj3:GetAttribute("Floor") then
-			obj3:SetAttribute("Floor", uiSizeConstraint.MinSize.Y)
-		end
-
-		uiSizeConstraint.MinSize = Vector2.new(uiSizeConstraint.MinSize.X, 0)
-	end
-
-	obj3.ClipsDescendants = true
-	obj3.AutomaticSize = Enum.AutomaticSize.None
+    tweenWindowPosition(Runtime.windowRestPosition, TweenInfo.new(
+        WINDOW_OPEN_DURATION,
+        Enum.EasingStyle.Quart,
+        Enum.EasingDirection.Out
+    ), function()
+        animationLocked = false
+        Runtime.windowAnimating = false
+        if completed then
+            completed()
+        end
+    end)
 end
 
-local function func40(obj4)
-	local uiSizeConstraint = obj4:FindFirstChildOfClass("UISizeConstraint")
+local function playCloseAnimation()
+    if not Runtime.chilliIsOpen then
+        return
+    end
+    
+    
+    if Runtime.windowDragController then
+        Runtime.windowDragController.Cancel()
+    end
+    animationLocked = true
+    Runtime.windowAnimating = true
+    Runtime.chilliIsOpen = false
+    setLeftCenterHidden(
+        launcherGui:GetAttribute("QuickHudHidden") == true
+    )
 
-	if uiSizeConstraint then
-		uiSizeConstraint.MinSize = Vector2.new(uiSizeConstraint.MinSize.X, obj4:GetAttribute("Floor") or 0)
-	end
-
-	obj4.Size = UDim2.new(1, 0, 0, 0)
-	obj4.AutomaticSize = Enum.AutomaticSize.Y
-	obj4.ClipsDescendants = obj4:GetAttribute("Clip") == true
+    mainFrame.Size = Runtime.menuSize
+    tweenWindowPosition(closedWindowPosition(), TweenInfo.new(
+        WINDOW_CLOSE_DURATION,
+        Enum.EasingStyle.Quart,
+        Enum.EasingDirection.In
+    ), function()
+        animationLocked = false
+        Runtime.windowAnimating = false
+    end)
 end
 
-local function func41(instance2, visible)
-	if instance2:GetAttribute("Clip") == nil then
-		instance2:SetAttribute("Clip", instance2.ClipsDescendants)
-	end
 
-	if not instance2:IsA("CanvasGroup") then
-		instance2.Visible = visible
-		return
-	end
 
-	if instance2:GetAttribute("Aim") == nil then
-		instance2:SetAttribute("Aim", instance2.Visible)
-	end
-	-- 𝖲𝗈𝗎𝗋𝖼𝖾 𝖫𝖾𝖺𝗄 (𝖲𝖫) | https://discord.gg/x7YbZeezpm
 
-	if instance2:GetAttribute("Aim") == visible then
-		return
-	end
-	instance2:SetAttribute("Aim", visible)
-	local uiStroke = instance2:FindFirstChildOfClass("UIStroke")
 
-	if uiStroke and not instance2:GetAttribute("Rim") then
-		instance2:SetAttribute("Rim", uiStroke.Transparency)
-	end
 
-	if visible then
-		local attribute = instance2:GetAttribute("Tall") or instance2.AbsoluteSize.Y
-		instance2.Visible = true
-		result1.set(instance2, { GroupTransparency = 1, Size = UDim2.new(1, 0, 0, 0) })
 
-		if uiStroke then
-			result1.set(uiStroke, { Transparency = 1 })
-		end
 
-		func39(instance2)
 
-		local tbl28 = {
-			time = 0.26,
-			ease = result1.ease.out,
-			done = function()
-				if instance2:GetAttribute("Aim") then
-					func40(instance2)
-				end
-			end,
-		}
 
-		result1.tween(instance2, { Size = UDim2.new(1, 0, 0, attribute) }, tbl28)
-		result1.tween(instance2, { GroupTransparency = 0 }, { time = 0.22, ease = result1.ease.out })
 
-		if uiStroke then
-			result1.tween(uiStroke, { Transparency = instance2:GetAttribute("Rim") or 0.45 }, { time = 0.22, ease = result1.ease.out })
-		end
 
-		return
-	end
 
-	instance2:SetAttribute("Tall", instance2.AbsoluteSize.Y)
-	func39(instance2)
-	instance2.Size = UDim2.new(1, 0, 0, instance2:GetAttribute("Tall"))
 
-	local tbl29 = {
-		time = 0.24,
-		ease = result1.ease.inOut,
-		done = function()
-			if not instance2:GetAttribute("Aim") then
-				instance2.Visible = false
-			end
-		end,
-	}
 
-	result1.tween(instance2, { Size = UDim2.new(1, 0, 0, 0) }, tbl29)
-	result1.tween(instance2, { GroupTransparency = 1 }, { time = 0.16, ease = result1.ease.out })
+local RESIZE_LIMITS = {
+    MinWidth = 0.20,
+    MaxWidth = 0.98,
+    MinHeight = 0.22,
+    MaxHeight = 0.98,
+}
 
-	if uiStroke then
-		result1.tween(uiStroke, { Transparency = 1 }, { time = 0.14, ease = result1.ease.out })
-	end
-end
 
-local function func42(list6, param59)
-	for _, descendant in ipairs(list6:GetDescendants()) do
-		if descendant:IsA("TextLabel") and string.find(string.lower(descendant.Text), param59, 1, true) then
-			return true
-		end
-	end
 
-	return false
-end
 
-index.AddTab = function(obj5, flag25)
-	local tbl30 = flag25 or {}
-	obj5.Count = obj5.Count + 1
-	local count = obj5.Count
-	local title = tbl30.Title or "Tab " .. count
 
-	local TextButton = func2("TextButton", {
-		Name = title,
-		Size = UDim2.new(1, 0, 0, 36),
-		BackgroundColor3 = color4,
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		AutoButtonColor = false,
-		Text = "",
-		LayoutOrder = count,
-	}, obj5.TabHolder)
+local RESIZE_KEEPS_OPTION_WIDTH = false
 
-	func3(TextButton, 8)
-	local value23 = func4(TextButton, color3, 1)
+local resizeGrip = Instance.new("TextButton")
+resizeGrip.Name = "ResizeGrip"
+resizeGrip.Active = true
+resizeGrip.AutoButtonColor = false
+resizeGrip.AnchorPoint = Vector2.new(1, 1)
+resizeGrip.BackgroundTransparency = 1
+resizeGrip.BorderSizePixel = 0
+resizeGrip.Position = UDim2.fromScale(0.998, 0.995)
+resizeGrip.Selectable = false
+resizeGrip.Size = UDim2.fromScale(0.05, 0.05)
+resizeGrip.Text = ""
+resizeGrip.ZIndex = 120
+resizeGrip.Parent = mainFrame
 
-	func2("Frame", {
-		Name = "Mark",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, -10, 0.5, 0),
-		Size = UDim2.fromOffset(3, 16),
-		BackgroundColor3 = color3,
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-	}, TextButton)
+local resizeGripAspect = Instance.new("UIAspectRatioConstraint")
+resizeGripAspect.AspectRatio = 1
+resizeGripAspect.AspectType = Enum.AspectType.FitWithinMaxSize
+resizeGripAspect.DominantAxis = Enum.DominantAxis.Width
+resizeGripAspect.Parent = resizeGrip
 
-	func3(TextButton.Mark, 2)
-	local func43 = func2
 
-	func43("ImageLabel", {
-		Name = "Icon",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 10, 0.5, 0),
-		Size = UDim2.fromOffset(16, 16),
-		BackgroundTransparency = 1,
-		Image = obj1:GetIcon(tbl30.Icon) or obj.component,
-		ImageColor3 = color4,
-		ImageTransparency = 0.2,
-		ScaleType = Enum.ScaleType.Fit,
-	}, TextButton)
-
-	func7({
-		Name = "Label",
-		Position = UDim2.fromOffset(34, 0),
-		Size = UDim2.new(1, -40, 1, 0),
-		Text = title,
-		TextSize = 12,
-		TextTransparency = 0.5,
-		TextTruncate = Enum.TextTruncate.AtEnd,
-		TextYAlignment = Enum.TextYAlignment.Center,
-	}, TextButton)
-
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = title,
-		Size = UDim2.fromScale(1, 1),
-		BackgroundTransparency = 1,
-		GroupTransparency = count == 1 and 0 or 1,
-		Visible = count == 1,
-	}, obj5.Stage)
-
-	local Frame2 = func2("Frame", {
-		Name = "Head",
-		Position = UDim2.fromOffset(14, 12),
-		Size = UDim2.new(1, -28, 0, 38),
-		BackgroundTransparency = 1,
-	}, CanvasGroup)
-
-	local func44 = func2
-
-	func44("ImageLabel", {
-		Name = "Icon",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 0, 0.5, 0),
-		Size = UDim2.fromOffset(20, 20),
-		BackgroundColor3 = color3,
-		BackgroundTransparency = 0.82,
-		BorderSizePixel = 0,
-		Image = obj1:GetIcon(tbl30.Icon) or obj.component,
-		ImageColor3 = color3,
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame2)
-
-	func3(Frame2.Icon, 6)
-
-	func7({
-		Name = "Title",
-		Position = UDim2.fromOffset(28, (tbl30.Description or "") ~= "" and 1 or 10),
-		Size = UDim2.new(1, -28, 0, 17),
-		Text = string.upper(title),
-		TextSize = 14,
-		FontFace = func1(Enum.FontWeight.Bold),
-	}, Frame2)
-
-	func7({
-		Name = "Desc",
-		Position = UDim2.fromOffset(28, 19),
-		Size = UDim2.new(1, -28, 0, 13),
-		Text = tbl30.Description or "",
-		TextSize = 10,
-		TextTransparency = n5,
-		TextTruncate = Enum.TextTruncate.AtEnd,
-		Visible = (tbl30.Description or "") ~= "",
-	}, Frame2)
-
-	local ScrollingFrame = func2("ScrollingFrame", {
-		Name = "List",
-		Position = UDim2.fromOffset(0, 54),
-		Size = UDim2.new(1, -14, 1, -62),
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		CanvasSize = UDim2.new(),
-		AutomaticCanvasSize = Enum.AutomaticSize.Y,
-		ScrollingDirection = Enum.ScrollingDirection.Y,
-		ScrollBarThickness = 2,
-		ScrollBarImageColor3 = color4,
-		ScrollBarImageTransparency = 0.72,
-		ElasticBehavior = Enum.ElasticBehavior.Never,
-	}, CanvasGroup)
-
-	func5(ScrollingFrame, 6, 10, 14, 14)
-	func6(ScrollingFrame, 10)
-
-	func7({
-		Name = "Blank",
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 90),
-		Size = UDim2.new(1, -40, 0, 16),
-		Text = "Nothing matches that search",
-		TextSize = 11,
-		TextTransparency = n5,
-		TextXAlignment = Enum.TextXAlignment.Center,
-		Visible = false,
-	}, CanvasGroup)
-
-	local obj2 = setmetatable({
-		Window = obj5,
-		Name = title,
-		Order = count,
-		Button = TextButton,
-		Page = CanvasGroup,
-		List = ScrollingFrame,
-		Count = 0,
-		Loose = nil,
-	}, index2)
-
-	obj5.Tabs[count] = obj2
-	obj5.Pages[title] = CanvasGroup
-
-	TextButton.MouseEnter:Connect(function()
-		if obj5.Current ~= title then
-			func21(TextButton, tbl14, { BackgroundTransparency = 0.96 })
-		end
-	end)
-
-	TextButton.MouseLeave:Connect(function()
-		if obj5.Current ~= title then
-			func21(TextButton, tbl14, { BackgroundTransparency = 1 })
-		end
-	end)
-
-	TextButton.MouseButton1Click:Connect(function()
-		obj5:Select(title)
-	end)
-
-	if count == 1 then
-		obj5.Current = title
-		TextButton.BackgroundTransparency = 0.92
-		TextButton.Mark.BackgroundTransparency = 0
-		TextButton.Label.TextTransparency = 0
-		TextButton.Icon.ImageTransparency = 0
-		value23.Transparency = 0.5
-	end
-
-	return obj2
-end
-
-index.Select = function(self, current)
-	if self.Current == current then
-		return
-	end
-	self.Current = current
-
-	for _, tab in pairs(self.Tabs) do
-		local name = tab.Name == current
-		local button = tab.Button
-		local uiStroke = button:FindFirstChildOfClass("UIStroke")
-		func21(button, tbl14, { BackgroundTransparency = name and 0.92 or 1 })
-		func21(button.Mark, tbl14, { BackgroundTransparency = name and 0 or 1 })
-		func21(button.Label, tbl14, { TextTransparency = name and 0 or 0.5 })
-		func21(button.Icon, tbl14, { ImageTransparency = name and 0 or 0.2 })
-
-		if uiStroke then
-			uiStroke.Transparency = name and 0.5 or 1
-		end
-
-		local page = tab.Page
-
-		if name then
-			page.Visible = true
-			result1.set(page, { GroupTransparency = 1 })
-			result1.tween(page, { GroupTransparency = 0 }, tbl27)
-			result1.set(tab.List, { Position = UDim2.fromOffset(18, 54) })
-			result1.spring(tab.List, { Position = UDim2.fromOffset(0, 54) }, tbl15)
-			result1.set(page.Head, { Position = UDim2.fromOffset(26, 12) })
-			result1.spring(page.Head, { Position = UDim2.fromOffset(14, 12) }, tbl15)
-		elseif page.Visible then
-			result1.spring(tab.List, { Position = UDim2.fromOffset(-14, 54) }, tbl15)
-			result1.spring(page.Head, { Position = UDim2.fromOffset(2, 12) }, tbl15)
-
-			result1.tween(page, { GroupTransparency = 1 }, {
-				time = 0.13,
-				ease = result1.ease.out,
-				done = function()
-					if self.Current ~= tab.Name then
-						page.Visible = false
-					end
-				end,
-			})
-		end
-	end
-end
-
-index2.AddSection = function(self, flag26, flag27)
-	self.Count = self.Count + 1
-
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = "Section",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundColor3 = color4,
-		BackgroundTransparency = n,
-		BorderSizePixel = 0,
-		GroupTransparency = 0,
-		LayoutOrder = self.Count,
-	}, self.List)
-
-	func3(CanvasGroup, 10)
-	func4(CanvasGroup, color2, 0.25)
-	func6(CanvasGroup, 0)
-	local Frame2 = func2("Frame", { Name = "Head", Size = UDim2.new(1, 0, 0, 44), BackgroundTransparency = 1, LayoutOrder = 1 }, CanvasGroup)
-
-	func2("ImageLabel", {
-		Name = "Icon",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 12, 0.5, 0),
-		Size = UDim2.fromOffset(20, 20),
-		BackgroundColor3 = color3,
-		BackgroundTransparency = 0.82,
-		BorderSizePixel = 0,
-		Image = "",
-		ImageColor3 = color3,
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame2)
-
-	func3(Frame2.Icon, 6)
-
-	func7({
-		Name = "Title",
-		Position = UDim2.fromOffset(40, (flag27 or "") ~= "" and 8 or 15),
-		Size = UDim2.new(1, -60, 0, 15),
-		Text = string.upper(flag26 or "Section"),
-		TextSize = 11,
-		FontFace = func1(Enum.FontWeight.Bold),
-	}, Frame2)
-
-	func7({
-		Name = "Desc",
-		Position = UDim2.fromOffset(40, 23),
-		Size = UDim2.new(1, -60, 0, 13),
-		Text = flag27 or "",
-		TextSize = 10,
-		TextTransparency = n5,
-		TextTruncate = Enum.TextTruncate.AtEnd,
-		Visible = (flag27 or "") ~= "",
-	}, Frame2)
-
-	local ImageLabel = func2("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -14, 0.5, 0),
-		Size = UDim2.fromOffset(13, 13),
-		BackgroundTransparency = 1,
-		Image = obj.caret,
-		ImageColor3 = color4,
-		ImageTransparency = n5,
-		Rotation = 180,
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame2)
-
-	local Frame3 = func2("Frame", {
-		Name = "Items",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundTransparency = 1,
-		ClipsDescendants = true,
-		LayoutOrder = 2,
-	}, CanvasGroup)
-	-- 𝗦𝗟 | 𝗦𝗼𝘂𝗿𝗰𝗲 𝗟𝗲𝗮𝗸 | https://discord.gg/x7YbZeezpm
-
-	func5(Frame3, 0, 10, 10, 10)
-	func6(Frame3, 6)
-	local obj2 = setmetatable({ Window = self.Window, Tab = self, Card = CanvasGroup, Items = Frame3, Count = 0, Folded = false }, handlers)
-
-	local function func45(param60, param61, param62)
-		for _, child in ipairs(Frame3:GetChildren()) do
-			if child:IsA("CanvasGroup") then
-				result1.tween(child, { GroupTransparency = param60 }, { time = param61, ease = param62 })
-			end
-		end
-	end
-
-	func8(Frame2).MouseButton1Click:Connect(function()
-		obj2.Folded = not obj2.Folded
-		result1.spring(ImageLabel, { Rotation = obj2.Folded and 0 or 180 }, snappy)
-
-		if obj2.Folded then
-			Frame3:SetAttribute("Full", Frame3.AbsoluteSize.Y)
-			Frame3.AutomaticSize = Enum.AutomaticSize.None
-			Frame3.Size = UDim2.new(1, 0, 0, Frame3:GetAttribute("Full"))
-			local tbl31 = { time = 0.28, ease = result1.ease.inOut }
-			result1.tween(Frame3, { Size = UDim2.new(1, 0, 0, 0) }, tbl31)
-			func45(1, 0.13, result1.ease.out)
-		else
-			local attribute = Frame3:GetAttribute("Full") or Frame3.AbsoluteSize.Y
-			Frame3.AutomaticSize = Enum.AutomaticSize.None
-
-			local tbl32 = {
-				time = 0.32,
-				ease = result1.ease.inOut,
-				done = function()
-					if obj2.Folded then
-						return
-					end
-					Frame3.Size = UDim2.new(1, 0, 0, 0)
-					Frame3.AutomaticSize = Enum.AutomaticSize.Y
-				end,
-			}
-
-			result1.tween(Frame3, { Size = UDim2.new(1, 0, 0, attribute) }, tbl32)
-			func45(0, 0.34, result1.ease.inOut)
-		end
-	end)
-
-	obj2.SetIcon = function(param63, param64)
-		Frame2.Icon.Image = obj1:GetIcon(param64) or ""
-	end
-
-	obj2:SetIcon(nil)
-	return obj2
-end
-
-index2.Loft = function(self)
-	if not self.Loose then
-		self.Loose = self:AddSection("General", "")
-		self.Loose:SetIcon("layers")
-	end
-
-	return self.Loose
-end
-
-index.Sift = function(self, flag28)
-	local lowered = string.lower(flag28 or "")
-	local flag29 = lowered == ""
-	self.Wipe.Visible = not flag29
-
-	for _, tab in pairs(self.Tabs) do
-		local n8 = 0
-
-		for _, child in ipairs(tab.List:GetChildren()) do
-			if child:IsA("GuiObject") and child.Name == "Section" then
-				local items = child:FindFirstChild("Items")
-				local head = func42(child.Head, lowered)
-				local n9 = 0
-
-				if items then
-					for _, child2 in ipairs(items:GetChildren()) do
-						if child2:IsA("GuiObject") then
-							local value24 = flag29 or head or func42(child2, lowered)
-							func41(child2, value24)
-
-							if value24 then
-								n9 += 1
-							end
-						end
-					end
-				end
-
-				head = flag29 or head or n9 > 0
-				func41(child, head)
-
-				if head then
-					n8 += 1
-				end
-			end
-		end
-
-		local blank = tab.Page:FindFirstChild("Blank")
-
-		if blank then
-			blank.Visible = not flag29 and n8 == 0
-		end
-	end
-end
-
-local function func46(param65, flag30, flag31, flag32, flag33)
-	param65.Count = param65.Count + 1
-
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = "Row",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundColor3 = color4,
-		BackgroundTransparency = n,
-		BorderSizePixel = 0,
-		GroupTransparency = 0,
-		LayoutOrder = param65.Count,
-	}, param65.Items)
-
-	func2("UISizeConstraint", { MinSize = Vector2.new(0, flag32 or 46) }, CanvasGroup)
-	func3(CanvasGroup, 8)
-	local value25 = func4(CanvasGroup, color2, 0.45)
-	func22(CanvasGroup, 28)
-
-	local Frame2 = func2("Frame", {
-		Name = "Text",
-		Position = UDim2.fromOffset(47, 0),
-		Size = UDim2.new(1, -(flag33 or 120), 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundTransparency = 1,
-	}, CanvasGroup)
-
-	func5(Frame2, 9, 0, 9, 0)
-	func6(Frame2, 2)
-
-	func7({
-		Name = "Title",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Text = flag30 or "Element",
-		TextSize = 12,
-		TextWrapped = true,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		LayoutOrder = 1,
-		FontFace = func1(Enum.FontWeight.Medium),
-	}, Frame2)
-
-	func7({
-		Name = "Desc",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Text = flag31 or "",
-		TextSize = 11,
-		TextTransparency = n4,
-		TextWrapped = true,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		LayoutOrder = 2,
-		Visible = (flag31 or "") ~= "",
-	}, Frame2)
-
-	local backgroundTransparency = CanvasGroup.BackgroundTransparency
-
-	CanvasGroup.MouseEnter:Connect(function()
-		func21(CanvasGroup, tbl14, { BackgroundTransparency = backgroundTransparency - 0.025 })
-		func21(value25, tbl14, { Transparency = 0.15 })
-	end)
-
-	CanvasGroup.MouseLeave:Connect(function()
-		func21(CanvasGroup, tbl14, { BackgroundTransparency = backgroundTransparency })
-		func21(value25, tbl14, { Transparency = 0.45 })
-	end)
-
-	return CanvasGroup
-end
-
-local function func47(param66, param67)
-	param66.IconBox.Art.Image = obj1:GetIcon(param67) or ""
-end
-
-local function func48(param68)
-	param68.IconBox.AnchorPoint = Vector2.new(0, 0)
-	param68.IconBox.Position = UDim2.fromOffset(9, 9)
-end
-
-local function func49(instance3, frame)
-	instance3.Frame = frame
-	instance3.Locked = false
-	local text = frame:FindFirstChild("Text")
-	local title = text and text:FindFirstChild("Title")
-	local desc = text and text:FindFirstChild("Desc")
-
-	instance3.SetTitle = function(param69, text2)
-		if title then
-			title.Text = text2 or ""
-		end
-	end
-	--[=[ 𝗦𝗼𝘂𝗿𝗰𝗲 𝗟𝗲𝗮𝗸 (𝗦𝗟) ]=] -- discord.gg/x7YbZeezpm
-
-	instance3.SetDesc = function(param70, text2)
-		if not desc then
-			return
-		end
-		desc.Text = text2 or ""
-		desc.Visible = (text2 or "") ~= ""
-	end
-
-	instance3.SetVisible = function(param71, visible2)
-		frame.Visible = visible2 ~= false
-	end
-
-	local function func50()
-		local guard = frame:FindFirstChild("Guard")
-		if guard then
-			return guard
-		end
-
-		local Frame2 = func2("Frame", {
-			Name = "Guard",
-			Size = UDim2.fromScale(1, 1),
-			BackgroundColor3 = color,
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-			Visible = false,
-			ZIndex = 20,
-		}, frame)
-
-		func3(Frame2, 8)
-
-		func2("ImageLabel", {
-			Name = "Bolt",
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(0.5, 0.5),
-			Size = UDim2.fromOffset(18, 18),
-			BackgroundTransparency = 1,
-			Image = obj.lock,
-			ImageColor3 = color4,
-			ImageTransparency = 1,
-			ScaleType = Enum.ScaleType.Fit,
-			ZIndex = 21,
-		}, Frame2)
-
-		func8(Frame2, 22).MouseButton1Click:Connect(function()
-			result1.set(Frame2.Bolt, { Size = UDim2.fromOffset(24, 24) })
-			result1.spring(Frame2.Bolt, { Size = UDim2.fromOffset(18, 18) }, bouncy)
-
-			obj1:Notify({
-				Kind = "warn",
-				Title = instance3.LockTitle or "Locked",
-				Content = instance3.LockNote or "This feature is locked",
-				Duration = 4,
-			})
-		end)
-
-		return Frame2
-	end
-
-	instance3.Lock = function(param72, lockNote, lockTitle)
-		instance3.LockNote = lockNote or instance3.LockNote
-		instance3.LockTitle = lockTitle or instance3.LockTitle
-		if instance3.Locked then
-			return
-		end
-		instance3.Locked = true
-		local result5 = func50()
-		result5.Visible = true
-		result1.tween(result5, { BackgroundTransparency = 0.42 }, { time = 0.18, ease = result1.ease.out })
-		result1.tween(result5.Bolt, { ImageTransparency = 0.12 }, { time = 0.22, ease = result1.ease.out })
-		result1.tween(frame, { GroupTransparency = 0.25 }, { time = 0.18, ease = result1.ease.out })
-	end
-
-	instance3.Unlock = function()
-		if not instance3.Locked then
-			return
-		end
-		instance3.Locked = false
-		local guard = frame:FindFirstChild("Guard")
-
-		if guard then
-			result1.tween(guard.Bolt, { ImageTransparency = 1 }, { time = 0.14, ease = result1.ease.out })
-
-			result1.tween(guard, { BackgroundTransparency = 1 }, {
-				time = 0.18,
-				ease = result1.ease.out,
-				done = function()
-					if not instance3.Locked then
-						guard.Visible = false
-					end
-				end,
-			})
-		end
-
-		result1.tween(frame, { GroupTransparency = 0 }, { time = 0.18, ease = result1.ease.out })
-	end
-
-	if not rawget(instance3, "Destroy") then
-		instance3.Destroy = function()
-			frame:Destroy()
-
-			if instance3.Id then
-				obj1.Options[instance3.Id] = nil
-			end
-		end
-	end
-
-	return instance3
-end
-
-local function func51(id, param73)
-	if not id then
-		return param73
-	end
-	obj1.Options[id] = param73
-	param73.Id = id
-	local setValue = param73.SetValue
-
-	if setValue then
-		param73.SetValue = function(param74, param75, flag34)
-			setValue(param74, param75, flag34)
-
-			if flag34 ~= true then
-				obj1:Dirty()
-			end
-		end
-	end
-
-	return param73
-end
-
-handlers.AddToggle = function(param76, param77, flag35)
-	local tbl33 = flag35 or {}
-	local obj6 = func46(param76, tbl33.Title, tbl33.Description, 46, 96)
-	func47(obj6, tbl33.Icon or "toggle")
-
-	local Frame2 = func2("Frame", {
-		Name = "Track",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(1, -32, 0.5, 0),
-		Size = UDim2.fromOffset(40, 21),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-	}, obj6)
-
-	func3(Frame2, 11)
-	func4(Frame2, color2, 0.4)
-
-	local Frame3 = func2("Frame", {
-		Name = "Knob",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 3, 0.5, 0),
-		Size = UDim2.fromOffset(15, 15),
-		BackgroundColor3 = color4,
-		BorderSizePixel = 0,
-		ZIndex = 3,
-	}, Frame2)
-
-	func3(Frame3, 8)
-	local tbl34 = { Type = "Toggle", Value = tbl33.Default and true or false, Callback = tbl33.Callback }
-	local size = Frame2.Size
-
-	tbl34.SetValue = function(param78, flag36, param79)
-		local flag37 = not not flag36
-		tbl34.Value = flag37
-		result1.spring(Frame2, { BackgroundColor3 = flag37 and color3 or color, BackgroundTransparency = flag37 and 0 or 0.45 }, snappy)
-
-		result1.spring(Frame3, {
-			Position = UDim2.new(flag37 and 1 or 0, flag37 and -3 or 3, 0.5, 0),
-			AnchorPoint = Vector2.new(flag37 and 1 or 0, 0.5),
-		}, snappy)
-
-		result1.spring(Frame2, { Size = size }, tbl17)
-		result1.shove(Frame2, "Size", UDim2.fromOffset(225, 440))
-		if param79 then
-			return
-		end
-		obj1:Guard(tbl34.Callback, flag37)
-		obj1:Guard(tbl34.Changed, flag37)
-	end
-
-	tbl34.OnChanged = function(value, changed)
-		tbl34.Changed = changed
-		changed(tbl34.Value)
-	end
-
-	tbl34.Destroy = function()
-		obj6:Destroy()
-		obj1.Options[param77] = nil
-	end
-
-	func8(obj6).MouseButton1Click:Connect(function()
-		tbl34:SetValue(not tbl34.Value)
-	end)
-
-	tbl34:SetValue(tbl34.Value, true)
-	return func51(param77, func49(tbl34, obj6))
-end
-
-handlers.AddSlider = function(param80, param81, flag38)
-	local tbl35 = flag38 or {}
-	local min = tbl35.Min or 0
-	local max = tbl35.Max or 100
-	local rounding = tbl35.Rounding or 0
-	local obj7 = func46(param80, tbl35.Title, tbl35.Description, 78, 24)
-	func47(obj7, tbl35.Icon or "sliders")
-	func48(obj7)
-
-	local value26 = func7({
-		Name = "Max",
-		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -14, 0, 11),
-		Size = UDim2.fromOffset(120, 14),
-		Text = "",
-		TextSize = 11,
-		TextTransparency = n5,
-		TextXAlignment = Enum.TextXAlignment.Right,
-	}, obj7)
-
-	local Frame2 = func2("Frame", {
-		Name = "Track",
-		AnchorPoint = Vector2.new(0, 1),
-		Position = UDim2.new(0, 47, 1, -16),
-		Size = UDim2.new(1, -61, 0, 4),
-		BackgroundColor3 = color,
-		BackgroundTransparency = 0.25,
-		BorderSizePixel = 0,
-	}, obj7)
-
-	func3(Frame2, 2)
-	local Frame3 = func2("Frame", { Name = "Fill", Size = UDim2.fromScale(0, 1), BackgroundColor3 = color3, BorderSizePixel = 0 }, Frame2)
-	func3(Frame3, 2)
-
-	local Frame4 = func2("Frame", {
-		Name = "Grip",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(1, 0, 0.5, 0),
-		Size = UDim2.fromOffset(13, 13),
-		BackgroundColor3 = color4,
-		BorderSizePixel = 0,
-		ZIndex = 4,
-	}, Frame3)
-
-	func3(Frame4, 7)
-
-	local TextButton = func2("TextButton", {
-		Name = "Grab",
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 0, 0.5, 0),
-		Size = UDim2.new(1, 0, 0, 22),
-		BackgroundTransparency = 1,
-		AutoButtonColor = false,
-		Text = "",
-		ZIndex = 6,
-	}, Frame2)
-
-	local tbl36 = { Type = "Slider", Value = tbl35.Default or min, Min = min, Max = max, Callback = tbl35.Callback }
-
-	local function func52(param82)
-		result1.spring(Frame3, { Size = UDim2.fromScale(param82, 1) }, tbl16)
-		value26.Text = tostring(tbl36.Value) .. "  /  " .. tostring(max)
-	end
-
-	tbl36.SetValue = function(param83, num28, param84)
-		local n8 = max == min and 0 or math.clamp((num28 - min) / (max - min), 0, 1)
-		tbl36.Value = obj1:Round(min + (max - min) * n8, rounding)
-		func52(n8)
-		if param84 then
-			return
-		end
-		obj1:Guard(tbl36.Callback, tbl36.Value)
-		obj1:Guard(tbl36.Changed, tbl36.Value)
-	end
-	-- more leaks: https://discord.gg/x7YbZeezpm
-
-	tbl36.OnChanged = function(value, changed)
-		tbl36.Changed = changed
-		changed(tbl36.Value)
-	end
-
-	tbl36.Destroy = function()
-		obj7:Destroy()
-		obj1.Options[param81] = nil
-	end
-
-	local flag39 = false
-
-	local function func53(num29)
-		local x = Frame2.AbsoluteSize.X
-		if x <= 0 then
-			return
-		end
-		tbl36:SetValue(min + (max - min) * math.clamp((num29 - Frame2.AbsolutePosition.X) / x, 0, 1))
-	end
-
-	TextButton.InputBegan:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		flag39 = true
-		result1.spring(Frame4, { Size = UDim2.fromOffset(17, 17) }, bouncy)
-		func53(input.Position.X)
-	end)
-
-	UserInputService.InputEnded:Connect(function(input)
-		if not flag39 then
-			return
-		end
-
-		if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		flag39 = false
-		result1.spring(Frame4, { Size = UDim2.fromOffset(13, 13) }, bouncy)
-	end)
-
-	UserInputService.InputChanged:Connect(function(input)
-		if not flag39 then
-			return
-		end
-
-		if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		func53(input.Position.X)
-	end)
-
-	tbl36:SetValue(tbl36.Value, true)
-	return func51(param81, func49(tbl36, obj7))
-end
-
-handlers.AddInput = function(param85, param86, flag40)
-	local flag41 = flag40 or {}
-	local obj8 = func46(param85, flag41.Title, flag41.Description, 46, 211)
-	func47(obj8, flag41.Icon or "textField")
-
-	local Frame2 = func2("Frame", {
-		Name = "Box",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -12, 0.5, 0),
-		Size = UDim2.fromOffset(140, 28),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-	}, obj8)
-
-	func3(Frame2, 7)
-	local value27 = func4(Frame2, color2, 0.45)
-
-	local TextBox = func2("TextBox", {
-		Name = "Field",
-		Position = UDim2.fromOffset(9, 0),
-		Size = UDim2.new(1, -18, 1, 0),
-		BackgroundTransparency = 1,
-		ClearTextOnFocus = false,
-		Text = flag41.Default or "",
-		PlaceholderText = flag41.Placeholder or "",
-		PlaceholderColor3 = color4,
-		TextColor3 = color4,
-		TextSize = 11,
-		TextXAlignment = Enum.TextXAlignment.Left,
-		TextTruncate = Enum.TextTruncate.AtEnd,
-		FontFace = func1(),
-	}, Frame2)
-
-	local Frame3 = func2("Frame", {
-		Name = "Line",
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -1),
-		Size = UDim2.new(0, 0, 0, 2),
-		BackgroundColor3 = color3,
-		BorderSizePixel = 0,
-		ZIndex = 3,
-	}, Frame2)
-
-	func3(Frame3, 1)
-	local obj9
-
-	obj9 = {
-		Type = "Input",
-		Value = flag41.Default or "",
-		Callback = flag41.Callback,
-		SetValue = function(param87, list7, param88)
-			local flag42
-
-			if flag41.MaxLength and #list7 > flag41.MaxLength then
-				flag42 = string.sub(list7, 1, flag41.MaxLength)
-			else
-				flag42 = list7
-			end
-
-			if flag41.Numeric and flag42 ~= "" and not tonumber(flag42) then
-				flag42 = obj9.Value
-			end
-
-			obj9.Value = flag42
-			TextBox.Text = flag42
-			if param88 then
-				return
-			end
-			obj1:Guard(obj9.Callback, flag42)
-			obj1:Guard(obj9.Changed, flag42)
-		end,
-		OnChanged = function(value, changed)
-			obj9.Changed = changed
-			changed(obj9.Value)
-		end,
-		Destroy = function()
-			obj8:Destroy()
-			obj1.Options[param86] = nil
-		end,
-	}
-
-	TextBox.Focused:Connect(function()
-		result1.spring(Frame3, { Size = UDim2.new(1, -4, 0, 2) }, snappy)
-		func21(value27, tbl14, { Transparency = 0.1, Color = color3 })
-	end)
-
-	TextBox.FocusLost:Connect(function(enterPressed)
-		result1.spring(Frame3, { Size = UDim2.new(0, 0, 0, 2) }, snappy)
-		func21(value27, tbl14, { Transparency = 0.45, Color = color2 })
-		if flag41.Finished and not enterPressed then
-			return
-		end
-		obj9:SetValue(TextBox.Text)
-	end)
-
-	if not flag41.Finished then
-		TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-			if TextBox.Text == obj9.Value then
-				return
-			end
-			obj9:SetValue(TextBox.Text)
-		end)
-	end
-
-	return func51(param86, func49(obj9, obj8))
-end
-
-handlers.AddKeybind = function(param89, param90, flag43)
-	local tbl37 = flag43 or {}
-	local obj10 = func46(param89, tbl37.Title, tbl37.Description, 46, 157)
-	func47(obj10, tbl37.Icon or "keyboard")
-
-	local Frame2 = func2("Frame", {
-		Name = "Box",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -12, 0.5, 0),
-		Size = UDim2.fromOffset(86, 28),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-	}, obj10)
-
-	func3(Frame2, 7)
-	local value28 = func4(Frame2, color2, 0.45)
-
-	local value29 = func7({
-		Name = "Key",
-		Size = UDim2.fromScale(1, 1),
-		Text = tbl37.Default or "None",
-		TextSize = 11,
-		TextXAlignment = Enum.TextXAlignment.Center,
-		FontFace = func1(Enum.FontWeight.Medium),
-	}, Frame2)
-
-	local tbl38 = {
-		Type = "Keybind",
-		Value = tbl37.Default or "None",
-		Mode = tbl37.Mode or "Toggle",
-		Toggled = false,
-		Callback = tbl37.Callback,
-	}
-
-	local flag44 = false
-
-	tbl38.SetValue = function(param91, flag45, mode)
-		tbl38.Value = flag45 or tbl38.Value
-		tbl38.Mode = mode or tbl38.Mode
-		value29.Text = tbl38.Value
-	end
-
-	tbl38.GetState = function()
-		if tbl38.Mode == "Always" then
-			return true
-		end
-
-		if tbl38.Mode == "Hold" then
-			if tbl38.Value == "None" then
-				return false
-			end
-
-			local ok, result = pcall(function()
-				return UserInputService:IsKeyDown(Enum.KeyCode[tbl38.Value])
-			end)
-
-			return ok and result
-		end
-
-		return tbl38.Toggled
-	end
-
-	tbl38.OnChanged = function(value, changed)
-		tbl38.Changed = changed
-	end
-
-	tbl38.Destroy = function()
-		obj10:Destroy()
-		obj1.Options[param90] = nil
-	end
-
-	func8(Frame2, 6).MouseButton1Click:Connect(function()
-		flag44 = true
-		value29.Text = "..."
-		func21(value28, tbl14, { Transparency = 0.1, Color = color3 })
-	end)
-
-	UserInputService.InputBegan:Connect(function(input, gameProcessed)
-		if flag44 then
-			if input.UserInputType ~= Enum.UserInputType.Keyboard then
-				return
-			end
-			flag44 = false
-			tbl38:SetValue(input.KeyCode.Name)
-			func21(value28, tbl14, { Transparency = 0.45, Color = color2 })
-			obj1:Guard(tbl38.Changed, tbl38.Value)
-			return
-		end
-
-		if gameProcessed then
-			return
-		end
-
-		if input.UserInputType ~= Enum.UserInputType.Keyboard then
-			return
-		end
-
-		if input.KeyCode.Name ~= tbl38.Value then
-			return
-		end
-
-		if tbl38.Mode == "Toggle" then
-			tbl38.Toggled = not tbl38.Toggled
-			obj1:Guard(tbl38.Callback, tbl38.Toggled)
-		else
-			obj1:Guard(tbl38.Callback, true)
-		end
-	end)
-
-	return func51(param90, func49(tbl38, obj10))
-end
-
-handlers.AddParagraph = function(param92, flag46)
-	local tbl39 = flag46 or {}
-	local value30 = func46(param92, tbl39.Title, tbl39.Content, 60, 24)
-	func47(value30, tbl39.Icon or "quote")
-	func48(value30)
-	local tbl40 = { Type = "Paragraph" }
-	func49(tbl40, value30)
-	tbl40.SetContent = tbl40.SetDesc
-	return tbl40
-end
-
-handlers.AddButton = function(param93, flag47)
-	local flag48 = flag47 or {}
-	local value31 = func46(param93, flag48.Title, flag48.Description, 46, 149)
-	func47(value31, flag48.Icon or "click")
-	local func54 = func2
-
-	local TextButton = func54("TextButton", {
-		Name = "Go",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -12, 0.5, 0),
-		Size = UDim2.fromOffset(78, 28),
-		BackgroundColor3 = flag48.Filled and color3 or color,
-		BackgroundTransparency = flag48.Filled and 0 or 0.45,
-		BorderSizePixel = 0,
-		AutoButtonColor = false,
-		Text = flag48.Label or "Run",
-		TextColor3 = color4,
-		TextSize = 11,
-		FontFace = func1(Enum.FontWeight.Medium),
-	}, value31)
-
-	func3(TextButton, 7)
-
-	if not flag48.Filled then
-		func4(TextButton, color2, 0.45)
-	end
-
-	local size = TextButton.Size
-
-	TextButton.MouseButton1Down:Connect(function()
-		func21(TextButton, tbl14, { Size = UDim2.fromOffset(size.X.Offset - 4, size.Y.Offset - 2) })
-	end)
-
-	TextButton.MouseButton1Up:Connect(function()
-		func21(TextButton, bouncy, { Size = size })
-	end)
-
-	TextButton.MouseLeave:Connect(function()
-		func21(TextButton, bouncy, { Size = size })
-	end)
-
-	TextButton.MouseButton1Click:Connect(function()
-		obj1:Guard(flag48.Callback)
-	end)
-
-	local tbl41 = { Type = "Button" }
-	func49(tbl41, value31)
-
-	tbl41.SetLabel = function(param94, text)
-		TextButton.Text = text
-	end
-
-	return tbl41
-end
-
-handlers.AddButtons = function(obj, list8)
-	list8 = list8 or {}
-	obj.Count = obj.Count + 1
-
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = "Actions",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundTransparency = 1,
-		GroupTransparency = 0,
-		LayoutOrder = obj.Count,
-	}, obj.Items)
-
-	func6(CanvasGroup, 6, Enum.FillDirection.Horizontal)
-	local tbl42 = {}
-
-	for i, item3 in ipairs(list8) do
-		local TextButton = func2("TextButton", {
-			Name = item3.Title or "Act" .. i,
-			Size = UDim2.new(1 / #list8, -(#list8 - 1) * 6 / #list8, 0, 62),
-			BackgroundColor3 = item3.Filled and color3 or color4,
-			BackgroundTransparency = item3.Filled and 0.12 or 0.95,
-			BorderSizePixel = 0,
-			AutoButtonColor = false,
-			Text = "",
-			LayoutOrder = i,
-		}, CanvasGroup)
-
-		func3(TextButton, 8)
-		local value32 = func4(TextButton, item3.Filled and color3 or color2, item3.Filled and 0.5 or 0.45)
-
-		func2("ImageLabel", {
-			Name = "Icon",
-			Position = UDim2.fromOffset(12, 12),
-			Size = UDim2.fromOffset(16, 16),
-			BackgroundTransparency = 1,
-			Image = obj1:GetIcon(item3.Icon or "click") or "",
-			ImageColor3 = color4,
-			ImageTransparency = 0.05,
-			ScaleType = Enum.ScaleType.Fit,
-		}, TextButton)
-
-		func7({
-			Name = "Title",
-			Position = UDim2.fromOffset(12, 32),
-			Size = UDim2.new(1, -24, 0, 14),
-			Text = item3.Title or "Action",
-			TextSize = 12,
-			TextTruncate = Enum.TextTruncate.AtEnd,
-			FontFace = func1(Enum.FontWeight.Medium),
-		}, TextButton)
-
-		func7({
-			Name = "Desc",
-			Position = UDim2.fromOffset(12, 45),
-			Size = UDim2.new(1, -24, 0, 12),
-			Text = item3.Description or "",
-			TextSize = 10,
-			TextTransparency = n4,
-			TextTruncate = Enum.TextTruncate.AtEnd,
-		}, TextButton)
-
-		local backgroundTransparency = TextButton.BackgroundTransparency
-
-		TextButton.MouseEnter:Connect(function()
-			func21(TextButton, tbl14, { BackgroundTransparency = backgroundTransparency - 0.04 })
-			func21(value32, tbl14, { Transparency = 0.15 })
-		end)
-
-		TextButton.MouseLeave:Connect(function()
-			func21(TextButton, tbl14, { BackgroundTransparency = backgroundTransparency })
-			func21(value32, tbl14, { Transparency = item3.Filled and 0.5 or 0.45 })
-		end)
-
-		TextButton.MouseButton1Click:Connect(function()
-			obj1:Guard(item3.Callback)
-		end)
-
-		tbl42[i] = TextButton
-	end
-
-	return {
-		Type = "Buttons",
-		Cells = tbl42,
-		Destroy = function()
-			CanvasGroup:Destroy()
-		end,
-	}
-end
-
-handlers.AddSegmented = function(param95, param96, flag49)
-	local tbl43 = flag49 or {}
-	local values = tbl43.Values or {}
-	local obj11 = func46(param95, tbl43.Title, tbl43.Description, 78, 24)
-	func47(obj11, tbl43.Icon or "columns3")
-	func48(obj11)
-
-	local Frame2 = func2("Frame", {
-		Name = "Segment",
-		AnchorPoint = Vector2.new(0, 1),
-		Position = UDim2.new(0, 47, 1, -10),
-		Size = UDim2.new(1, -61, 0, 26),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-	}, obj11)
-
-	func3(Frame2, 8)
-	func4(Frame2, color2, 0.5)
-	func5(Frame2, 3)
-	-- join us: https://discord.gg/x7YbZeezpm
-
-	local Frame3 = func2("Frame", {
-		Name = "Pill",
-		Size = UDim2.fromScale(1 / math.max(#values, 1), 1),
-		BackgroundColor3 = color3,
-		BorderSizePixel = 0,
-		ZIndex = 2,
-	}, Frame2)
-
-	func3(Frame3, 6)
-	local tbl44 = { Type = "Segmented", Value = tbl43.Default or values[1], Callback = tbl43.Callback }
-	local tbl45 = {}
-
-	for i, value33 in ipairs(values) do
-		local TextButton = func2("TextButton", {
-			Name = value33,
-			Size = UDim2.fromScale(1 / #values, 1),
-			Position = UDim2.fromScale((i - 1) / #values, 0),
-			BackgroundTransparency = 1,
-			AutoButtonColor = false,
-			Text = value33,
-			TextColor3 = color4,
-			TextSize = 11,
-			TextTransparency = 0.45,
-			FontFace = func1(Enum.FontWeight.Medium),
-			ZIndex = 3,
-		}, Frame2)
-
-		tbl45[i] = TextButton
-
-		TextButton.MouseButton1Click:Connect(function()
-			tbl44:SetValue(value33)
-		end)
-	end
-
-	tbl44.SetValue = function(param97, value34, param98)
-		local foundAt2 = table.find(values, value34)
-		if not foundAt2 then
-			return
-		end
-		tbl44.Value = value34
-		result1.spring(Frame3, { Position = UDim2.fromScale((foundAt2 - 1) / #values, 0) }, snappy)
-
-		for i, item4 in ipairs(tbl45) do
-			func21(item4, tbl14, { TextTransparency = i == foundAt2 and 0 or 0.45 })
-		end
-
-		if param98 then
-			return
-		end
-		obj1:Guard(tbl44.Callback, value34)
-		obj1:Guard(tbl44.Changed, value34)
-	end
-
-	tbl44.OnChanged = function(value, changed)
-		tbl44.Changed = changed
-		changed(tbl44.Value)
-	end
-
-	tbl44.Destroy = function()
-		obj11:Destroy()
-		obj1.Options[param96] = nil
-	end
-
-	tbl44:SetValue(tbl44.Value, true)
-	return func51(param96, func49(tbl44, obj11))
-end
-
-local tbl46 = { time = 0.34, ease = result1.ease.back }
-local tbl47 = { time = 0.22, ease = result1.ease.backIn }
-local n8 = 236
-local tbl48 = {}
-local value35 = nil
-
-local function func55(instance4)
-	local roll = instance4:FindFirstChild("Roll")
-	if not roll then
-		return instance4.AbsoluteSize.Y
-	end
-	local uiListLayout = roll:FindFirstChildOfClass("UIListLayout")
-	local n9
-
-	if uiListLayout and uiListLayout.AbsoluteContentSize.Y > 0 then
-		n9 = uiListLayout.AbsoluteContentSize.Y + 14
-	else
-		n9 = 14
-
-		for _, child in ipairs(roll:GetChildren()) do
-			if child:IsA("GuiObject") and child.Visible then
-				n9 = n9 + child.Size.Y.Offset + 3
-			end
-		end
-	end
-
-	local scrollingEnabled = n9 > n8
-	local n10 = math.min(n9, 236)
-	instance4.Size = UDim2.fromOffset(instance4.Size.X.Offset, n10)
-	roll.ScrollingEnabled = scrollingEnabled
-	roll.ScrollBarThickness = scrollingEnabled and 2 or 0
-	roll.CanvasPosition = Vector2.zero
-	return n10
-end
---[=[ Source Leak (SL) ]=] -- discord.gg/x7YbZeezpm
-
-local function func56(part2, param99, num30, flag50)
-	local n9 = flag50 or 6
-	local absolutePosition = param99.AbsolutePosition
-	local absoluteSize = param99.AbsoluteSize
-	local offset = part2.Size.X.Offset
-	local num31 = func55(part2)
-	local y = num30.AbsolutePosition.Y
-	local n10 = y + num30.AbsoluteSize.Y
-	local n11 = absolutePosition.Y + absoluteSize.Y + n9
-	local n12 = absolutePosition.Y - n9 - num31
-	local num32 = n11 + num31 > n10 - n9 and n12 >= y + n9
-	local flag51 = false
-
-	if num32 then
-		flag51 = true
-	else
-		n12 = n11
-	end
-
-	local n13 = math.clamp(n12, y + n9, math.max(y + n9, n10 - num31 - n9))
-	local n14 = math.clamp(absolutePosition.X + absoluteSize.X - offset, num30.AbsolutePosition.X + n9, math.max(num30.AbsolutePosition.X + n9, num30.AbsolutePosition.X + num30.AbsoluteSize.X - offset - n9))
-	part2:SetAttribute("Rest", n13)
-	part2:SetAttribute("Flip", flag51)
-	part2.Position = UDim2.fromOffset(n14, n13 + (flag51 and 8 or -8))
-end
-
-local function func57(part3)
-	local attribute = part3:GetAttribute("Rest") or part3.Position.Y.Offset
-	local attribute2 = part3:GetAttribute("Flip")
-	local offset = part3.Position.X.Offset
-	part3:SetAttribute("Open", true)
-	local uiStroke = part3:FindFirstChildOfClass("UIStroke")
-
-	if uiStroke then
-		result1.set(uiStroke, { Transparency = 1 })
-		result1.tween(uiStroke, { Transparency = 0.25 }, { time = 0.17, ease = result1.ease.out })
-	end
-
-	result1.set(part3, { GroupTransparency = 1, Position = UDim2.fromOffset(offset, attribute + (attribute2 and 14 or -14)) })
-	part3.Pop.Scale = 0.86
-	part3.Visible = true
-	result1.tween(part3, { Position = UDim2.fromOffset(offset, attribute) }, tbl46)
-	result1.tween(part3.Pop, { Scale = 1 }, tbl46)
-	result1.tween(part3, { GroupTransparency = 0 }, { time = 0.13, ease = result1.ease.out })
-end
-
-local function func58(part4)
-	if not part4.Visible then
-		return
-	end
-	part4:SetAttribute("Open", false)
-	local attribute = part4:GetAttribute("Rest") or part4.Position.Y.Offset
-	local attribute2 = part4:GetAttribute("Flip")
-	local offset = part4.Position.X.Offset
-	local uiStroke = part4:FindFirstChildOfClass("UIStroke")
-
-	if uiStroke then
-		result1.tween(uiStroke, { Transparency = 1 }, { time = 0.17, ease = result1.ease.inOut })
-	end
-
-	result1.tween(part4, { Position = UDim2.fromOffset(offset, attribute + (attribute2 and 10 or -10)) }, tbl47)
-	result1.tween(part4.Pop, { Scale = 0.9 }, tbl47)
-
-	result1.tween(part4, { GroupTransparency = 1 }, {
-		time = 0.2,
-		ease = result1.ease.inOut,
-		done = function()
-			if not part4:GetAttribute("Open") then
-				part4.Visible = false
-			end
-		end,
-	})
-end
-
-local function func59()
-	for _, item5 in ipairs(tbl48) do
-		func58(item5)
-	end
-
-	value35 = nil
-end
-
-UserInputService.InputBegan:Connect(function(input)
-	if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-		return
-	end
-
-	if not value35 or not value35.Visible then
-		return
-	end
-	local absolutePosition = value35.AbsolutePosition
-	local absoluteSize = value35.AbsoluteSize
-	local position = input.Position
-
-	if position.X < absolutePosition.X or position.X > absolutePosition.X + absoluteSize.X or position.Y < absolutePosition.Y or position.Y > absolutePosition.Y + absoluteSize.Y then
-		task.defer(func59)
-	end
-end)
-
-local function func60(param100)
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = "Float",
-		Size = UDim2.fromOffset(param100, 0),
-		BackgroundColor3 = color,
-		BackgroundTransparency = 0.03,
-		BorderSizePixel = 0,
-		ClipsDescendants = true,
-		GroupTransparency = 0,
-		Visible = false,
-		ZIndex = 200,
-	}, ScreenGui)
-
-	func2("UIScale", { Name = "Pop", Scale = 1 }, CanvasGroup)
-	func3(CanvasGroup, 11)
-	func4(CanvasGroup, color2, 0.25)
-	table.insert(tbl48, CanvasGroup)
-	return CanvasGroup
-end
-
-local function func61(param101, param102, flag52)
-	local Frame2 = func2("Frame", {
-		Name = "Box",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -12, 0.5, 0),
-		Size = UDim2.fromOffset(param102, 28),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-	}, param101)
-
-	func3(Frame2, 7)
-	func4(Frame2, color2, 0.45)
-
-	func7({
-		Name = "Value",
-		Position = UDim2.fromOffset(9, 0),
-		Size = UDim2.new(1, -30, 1, 0),
-		Text = flag52 or "",
-		TextSize = 11,
-		TextTruncate = Enum.TextTruncate.AtEnd,
-	}, Frame2)
-
-	func2("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -8, 0.5, 0),
-		Size = UDim2.fromOffset(12, 12),
-		BackgroundTransparency = 1,
-		Image = obj.caret,
-		ImageColor3 = color4,
-		ImageTransparency = 0.45,
-		ScaleType = Enum.ScaleType.Fit,
-	}, Frame2)
-
-	return Frame2
-end
-
-handlers.AddDropdown = function(param103, param104, flag53)
-	local tbl49 = flag53 or {}
-	local values = tbl49.Values or {}
-	local obj12 = func46(param103, tbl49.Title, tbl49.Description, 46, 223)
-	func47(obj12, tbl49.Icon or "caret")
-	local value36 = func61(obj12, 152, "--")
-	local obj13 = func60(178)
-
-	local ScrollingFrame = func2("ScrollingFrame", {
-		Name = "Roll",
-		Size = UDim2.fromScale(1, 1),
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		CanvasSize = UDim2.new(),
-		AutomaticCanvasSize = Enum.AutomaticSize.Y,
-		ScrollingDirection = Enum.ScrollingDirection.Y,
-		ElasticBehavior = Enum.ElasticBehavior.Never,
-		ScrollBarThickness = 0,
-		ScrollBarImageColor3 = color4,
-		ScrollBarImageTransparency = 0.7,
-		ScrollingEnabled = false,
-		ZIndex = 201,
-	}, obj13)
-
-	func5(ScrollingFrame, 7)
-	func6(ScrollingFrame, 3)
-
-	local tbl50 = {
-		Type = "Dropdown",
-		Values = values,
-		Multi = tbl49.Multi,
-		Value = tbl49.Multi and {} or nil,
-		Callback = tbl49.Callback,
-	}
-
-	local list9 = {}
-
-	local function func62()
-		local flag54
-
-		if tbl50.Multi then
-			local list10 = {}
-
-			for _, value37 in ipairs(tbl50.Values) do
-				if tbl50.Value[value37] then
-					list10[#list10 + 1] = value37
-				end
-			end
-
-			flag54 = table.concat(list10, ", ")
-		else
-			flag54 = tbl50.Value or ""
-		end
-
-		value36.Value.Text = flag54 == "" and "--" or flag54
-	end
-
-	local function func63(param105, transparency)
-		func21(param105, tbl14, { BackgroundTransparency = transparency and 0.9 or 1 })
-		func21(param105.Label, tbl14, { TextTransparency = transparency and 0 or 0.4 })
-		func21(param105.Tick, tbl14, { ImageTransparency = transparency and 0 or 1 })
-		func21(param105.Mark, tbl14, { BackgroundTransparency = transparency and 0 or 1 })
-		param105.Edge.Transparency = transparency and 0.55 or 1
-
-		if transparency then
-			result1.set(param105.Mark, { Size = UDim2.fromOffset(3, 0) })
-			result1.spring(param105.Mark, { Size = UDim2.fromOffset(3, 14) }, bouncy)
-			result1.set(param105.Tick, { Size = UDim2.fromOffset(6, 6) })
-			result1.spring(param105.Tick, { Size = UDim2.fromOffset(13, 13) }, bouncy)
-			result1.set(param105, { BackgroundTransparency = 0.7 })
-			result1.tween(param105, { BackgroundTransparency = 0.9 }, { time = 0.26, ease = result1.ease.out })
-		end
-	end
-
-	local function func64()
-		for _, item6 in ipairs(list9) do
-			item6:Destroy()
-		end
-
-		list9 = {}
-
-		for i, value38 in ipairs(tbl50.Values) do
-			local TextButton = func2("TextButton", {
-				Name = value38,
-				Size = UDim2.new(1, 0, 0, 30),
-				BackgroundColor3 = color4,
-				BackgroundTransparency = 1,
-				BorderSizePixel = 0,
-				AutoButtonColor = false,
-				Text = "",
-				LayoutOrder = i,
-				ZIndex = 202,
-			}, ScrollingFrame)
-
-			func3(TextButton, 8)
-			func4(TextButton, color3, 1).Name = "Edge"
-
-			func3(func2("Frame", {
-				Name = "Mark",
-				AnchorPoint = Vector2.new(0, 0.5),
-				Position = UDim2.new(0, 0, 0.5, 0),
-				Size = UDim2.fromOffset(3, 14),
-				BackgroundColor3 = color3,
-				BackgroundTransparency = 1,
-				BorderSizePixel = 0,
-				ZIndex = 203,
-			}, TextButton), 2)
-
-			func7({
-				Name = "Label",
-				Position = UDim2.fromOffset(12, 0),
-				Size = UDim2.new(1, -34, 1, 0),
-				Text = value38,
-				TextSize = 11,
-				TextTransparency = 0.4,
-				TextTruncate = Enum.TextTruncate.AtEnd,
-				ZIndex = 203,
-			}, TextButton)
-
-			func2("ImageLabel", {
-				Name = "Tick",
-				AnchorPoint = Vector2.new(1, 0.5),
-				Position = UDim2.new(1, -9, 0.5, 0),
-				Size = UDim2.fromOffset(13, 13),
-				BackgroundTransparency = 1,
-				Image = obj.check,
-				ImageColor3 = color3,
-				ImageTransparency = 1,
-				ScaleType = Enum.ScaleType.Fit,
-				ZIndex = 203,
-			}, TextButton)
-
-			local function func65()
-				if tbl50.Multi then
-					return tbl50.Value[value38] and true or false
-				end
-				return tbl50.Value == value38
-			end
-
-			TextButton.MouseEnter:Connect(function()
-				if not func65() then
-					func21(TextButton, tbl14, { BackgroundTransparency = 0.95 })
-				end
-			end)
-
-			TextButton.MouseLeave:Connect(function()
-				if not func65() then
-					func21(TextButton, tbl14, { BackgroundTransparency = 1 })
-				end
-			end)
-
-			TextButton.MouseButton1Click:Connect(function()
-				if tbl50.Multi then
-					tbl50.Value[value38] = not tbl50.Value[value38] or nil
-					func63(TextButton, tbl50.Value[value38] and true or false)
-				else
-					tbl50.Value = value38
-
-					for _, item7 in ipairs(list9) do
-						func63(item7, item7 == TextButton)
-					end
-
-					task.delay(0.14, func59)
-				end
-
-				func62()
-				obj1:Dirty()
-				obj1:Guard(tbl50.Callback, tbl50.Value)
-				obj1:Guard(tbl50.Changed, tbl50.Value)
-			end)
-
-			list9[#list9 + 1] = TextButton
-			local func66 = func63
-			local result6 = func65()
-			func66(TextButton, result6)
-		end
-
-		func62()
-	end
-
-	tbl50.SetValues = function(param106, values2)
-		tbl50.Values = values2 or tbl50.Values
-		func64()
-	end
-
-	tbl50.SetValue = function(param107, flag55, param108)
-		if tbl50.Multi then
-			local tbl51 = {}
-			local func67 = ipairs
-			flag55 = flag55 or {}
-
-			for _, value39 in func67(flag55) do
-				if table.find(tbl50.Values, value39) then
-					tbl51[value39] = true
-				end
-			end
-
-			tbl50.Value = tbl51
-		else
-			tbl50.Value = table.find(tbl50.Values, flag55) and flag55 or nil
-		end
-
-		for _, item8 in ipairs(list9) do
-			local func68 = func63
-			local multi = tbl50.Multi
-			local flag56
-
-			if multi then
-				flag56 = tbl50.Value[item8.Name] and true or false
-			else
-				flag56 = multi
-			end
-
-			func68(item8, flag56 or tbl50.Value == item8.Name)
-		end
-
-		func62()
-		if param108 then
-			return
-		end
-		obj1:Guard(tbl50.Callback, tbl50.Value)
-		obj1:Guard(tbl50.Changed, tbl50.Value)
-	end
-
-	tbl50.OnChanged = function(value, changed)
-		tbl50.Changed = changed
-		changed(tbl50.Value)
-	end
-
-	tbl50.Destroy = function()
-		obj12:Destroy()
-		obj13:Destroy()
-		obj1.Options[param104] = nil
-	end
-
-	func64()
-
-	if tbl49.Default then
-		tbl50:SetValue(tbl49.Default, true)
-	end
-
-	func8(value36, 6).MouseButton1Click:Connect(function()
-		if obj13.Visible and obj13:GetAttribute("Open") then
-			func59()
-			return
-		end
-		func59()
-		func56(obj13, value36, param103.Window.Root, 6)
-		func57(obj13)
-		value35 = obj13
-	end)
-
-	return func51(param104, func49(tbl50, obj12))
-end
-
-handlers.AddColorpicker = function(obj, param109, flag57)
-	local tbl52 = flag57 or {}
-	local obj14 = func46(obj, tbl52.Title, tbl52.Description, 46, 131)
-	func47(obj14, tbl52.Icon or "pipette")
-	local default = tbl52.Default or color3
-
-	local Frame2 = func2("Frame", {
-		Name = "Chip",
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -12, 0.5, 0),
-		Size = UDim2.fromOffset(52, 26),
-		BackgroundColor3 = default,
-		BorderSizePixel = 0,
-	}, obj14)
-
-	func3(Frame2, 7)
-	func4(Frame2, color2, 0.35)
-	local obj15 = func60(186)
-	obj15.Size = UDim2.fromOffset(186, 186)
-
-	local Frame3 = func2("Frame", {
-		Name = "Field",
-		Position = UDim2.fromOffset(12, 12),
-		Size = UDim2.fromOffset(134, 110),
-		BackgroundColor3 = default,
-		BorderSizePixel = 0,
-		ZIndex = 201,
-	}, obj15)
-
-	func3(Frame3, 8)
-	local Frame4 = func2("Frame", { Size = UDim2.fromScale(1, 1), BackgroundColor3 = color4, BorderSizePixel = 0, ZIndex = 202 }, Frame3)
-	func3(Frame4, 8)
-	local new = NumberSequenceKeypoint.new
-	func2("UIGradient", { Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0), new(1, 1) }) }, Frame4)
-
-	local Frame5 = func2("Frame", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Color3.new(0, 0, 0),
-		BorderSizePixel = 0,
-		ZIndex = 203,
-	}, Frame3)
-
-	func3(Frame5, 8)
-	local new2 = NumberSequenceKeypoint.new
-
-	func2("UIGradient", {
-		Rotation = 90,
-		Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), new2(1, 0) }),
-	}, Frame5)
-
-	local Frame6 = func2("Frame", {
-		Name = "Dot",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.fromOffset(11, 11),
-		BackgroundColor3 = color4,
-		BorderSizePixel = 0,
-		ZIndex = 205,
-	}, Frame3)
-
-	func3(Frame6, 6)
-	func4(Frame6, Color3.new(0, 0, 0), 0.55)
-
-	local Frame7 = func2("Frame", {
-		Name = "Hue",
-		Position = UDim2.fromOffset(154, 12),
-		Size = UDim2.fromOffset(20, 110),
-		BorderSizePixel = 0,
-		ZIndex = 201,
-	}, obj15)
-
-	func3(Frame7, 6)
-	local list11 = {}
-
-	for i = 0, 6 do
-		list11[#list11 + 1] = ColorSequenceKeypoint.new(i / 6, Color3.fromHSV(i / 6, 1, 1))
-	end
-
-	func2("UIGradient", { Color = ColorSequence.new(list11), Rotation = 90 }, Frame7)
-
-	local Frame8 = func2("Frame", {
-		Name = "Slot",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(0.5, 0, 0, 0),
-		Size = UDim2.new(1, 6, 0, 5),
-		BackgroundColor3 = color4,
-		BorderSizePixel = 0,
-		ZIndex = 203,
-	}, Frame7)
-
-	func3(Frame8, 3)
-	func4(Frame8, Color3.new(0, 0, 0), 0.6)
-
-	local TextBox = func2("TextBox", {
-		Name = "Hex",
-		Position = UDim2.fromOffset(12, 132),
-		Size = UDim2.fromOffset(162, 28),
-		BackgroundColor3 = color,
-		BackgroundTransparency = n2,
-		BorderSizePixel = 0,
-		ClearTextOnFocus = false,
-		Text = "#" .. default:ToHex(),
-		TextColor3 = color4,
-		TextSize = 11,
-		TextXAlignment = Enum.TextXAlignment.Center,
-		FontFace = func1(Enum.FontWeight.Medium),
-		ZIndex = 201,
-	}, obj15)
-
-	func3(TextBox, 7)
-	func4(TextBox, color2, 0.45)
-	local color5, n9, n10 = Color3.toHSV(default)
-	local tbl53 = { Type = "Colorpicker", Value = default, Callback = tbl52.Callback }
-
-	local function func69(param110)
-		local color6 = Color3.fromHSV(color5, n9, n10)
-		tbl53.Value = color6
-		Frame2.BackgroundColor3 = color6
-		Frame3.BackgroundColor3 = Color3.fromHSV(color5, 1, 1)
-		Frame6.Position = UDim2.fromScale(n9, 1 - n10)
-		Frame8.Position = UDim2.new(0.5, 0, color5, 0)
-		TextBox.Text = "#" .. color6:ToHex()
-		if param110 then
-			return
-		end
-		obj1:Dirty()
-		obj1:Guard(tbl53.Callback, color6)
-		obj1:Guard(tbl53.Changed, color6)
-	end
-
-	tbl53.SetValue = function(param111, param112, param113)
-		local color6, value40, value41 = Color3.toHSV(param112)
-		color5 = color6
-		n9 = value40
-		n10 = value41
-		func69(param113)
-	end
-
-	tbl53.OnChanged = function(value, changed)
-		tbl53.Changed = changed
-		changed(tbl53.Value)
-	end
-
-	tbl53.Destroy = function()
-		obj14:Destroy()
-		obj15:Destroy()
-		obj1.Options[param109] = nil
-	end
-	-- join us: https://discord.gg/x7YbZeezpm
-
-	local flag58 = false
-	local flag59 = false
-	local value42 = func8(Frame3, 206)
-	local value43 = func8(Frame7, 206)
-
-	local function func70(param114)
-		local absoluteSize = Frame3.AbsoluteSize
-		if absoluteSize.X <= 0 or absoluteSize.Y <= 0 then
-			return
-		end
-		n9 = math.clamp((param114.X - Frame3.AbsolutePosition.X) / absoluteSize.X, 0, 1)
-		n10 = 1 - math.clamp((param114.Y - Frame3.AbsolutePosition.Y) / absoluteSize.Y, 0, 1)
-		func69()
-	end
-
-	local function func71(param115)
-		local absoluteSize = Frame7.AbsoluteSize
-		if absoluteSize.Y <= 0 then
-			return
-		end
-		color5 = math.clamp((param115.Y - Frame7.AbsolutePosition.Y) / absoluteSize.Y, 0, 1)
-		func69()
-	end
-
-	value42.InputBegan:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		flag58 = true
-		func70(input.Position)
-	end)
-
-	value43.InputBegan:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		flag59 = true
-		func71(input.Position)
-	end)
-
-	UserInputService.InputChanged:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-
-		if flag58 then
-			func70(input.Position)
-		end
-
-		if flag59 then
-			func71(input.Position)
-		end
-	end)
-
-	UserInputService.InputEnded:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		flag58 = false
-		flag59 = false
-	end)
-
-	TextBox.FocusLost:Connect(function()
-		local ok, result = pcall(Color3.fromHex, TextBox.Text)
-
-		if ok and typeof(result) == "Color3" then
-			tbl53:SetValue(result)
-		else
-			func69(true)
-		end
-	end)
-
-	func8(Frame2, 6).MouseButton1Click:Connect(function()
-		if obj15.Visible and obj15:GetAttribute("Open") then
-			func59()
-			return
-		end
-		func59()
-		func56(obj15, Frame2, obj.Window.Root, 6)
-		func57(obj15)
-		value35 = obj15
-	end)
-
-	func69(true)
-	return func51(param109, func49(tbl53, obj14))
-end
-
-local HttpService = game:GetService("HttpService")
-local tbl54 = {}
-
-local function func72()
-	return type(writefile) == "function" and type(readfile) == "function"
-end
-
-local function func73(param116)
-	if type(makefolder) ~= "function" or type(isfolder) ~= "function" then
-		return
-	end
-	local value44, value45, value46 = string.gmatch(param116, "[^/]+")
-	local value47 = nil
-
-	for k in value44, value45, value46 do
-		value47 = value47 and value47 .. "/" .. k or k
-
-		if not isfolder(value47) then
-			pcall(makefolder, value47)
-		end
-	end
-end
-
-local function func74(param117, param118)
-	if not func72() then
-		tbl54[param117] = param118
-		return true, "vault"
-	end
-
-	if pcall(writefile, param117, param118) then
-		return true, "disk"
-	end
-	tbl54[param117] = param118
-	return true, "vault"
-end
-
-local function func75(param119)
-	if func72() and type(isfile) == "function" then
-		if select(2, pcall(isfile, param119)) then
-			local ok, result = pcall(readfile, param119)
-			if ok then
-				return result, "disk"
-			end
-		end
-	end
-
-	return tbl54[param119], tbl54[param119] and "vault" or nil
-end
-
-local function func76(param120)
-	local type_ = param120.Type
-	if type_ == "Colorpicker" then
-		return { k = "color", v = param120.Value:ToHex() }
-	end
-
-	if type_ == "Keybind" then
-		return { k = "bind", v = param120.Value, m = param120.Mode }
-	end
-
-	if type_ == "Dropdown" and param120.Multi then
-		local list12 = {}
-		local func77 = pairs
-		local value48 = param120.Value or {}
-
-		for k, value49 in func77(value48) do
-			if value49 then
-				list12[#list12 + 1] = k
-			end
-		end
-
-		table.sort(list12)
-		return { k = "many", v = list12 }
-	end
-
-	return { k = "plain", v = param120.Value }
-end
-
-local function func78(obj16, param121)
-	if type(param121) ~= "table" then
-		return
-	end
-
-	if param121.k == "color" then
-		local ok, result = pcall(Color3.fromHex, param121.v)
-
-		if ok then
-			obj16:SetValue(result, true)
-		end
-
-		return
-	end
-
-	if param121.k == "bind" then
-		obj16:SetValue(param121.v, param121.m)
-		return
-	end
-
-	if param121.k == "many" then
-		obj16:SetValue(param121.v, true)
-		return
-	end
-
-	if param121.v ~= nil then
-		obj16:SetValue(param121.v, true)
-	end
-end
-
-obj1.ConfigPath = function()
-	local settings = obj1.Settings or {}
-	local main = settings.Main or "Night Hub"
-	return main, main .. "/" .. (settings.Game or tostring(game.PlaceId)) .. ".json"
-end
-
-obj1.SaveConfig = function()
-	if not obj1.Settings then
-		return false, "chua bat Settings"
-	end
-	local tbl55 = {}
-
-	for k, option in pairs(obj1.Options) do
-		if option.Type then
-			tbl55[k] = func76(option)
-		end
-	end
-	-- https://discord.gg/x7YbZeezpm | 𝖲𝗈𝗎𝗋𝖼𝖾 𝖫𝖾𝖺𝗄
-
-	local ok, result = pcall(function()
-		return HttpService:JSONEncode({ version = obj1.Version, saved = os.time(), data = tbl55 })
-	end)
-
-	if not ok then
-		return false, result
-	end
-	local value50, value51 = obj1:ConfigPath()
-	func73(value50)
-	local value52, value53 = func74(value51, result)
-	return value52, value53
-end
-
-obj1.LoadConfig = function(self, flag60)
-	if not obj1.Settings then
-		return false, "chua bat Settings"
-	end
-	local value54, value55 = obj1:ConfigPath()
-	local flag61, str2 = func75(value55)
-
-	if not flag61 then
-		if not flag60 then
-			obj1:Notify({ Kind = "warn", Title = "Khong co config", Content = value55, Duration = 4 })
-		end
-
-		return false, "trong"
-	end
-
-	local ok, result = pcall(function()
-		return HttpService:JSONDecode(flag61)
-	end)
-
-	if not ok or type(result) ~= "table" then
-		return false, "hong"
-	end
-	obj1.Busy = true
-	local func79 = pairs
-	local data = result.data or {}
-	local n9 = 0
-
-	for k, value56 in func79(data) do
-		local flag62 = obj1.Options[k]
-
-		if flag62 and flag62.SetValue then
-			if pcall(func78, flag62, value56) then
-				n9 += 1
-			end
-		end
-	end
-
-	task.defer(function()
-		obj1.Busy = false
-	end)
-
-	if not flag60 then
-		obj1:Notify({ Kind = "good", Title = "Da nap config", Content = n9 .. " muc tu " .. str2, Duration = 4 })
-	end
-
-	return true, n9
-end
-
-obj1.DeleteConfig = function()
-	if not obj1.Settings then
-		return false
-	end
-	local value57, value58 = obj1:ConfigPath()
-	tbl54[value58] = nil
-
-	if type(delfile) == "function" then
-		pcall(delfile, value58)
-	end
-
-	return true
-end
-
-local flag63 = false
-
-obj1.Dirty = function()
-	if not obj1.Settings or not obj1.Settings.Save then
-		return
-	end
-
-	if obj1.Busy or flag63 then
-		return
-	end
-	flag63 = true
-
-	task.delay(0.6, function()
-		flag63 = false
-		if obj1.Unloaded or obj1.Busy then
-			return
-		end
-		obj1:SaveConfig()
-	end)
-end
-
-index.Dialog = function(param122, flag64)
-	local tbl56 = flag64 or {}
-
-	local Frame2 = func2("Frame", {
-		Name = "Shade",
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Color3.new(0, 0, 0),
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		ZIndex = 300,
-	}, param122.Root)
-
-	local CanvasGroup = func2("CanvasGroup", {
-		Name = "Box",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(300, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundColor3 = color,
-		BackgroundTransparency = 0.04,
-		BorderSizePixel = 0,
-		GroupTransparency = 1,
-		ZIndex = 301,
-	}, Frame2)
-
-	func3(CanvasGroup, 12)
-	func4(CanvasGroup, color2)
-	local UIScale = func2("UIScale", { Name = "Pop", Scale = 0.92 }, CanvasGroup)
-	func2("UISizeConstraint", { MaxSize = Vector2.new(math.max(param122.Root.AbsoluteSize.X - 64, 240), math.huge) }, CanvasGroup)
-
-	local Frame3 = func2("Frame", {
-		Name = "Column",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		BackgroundTransparency = 1,
-		ZIndex = 302,
-	}, CanvasGroup)
-
-	func5(Frame3, 18)
-	func6(Frame3, 8)
-
-	local TextButton = func2("TextButton", {
-		Name = "Quit",
-		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -10, 0, 10),
-		Size = UDim2.fromOffset(24, 24),
-		BackgroundColor3 = color4,
-		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		AutoButtonColor = false,
-		Text = "",
-		ZIndex = 305,
-	}, CanvasGroup)
-
-	func3(TextButton, 7)
-
-	func2("ImageLabel", {
-		Name = "Art",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(12, 12),
-		BackgroundTransparency = 1,
-		Image = obj.close,
-		ImageColor3 = color4,
-		ImageTransparency = 0.45,
-		ScaleType = Enum.ScaleType.Fit,
-		ZIndex = 306,
-	}, TextButton)
-
-	TextButton.MouseEnter:Connect(function()
-		func21(TextButton, tbl14, { BackgroundTransparency = 0.9 })
-		func21(TextButton.Art, tbl14, { ImageTransparency = 0.1 })
-	end)
-
-	TextButton.MouseLeave:Connect(function()
-		func21(TextButton, tbl14, { BackgroundTransparency = 1 })
-		func21(TextButton.Art, tbl14, { ImageTransparency = 0.45 })
-	end)
-
-	func7({
-		Name = "Title",
-		Size = UDim2.new(1, -28, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Text = tbl56.Title or "Confirm",
-		TextSize = 14,
-		TextWrapped = true,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		LayoutOrder = 1,
-		FontFace = func1(Enum.FontWeight.Bold),
-		ZIndex = 303,
-	}, Frame3)
-
-	func7({
-		Name = "Desc",
-		Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Text = tbl56.Content or "",
-		TextSize = 11,
-		TextTransparency = n4,
-		TextWrapped = true,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		LayoutOrder = 2,
-		ZIndex = 303,
-	}, Frame3)
-
-	local Frame4 = func2("Frame", {
-		Name = "Buttons",
-		Size = UDim2.new(1, 0, 0, 32),
-		BackgroundTransparency = 1,
-		LayoutOrder = 3,
-		ZIndex = 303,
-	}, Frame3)
-
-	func6(Frame4, 8, Enum.FillDirection.Horizontal)
-
-	local function close2()
-		result1.tween(CanvasGroup, { GroupTransparency = 1 }, { time = 0.14, ease = result1.ease.out })
-		result1.tween(UIScale, { Scale = 0.92 }, { time = 0.16, ease = result1.ease.backIn })
-
-		result1.tween(Frame2, { BackgroundTransparency = 1 }, {
-			time = 0.18,
-			ease = result1.ease.out,
-			done = function()
-				Frame2:Destroy()
-			end,
-		})
-	end
-
-	TextButton.MouseButton1Click:Connect(close2)
-
-	func2("TextButton", {
-		Name = "Away",
-		Size = UDim2.fromScale(1, 1),
-		BackgroundTransparency = 1,
-		AutoButtonColor = false,
-		Text = "",
-		ZIndex = 300,
-	}, Frame2).MouseButton1Click:Connect(close2)
-
-	local buttons = tbl56.Buttons or { { Title = "OK" } }
-
-	for i, button in ipairs(buttons) do
-		local TextButton2 = func2("TextButton", {
-			Name = button.Title or "Pick" .. i,
-			Size = UDim2.new(1 / #buttons, -(#buttons - 1) * 8 / #buttons, 1, 0),
-			BackgroundColor3 = button.Filled and color3 or color,
-			BackgroundTransparency = button.Filled and 0 or 0.45,
-			BorderSizePixel = 0,
-			AutoButtonColor = false,
-			Text = button.Title or "OK",
-			TextColor3 = color4,
-			TextSize = 11,
-			LayoutOrder = i,
-			FontFace = func1(Enum.FontWeight.Medium),
-			ZIndex = 304,
-		}, Frame4)
-
-		func3(TextButton2, 7)
-
-		if not button.Filled then
-			func4(TextButton2, color2, 0.45)
-		end
-
-		TextButton2.MouseButton1Click:Connect(function()
-			close2()
-			obj1:Guard(button.Callback)
-		end)
-	end
-
-	result1.tween(Frame2, { BackgroundTransparency = 0.45 }, { time = 0.18, ease = result1.ease.out })
-	result1.tween(CanvasGroup, { GroupTransparency = 0 }, { time = 0.18, ease = result1.ease.out })
-	result1.tween(UIScale, { Scale = 1 }, { time = 0.32, ease = result1.ease.back })
-	return { Close = close2 }
-end
-
-for _, item9 in ipairs({
-	"AddToggle",
-	"AddSlider",
-	"AddInput",
-	"AddKeybind",
-	"AddDropdown",
-	"AddColorpicker",
-	"AddButton",
-	"AddButtons",
-	"AddParagraph",
-	"AddSegmented",
+local resizeGripBars = {}
+for _, bar in ipairs({
+    { 0.5, 0.5, 0.9 },
+    { 0.68, 0.68, 0.54 },
+    { 0.84, 0.84, 0.22 },
 }) do
-	index2[item9] = function(obj17, ...)
-		return handlers[item9](obj17:Loft(), ...)
-	end
+    local piece = Instance.new("Frame")
+    piece.Name = "GripBar"
+    piece.Active = false
+    piece.AnchorPoint = Vector2.new(0.5, 0.5)
+    piece.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    piece.BackgroundTransparency = 0.35
+    piece.BorderSizePixel = 0
+    piece.Position = UDim2.fromScale(bar[1], bar[2])
+    piece.Rotation = -45
+    piece.Size = UDim2.fromScale(bar[3], 0.13)
+    piece.ZIndex = 121
+    piece.Parent = resizeGrip
+    table.insert(resizeGripBars, piece)
 end
 
-return obj1
+local function setResizeGripHighlight(highlighted)
+    for _, piece in ipairs(resizeGripBars) do
+        TweenService:Create(piece, TweenInfo.new(0.1), {
+            BackgroundTransparency = highlighted and 0.05 or 0.35,
+        }):Play()
+    end
+end
 
--- ＳＬ | Ｓｏｕｒｃｅ Ｌｅａｋ // discord.gg/x7YbZeezpm
+local resizeDragging = false
+local resizeActiveTouch = nil
+local resizeStartPointer = Vector2.new(0, 0)
+local resizeStartSize = Vector2.new(0, 0)
+
+local function applyResizeSize(widthPixels, heightPixels)
+    local region = rootGui.AbsoluteSize
+    if region.X <= 0 or region.Y <= 0 then
+        return
+    end
+    Runtime.menuSize = UDim2.fromScale(
+        math.clamp(
+            widthPixels / region.X,
+            RESIZE_LIMITS.MinWidth,
+            RESIZE_LIMITS.MaxWidth
+        ),
+        math.clamp(
+            heightPixels / region.Y,
+            RESIZE_LIMITS.MinHeight,
+            RESIZE_LIMITS.MaxHeight
+        )
+    )
+    rootGui:SetAttribute("MenuSize", Runtime.menuSize)
+    mainFrame.Size = Runtime.menuSize
+    ContentScale.Refresh()
+end
+
+local function resizeFromInputPosition(position)
+    local delta = Vector2.new(position.X, position.Y) - resizeStartPointer
+    applyResizeSize(
+        resizeStartSize.X + delta.X * 2,
+        resizeStartSize.Y + delta.Y * 2
+    )
+end
+
+resizeGrip.MouseEnter:Connect(function()
+    setResizeGripHighlight(true)
+end)
+
+resizeGrip.MouseLeave:Connect(function()
+    if not resizeDragging then
+        setResizeGripHighlight(false)
+    end
+end)
+
+resizeGrip.InputBegan:Connect(function(input)
+    if resizeDragging or input.UserInputState ~= Enum.UserInputState.Begin then
+        return
+    end
+    if input.UserInputType ~= Enum.UserInputType.MouseButton1
+        and input.UserInputType ~= Enum.UserInputType.Touch
+    then
+        return
+    end
+    local pointer = Vector2.new(input.Position.X, input.Position.Y)
+    local gripPosition = resizeGrip.AbsolutePosition
+    local gripSize = resizeGrip.AbsoluteSize
+    if pointer.X < gripPosition.X
+        or pointer.X > gripPosition.X + gripSize.X
+        or pointer.Y < gripPosition.Y
+        or pointer.Y > gripPosition.Y + gripSize.Y
+    then
+        return
+    end
+    resizeDragging = true
+    resizeActiveTouch = input.UserInputType == Enum.UserInputType.Touch
+        and input
+        or nil
+    resizeStartPointer = Vector2.new(input.Position.X, input.Position.Y)
+    resizeStartSize = mainFrame.AbsoluteSize
+    setResizeGripHighlight(true)
+end)
+
+trackRootConnection(UserInputService.InputChanged:Connect(function(input)
+    if not resizeDragging then
+        return
+    end
+    if resizeActiveTouch then
+        if input == resizeActiveTouch then
+            resizeFromInputPosition(input.Position)
+        end
+    elseif input.UserInputType == Enum.UserInputType.MouseMovement then
+        resizeFromInputPosition(input.Position)
+    end
+end))
+
+trackRootConnection(UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input == resizeActiveTouch
+    then
+        if resizeDragging then
+            resizeDragging = false
+            resizeActiveTouch = nil
+            setResizeGripHighlight(false)
+        end
+    end
+end))
+
+
+ContentScale.OnChanged(function(scaleX, scaleY)
+    resizeGrip.Position = UDim2.fromScale(
+        1 - 0.002 / scaleX,
+        1 - 0.005 / scaleY
+    )
+    resizeGrip.Size = UDim2.fromScale(0.05 / scaleX, 0.05 / scaleY)
+end)
+
+
+
+ContentScale.OnChanged(function(scaleX, scaleY)
+    topBar.Size = UDim2.new(1, 0, 0.125 / scaleY, 0)
+    objects.obj12.Position = UDim2.new(
+        0.06700000166893005 / scaleX,
+        0,
+        0.44999998807907104,
+        0
+    )
+    objects.obj12.Size = UDim2.new(
+        0.11656716465950012 / scaleX,
+        0,
+        1.1833335161209106,
+        0
+    )
+    objects.obj9.Position = UDim2.new(
+        0.5687711238861084 / scaleX,
+        0,
+        0.5,
+        0
+    )
+    objects.obj9.Size = UDim2.new(
+        0.8620089292526245 / scaleX,
+        0,
+        0.7499999403953552,
+        0
+    )
+    objects.obj14.Position = UDim2.new(
+        1 - 0.045000016689300537 / scaleX,
+        0,
+        0.4339999854564667,
+        0
+    )
+    objects.obj14.Size = UDim2.new(
+        0.06637302041053772 / scaleX,
+        0,
+        0.6588137149810791,
+        0
+    )
+end)
+
+local normalTextFont = Font.new(
+    "rbxasset://fonts/families/GothamSSm.json",
+    Enum.FontWeight.ExtraBold,
+    Enum.FontStyle.Normal
+)
+
+local italicTextFont = Font.new(
+    "rbxasset://fonts/families/GothamSSm.json",
+    Enum.FontWeight.ExtraBold,
+    Enum.FontStyle.Italic
+)
+
+local shinyTextGradient = ColorSequence.new(Runtime.Theme.Text)
+
+local blueStrokeGradient = ColorSequence.new(Runtime.Theme.Stroke)
+
+local function clearDirectGradients(container)
+    for _, child in ipairs(container:GetChildren()) do
+        if child:IsA("UIGradient") then
+            child:Destroy()
+        end
+    end
+end
+
+local function getTextStroke(label)
+    local stroke = label:FindFirstChildOfClass("UIStroke")
+    if not stroke then
+        stroke = Instance.new("UIStroke")
+        stroke.Name = "UIStroke"
+        stroke.Parent = label
+    end
+    return stroke
+end
+
+local function configureScaledStroke(stroke, color, thickness)
+    stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+    stroke.Color = color
+    stroke.Enabled = true
+    stroke.LineJoinMode = Enum.LineJoinMode.Round
+    stroke.Thickness = thickness
+    stroke.Transparency = 1
+    pcall(function()
+        stroke.BorderOffset = UDim.new(0, 0)
+        stroke.BorderStrokePosition = Enum.BorderStrokePosition.Outer
+        stroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+    end)
+end
+
+local function applyShinyTextStyle(label, fontFace)
+    if fontFace then
+        label.FontFace = fontFace
+    end
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.TextTransparency = 0
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextStrokeTransparency = 1
+    label.TextScaled = true
+    label.LineHeight = 1
+
+    clearDirectGradients(label)
+
+    local stroke = getTextStroke(label)
+    clearDirectGradients(stroke)
+    configureScaledStroke(stroke, Color3.fromRGB(255, 255, 255), 0.06499999761581421)
+
+    local strokeGradient = Instance.new("UIGradient")
+    strokeGradient.Name = "StrokeStyleGradient"
+    strokeGradient.Color = blueStrokeGradient
+    strokeGradient.Offset = Vector2.new(0, 0)
+    strokeGradient.Rotation = 90
+    strokeGradient.Transparency = NumberSequence.new(0)
+    strokeGradient.Parent = stroke
+
+    local textGradient = Instance.new("UIGradient")
+    textGradient.Name = "TextStyleGradient"
+    textGradient.Color = shinyTextGradient
+    textGradient.Offset = Vector2.new(0, 0)
+    textGradient.Rotation = 90
+    textGradient.Transparency = NumberSequence.new(0)
+    textGradient.Parent = label
+end
+
+local function applyPlainTextStyle(label)
+    label.FontFace = normalTextFont
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.TextTransparency = 0
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextStrokeTransparency = 1
+    label.TextScaled = true
+    label.LineHeight = 1
+
+    clearDirectGradients(label)
+
+    local stroke = getTextStroke(label)
+    clearDirectGradients(stroke)
+    configureScaledStroke(stroke, Color3.fromRGB(0, 0, 0), 0.07999999821186066)
+end
+
+local rebirthOuterGradient = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Runtime.Theme.AccentLight),
+    ColorSequenceKeypoint.new(1, Runtime.Theme.Accent),
+})
+
+local rebirthInnerGradient = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Runtime.Theme.AccentLight),
+    ColorSequenceKeypoint.new(1, Runtime.Theme.Accent),
+})
+
+local function addRedGradient(parent, name, color)
+    local gradient = Instance.new("UIGradient")
+    gradient.Name = name
+    gradient.Color = color
+    gradient.Rotation = 90
+    gradient.Parent = parent
+    return gradient
+end
+
+local function addScaledStroke(parent, mode, thickness)
+    local stroke = Instance.new("UIStroke")
+    stroke.ApplyStrokeMode = mode
+    stroke.Color = Runtime.Theme.Stroke
+    stroke.LineJoinMode = Enum.LineJoinMode.Round
+    stroke.Thickness = thickness
+    stroke.Transparency = 0
+    pcall(function()
+        stroke.BorderOffset = UDim.new(0, 0)
+        stroke.BorderStrokePosition = Enum.BorderStrokePosition.Outer
+        stroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+    end)
+    stroke.Parent = parent
+    return stroke
+end
+
+local function createRebirthStyleButton(parent, text, layoutOrder)
+    local button = Instance.new("TextButton")
+    button.Name = text
+    button.Active = true
+    button.AnchorPoint = Vector2.new(0.5, 0.5)
+    button.AutoButtonColor = false
+    button.BackgroundTransparency = 1
+    button.BorderSizePixel = 0
+    button.LayoutOrder = layoutOrder
+    button.Size = UDim2.new(1, 0, 0.130, 0)
+    button.Text = ""
+    button.ZIndex = 99
+    button.Parent = parent
+
+    local buttonScale = Instance.new("UIScale")
+    buttonScale.Scale = 1
+    buttonScale.Parent = button
+
+    local base = Instance.new("Frame")
+    base.Name = "Main"
+    base.Active = false
+    base.AnchorPoint = Vector2.new(0.5, 0.5)
+    base.BackgroundColor3 = Runtime.Theme.AccentDark
+    base.BorderSizePixel = 0
+    base.Position = UDim2.fromScale(0.5, 0.5)
+    base.Size = UDim2.fromScale(1, 1)
+    base.ZIndex = 1
+    base.Parent = button
+    addScaledStroke(base, Enum.ApplyStrokeMode.Border, 0.0599999987)
+
+    local colorFrame = Instance.new("Frame")
+    colorFrame.Name = "ColorFrame"
+    colorFrame.Active = false
+    colorFrame.AnchorPoint = Vector2.new(0.5, 0)
+    colorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    colorFrame.BorderSizePixel = 0
+    colorFrame.Position = UDim2.fromScale(0.5, 0)
+    colorFrame.Size = UDim2.fromScale(1, 1)
+    colorFrame.ZIndex = 1
+    colorFrame.Parent = base
+    colorFrame.BackgroundColor3 = Runtime.Theme.Accent
+
+    local highlight = Instance.new("Frame")
+    highlight.Name = "Transparent"
+    highlight.Active = false
+    highlight.AnchorPoint = Vector2.new(0.5, 0.5)
+    highlight.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    highlight.BorderSizePixel = 0
+    highlight.Position = UDim2.fromScale(0.5, 0.5)
+    highlight.Size = UDim2.fromScale(0.965, 0.88)
+    highlight.ZIndex = 2
+    highlight.Parent = colorFrame
+    highlight.Visible = false
+    addRedGradient(highlight, "RedGradient", rebirthInnerGradient)
+
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Active = false
+    label.AnchorPoint = Vector2.new(0.5, 0.5)
+    label.BackgroundTransparency = 1
+    label.BorderSizePixel = 0
+    label.Position = UDim2.fromScale(0.5, 0.5)
+    label.Size = UDim2.fromScale(0.94, 0.72)
+    label.Text = text
+    label.ZIndex = 6
+    label.Parent = colorFrame
+    applyShinyTextStyle(label, normalTextFont)
+
+    local activeTween
+    local hovered = false
+    local function tweenScale(value, duration)
+        if activeTween then
+            activeTween:Cancel()
+        end
+        activeTween = TweenService:Create(
+            buttonScale,
+            TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            { Scale = value }
+        )
+        activeTween:Play()
+    end
+
+    button.MouseEnter:Connect(function()
+        hovered = true
+        tweenScale(1.035, 0.1)
+    end)
+    button.MouseLeave:Connect(function()
+        hovered = false
+        tweenScale(1, 0.1)
+    end)
+    button.MouseButton1Down:Connect(function()
+        tweenScale(0.96, 0.055)
+    end)
+    button.MouseButton1Up:Connect(function()
+        tweenScale(hovered and 1.035 or 1, 0.08)
+    end)
+
+    return button
+end
+
+local sideButtons = Instance.new("Frame")
+sideButtons.Name = "SideButtons"
+sideButtons.Active = false
+sideButtons.AnchorPoint = Vector2.new(1, 0.5)
+sideButtons.BackgroundTransparency = 1
+sideButtons.BorderSizePixel = 0
+
+
+
+sideButtons.Position = UDim2.new(-0.025, 0, 0.558, 0)
+sideButtons.Size = UDim2.new(0.2612044513, 0, 1, 0)
+sideButtons.ZIndex = 99
+sideButtons.Parent = mainFrame
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local ACCENT_GRADIENT = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Runtime.Theme.AccentLight),
+    ColorSequenceKeypoint.new(1, Runtime.Theme.AccentDark),
+})
+
+
+local ROW_ASPECT = 10
+local ROW_WIDTH_SCALE = 0.97
+
+
+
+
+
+local CONTROL_LAYOUT = {
+    NarrowWidth = 0.20062215626239776,
+    NarrowCenterX = 0.8846889218690012,
+    WideWidth = 0.28,
+    WideCenterX = 0.845,
+}
+
+
+
+local CHEVRON_COLOR = Runtime.Theme.Accent
+
+
+local UNIT_CHEVRON_COLOR = Color3.fromRGB(255, 255, 255)
+
+
+local MAX_CHIPS_PER_LINE = 4
+
+
+
+
+local BALANCE_CHIP_LINES = false
+
+
+
+local ACCENT_WIDTH_RATIO = 0.17
+
+
+
+local SEARCH_MIN_OPTIONS = 5
+
+
+
+
+local ROW_ASPECT_WITH_NOTE = 7.5
+
+
+
+
+local NOTE_TITLE_SCALE = 0.9
+
+local function addAccentGradient(parent)
+    local gradient = Instance.new("UIGradient")
+    gradient.Name = "AccentGradient"
+    gradient.Color = ACCENT_GRADIENT
+    gradient.Rotation = 90
+    gradient.Parent = parent
+    return gradient
+end
+
+local function attachScaleFeedback(button, hoverScale, pressScale)
+    local scale = button:FindFirstChildOfClass("UIScale")
+    if not scale then
+        scale = Instance.new("UIScale")
+        scale.Name = "InteractionScale"
+        scale.Scale = 1
+        scale.Parent = button
+    end
+
+    local activeTween
+    local hovered = false
+
+    local function play(value, duration)
+        if activeTween then
+            activeTween:Cancel()
+        end
+        activeTween = TweenService:Create(
+            scale,
+            TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            { Scale = value }
+        )
+        activeTween:Play()
+    end
+
+    button.MouseEnter:Connect(function()
+        hovered = true
+        play(hoverScale, 0.1)
+    end)
+    button.MouseLeave:Connect(function()
+        hovered = false
+        play(1, 0.1)
+    end)
+    button.MouseButton1Down:Connect(function()
+        play(pressScale, 0.055)
+    end)
+    button.MouseButton1Up:Connect(function()
+        play(hovered and hoverScale or 1, 0.08)
+    end)
+
+    return scale
+end
+
+
+local function buildRowPlate(parent, labelText)
+    local main = Instance.new("Frame")
+    main.Name = "Main"
+    main.Active = false
+    main.AnchorPoint = Vector2.new(0.5, 0.5)
+    main.BackgroundColor3 = Runtime.Theme.Row
+    main.BackgroundTransparency = 0
+    main.BorderSizePixel = 0
+    main.Position = UDim2.fromScale(0.5, 0.5)
+    main.Size = UDim2.fromScale(1, 0.85)
+    main.ZIndex = 3
+    main.Parent = parent
+    Runtime.addCorner(main, Runtime.Theme.Corner)
+    addScaledStroke(main, Enum.ApplyStrokeMode.Border, 0.05)
+
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Active = false
+    label.AnchorPoint = Vector2.new(0, 0.5)
+    label.BackgroundTransparency = 1
+    label.BorderSizePixel = 0
+    label.Position = UDim2.fromScale(0.025, 0.5)
+    
+    
+    label.Size = UDim2.fromScale(0.65, 0.64)
+    label.Text = labelText
+    label.TextWrapped = true
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextYAlignment = Enum.TextYAlignment.Center
+    label.ZIndex = 5
+    label.Parent = main
+    applyPlainTextStyle(label)
+
+    return main, label
+end
+
+
+local function buildFixedRow(name, labelText)
+    local row = Instance.new("Frame")
+    row.Name = name
+    row.Active = false
+    row.AnchorPoint = Vector2.new(0.5, 0.5)
+    row.BackgroundTransparency = 1
+    row.BorderSizePixel = 0
+    row.Position = UDim2.fromScale(0.5, 0.5)
+    row.Size = UDim2.fromScale(ROW_WIDTH_SCALE, 0.6)
+    row.ZIndex = 3
+
+    local aspect = Instance.new("UIAspectRatioConstraint")
+    aspect.AspectRatio = ROW_ASPECT
+    aspect.AspectType = Enum.AspectType.FitWithinMaxSize
+    aspect.DominantAxis = Enum.DominantAxis.Width
+    aspect.Parent = row
+
+    local main, label = buildRowPlate(row, labelText)
+    return row, main, label
+end
+
+
+
+
+Runtime.activeDropdownCloser = nil
+
+local function closeActiveDropdown()
+    if Runtime.activeDropdownCloser then
+        Runtime.activeDropdownCloser()
+    end
+end
+
+
+
+
+
+
+
+
+
+
+local function createDropdownRow(
+    name,
+    labelText,
+    options,
+    defaultIndex,
+    multiSelect,
+    action,
+    noteText
+)
+    local row = Instance.new("Frame")
+    row.Name = name
+    row.Active = false
+    row.AnchorPoint = Vector2.new(0.5, 0.5)
+    row.BackgroundTransparency = 1
+    row.BorderSizePixel = 0
+    
+    
+    
+    row.ClipsDescendants = false
+    row.Position = UDim2.fromScale(0.5, 0.5)
+    row.Size = UDim2.new(ROW_WIDTH_SCALE, 0, 0, 0)
+    row.ZIndex = 3
+
+    local head = Instance.new("Frame")
+    head.Name = "Head"
+    head.Active = false
+    head.AnchorPoint = Vector2.new(0.5, 0)
+    head.BackgroundTransparency = 1
+    head.BorderSizePixel = 0
+    head.Position = UDim2.fromScale(0.5, 0)
+    head.Size = UDim2.new(1, 0, 0, 0)
+    head.ZIndex = 3
+    head.Parent = row
+
+    local main, titleLabel = buildRowPlate(head, labelText)
+
+    local box = Instance.new("TextButton")
+    box.Name = "Dropdown"
+    box.Active = true
+    box.AutoButtonColor = false
+    box.AnchorPoint = Vector2.new(0.5, 0.5)
+    box.BackgroundColor3 = Runtime.Theme.Field
+    box.BackgroundTransparency = 0
+    box.BorderSizePixel = 0
+    box.Position = UDim2.fromScale(CONTROL_LAYOUT.WideCenterX, 0.5)
+    box.Size = UDim2.fromScale(CONTROL_LAYOUT.WideWidth, 0.62)
+    box.Text = ""
+    box.ZIndex = 6
+    box.Parent = main
+    addScaledStroke(box, Enum.ApplyStrokeMode.Border, 0.1)
+    attachScaleFeedback(box, 1.025, 0.975)
+
+    local currentNote = tostring(noteText or "")
+    local noteVScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
+    local boxLeft = CONTROL_LAYOUT.WideCenterX - CONTROL_LAYOUT.WideWidth / 2
+
+    local noteLabel = Instance.new("TextLabel")
+    noteLabel.Name = "Note"
+    noteLabel.Active = false
+    noteLabel.AnchorPoint = Vector2.new(0, 0.5)
+    noteLabel.BackgroundTransparency = 1
+    noteLabel.BorderSizePixel = 0
+    noteLabel.Position = UDim2.fromScale(0.025, 0.755)
+    noteLabel.Size = UDim2.fromScale(math.max(0.3, boxLeft - 0.045), 0.3)
+    noteLabel.Text = currentNote
+    noteLabel.TextWrapped = false
+    noteLabel.TextXAlignment = Enum.TextXAlignment.Left
+    noteLabel.TextYAlignment = Enum.TextYAlignment.Center
+    noteLabel.Visible = false
+    noteLabel.ZIndex = 5
+    noteLabel.Parent = main
+    applyPlainTextStyle(noteLabel)
+    noteLabel.TextTransparency = 0.32
+
+    local noteStroke = noteLabel:FindFirstChildOfClass("UIStroke")
+    if noteStroke then
+        noteStroke.Thickness = 0.06
+        noteStroke.Transparency = 0.2
+    end
+
+    local function applyNoteLayout()
+        local hasNote = currentNote ~= ""
+        noteLabel.Text = currentNote
+        noteLabel.Visible = hasNote
+        if hasNote then
+            titleLabel.Position = UDim2.fromScale(0.025, 0.34)
+            titleLabel.Size = UDim2.fromScale(0.65, 0.64 * noteVScale * NOTE_TITLE_SCALE)
+            box.Size = UDim2.fromScale(CONTROL_LAYOUT.WideWidth, 0.62 * noteVScale)
+        else
+            titleLabel.Position = UDim2.fromScale(0.025, 0.5)
+            titleLabel.Size = UDim2.fromScale(0.65, 0.64)
+            box.Size = UDim2.fromScale(CONTROL_LAYOUT.WideWidth, 0.62)
+        end
+    end
+    applyNoteLayout()
+
+    local value = Instance.new("TextLabel")
+    value.Name = "Value"
+    value.Active = false
+    value.AnchorPoint = Vector2.new(0.5, 0.5)
+    value.BackgroundTransparency = 1
+    value.BorderSizePixel = 0
+    
+    value.Position = UDim2.fromScale(0.405, 0.5)
+    value.Size = UDim2.fromScale(0.7, 0.58)
+    value.Text = options[defaultIndex] or options[1]
+    value.TextWrapped = true
+    value.TextXAlignment = Enum.TextXAlignment.Center
+    value.TextYAlignment = Enum.TextYAlignment.Center
+    value.ZIndex = 7
+    value.Parent = box
+    applyPlainTextStyle(value)
+
+    
+    local divider = Instance.new("Frame")
+    divider.Name = "Divider"
+    divider.Active = false
+    divider.AnchorPoint = Vector2.new(0.5, 0.5)
+    divider.BackgroundColor3 = Runtime.Theme.Stroke
+    divider.BackgroundTransparency = 0
+    divider.BorderSizePixel = 0
+    divider.Position = UDim2.fromScale(0.8, 0.5)
+    divider.Size = UDim2.fromScale(0.014, 0.66)
+    divider.ZIndex = 7
+    divider.Parent = box
+
+    local caret = Instance.new("Frame")
+    caret.Name = "Caret"
+    caret.Active = false
+    caret.AnchorPoint = Vector2.new(0.5, 0.5)
+    caret.BackgroundTransparency = 1
+    caret.BorderSizePixel = 0
+    caret.Position = UDim2.fromScale(0.888, 0.5)
+    caret.Size = UDim2.fromScale(0.16, 0.56)
+    caret.ZIndex = 7
+    caret.Parent = box
+
+    local caretAspect = Instance.new("UIAspectRatioConstraint")
+    caretAspect.AspectRatio = 1
+    caretAspect.AspectType = Enum.AspectType.FitWithinMaxSize
+    caretAspect.DominantAxis = Enum.DominantAxis.Height
+    caretAspect.Parent = caret
+
+    
+    
+    
+    
+    
+    for _, arm in ipairs({ { 0.335355, 45 }, { 0.664645, -45 } }) do
+        local piece = Instance.new("Frame")
+        piece.Name = "Arm"
+        piece.Active = false
+        piece.AnchorPoint = Vector2.new(0.5, 0.5)
+        piece.BackgroundColor3 = CHEVRON_COLOR
+        piece.BorderSizePixel = 0
+        piece.Position = UDim2.fromScale(arm[1], 0.535355)
+        piece.Rotation = arm[2]
+        piece.Size = UDim2.fromScale(0.6657, 0.2)
+        piece.ZIndex = 8
+        piece.Parent = caret
+    end
+
+    
+    
+    
+    
+    
+    
+    
+    
+    local menuClip = Instance.new("Frame")
+    menuClip.Name = "Menu"
+    menuClip.Active = false
+    menuClip.AnchorPoint = Vector2.new(0.5, 0)
+    menuClip.BackgroundTransparency = 1
+    menuClip.BorderSizePixel = 0
+    menuClip.ClipsDescendants = true
+    menuClip.Position = UDim2.new(0.5, 0, 0, 0)
+    menuClip.Size = UDim2.new(1, 0, 0, 0)
+    menuClip.ZIndex = 6
+    menuClip.Parent = row
+
+    
+    local searchField, searchBox
+    if #options >= SEARCH_MIN_OPTIONS then
+        searchField = Instance.new("Frame")
+        searchField.Name = "Search"
+        searchField.Active = false
+        searchField.BackgroundColor3 = Runtime.Theme.Field
+        searchField.BackgroundTransparency = 0
+        searchField.BorderSizePixel = 0
+        searchField.Position = UDim2.new(0, 0, 0, 0)
+        searchField.Size = UDim2.new(0, 0, 0, 0)
+        searchField.ZIndex = 7
+        searchField.Parent = menuClip
+        addScaledStroke(searchField, Enum.ApplyStrokeMode.Border, 0.07)
+
+        searchBox = Instance.new("TextBox")
+        searchBox.Name = "Input"
+        searchBox.Active = true
+        searchBox.AnchorPoint = Vector2.new(0.5, 0.5)
+        searchBox.BackgroundTransparency = 1
+        searchBox.BorderSizePixel = 0
+        searchBox.ClearTextOnFocus = false
+        searchBox.MultiLine = false
+        searchBox.Position = UDim2.fromScale(0.5, 0.5)
+        searchBox.Size = UDim2.fromScale(0.94, 0.56)
+        searchBox.Text = ""
+        searchBox.PlaceholderText = "Search..."
+        searchBox.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
+        searchBox.TextXAlignment = Enum.TextXAlignment.Center
+        searchBox.TextYAlignment = Enum.TextYAlignment.Center
+        searchBox.ZIndex = 9
+        searchBox.Parent = searchField
+        applyPlainTextStyle(searchBox)
+    end
+
+    local emptyLabel = Instance.new("TextLabel")
+    emptyLabel.Name = "Empty"
+    emptyLabel.Active = false
+    emptyLabel.BackgroundTransparency = 1
+    emptyLabel.BorderSizePixel = 0
+    emptyLabel.Position = UDim2.new(0, 0, 0, 0)
+    emptyLabel.Size = UDim2.new(0, 0, 0, 0)
+    emptyLabel.Text = "No match"
+    emptyLabel.Visible = false
+    emptyLabel.ZIndex = 9
+    emptyLabel.Parent = menuClip
+    applyPlainTextStyle(emptyLabel)
+    emptyLabel.TextTransparency = 0.4
+
+    local currentIndex = type(defaultIndex) == "number" and defaultIndex or 1
+    local selected = {}
+    if multiSelect and type(defaultIndex) == "table" then
+        for _, choice in ipairs(defaultIndex) do
+            local choiceIndex = nil
+            if type(choice) == "number" then
+                choiceIndex = math.clamp(math.floor(choice), 1, #options)
+            else
+                for index, option in ipairs(options) do
+                    if option == tostring(choice) then
+                        choiceIndex = index
+                        break
+                    end
+                end
+            end
+            if choiceIndex then
+                selected[choiceIndex] = true
+            end
+        end
+    else
+        selected[currentIndex] = true
+    end
+
+    local function getControllerValue()
+        if not multiSelect then
+            return options[currentIndex], currentIndex
+        end
+        local values = {}
+        local indices = {}
+        for index = 1, #options do
+            if selected[index] then
+                table.insert(values, options[index])
+                table.insert(indices, index)
+            end
+        end
+        return values, indices
+    end
+
+    local items = {}
+    local visibleItems = {}
+    local searchQuery = ""
+    local isOpen = false
+    local setOpen
+    local refreshSelection
+    local accentWidth = 0
+
+    
+    
+    local hintLabel = nil
+    local applyButton = nil
+    local applyCaption = nil
+    local applyCaptionStroke = nil
+    local applyLayers = nil
+    local applyBaseText = ""
+    local applyReady = true
+    if action then
+        applyBaseText = tostring(action.ButtonText or "Apply")
+
+        
+        
+        hintLabel = Instance.new("TextLabel")
+        hintLabel.Name = "Hint"
+        hintLabel.Active = false
+        hintLabel.BackgroundTransparency = 1
+        hintLabel.BorderSizePixel = 0
+        hintLabel.Position = UDim2.new(0, 0, 0, 0)
+        hintLabel.Size = UDim2.new(0, 0, 0, 0)
+        hintLabel.Text = tostring(action.Hint or "")
+        hintLabel.TextWrapped = true
+        hintLabel.TextXAlignment = Enum.TextXAlignment.Center
+        hintLabel.TextYAlignment = Enum.TextYAlignment.Center
+        hintLabel.ZIndex = 9
+        hintLabel.Parent = menuClip
+        applyPlainTextStyle(hintLabel)
+        hintLabel.TextTransparency = 0.28
+
+        
+        
+        
+        applyButton = Instance.new("TextButton")
+        applyButton.Name = "Apply"
+        applyButton.Active = true
+        applyButton.AutoButtonColor = false
+        
+        
+        applyButton.AnchorPoint = Vector2.new(0.5, 0.5)
+        applyButton.BackgroundTransparency = 1
+        applyButton.BorderSizePixel = 0
+        applyButton.Position = UDim2.new(0, 0, 0, 0)
+        applyButton.Size = UDim2.new(0, 0, 0, 0)
+        applyButton.Text = ""
+        applyButton.ZIndex = 9
+        applyButton.Parent = menuClip
+        attachScaleFeedback(applyButton, 1.03, 0.96)
+
+        local applyBase = Instance.new("Frame")
+        applyBase.Name = "Main"
+        applyBase.Active = false
+        applyBase.AnchorPoint = Vector2.new(0.5, 0.5)
+        applyBase.BackgroundColor3 = Runtime.Theme.AccentDark
+        applyBase.BorderSizePixel = 0
+        applyBase.Position = UDim2.fromScale(0.5, 0.5)
+        applyBase.Size = UDim2.fromScale(1, 1)
+        applyBase.ZIndex = 10
+        applyBase.Parent = applyButton
+        addScaledStroke(applyBase, Enum.ApplyStrokeMode.Border, 0.07)
+
+        local applyColor = Instance.new("Frame")
+        applyColor.Name = "ColorFrame"
+        applyColor.Active = false
+        applyColor.AnchorPoint = Vector2.new(0.5, 0)
+        applyColor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        applyColor.BorderSizePixel = 0
+        applyColor.Position = UDim2.fromScale(0.5, 0)
+        applyColor.Size = UDim2.fromScale(1, 1)
+        applyColor.ZIndex = 11
+        applyColor.Parent = applyBase
+        addRedGradient(applyColor, "RedGradient", rebirthOuterGradient)
+
+        local applyHighlight = Instance.new("Frame")
+        applyHighlight.Name = "Transparent"
+        applyHighlight.Active = false
+        applyHighlight.AnchorPoint = Vector2.new(0.5, 0.5)
+        applyHighlight.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        applyHighlight.BorderSizePixel = 0
+        applyHighlight.Position = UDim2.fromScale(0.5, 0.5)
+        applyHighlight.Size = UDim2.fromScale(0.965, 0.88)
+        applyHighlight.ZIndex = 12
+        applyHighlight.Parent = applyColor
+        applyHighlight.Visible = false
+        addRedGradient(applyHighlight, "RedGradient", rebirthInnerGradient)
+
+        applyCaption = Instance.new("TextLabel")
+        applyCaption.Name = "Label"
+        applyCaption.Active = false
+        applyCaption.AnchorPoint = Vector2.new(0.5, 0.5)
+        applyCaption.BackgroundTransparency = 1
+        applyCaption.BorderSizePixel = 0
+        applyCaption.Position = UDim2.fromScale(0.5, 0.5)
+        applyCaption.Size = UDim2.fromScale(0.88, 0.56)
+        applyCaption.Text = applyBaseText
+        applyCaption.TextWrapped = true
+        applyCaption.ZIndex = 13
+        applyCaption.Parent = applyColor
+        applyShinyTextStyle(applyCaption, normalTextFont)
+        
+        
+        applyCaptionStroke = applyCaption:FindFirstChildOfClass("UIStroke")
+
+        applyLayers = { applyColor, applyHighlight }
+
+        connectSafeActivation(applyButton, function()
+            
+            
+            if multiSelect and not applyReady then
+                return
+            end
+            local values, indices = getControllerValue()
+            setOpen(false)
+            if type(action.OnApply) == "function" then
+                action.OnApply(values, indices)
+            end
+        end)
+    end
+
+    local function describeSelection()
+        if not multiSelect then
+            return options[currentIndex] or ""
+        end
+        local picked = {}
+        for index = 1, #options do
+            if selected[index] then
+                table.insert(picked, options[index])
+            end
+        end
+        if #picked == 0 then
+            return "None"
+        elseif #picked == 1 then
+            return picked[1]
+        end
+        return #picked .. " selected"
+    end
+
+    for index, optionText in ipairs(options) do
+        local item = Instance.new("TextButton")
+        item.Name = "Option" .. index
+        item.Active = true
+        item.AutoButtonColor = false
+        item.AnchorPoint = Vector2.new(0, 0)
+        item.BackgroundColor3 = Runtime.Theme.Item
+        item.BackgroundTransparency = 0
+        item.BorderSizePixel = 0
+        item.LayoutOrder = index
+        item.Position = UDim2.new(0, 0, 0, 0)
+        item.Size = UDim2.new(0, 0, 0, 0)
+        item.Text = ""
+        item.ZIndex = 7
+        item.Parent = menuClip
+        addScaledStroke(item, Enum.ApplyStrokeMode.Border, 0.07)
+
+        
+        local accent
+        if not multiSelect then
+            accent = Instance.new("Frame")
+            accent.Name = "Accent"
+            accent.Active = false
+            accent.AnchorPoint = Vector2.new(0, 0.5)
+            accent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            accent.BorderSizePixel = 0
+            accent.Position = UDim2.fromScale(0, 0.5)
+            accent.Size = UDim2.fromScale(0, 1)
+            accent.ZIndex = 8
+            accent.Parent = item
+            addAccentGradient(accent)
+        end
+
+        
+        local tickFill
+        if multiSelect then
+            local tickBox = Instance.new("Frame")
+            tickBox.Name = "Tick"
+            tickBox.Active = false
+            tickBox.AnchorPoint = Vector2.new(0, 0.5)
+            tickBox.BackgroundColor3 = Runtime.Theme.Field
+            tickBox.BackgroundTransparency = 0
+            tickBox.BorderSizePixel = 0
+            tickBox.Position = UDim2.fromScale(0.055, 0.5)
+            tickBox.Size = UDim2.fromScale(0.16, 0.44)
+            tickBox.ZIndex = 8
+            tickBox.Parent = item
+            addScaledStroke(tickBox, Enum.ApplyStrokeMode.Border, 0.12)
+
+            local tickAspect = Instance.new("UIAspectRatioConstraint")
+            tickAspect.AspectRatio = 1
+            tickAspect.AspectType = Enum.AspectType.FitWithinMaxSize
+            tickAspect.DominantAxis = Enum.DominantAxis.Height
+            tickAspect.Parent = tickBox
+
+            tickFill = Instance.new("Frame")
+            tickFill.Name = "Fill"
+            tickFill.Active = false
+            tickFill.AnchorPoint = Vector2.new(0.5, 0.5)
+            tickFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            tickFill.BorderSizePixel = 0
+            tickFill.Position = UDim2.fromScale(0.5, 0.5)
+            tickFill.Size = UDim2.fromScale(0, 0)
+            tickFill.ZIndex = 9
+            tickFill.Parent = tickBox
+            addAccentGradient(tickFill)
+        end
+
+        
+        
+        local text = Instance.new("TextLabel")
+        text.Name = "Label"
+        text.Active = false
+        
+        
+        text.AnchorPoint = Vector2.new(0.5, 0.5)
+        text.BackgroundTransparency = 1
+        text.BorderSizePixel = 0
+        text.Position = UDim2.fromScale(multiSelect and 0.56 or 0.5, 0.5)
+        text.Size = UDim2.fromScale(multiSelect and 0.62 or 0.78, 0.56)
+        text.Text = optionText
+        text.TextWrapped = true
+        text.TextXAlignment = Enum.TextXAlignment.Center
+        text.TextYAlignment = Enum.TextYAlignment.Center
+        text.ZIndex = 9
+        text.Parent = item
+        applyPlainTextStyle(text)
+
+        local hovered = false
+
+        local function isChosen()
+            if multiSelect then
+                return selected[index] == true
+            end
+            return currentIndex == index
+        end
+
+        local function paint(animated)
+            local chosen = isChosen()
+            if not animated then
+                if accent then
+                    accent.Size = UDim2.new(0, chosen and accentWidth or 0, 1, 0)
+                end
+                item.BackgroundColor3 = chosen and Runtime.Theme.ItemChosen or (hovered and Runtime.Theme.ItemHover or Runtime.Theme.Item)
+                if tickFill then
+                    tickFill.Size = UDim2.fromScale(chosen and 0.85 or 0, chosen and 0.85 or 0)
+                end
+                text.TextTransparency = chosen and 0 or 0.15
+                return
+            end
+            local info = TweenInfo.new(
+                animated and 0.12 or 0,
+                Enum.EasingStyle.Quad,
+                Enum.EasingDirection.Out
+            )
+            if accent then
+                TweenService:Create(accent, info, {
+                    Size = UDim2.new(0, chosen and accentWidth or 0, 1, 0),
+                }):Play()
+            end
+            TweenService:Create(item, info, {
+                BackgroundColor3 = chosen and Runtime.Theme.ItemChosen or (hovered and Runtime.Theme.ItemHover or Runtime.Theme.Item),
+            }):Play()
+            if tickFill then
+                TweenService:Create(tickFill, info, {
+                    Size = UDim2.fromScale(chosen and 0.85 or 0, chosen and 0.85 or 0),
+                }):Play()
+            end
+            text.TextTransparency = chosen and 0 or 0.15
+        end
+
+        item.MouseEnter:Connect(function()
+            hovered = true
+            paint(true)
+        end)
+        item.MouseLeave:Connect(function()
+            hovered = false
+            paint(true)
+        end)
+
+        connectSafeActivation(item, function()
+            if multiSelect then
+                if selected[index] then
+                    selected[index] = nil
+                else
+                    selected[index] = true
+                end
+                refreshSelection(true)
+            else
+                currentIndex = index
+                refreshSelection(true)
+                
+                
+                if not action then
+                    setOpen(false)
+                end
+            end
+        end)
+
+        items[index] = { button = item, paint = paint }
+    end
+
+    refreshSelection = function(animated)
+        for _, entry in ipairs(items) do
+            entry.paint(animated)
+        end
+        value.Text = describeSelection()
+        if applyButton then
+            local picked = 0
+            if multiSelect then
+                for index = 1, #options do
+                    if selected[index] then
+                        picked = picked + 1
+                    end
+                end
+            elseif options[currentIndex] then
+                picked = 1
+            end
+            
+            
+            applyCaption.Text = (multiSelect and picked > 0)
+                    and (applyBaseText .. " (" .. picked .. ")")
+                or applyBaseText
+            applyReady = picked > 0
+            
+            
+            local dim = applyReady and 0 or 0.45
+            applyCaption.TextTransparency = dim
+            if applyCaptionStroke then
+                applyCaptionStroke.Transparency = dim
+            end
+            for _, layer in ipairs(applyLayers) do
+                layer.BackgroundTransparency = dim
+            end
+        end
+    end
+
+    
+    
+    local function applyFilter()
+        local query = searchQuery:lower()
+        visibleItems = {}
+        for index, entry in ipairs(items) do
+            local matched = query == ""
+                or options[index]:lower():find(query, 1, true) ~= nil
+            entry.button.Visible = matched
+            if matched then
+                table.insert(visibleItems, entry)
+            end
+        end
+        emptyLabel.Visible = #visibleItems == 0
+    end
+
+    local heightTween
+    local menuTween
+    local headHeight, menuHeight, gapSize, clipMargin = 0, 0, 0, 0
+
+    
+    
+    local function applyOpenState(animated)
+        if heightTween then
+            heightTween:Cancel()
+            heightTween = nil
+        end
+        if menuTween then
+            menuTween:Cancel()
+            menuTween = nil
+        end
+
+        local rowSize = UDim2.new(
+            row.Size.X.Scale,
+            row.Size.X.Offset,
+            0,
+            headHeight + (isOpen and (gapSize + menuHeight) or 0)
+        )
+        local clipSize = UDim2.new(
+            1,
+            clipMargin * 2,
+            0,
+            isOpen and (menuHeight + clipMargin * 2) or 0
+        )
+
+        if isOpen then
+            menuClip.Visible = true
+        end
+        if animated then
+            local info = TweenInfo.new(0.26, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+            heightTween = TweenService:Create(row, info, { Size = rowSize })
+            menuTween = TweenService:Create(menuClip, info, { Size = clipSize })
+            if not isOpen then
+                menuTween.Completed:Connect(function(state)
+                    if state == Enum.PlaybackState.Completed and not isOpen then
+                        menuClip.Visible = false
+                    end
+                end)
+            end
+            heightTween:Play()
+            menuTween:Play()
+        else
+            row.Size = rowSize
+            menuClip.Size = clipSize
+            menuClip.Visible = isOpen
+        end
+    end
+
+    local function refreshGeometry(animated)
+        local width = row.AbsoluteSize.X
+        if width <= 0 then
+            return
+        end
+
+        
+        
+        local referenceWidth = width
+        if not RESIZE_KEEPS_OPTION_WIDTH then
+            referenceWidth = width / ContentScale.X
+        end
+        local band = referenceWidth / ROW_ASPECT
+        headHeight = currentNote ~= "" and referenceWidth / ROW_ASPECT_WITH_NOTE or band
+        local chipHeight = band * 0.62
+        local count = #visibleItems
+        
+        clipMargin = chipHeight * 0.12
+
+        
+        
+        
+        
+        local plateInset = headHeight * 0.075
+        gapSize = band * 0.15
+        local gap = gapSize
+
+        accentWidth = chipHeight * ACCENT_WIDTH_RATIO
+        head.Size = UDim2.new(1, 0, 0, headHeight)
+        
+        
+        
+        menuClip.Position = UDim2.new(
+            0.5,
+            0,
+            0,
+            headHeight - plateInset + gap - clipMargin
+        )
+
+        if not isOpen and not animated then
+            applyOpenState(false)
+            return
+        end
+
+        local hintBlock = 0
+        if hintLabel then
+            local hintHeight = chipHeight * 0.8
+            hintBlock = hintHeight + gap
+            hintLabel.Position = UDim2.new(0, clipMargin, 0, clipMargin)
+            hintLabel.Size = UDim2.new(0, width, 0, hintHeight)
+        end
+
+        
+        local searchBlock = 0
+        if searchField then
+            searchBlock = chipHeight + gap
+            searchField.Position = UDim2.new(
+                0,
+                clipMargin,
+                0,
+                clipMargin + hintBlock
+            )
+            searchField.Size = UDim2.new(0, width, 0, chipHeight)
+        end
+        local chipsTop = clipMargin + hintBlock + searchBlock
+
+        if count == 0 then
+            
+            
+            emptyLabel.Position = UDim2.new(0, clipMargin, 0, chipsTop)
+            emptyLabel.Size = UDim2.new(0, width, 0, chipHeight)
+            menuHeight = hintBlock + searchBlock + chipHeight
+        else
+            
+            
+            local minChipWidth = chipHeight * 2.2
+            local fitPerLine = math.floor((width + gap) / (minChipWidth + gap))
+            local perLine = math.clamp(
+                math.min(MAX_CHIPS_PER_LINE, fitPerLine),
+                1,
+                count
+            )
+            local lines = math.ceil(count / perLine)
+            if BALANCE_CHIP_LINES then
+                perLine = math.ceil(count / lines)
+            end
+
+            local chipWidth = (width - (perLine - 1) * gap) / perLine
+            menuHeight = hintBlock
+                + searchBlock
+                + lines * chipHeight
+                + math.max(lines - 1, 0) * gap
+
+            for index, entry in ipairs(visibleItems) do
+                local line = math.floor((index - 1) / perLine)
+                local column = (index - 1) % perLine
+                
+                local inThisLine = math.min(perLine, count - line * perLine)
+                local lineWidth = inThisLine * chipWidth + (inThisLine - 1) * gap
+                entry.button.Position = UDim2.new(
+                    0,
+                    clipMargin + (width - lineWidth) / 2 + column * (chipWidth + gap),
+                    0,
+                    chipsTop + line * (chipHeight + gap)
+                )
+                entry.button.Size = UDim2.new(0, chipWidth, 0, chipHeight)
+            end
+        end
+
+        
+        
+        if applyButton then
+            local applyWidth = math.min(
+                width,
+                math.max(chipHeight * 3.6, width * 0.42)
+            )
+            
+            applyButton.Position = UDim2.new(
+                0,
+                clipMargin + width / 2,
+                0,
+                clipMargin + menuHeight + gap + chipHeight / 2
+            )
+            applyButton.Size = UDim2.new(0, applyWidth, 0, chipHeight)
+            menuHeight = menuHeight + gap + chipHeight
+        end
+
+        
+        refreshSelection(false)
+
+        applyOpenState(animated)
+    end
+
+    setOpen = function(open)
+        if isOpen == open then
+            return
+        end
+        if open then
+            
+            closeActiveDropdown()
+            
+            if searchBox then
+                searchBox.Text = ""
+            end
+            searchQuery = ""
+            applyFilter()
+        elseif searchBox then
+            searchBox:ReleaseFocus()
+        end
+        isOpen = open
+        Runtime.activeDropdownCloser = open and function()
+            setOpen(false)
+        end or nil
+
+        TweenService:Create(
+            caret,
+            TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            { Rotation = open and 180 or 0 }
+        ):Play()
+        TweenService:Create(box, TweenInfo.new(0.16), {
+            BackgroundColor3 = open and Runtime.Theme.ItemHover or Runtime.Theme.Field,
+        }):Play()
+
+        refreshGeometry(true)
+    end
+
+    if searchBox then
+        searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+            searchQuery = searchBox.Text:match("^%s*(.-)%s*$") or ""
+            applyFilter()
+            refreshGeometry(true)
+        end)
+    end
+
+    connectSafeActivation(box, function()
+        setOpen(not isOpen)
+    end)
+
+    local lastWidth = 0
+    row:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+        local width = row.AbsoluteSize.X
+        if math.abs(width - lastWidth) < 0.5 then
+            return
+        end
+        lastWidth = width
+        refreshGeometry(false)
+    end)
+
+    task.defer(function()
+        RunService.RenderStepped:Wait()
+        lastWidth = row.AbsoluteSize.X
+        applyFilter()
+        refreshSelection(false)
+        refreshGeometry(false)
+    end)
+
+    local function resolveControllerIndex(choice)
+        if type(choice) == "number" then
+            return math.clamp(math.floor(choice), 1, #options)
+        end
+        for index, option in ipairs(options) do
+            if option == tostring(choice) then
+                return index
+            end
+        end
+        return nil
+    end
+
+    local function setControllerValue(newValue)
+        if multiSelect then
+            selected = {}
+            local choices = type(newValue) == "table"
+                and newValue
+                or { newValue }
+            for _, choice in ipairs(choices) do
+                local index = resolveControllerIndex(choice)
+                if index then
+                    selected[index] = true
+                end
+            end
+        else
+            local index = resolveControllerIndex(newValue)
+            if index then
+                currentIndex = index
+            end
+        end
+        refreshSelection(false)
+    end
+
+    return row, {
+        GetValue = getControllerValue,
+        SetValue = setControllerValue,
+        
+        Apply = function()
+            local values, indices = getControllerValue()
+            setOpen(false)
+            if action and type(action.OnApply) == "function" then
+                action.OnApply(values, indices)
+            end
+        end,
+        SetHint = function(text)
+            if hintLabel then
+                hintLabel.Text = tostring(text or "")
+            end
+        end,
+        SetActionText = function(text)
+            if applyButton then
+                applyBaseText = tostring(text or applyBaseText)
+                refreshSelection(false)
+            end
+        end,
+        GetNote = function()
+            return currentNote
+        end,
+        SetNote = function(value)
+            currentNote = tostring(value or "")
+            applyNoteLayout()
+            refreshGeometry(false)
+        end,
+    }
+end
+
+
+
+
+
+
+local function createButtonRow(name, labelText, buttonText, confirmText)
+    local row, main = buildFixedRow(name, labelText)
+    local currentButtonText = tostring(buttonText or "")
+    local currentConfirmText = tostring(confirmText or "")
+
+    local button = Instance.new("TextButton")
+    button.Name = "Action"
+    button.Active = true
+    button.AutoButtonColor = false
+    button.AnchorPoint = Vector2.new(0.5, 0.5)
+    button.BackgroundTransparency = 1
+    button.BorderSizePixel = 0
+    button.Position = UDim2.fromScale(CONTROL_LAYOUT.NarrowCenterX, 0.5)
+    button.Size = UDim2.fromScale(CONTROL_LAYOUT.NarrowWidth, 0.68)
+    button.Text = ""
+    button.ZIndex = 6
+    button.Parent = main
+    attachScaleFeedback(button, 1.035, 0.96)
+
+    local base = Instance.new("Frame")
+    base.Name = "Main"
+    base.Active = false
+    base.AnchorPoint = Vector2.new(0.5, 0.5)
+    base.BackgroundColor3 = Runtime.Theme.AccentDark
+    base.BorderSizePixel = 0
+    base.Position = UDim2.fromScale(0.5, 0.5)
+    base.Size = UDim2.fromScale(1, 1)
+    base.ZIndex = 1
+    base.Parent = button
+    addScaledStroke(base, Enum.ApplyStrokeMode.Border, 0.06)
+
+    local colorFrame = Instance.new("Frame")
+    colorFrame.Name = "ColorFrame"
+    colorFrame.Active = false
+    colorFrame.AnchorPoint = Vector2.new(0.5, 0)
+    colorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    colorFrame.BorderSizePixel = 0
+    colorFrame.Position = UDim2.fromScale(0.5, 0)
+    colorFrame.Size = UDim2.fromScale(1, 1)
+    colorFrame.ZIndex = 1
+    colorFrame.Parent = base
+    addRedGradient(colorFrame, "RedGradient", rebirthOuterGradient)
+
+    local highlight = Instance.new("Frame")
+    highlight.Name = "Transparent"
+    highlight.Active = false
+    highlight.AnchorPoint = Vector2.new(0.5, 0.5)
+    highlight.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    highlight.BorderSizePixel = 0
+    highlight.Position = UDim2.fromScale(0.5, 0.5)
+    highlight.Size = UDim2.fromScale(0.965, 0.88)
+    highlight.ZIndex = 2
+    highlight.Parent = colorFrame
+    highlight.Visible = false
+    addRedGradient(highlight, "RedGradient", rebirthInnerGradient)
+
+    local caption = Instance.new("TextLabel")
+    caption.Name = "Label"
+    caption.Active = false
+    caption.AnchorPoint = Vector2.new(0.5, 0.5)
+    caption.BackgroundTransparency = 1
+    caption.BorderSizePixel = 0
+    caption.Position = UDim2.fromScale(0.5, 0.5)
+    caption.Size = UDim2.fromScale(0.9, 0.62)
+    caption.Text = currentButtonText
+    caption.TextWrapped = true
+    caption.ZIndex = 6
+    caption.Parent = colorFrame
+    applyShinyTextStyle(caption, normalTextFont)
+
+    
+    local busy = false
+    
+    
+    local function playPress()
+        local scale = button:FindFirstChildOfClass("UIScale")
+        if scale then
+            TweenService:Create(
+                scale,
+                TweenInfo.new(
+                    0.055,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.Out
+                ),
+                { Scale = 0.96 }
+            ):Play()
+            task.delay(0.07, function()
+                if scale.Parent then
+                    TweenService:Create(
+                        scale,
+                        TweenInfo.new(
+                            0.09,
+                            Enum.EasingStyle.Quad,
+                            Enum.EasingDirection.Out
+                        ),
+                        { Scale = 1 }
+                    ):Play()
+                end
+            end)
+        end
+        if busy or currentConfirmText == "" then
+            return
+        end
+        busy = true
+        caption.Text = currentConfirmText
+        task.delay(0.9, function()
+            caption.Text = currentButtonText
+            busy = false
+        end)
+    end
+
+    connectSafeActivation(button, playPress)
+
+    return row, playPress
+end
+
+
+
+
+
+
+local function createInputRow(name, labelText, placeholder)
+    local row, main = buildFixedRow(name, labelText)
+
+    local field = Instance.new("Frame")
+    field.Name = "Field"
+    field.Active = false
+    field.AnchorPoint = Vector2.new(0.5, 0.5)
+    field.BackgroundColor3 = Runtime.Theme.Field
+    field.BackgroundTransparency = 0
+    field.BorderSizePixel = 0
+    
+    
+    field.ClipsDescendants = false
+    field.Position = UDim2.fromScale(CONTROL_LAYOUT.WideCenterX, 0.5)
+    field.Size = UDim2.fromScale(CONTROL_LAYOUT.WideWidth, 0.62)
+    field.ZIndex = 4
+    field.Parent = main
+    addScaledStroke(field, Enum.ApplyStrokeMode.Border, 0.1)
+
+    local underline = Instance.new("Frame")
+    underline.Name = "Underline"
+    underline.Active = false
+    underline.AnchorPoint = Vector2.new(0.5, 1)
+    underline.BackgroundColor3 = Runtime.Theme.Accent
+    underline.BorderSizePixel = 0
+    underline.Position = UDim2.fromScale(0.5, 1)
+    underline.Size = UDim2.fromScale(0, 0.11)
+    underline.ZIndex = 6
+    underline.Parent = field
+
+    local input = Instance.new("TextBox")
+    input.Name = "Input"
+    input.Active = true
+    input.AnchorPoint = Vector2.new(0.5, 0.5)
+    input.BackgroundTransparency = 1
+    input.BorderSizePixel = 0
+    input.ClearTextOnFocus = false
+    input.MultiLine = false
+    input.Position = UDim2.fromScale(0.5, 0.5)
+    input.Size = UDim2.fromScale(0.9, 0.56)
+    input.Text = ""
+    input.PlaceholderText = placeholder
+    input.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
+    input.TextXAlignment = Enum.TextXAlignment.Center
+    input.TextYAlignment = Enum.TextYAlignment.Center
+    input.ZIndex = 5
+    input.Parent = field
+    applyPlainTextStyle(input)
+
+    local function normalizeText(value)
+        local text = tostring(value or "")
+        text = text:match("^%s*(.-)%s*$") or ""
+        return text
+    end
+
+    local function tweenFocus(focused)
+        TweenService:Create(field, TweenInfo.new(0.16), {
+            BackgroundColor3 = focused and Runtime.Theme.ItemHover or Runtime.Theme.Field,
+        }):Play()
+        TweenService:Create(
+            underline,
+            TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+            { Size = UDim2.fromScale(focused and 1.0 or 0, 0.11) }
+        ):Play()
+    end
+
+    input.Focused:Connect(function()
+        tweenFocus(true)
+    end)
+
+    input.FocusLost:Connect(function()
+        tweenFocus(false)
+        input.Text = normalizeText(input.Text)
+    end)
+
+    return row, normalizeText
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local function safeCallback(callback, ...)
+    if type(callback) ~= "function" then
+        return
+    end
+
+    local arguments = table.pack(...)
+    task.spawn(function()
+        local ok, message = xpcall(function()
+            callback(table.unpack(arguments, 1, arguments.n))
+        end, function(problem)
+            return tostring(problem)
+        end)
+        if not ok then
+        end
+    end)
+end
+
+local function copyTable(source)
+    local result = {}
+    if type(source) == "table" then
+        for key, value in pairs(source) do
+            result[key] = value
+        end
+    end
+    return result
+end
+
+local function normalizeConfig(config, fallbackName)
+    if type(config) == "string" then
+        return {
+            Name = config,
+        }
+    end
+    assert(type(config) == "table", "config phai la string hoac table")
+
+    local result = copyTable(config)
+    result.Name = tostring(
+        result.Name
+            or result.Title
+            or result.Text
+            or fallbackName
+            or "Unnamed"
+    )
+    assert(result.Name ~= "", "Name khong duoc de trong")
+    return result
+end
+
+local function findDescendant(root, name)
+    local found = root:FindFirstChild(name, true)
+    assert(found, ("Khong tim thay thanh phan UI '%s'"):format(name))
+    return found
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local function createLibrarySliderRow(config)
+    local rawMinimum = tonumber(config.Min) or 0
+    local rawMaximum = tonumber(config.Max) or 100
+    local rawDefault = tonumber(config.Default)
+    local requestedIncrement = tonumber(config.Increment or config.Step)
+
+    local function decimalCount(value)
+        value = tonumber(value)
+        if not value then
+            return 0
+        end
+        for places = 0, 6 do
+            local scale = 10 ^ places
+            if math.abs(value * scale - math.round(value * scale)) < 1e-6 then
+                return places
+            end
+        end
+        return 6
+    end
+
+    local configuredDecimals = config.AllowDecimals
+    if configuredDecimals == nil then
+        configuredDecimals = config.Decimals
+    end
+
+    local allowDecimals
+    if configuredDecimals == nil then
+        allowDecimals = decimalCount(requestedIncrement) > 0
+            or decimalCount(rawMinimum) > 0
+            or decimalCount(rawMaximum) > 0
+            or decimalCount(rawDefault) > 0
+    else
+        allowDecimals = configuredDecimals == true
+    end
+
+    local configuredPlaces = tonumber(
+        config.DecimalPlaces or config.Precision
+    )
+    local decimalPlaces = 0
+    if allowDecimals then
+        decimalPlaces = math.clamp(
+            math.floor(
+                configuredPlaces
+                    or math.max(
+                        1,
+                        decimalCount(requestedIncrement),
+                        decimalCount(rawMinimum),
+                        decimalCount(rawMaximum),
+                        decimalCount(rawDefault)
+                    )
+            ),
+            1,
+            6
+        )
+    end
+
+    local function roundForMode(value)
+        value = tonumber(value) or 0
+        if not allowDecimals then
+            return math.round(value)
+        end
+        local scale = 10 ^ decimalPlaces
+        return math.round(value * scale) / scale
+    end
+
+    local minimum = roundForMode(rawMinimum)
+    local maximum = roundForMode(rawMaximum)
+    if maximum < minimum then
+        minimum, maximum = maximum, minimum
+    end
+
+    local function normalizeIncrement(value)
+        if allowDecimals then
+            local quantum = 10 ^ -decimalPlaces
+            local normalized = math.abs(tonumber(value) or quantum)
+            normalized = roundForMode(normalized)
+            return math.max(quantum, normalized)
+        end
+        return math.max(1, math.round(math.abs(tonumber(value) or 1)))
+    end
+
+    local increment = normalizeIncrement(requestedIncrement)
+
+    
+    
+    
+    
+    local valueFormatFn = type(config.ValueFormat or config.InputFormat)
+            == "function"
+        and (config.ValueFormat or config.InputFormat)
+        or nil
+    local valueParseFn = type(config.ValueParse or config.InputParse)
+            == "function"
+        and (config.ValueParse or config.InputParse)
+        or nil
+
+    
+    local function normalizeUnitOptions(list)
+        local result = {}
+        if type(list) ~= "table" then
+            return result
+        end
+        for _, entry in ipairs(list) do
+            if type(entry) == "string" or type(entry) == "number" then
+                local text = tostring(entry)
+                table.insert(result, { Name = text, Suffix = text })
+            elseif type(entry) == "table" then
+                local name = tostring(
+                    entry.Name or entry.Text or entry.Suffix or "Unit"
+                )
+                local suffix = entry.Suffix ~= nil
+                    and tostring(entry.Suffix)
+                    or name
+                table.insert(result, {
+                    Name = name,
+                    Suffix = suffix,
+                    Prefix = entry.Prefix ~= nil
+                        and tostring(entry.Prefix)
+                        or nil,
+                    Format = type(entry.Format) == "function"
+                        and entry.Format
+                        or nil,
+                    FromBase = type(entry.FromBase) == "function"
+                        and entry.FromBase
+                        or nil,
+                    ToBase = type(entry.ToBase) == "function"
+                        and entry.ToBase
+                        or nil,
+                })
+            end
+        end
+        return result
+    end
+
+    local unitConfig = config.Unit or config.Units
+    if type(unitConfig) == "string" then
+        unitConfig = { Options = { unitConfig } }
+    elseif type(unitConfig) == "table"
+        and unitConfig.Options == nil
+        and unitConfig.List == nil
+        and #unitConfig > 0
+    then
+        unitConfig = { Options = unitConfig }
+    elseif type(unitConfig) ~= "table" then
+        unitConfig = nil
+    end
+
+    local unitOptions = normalizeUnitOptions(
+        unitConfig and (unitConfig.Options or unitConfig.List)
+    )
+    local unitEnabled = unitConfig ~= nil
+        and unitConfig.Enabled ~= false
+        and #unitOptions > 0
+    local unitSelectorEnabled
+    if unitConfig and unitConfig.Selector ~= nil then
+        unitSelectorEnabled = unitConfig.Selector == true
+    else
+        unitSelectorEnabled = #unitOptions > 1
+    end
+    local unitCallback = unitConfig and unitConfig.Callback or nil
+    local unitGlobalFormat = unitConfig
+            and type(unitConfig.Format) == "function"
+            and unitConfig.Format
+        or nil
+    
+    local filteringValueText = false
+
+    
+    
+    local valueColors = {
+        Number = Color3.fromRGB(255, 255, 255),
+        Prefix = CHEVRON_COLOR,
+        Suffix = CHEVRON_COLOR,
+    }
+    local valueColorEnabled = true
+
+    local function applyColorConfig(colors)
+        if type(colors) ~= "table" then
+            return
+        end
+        
+        if typeof(colors.Unit) == "Color3" then
+            valueColors.Prefix = colors.Unit
+            valueColors.Suffix = colors.Unit
+        end
+        for _, key in ipairs({ "Number", "Prefix", "Suffix" }) do
+            if typeof(colors[key]) == "Color3" then
+                valueColors[key] = colors[key]
+            end
+        end
+    end
+
+    applyColorConfig(config.Colors)
+    applyColorConfig(unitConfig and unitConfig.Colors)
+    if config.ColorEnabled ~= nil then
+        valueColorEnabled = config.ColorEnabled == true
+    end
+    if unitConfig and unitConfig.ColorEnabled ~= nil then
+        valueColorEnabled = unitConfig.ColorEnabled == true
+    end
+
+    local function escapeRichText(text)
+        local result = tostring(text)
+        result = result:gsub("&", "&amp;")
+        result = result:gsub("<", "&lt;")
+        result = result:gsub(">", "&gt;")
+        return result
+    end
+
+    local function colorTag(color, text)
+        return ('<font color="rgb(%d,%d,%d)">%s</font>'):format(
+            math.floor(color.R * 255 + 0.5),
+            math.floor(color.G * 255 + 0.5),
+            math.floor(color.B * 255 + 0.5),
+            escapeRichText(text)
+        )
+    end
+
+    
+    local unitPrefix = ""
+    if unitConfig and unitConfig.Prefix ~= nil then
+        unitPrefix = tostring(unitConfig.Prefix)
+    end
+    local currentUnitIndex = 1
+
+    local row, main, label = buildFixedRow(config.Name, config.Name)
+    
+    
+    label.Size = UDim2.fromScale(0.43, 0.64)
+
+    local sliderNote = tostring(config.Note or config.Description or "")
+    local noteVScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
+    local noteLabel = Instance.new("TextLabel")
+    noteLabel.Name = "Note"
+    noteLabel.Active = false
+    noteLabel.AnchorPoint = Vector2.new(0, 0.5)
+    noteLabel.BackgroundTransparency = 1
+    noteLabel.BorderSizePixel = 0
+    noteLabel.Position = UDim2.fromScale(0.025, 0.755)
+    noteLabel.Size = UDim2.fromScale(0.48, 0.3)
+    noteLabel.Text = ""
+    noteLabel.TextWrapped = false
+    noteLabel.TextXAlignment = Enum.TextXAlignment.Left
+    noteLabel.TextYAlignment = Enum.TextYAlignment.Center
+    noteLabel.Visible = false
+    noteLabel.ZIndex = 5
+    noteLabel.Parent = main
+    applyPlainTextStyle(noteLabel)
+    noteLabel.TextTransparency = 0.32
+    do
+        local noteStroke = noteLabel:FindFirstChildOfClass("UIStroke")
+        if noteStroke then
+            noteStroke.Thickness = 0.06
+            noteStroke.Transparency = 0.2
+        end
+    end
+
+    local valueLabel = Instance.new("TextBox")
+    valueLabel.Name = "Value"
+    valueLabel.Active = true
+    valueLabel.AnchorPoint = Vector2.new(0, 0.5)
+    valueLabel.BackgroundColor3 = Runtime.Theme.Field
+    valueLabel.BackgroundTransparency = 0
+    valueLabel.BorderSizePixel = 0
+    valueLabel.ClearTextOnFocus = false
+    valueLabel.MultiLine = false
+    valueLabel.Position = UDim2.fromScale(0.525, 0.5)
+    valueLabel.Size = UDim2.fromScale(0.095, 0.56)
+    valueLabel.Text = ""
+    valueLabel.TextEditable = true
+    valueLabel.TextWrapped = false
+    valueLabel.TextXAlignment = Enum.TextXAlignment.Center
+    valueLabel.TextYAlignment = Enum.TextYAlignment.Center
+    valueLabel.ZIndex = 5
+    valueLabel.Parent = main
+    applyPlainTextStyle(valueLabel)
+    
+    
+    
+    addScaledStroke(valueLabel, Enum.ApplyStrokeMode.Border, 0.1)
+
+    local valuePadding = Instance.new("UIPadding")
+    valuePadding.Name = "ValuePadding"
+    
+    
+    valuePadding.PaddingLeft = UDim.new(0, 0)
+    valuePadding.PaddingRight = UDim.new(0, 0)
+    valuePadding.PaddingTop = UDim.new(0, 0)
+    valuePadding.PaddingBottom = UDim.new(0, 0)
+    valuePadding.Parent = valueLabel
+
+    local track = Instance.new("Frame")
+    track.Name = "Slider"
+    track.Active = true
+    track.AnchorPoint = Vector2.new(0.5, 0.5)
+    track.BackgroundColor3 = Runtime.Theme.Field
+    track.BackgroundTransparency = 0
+    track.BorderSizePixel = 0
+    track.ClipsDescendants = false
+    track.Position = UDim2.fromScale(0.8075, 0.5)
+    track.Size = UDim2.fromScale(0.345, 0.45)
+    track.ZIndex = 3
+    track.Parent = main
+    addScaledStroke(track, Enum.ApplyStrokeMode.Border, 0.1)
+
+    local bar = Instance.new("Frame")
+    bar.Name = "Bar"
+    bar.Active = true
+    bar.AnchorPoint = Vector2.new(0, 0.5)
+    bar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    bar.BorderSizePixel = 0
+    bar.Position = UDim2.fromScale(0, 0.5)
+    bar.Size = UDim2.fromScale(0.5, 1)
+    bar.ZIndex = 4
+    bar.Parent = track
+    addAccentGradient(bar)
+
+    local hold = Instance.new("Frame")
+    hold.Name = "Hold"
+    hold.Active = true
+    hold.AnchorPoint = Vector2.new(0.5, 0.5)
+    hold.BackgroundColor3 = Color3.fromRGB(89, 89, 89)
+    hold.BackgroundTransparency = 1
+    hold.BorderSizePixel = 0
+    hold.ClipsDescendants = false
+    hold.Position = UDim2.fromScale(0.5, 0.5)
+    hold.Size = UDim2.fromScale(0.115, 1.2)
+    hold.ZIndex = 5
+    hold.Parent = track
+
+    local holdStroke = addScaledStroke(
+        hold,
+        Enum.ApplyStrokeMode.Border,
+        0.09
+    )
+    holdStroke.Color = Runtime.Theme.Accent
+
+    local holdColor = Instance.new("Frame")
+    holdColor.Name = "Color"
+    holdColor.Active = false
+    holdColor.AnchorPoint = Vector2.new(0.5, 0)
+    holdColor.BackgroundColor3 = Runtime.Theme.Knob
+    holdColor.BorderSizePixel = 0
+    holdColor.Position = UDim2.fromScale(0.5, 0)
+    holdColor.Size = UDim2.fromScale(1, 1)
+    holdColor.ZIndex = 6
+    holdColor.Parent = hold
+    Runtime.addCorner(hold, UDim.new(0.5, 0))
+    Runtime.addCorner(holdColor, UDim.new(0.5, 0))
+
+    
+    
+    
+    
+    
+    
+    local unitDivider = Instance.new("Frame")
+    unitDivider.Name = "UnitDivider"
+    unitDivider.Active = false
+    unitDivider.AnchorPoint = Vector2.new(0.5, 0.5)
+    unitDivider.BackgroundColor3 = Runtime.Theme.Stroke
+    unitDivider.BackgroundTransparency = 0
+    unitDivider.BorderSizePixel = 0
+    unitDivider.Position = UDim2.fromScale(0.5935, 0.5)
+    unitDivider.Size = UDim2.fromScale(0.0025, 0.36)
+    unitDivider.Visible = false
+    unitDivider.ZIndex = 7
+    unitDivider.Parent = main
+
+    local unitButton = Instance.new("TextButton")
+    unitButton.Name = "UnitSelector"
+    unitButton.Active = true
+    unitButton.AutoButtonColor = false
+    unitButton.AnchorPoint = Vector2.new(1, 0.5)
+    unitButton.BackgroundTransparency = 1
+    unitButton.BorderSizePixel = 0
+    unitButton.Position = UDim2.fromScale(0.618, 0.5)
+    unitButton.Size = UDim2.fromScale(0.025, 0.46)
+    unitButton.Text = ""
+    unitButton.Visible = false
+    unitButton.ZIndex = 8
+    unitButton.Parent = main
+
+    local unitScale = Instance.new("UIScale")
+    unitScale.Name = "InteractionScale"
+    unitScale.Scale = 1
+    unitScale.Parent = unitButton
+
+    local unitCaret = Instance.new("Frame")
+    unitCaret.Name = "Caret"
+    unitCaret.Active = false
+    unitCaret.AnchorPoint = Vector2.new(0.5, 0.5)
+    unitCaret.BackgroundTransparency = 1
+    unitCaret.BorderSizePixel = 0
+    unitCaret.Position = UDim2.fromScale(0.5, 0.5)
+    unitCaret.Size = UDim2.fromScale(0.75, 0.6)
+    unitCaret.ZIndex = 8
+    unitCaret.Parent = unitButton
+
+    local unitCaretAspect = Instance.new("UIAspectRatioConstraint")
+    unitCaretAspect.AspectRatio = 1
+    unitCaretAspect.AspectType = Enum.AspectType.FitWithinMaxSize
+    unitCaretAspect.DominantAxis = Enum.DominantAxis.Height
+    unitCaretAspect.Parent = unitCaret
+
+    for _, arm in ipairs({ { 0.335355, 45 }, { 0.664645, -45 } }) do
+        local piece = Instance.new("Frame")
+        piece.Name = "Arm"
+        piece.Active = false
+        piece.AnchorPoint = Vector2.new(0.5, 0.5)
+        piece.BackgroundColor3 = UNIT_CHEVRON_COLOR
+        piece.BorderSizePixel = 0
+        piece.Position = UDim2.fromScale(arm[1], 0.535355)
+        piece.Rotation = arm[2]
+        piece.Size = UDim2.fromScale(0.6657, 0.2)
+        piece.ZIndex = 9
+        piece.Parent = unitCaret
+    end
+
+    local currentValue = minimum
+    local dragging = false
+    local activeTouch = nil
+    local globalConnections = {}
+    local setValue
+    local setRange
+    local setUnit
+    local closeUnitMenu
+    local refreshValueBoxGeometry
+
+    local function formatValue(value)
+        if not allowDecimals then
+            return tostring(math.round(value))
+        end
+        return string.format(
+            "%." .. tostring(decimalPlaces) .. "f",
+            value
+        )
+    end
+
+    
+    
+    local function numberText()
+        if valueFormatFn then
+            local ok, text = pcall(valueFormatFn, currentValue)
+            if ok and text ~= nil then
+                return tostring(text)
+            end
+            if not ok then
+                
+                
+                
+            end
+        end
+        return formatValue(currentValue)
+    end
+
+    
+    
+    
+    
+    
+    
+    local function displayValueText()
+        local text = numberText()
+        local unit = nil
+        if unitEnabled then
+            unit = unitOptions[currentUnitIndex]
+        end
+
+        local formatter = nil
+        if unit then
+            formatter = unitGlobalFormat or unit.Format
+        end
+        if formatter then
+            local ok, composed = pcall(
+                formatter,
+                text,
+                unit.Name,
+                unit,
+                currentValue
+            )
+            if ok and composed ~= nil then
+                return tostring(composed), valueColorEnabled
+            end
+            if not ok then
+                
+                
+                
+            end
+        end
+
+        if not unit then
+            if not valueColorEnabled then
+                return text, false
+            end
+            return colorTag(valueColors.Number, text), true
+        end
+
+        local prefix = unit.Prefix or unitPrefix
+        if not valueColorEnabled then
+            return prefix .. text .. unit.Suffix, false
+        end
+        return colorTag(valueColors.Prefix, prefix)
+            .. colorTag(valueColors.Number, text)
+            .. colorTag(valueColors.Suffix, unit.Suffix), true
+    end
+
+    local function visibleCharacterCount(text)
+        local plain = tostring(text or ""):gsub("<.->", "")
+        local ok, length = pcall(utf8.len, plain)
+        return (ok and length) or #plain
+    end
+
+    
+    
+    refreshValueBoxGeometry = function(text)
+        local showUnit = unitEnabled and #unitOptions > 0
+        local showSelector = showUnit and unitSelectorEnabled
+        local minimumWidth = showUnit and 0.125 or 0.095
+        local maximumWidth = showUnit and 0.195 or 0.175
+        local baseCharacters = showUnit and 7 or 5
+        local extraCharacters = math.max(
+            0,
+            visibleCharacterCount(text) - baseCharacters
+        )
+        local width = math.clamp(
+            minimumWidth + extraCharacters * 0.0095,
+            minimumWidth,
+            maximumWidth
+        )
+        local leftEdge = 0.62 - width
+
+        local hasNote = sliderNote ~= ""
+        local controlScale = hasNote and noteVScale or 1
+        valueLabel.Position = UDim2.fromScale(leftEdge, 0.5)
+        valueLabel.Size = UDim2.fromScale(width, 0.56 * controlScale)
+        track.Size = UDim2.fromScale(0.345, 0.45 * controlScale)
+        unitDivider.Size = UDim2.fromScale(0.0025, 0.36 * controlScale)
+        unitButton.Size = UDim2.fromScale(0.025, 0.46 * controlScale)
+
+        local normalLabelWidth = showUnit and 0.43 or 0.45
+        label.Position = UDim2.fromScale(0.025, hasNote and 0.34 or 0.5)
+        label.Size = UDim2.fromScale(
+            math.min(normalLabelWidth, math.max(0.28, leftEdge - 0.045)),
+            hasNote and 0.64 * noteVScale * NOTE_TITLE_SCALE or 0.64
+        )
+
+        noteLabel.Text = sliderNote
+        noteLabel.Visible = hasNote
+        noteLabel.Size = UDim2.fromScale(math.max(0.2, leftEdge - 0.045), 0.3)
+        local rowAspect = row:FindFirstChildOfClass("UIAspectRatioConstraint")
+        if rowAspect then
+            rowAspect.AspectRatio = hasNote and ROW_ASPECT_WITH_NOTE or ROW_ASPECT
+        end
+        row:SetAttribute(
+            "ChilliResponsiveAspect",
+            hasNote and ROW_ASPECT_WITH_NOTE or ROW_ASPECT
+        )
+
+        
+        valuePadding.PaddingRight = UDim.new(
+            showSelector
+                and math.min(0.45, 0.034 / math.max(width, 0.001))
+                or 0,
+            0
+        )
+    end
+
+    local function applyDisplayText()
+        if valueLabel:IsFocused() then
+            return
+        end
+        local text, richText = displayValueText()
+        filteringValueText = true
+        valueLabel.RichText = richText
+        valueLabel.Text = text
+        filteringValueText = false
+        refreshValueBoxGeometry(text)
+    end
+
+    local function snapValue(value)
+        value = math.clamp(tonumber(value) or minimum, minimum, maximum)
+        if value <= minimum then
+            return minimum
+        end
+        if value >= maximum then
+            return maximum
+        end
+        local steps = math.floor(((value - minimum) / increment) + 0.5)
+        local snapped = minimum + steps * increment
+        return math.clamp(roundForMode(snapped), minimum, maximum)
+    end
+
+    local function updateUnitDisplay()
+        applyDisplayText()
+    end
+
+    local function resolveUnitIndex(choice)
+        if choice == nil or #unitOptions == 0 then
+            return nil
+        end
+        if type(choice) == "number" then
+            return math.clamp(math.floor(choice), 1, #unitOptions)
+        end
+        local wanted = tostring(choice)
+        for index, unit in ipairs(unitOptions) do
+            if unit.Name == wanted or unit.Suffix == wanted then
+                return index
+            end
+        end
+        return nil
+    end
+
+    
+    
+    
+    
+    
+    
+    local unitOverlay = nil
+    local unitMenu = nil
+    local unitMenuList = nil
+    local unitMenuPadding = nil
+    local unitMenuOpen = false
+    local unitMenuConnections = {}
+
+    local function disconnectUnitMenuConnections()
+        for index = #unitMenuConnections, 1, -1 do
+            local connection = unitMenuConnections[index]
+            if connection.Connected then
+                connection:Disconnect()
+            end
+            unitMenuConnections[index] = nil
+        end
+    end
+
+    closeUnitMenu = function()
+        if not unitMenuOpen then
+            return
+        end
+        unitMenuOpen = false
+        disconnectUnitMenuConnections()
+        if unitOverlay then
+            unitOverlay.Visible = false
+        end
+        TweenService:Create(
+            unitCaret,
+            TweenInfo.new(
+                0.18,
+                Enum.EasingStyle.Quad,
+                Enum.EasingDirection.Out
+            ),
+            { Rotation = 0 }
+        ):Play()
+        if Runtime.activeDropdownCloser == closeUnitMenu then
+            Runtime.activeDropdownCloser = nil
+        end
+    end
+
+    local function ensureUnitOverlay()
+        if unitOverlay then
+            return
+        end
+        unitOverlay = Instance.new("TextButton")
+        unitOverlay.Name = "UnitMenuOverlay"
+        unitOverlay.Active = true
+        unitOverlay.AutoButtonColor = false
+        unitOverlay.BackgroundTransparency = 1
+        unitOverlay.BorderSizePixel = 0
+        unitOverlay.Position = UDim2.fromScale(0, 0)
+        unitOverlay.Selectable = false
+        unitOverlay.Size = UDim2.fromScale(1, 1)
+        unitOverlay.Text = ""
+        unitOverlay.Visible = false
+        unitOverlay.ZIndex = 150
+        unitOverlay.Parent = rootGui
+        connectSafeActivation(unitOverlay, function()
+            closeUnitMenu()
+        end)
+
+        unitMenu = Instance.new("Frame")
+        unitMenu.Name = "UnitMenu"
+        unitMenu.Active = true
+        
+        
+        unitMenu.BackgroundTransparency = 1
+        unitMenu.BorderSizePixel = 0
+        unitMenu.ZIndex = 151
+        unitMenu.Parent = unitOverlay
+
+        unitMenuPadding = Instance.new("UIPadding")
+        unitMenuPadding.Name = "MenuPadding"
+        unitMenuPadding.Parent = unitMenu
+
+        unitMenuList = Instance.new("UIListLayout")
+        unitMenuList.Name = "MenuLayout"
+        unitMenuList.FillDirection = Enum.FillDirection.Vertical
+        unitMenuList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        unitMenuList.VerticalAlignment = Enum.VerticalAlignment.Top
+        unitMenuList.SortOrder = Enum.SortOrder.LayoutOrder
+        unitMenuList.Parent = unitMenu
+    end
+
+    local function paintUnitMenuItems()
+        if not unitMenu then
+            return
+        end
+        for _, child in ipairs(unitMenu:GetChildren()) do
+            if child:IsA("TextButton") then
+                local chosen = child.LayoutOrder == currentUnitIndex
+                child.BackgroundColor3 = chosen and Runtime.Theme.ItemChosen or Runtime.Theme.Item
+                child.TextTransparency = chosen and 0 or 0.15
+            end
+        end
+    end
+
+    local function rebuildUnitMenuItems(itemHeight)
+        if not unitMenu then
+            return
+        end
+        for _, child in ipairs(unitMenu:GetChildren()) do
+            if child:IsA("TextButton") then
+                child:Destroy()
+            end
+        end
+        for index, unit in ipairs(unitOptions) do
+            local item = Instance.new("TextButton")
+            item.Name = "Unit" .. index
+            item.Active = true
+            item.AutoButtonColor = false
+            item.BackgroundColor3 = Runtime.Theme.Item
+            item.BackgroundTransparency = 0
+            item.BorderSizePixel = 0
+            item.LayoutOrder = index
+            item.Size = UDim2.new(1, 0, 0, itemHeight)
+            item.Text = unit.Name
+            item.TextWrapped = false
+            item.ZIndex = 152
+            item.Parent = unitMenu
+            applyPlainTextStyle(item)
+            addScaledStroke(item, Enum.ApplyStrokeMode.Border, 0.07)
+
+            
+            
+            local itemPadding = Instance.new("UIPadding")
+            itemPadding.Name = "ItemPadding"
+            itemPadding.PaddingTop = UDim.new(0.18, 0)
+            itemPadding.PaddingBottom = UDim.new(0.18, 0)
+            itemPadding.PaddingLeft = UDim.new(0.08, 0)
+            itemPadding.PaddingRight = UDim.new(0.08, 0)
+            itemPadding.Parent = item
+
+            item.MouseEnter:Connect(function()
+                if index ~= currentUnitIndex then
+                    item.BackgroundColor3 = Runtime.Theme.ItemHover
+                end
+            end)
+            item.MouseLeave:Connect(function()
+                paintUnitMenuItems()
+            end)
+            connectSafeActivation(item, function()
+                setUnit(index, true)
+                closeUnitMenu()
+            end)
+        end
+        paintUnitMenuItems()
+    end
+
+    local function layoutUnitMenu()
+        if not (unitOverlay and unitMenu) then
+            return
+        end
+        
+        local chipPosition = valueLabel.AbsolutePosition
+        local chipSize = valueLabel.AbsoluteSize
+        
+        
+        
+        local originPosition = rootGui.AbsolutePosition
+        local screenSize = rootGui.AbsoluteSize
+        if screenSize.X <= 0 or screenSize.Y <= 0 then
+            return
+        end
+        
+        
+        local itemHeight = math.max(14, math.floor(chipSize.Y * 0.85 + 0.5))
+        local pad = math.max(2, math.floor(itemHeight * 0.14 + 0.5))
+        
+        
+        local count = #unitOptions
+        local totalWidth = math.max(math.floor(chipSize.X + 0.5), 24)
+        local totalHeight = count * itemHeight
+            + math.max(count - 1, 0) * pad
+
+        unitMenuPadding.PaddingTop = UDim.new(0, 0)
+        unitMenuPadding.PaddingBottom = UDim.new(0, 0)
+        unitMenuPadding.PaddingLeft = UDim.new(0, 0)
+        unitMenuPadding.PaddingRight = UDim.new(0, 0)
+        unitMenuList.Padding = UDim.new(0, pad)
+        for _, child in ipairs(unitMenu:GetChildren()) do
+            if child:IsA("TextButton") then
+                child.Size = UDim2.new(1, 0, 0, itemHeight)
+            end
+        end
+
+        
+        
+        local x = chipPosition.X + chipSize.X - totalWidth
+        x = math.min(
+            x,
+            originPosition.X + screenSize.X - totalWidth - 4
+        )
+        x = math.max(x, originPosition.X + 4)
+        local y = chipPosition.Y + chipSize.Y + pad
+        if y + totalHeight > originPosition.Y + screenSize.Y - 4 then
+            y = chipPosition.Y - pad - totalHeight
+        end
+        y = math.max(y, originPosition.Y + 4)
+
+        unitMenu.Position = UDim2.fromOffset(
+            x - originPosition.X,
+            y - originPosition.Y
+        )
+        unitMenu.Size = UDim2.fromOffset(totalWidth, totalHeight)
+    end
+
+    local function trackUnitChip()
+        if not unitMenuOpen then
+            return
+        end
+        local viewport = valueLabel:FindFirstAncestorOfClass(
+            "ScrollingFrame"
+        )
+        if viewport then
+            local viewportTop = viewport.AbsolutePosition.Y
+            local viewportBottom = viewportTop + viewport.AbsoluteSize.Y
+            local chipTop = valueLabel.AbsolutePosition.Y
+            local chipBottom = chipTop + valueLabel.AbsoluteSize.Y
+            if chipBottom < viewportTop or chipTop > viewportBottom then
+                closeUnitMenu()
+                return
+            end
+        end
+        layoutUnitMenu()
+    end
+
+    local function openUnitMenu()
+        if unitMenuOpen or #unitOptions == 0 then
+            return
+        end
+        closeActiveDropdown()
+        ensureUnitOverlay()
+        local itemHeight = math.max(
+            14,
+            math.floor(valueLabel.AbsoluteSize.Y * 0.85 + 0.5)
+        )
+        rebuildUnitMenuItems(itemHeight)
+        layoutUnitMenu()
+        unitOverlay.Visible = true
+        unitMenuOpen = true
+        Runtime.activeDropdownCloser = closeUnitMenu
+        TweenService:Create(
+            unitCaret,
+            TweenInfo.new(
+                0.18,
+                Enum.EasingStyle.Quad,
+                Enum.EasingDirection.Out
+            ),
+            { Rotation = 180 }
+        ):Play()
+        
+        
+        
+        
+        
+        table.insert(
+            unitMenuConnections,
+            valueLabel:GetPropertyChangedSignal("AbsolutePosition"):Connect(
+                trackUnitChip
+            )
+        )
+        table.insert(
+            unitMenuConnections,
+            valueLabel:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+                trackUnitChip
+            )
+        )
+    end
+
+    setUnit = function(choice, fireCallback)
+        local index = resolveUnitIndex(choice)
+        if not index then
+            return false
+        end
+        local previousUnit = unitOptions[currentUnitIndex]
+        local nextUnit = unitOptions[index]
+        local previousName = previousUnit and previousUnit.Name or nil
+        currentUnitIndex = index
+
+        
+        
+        
+        if previousUnit
+            and previousUnit ~= nextUnit
+            and (previousUnit.ToBase or nextUnit.FromBase)
+        then
+            local function convert(value)
+                local result = value
+                if previousUnit.ToBase then
+                    local ok, converted = pcall(
+                        previousUnit.ToBase,
+                        result
+                    )
+                    if ok and tonumber(converted) then
+                        result = tonumber(converted)
+                    end
+                end
+                if nextUnit.FromBase then
+                    local ok, converted = pcall(
+                        nextUnit.FromBase,
+                        result
+                    )
+                    if ok and tonumber(converted) then
+                        result = tonumber(converted)
+                    end
+                end
+                return result
+            end
+            local convertedValue = convert(currentValue)
+            setRange(convert(minimum), convert(maximum), false)
+            setValue(convertedValue, false)
+        end
+
+        updateUnitDisplay()
+        paintUnitMenuItems()
+        if fireCallback ~= false and nextUnit then
+            safeCallback(
+                unitCallback,
+                nextUnit.Name,
+                index,
+                previousName
+            )
+        end
+        return true
+    end
+
+    local function updateSliderLayout()
+        local showUnit = unitEnabled and #unitOptions > 0
+        local showSelector = showUnit and unitSelectorEnabled
+        unitButton.Visible = showSelector
+        unitDivider.Visible = showSelector
+        
+        
+        if showSelector then
+            unitDivider.Position = UDim2.fromScale(0.5935, 0.5)
+            unitButton.Position = UDim2.fromScale(0.618, 0.5)
+        end
+        if not showSelector then
+            closeUnitMenu()
+        end
+        updateUnitDisplay()
+    end
+
+    local unitScaleTween = nil
+    local unitHovered = false
+    local function tweenUnitScale(targetScale, duration)
+        if unitScaleTween then
+            unitScaleTween:Cancel()
+        end
+        unitScaleTween = TweenService:Create(
+            unitScale,
+            TweenInfo.new(
+                duration,
+                Enum.EasingStyle.Quad,
+                Enum.EasingDirection.Out
+            ),
+            { Scale = targetScale }
+        )
+        unitScaleTween:Play()
+    end
+
+    unitButton.MouseEnter:Connect(function()
+        unitHovered = true
+        if unitSelectorEnabled then
+            tweenUnitScale(1.03, 0.1)
+        end
+    end)
+    unitButton.MouseLeave:Connect(function()
+        unitHovered = false
+        tweenUnitScale(1, 0.1)
+    end)
+    unitButton.MouseButton1Down:Connect(function()
+        if unitSelectorEnabled then
+            tweenUnitScale(0.97, 0.055)
+        end
+    end)
+    unitButton.MouseButton1Up:Connect(function()
+        tweenUnitScale(
+            unitSelectorEnabled and unitHovered and 1.03 or 1,
+            0.08
+        )
+    end)
+    connectSafeActivation(unitButton, function()
+        if not unitSelectorEnabled then
+            return
+        end
+        if unitMenuOpen then
+            closeUnitMenu()
+        else
+            openUnitMenu()
+        end
+    end)
+
+    setValue = function(value, fireCallback)
+        currentValue = snapValue(value)
+        
+        applyDisplayText()
+        updateUnitDisplay()
+        local alpha = 0
+        if maximum > minimum then
+            alpha = (currentValue - minimum) / (maximum - minimum)
+        end
+        
+        local visualAlpha = math.clamp(alpha, 0.0575, 0.9425)
+        bar.Size = UDim2.new(visualAlpha, 0, 1, 0)
+        hold.Position = UDim2.new(visualAlpha, 0, 0.5, 0)
+        if fireCallback ~= false then
+            safeCallback(config.Callback, currentValue)
+        end
+    end
+
+    setRange = function(newMinimum, newMaximum, fireCallback)
+        local nextMinimum = tonumber(newMinimum)
+        local nextMaximum = tonumber(newMaximum)
+        assert(nextMinimum ~= nil, "Slider Min phai la number")
+        assert(nextMaximum ~= nil, "Slider Max phai la number")
+
+        minimum = roundForMode(nextMinimum)
+        maximum = roundForMode(nextMaximum)
+        if maximum < minimum then
+            minimum, maximum = maximum, minimum
+        end
+        setValue(currentValue, fireCallback)
+    end
+
+    local function setDecimals(enabled, places, fireCallback)
+        allowDecimals = enabled == true
+        if allowDecimals then
+            decimalPlaces = math.clamp(
+                math.floor(tonumber(places) or math.max(decimalPlaces, 1)),
+                1,
+                6
+            )
+        else
+            decimalPlaces = 0
+        end
+
+        minimum = roundForMode(minimum)
+        maximum = roundForMode(maximum)
+        if maximum < minimum then
+            minimum, maximum = maximum, minimum
+        end
+        increment = allowDecimals and 10 ^ -decimalPlaces or 1
+        setValue(currentValue, fireCallback)
+    end
+
+    local function setIncrement(value, fireCallback)
+        increment = normalizeIncrement(value)
+        setValue(currentValue, fireCallback)
+    end
+
+    local function sanitizeNumericText(text)
+        text = tostring(text or "")
+        local result = {}
+        local hasDecimalSeparator = false
+        for index = 1, #text do
+            local character = text:sub(index, index)
+            if character:match("%d") then
+                table.insert(result, character)
+            elseif (character == "." or character == ",")
+                and allowDecimals
+                and not hasDecimalSeparator
+            then
+                table.insert(result, ".")
+                hasDecimalSeparator = true
+            elseif character == "-"
+                and minimum < 0
+                and #result == 0
+            then
+                table.insert(result, character)
+            end
+        end
+        return table.concat(result)
+    end
+
+    valueLabel:GetPropertyChangedSignal("Text"):Connect(function()
+        if valueLabel:IsFocused() then
+            refreshValueBoxGeometry(valueLabel.Text)
+        end
+        
+        
+        
+        if filteringValueText
+            or valueParseFn ~= nil
+            or not valueLabel:IsFocused()
+        then
+            return
+        end
+
+        local originalText = valueLabel.Text
+        local sanitizedText = sanitizeNumericText(originalText)
+        if sanitizedText == originalText then
+            return
+        end
+
+        local originalCursor = valueLabel.CursorPosition
+        local sanitizedPrefix = sanitizedText
+        if originalCursor > 0 then
+            sanitizedPrefix = sanitizeNumericText(
+                originalText:sub(1, originalCursor - 1)
+            )
+        end
+
+        filteringValueText = true
+        valueLabel.Text = sanitizedText
+        if originalCursor > 0 then
+            valueLabel.CursorPosition = math.clamp(
+                #sanitizedPrefix + 1,
+                1,
+                #sanitizedText + 1
+            )
+        end
+        filteringValueText = false
+    end)
+
+    local function commitTypedValue()
+        local typedValue
+        if valueParseFn then
+            local ok, parsed = pcall(
+                valueParseFn,
+                valueLabel.Text,
+                currentValue
+            )
+            if not ok then
+                
+                
+                
+            else
+                typedValue = tonumber(parsed)
+            end
+        else
+            typedValue = tonumber(valueLabel.Text)
+        end
+        if typedValue == nil then
+            applyDisplayText()
+            return
+        end
+        setValue(typedValue, true)
+    end
+
+    local function tweenValueFocus(focused)
+        TweenService:Create(valueLabel, TweenInfo.new(0.16), {
+            BackgroundColor3 = focused and Runtime.Theme.ItemHover or Runtime.Theme.Field,
+        }):Play()
+    end
+
+    valueLabel.Focused:Connect(function()
+        tweenValueFocus(true)
+        
+        
+        filteringValueText = true
+        valueLabel.RichText = false
+        valueLabel.Text = formatValue(currentValue)
+        filteringValueText = false
+        refreshValueBoxGeometry(valueLabel.Text)
+        task.defer(function()
+            if valueLabel:IsFocused() then
+                valueLabel.SelectionStart = 1
+                valueLabel.CursorPosition = #valueLabel.Text + 1
+            end
+        end)
+    end)
+
+    valueLabel.FocusLost:Connect(function()
+        tweenValueFocus(false)
+        commitTypedValue()
+    end)
+
+    local function setFromScreenX(screenX)
+        local width = math.max(track.AbsoluteSize.X, 1)
+        local alpha = math.clamp(
+            (screenX - track.AbsolutePosition.X) / width,
+            0,
+            1
+        )
+        setValue(minimum + (maximum - minimum) * alpha, true)
+    end
+
+    local function beginDrag(input)
+        if dragging or input.UserInputState ~= Enum.UserInputState.Begin then
+            return
+        end
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            activeTouch = nil
+            setFromScreenX(input.Position.X)
+        elseif input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            activeTouch = input
+            setFromScreenX(input.Position.X)
+        end
+    end
+
+    track.InputBegan:Connect(beginDrag)
+    bar.InputBegan:Connect(beginDrag)
+    hold.InputBegan:Connect(beginDrag)
+
+    table.insert(globalConnections, trackRootConnection(UserInputService.InputChanged:Connect(function(input)
+        if not dragging then
+            return
+        end
+        if activeTouch then
+            if input == activeTouch then
+                setFromScreenX(input.Position.X)
+            end
+        elseif input.UserInputType == Enum.UserInputType.MouseMovement then
+            setFromScreenX(input.Position.X)
+        end
+    end)))
+
+    table.insert(globalConnections, trackRootConnection(UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input == activeTouch
+        then
+            dragging = false
+            activeTouch = nil
+        end
+    end)))
+
+    
+    
+    if unitConfig and unitConfig.Default ~= nil then
+        local defaultUnitIndex = resolveUnitIndex(unitConfig.Default)
+        if defaultUnitIndex then
+            currentUnitIndex = defaultUnitIndex
+        end
+    end
+    updateSliderLayout()
+    updateUnitDisplay()
+    setValue(config.Default ~= nil and config.Default or minimum, false)
+
+    return row, {
+        GetValue = function()
+            return currentValue
+        end,
+        GetNote = function()
+            return sliderNote
+        end,
+        SetNote = function(value)
+            sliderNote = tostring(value or "")
+            refreshValueBoxGeometry(valueLabel.Text)
+        end,
+        SetValue = setValue,
+        GetRange = function()
+            return minimum, maximum
+        end,
+        SetRange = setRange,
+        SetMin = function(value, fireCallback)
+            setRange(value, maximum, fireCallback)
+        end,
+        SetMax = function(value, fireCallback)
+            setRange(minimum, value, fireCallback)
+        end,
+        GetDecimals = function()
+            return allowDecimals, decimalPlaces
+        end,
+        SetDecimals = setDecimals,
+        SetIncrement = setIncrement,
+        SetValueFormat = function(formatFn)
+            valueFormatFn = type(formatFn) == "function"
+                and formatFn
+                or nil
+            applyDisplayText()
+        end,
+        SetValueParse = function(parseFn)
+            valueParseFn = type(parseFn) == "function" and parseFn or nil
+        end,
+        GetValueColors = function()
+            return {
+                Number = valueColors.Number,
+                Prefix = valueColors.Prefix,
+                Suffix = valueColors.Suffix,
+            }, valueColorEnabled
+        end,
+        SetValueColors = function(colors)
+            applyColorConfig(colors)
+            applyDisplayText()
+        end,
+        SetValueColorEnabled = function(enabled)
+            valueColorEnabled = enabled == true
+            applyDisplayText()
+        end,
+        GetUnit = function()
+            local unit = unitOptions[currentUnitIndex]
+            if not unit then
+                return nil, nil
+            end
+            return unit.Name, currentUnitIndex
+        end,
+        SetUnit = setUnit,
+        SetUnits = function(newOptions, selected, fireCallback)
+            assert(
+                type(newOptions) == "table",
+                "SetUnits can danh sach don vi"
+            )
+            closeUnitMenu()
+            local previousUnit = unitOptions[currentUnitIndex]
+            unitOptions = normalizeUnitOptions(newOptions)
+            local index = resolveUnitIndex(selected)
+                or resolveUnitIndex(previousUnit and previousUnit.Name)
+                or 1
+            currentUnitIndex = math.clamp(
+                index,
+                1,
+                math.max(#unitOptions, 1)
+            )
+            updateSliderLayout()
+            updateUnitDisplay()
+            if fireCallback ~= false
+                and unitOptions[currentUnitIndex]
+            then
+                safeCallback(
+                    unitCallback,
+                    unitOptions[currentUnitIndex].Name,
+                    currentUnitIndex,
+                    previousUnit and previousUnit.Name
+                )
+            end
+        end,
+        SetUnitEnabled = function(enabled)
+            unitEnabled = enabled == true
+            updateSliderLayout()
+        end,
+        SetUnitSelectorEnabled = function(enabled)
+            unitSelectorEnabled = enabled == true
+            updateSliderLayout()
+        end,
+        SetUnitFormat = function(formatFn)
+            unitGlobalFormat = type(formatFn) == "function"
+                and formatFn
+                or nil
+            updateUnitDisplay()
+        end,
+        SetUnitCallback = function(callback)
+            unitCallback = type(callback) == "function"
+                and callback
+                or nil
+        end,
+        Close = closeUnitMenu,
+        Destroy = function()
+            dragging = false
+            activeTouch = nil
+            closeUnitMenu()
+            if unitOverlay then
+                unitOverlay:Destroy()
+                unitOverlay = nil
+                unitMenu = nil
+                unitMenuList = nil
+                unitMenuPadding = nil
+            end
+            for index = #globalConnections, 1, -1 do
+                local connection = globalConnections[index]
+                if connection.Connected then
+                    connection:Disconnect()
+                end
+                globalConnections[index] = nil
+            end
+        end,
+    }
+end
+
+local function createLibraryToggleRow(config)
+    local row, main, label = buildFixedRow(config.Name, config.Name)
+    label.Size = UDim2.fromScale(0.72, 0.64)
+
+    local switch = Instance.new("Frame")
+    switch.Name = "Switch"
+    switch.Active = false
+    switch.AnchorPoint = Vector2.new(0.5, 0.5)
+    switch.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    switch.BorderSizePixel = 0
+    switch.Position = UDim2.fromScale(0.915, 0.5)
+    switch.Size = UDim2.fromScale(0.142, 0.75)
+    switch.ZIndex = 3
+    switch.Parent = main
+    Runtime.addCorner(switch, UDim.new(0.5, 0))
+    addScaledStroke(switch, Enum.ApplyStrokeMode.Border, 0.06)
+
+    local offGradient = Instance.new("UIGradient")
+    offGradient.Name = "OFF"
+    offGradient.Color = ColorSequence.new(Runtime.Theme.ToggleOff)
+    offGradient.Rotation = 90
+    offGradient.Transparency = NumberSequence.new(0)
+    offGradient.Parent = switch
+
+    local onGradient = Instance.new("UIGradient")
+    onGradient.Name = "ON"
+    onGradient.Color = ACCENT_GRADIENT
+    onGradient.Rotation = 90
+    onGradient.Parent = switch
+
+    local knob = Instance.new("Frame")
+    knob.Name = "Hold"
+    knob.Active = false
+    knob.AnchorPoint = Vector2.new(0.5, 0.5)
+    knob.BackgroundColor3 = Runtime.Theme.KnobEdge
+    knob.BorderSizePixel = 0
+    knob.Size = UDim2.fromScale(0.72, 0.72)
+    knob.ZIndex = 5
+    knob.Parent = switch
+    Runtime.addCorner(knob, UDim.new(0.5, 0))
+    addScaledStroke(knob, Enum.ApplyStrokeMode.Border, 0.09)
+
+    local knobAspect = Instance.new("UIAspectRatioConstraint")
+    knobAspect.AspectRatio = 1
+    knobAspect.AspectType = Enum.AspectType.FitWithinMaxSize
+    knobAspect.DominantAxis = Enum.DominantAxis.Width
+    knobAspect.Parent = knob
+
+    local knobColor = Instance.new("Frame")
+    knobColor.Name = "Color"
+    knobColor.Active = false
+    knobColor.AnchorPoint = Vector2.new(0.5, 0)
+    knobColor.BackgroundColor3 = Runtime.Theme.Knob
+    knobColor.BorderSizePixel = 0
+    knobColor.Position = UDim2.fromScale(0.5, 0)
+    knobColor.Size = UDim2.fromScale(1, 0.9)
+    knobColor.ZIndex = 6
+    knobColor.Parent = knob
+    Runtime.addCorner(knobColor, UDim.new(0.5, 0))
+
+    local button = Instance.new("TextButton")
+    button.Name = "Button"
+    button.Active = true
+    button.AutoButtonColor = false
+    button.AnchorPoint = Vector2.new(0.5, 0.5)
+    button.BackgroundTransparency = 1
+    button.BorderSizePixel = 0
+    button.Position = UDim2.fromScale(0.5, 0.5)
+    button.Size = UDim2.fromScale(1, 1)
+    button.Text = ""
+    button.ZIndex = 99
+    button.Parent = switch
+
+    local enabled = config.Default == true
+
+    local function setValue(value, fireCallback, animated)
+        enabled = value == true
+        offGradient.Enabled = not enabled
+        onGradient.Enabled = enabled
+        local target = UDim2.fromScale(enabled and 0.72 or 0.28, 0.5)
+        if animated == false then
+            knob.Position = target
+        else
+            TweenService:Create(
+                knob,
+                TweenInfo.new(
+                    0.12,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.Out
+                ),
+                {
+                    Position = target,
+                }
+            ):Play()
+        end
+        if fireCallback ~= false then
+            safeCallback(config.Callback, enabled)
+        end
+    end
+
+    connectSafeActivation(button, function()
+        setValue(not enabled, true, true)
+    end)
+
+    setValue(enabled, false, false)
+
+    return row, {
+        GetValue = function()
+            return enabled
+        end,
+        SetValue = function(value, fireCallback)
+            setValue(value, fireCallback, true)
+        end,
+    }
+end
+
+local function createLibraryTextRow(config)
+    local displayText = tostring(config.Text or config.Value or config.Name)
+    local row, main, label = buildFixedRow(config.Name, displayText)
+    label.Size = UDim2.fromScale(0.94, 0.64)
+    label.TextXAlignment = config.Alignment or Enum.TextXAlignment.Left
+
+    local note = Instance.new("TextLabel")
+    note.Name = "Note"
+    note.Active = false
+    note.AnchorPoint = Vector2.new(0, 0.5)
+    note.BackgroundTransparency = 1
+    note.BorderSizePixel = 0
+    note.Position = UDim2.fromScale(0.025, 0.755)
+    note.Size = UDim2.fromScale(0.94, 0.3)
+    note.Text = ""
+    note.TextWrapped = false
+    note.TextXAlignment = Enum.TextXAlignment.Left
+    note.TextYAlignment = Enum.TextYAlignment.Center
+    note.Visible = false
+    note.ZIndex = 5
+    note.Parent = main
+    applyPlainTextStyle(note)
+    note.TextTransparency = 0.32
+
+    local noteStroke = note:FindFirstChildOfClass("UIStroke")
+    if noteStroke then
+        noteStroke.Thickness = 0.06
+        noteStroke.Transparency = 0.2
+    end
+
+    local currentNote = ""
+    local vScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
+    local function setNote(value)
+        currentNote = tostring(value or "")
+        local hasNote = currentNote ~= ""
+        note.Text = currentNote
+        note.Visible = hasNote
+        row:SetAttribute(
+            "ChilliResponsiveAspect",
+            hasNote and ROW_ASPECT_WITH_NOTE or ROW_ASPECT
+        )
+        if hasNote then
+            label.Position = UDim2.fromScale(0.025, 0.34)
+            label.Size = UDim2.fromScale(
+                0.94,
+                0.64 * vScale * NOTE_TITLE_SCALE
+            )
+        else
+            label.Position = UDim2.fromScale(0.025, 0.5)
+            label.Size = UDim2.fromScale(0.94, 0.64)
+        end
+    end
+
+    setNote(config.Note or config.Description or "")
+
+    return row, {
+        GetValue = function()
+            return label.Text
+        end,
+        SetValue = function(value)
+            label.Text = tostring(value)
+        end,
+        GetNote = function()
+            return currentNote
+        end,
+        SetNote = setNote,
+    }
+end
+
+
+
+
+
+
+
+
+
+
+local NOTE_LEFT = 0.025
+local NOTE_GAP = 0.02
+local NOTE_MAX_WIDTH = 0.94
+local NOTE_MIN_WIDTH = 0.3
+
+local function noteWidthFor(control)
+    if not control then
+        return NOTE_MAX_WIDTH
+    end
+
+    local controlLeft = control.Position.X.Scale
+        - control.Size.X.Scale * control.AnchorPoint.X
+
+    return math.clamp(
+        controlLeft - NOTE_LEFT - NOTE_GAP,
+        NOTE_MIN_WIDTH,
+        NOTE_MAX_WIDTH
+    )
+end
+
+local function addNoteToButtonRow(row, config, button)
+    local vScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
+    local aspect = row:FindFirstChildOfClass(
+        "UIAspectRatioConstraint"
+    )
+    local main = findDescendant(row, "Main")
+    local title = main:FindFirstChild("Label")
+    assert(title and title:IsA("TextLabel"), "Button row thieu Label")
+
+    if aspect then
+        aspect.AspectRatio = ROW_ASPECT_WITH_NOTE
+    end
+    row:SetAttribute(
+        "ChilliResponsiveAspect",
+        ROW_ASPECT_WITH_NOTE
+    )
+
+    title.Position = UDim2.fromScale(0.025, 0.34)
+    title.Size = UDim2.fromScale(
+        0.62,
+        0.64 * vScale * NOTE_TITLE_SCALE
+    )
+
+    local note = Instance.new("TextLabel")
+    note.Name = "Note"
+    note.Active = false
+    note.AnchorPoint = Vector2.new(0, 0.5)
+    note.BackgroundTransparency = 1
+    note.BorderSizePixel = 0
+    note.Position = UDim2.fromScale(NOTE_LEFT, 0.755)
+    note.Size = UDim2.fromScale(noteWidthFor(button), 0.3)
+    note.Text = ""
+    note.TextWrapped = false
+    note.TextXAlignment = Enum.TextXAlignment.Left
+    note.TextYAlignment = Enum.TextYAlignment.Center
+    note.ZIndex = 5
+    note.Parent = main
+    applyPlainTextStyle(note)
+    note.TextTransparency = 0.32
+
+    local noteStroke = note:FindFirstChildOfClass("UIStroke")
+    if noteStroke then
+        noteStroke.Thickness = 0.06
+        noteStroke.Transparency = 0.2
+    end
+
+    button.Size = UDim2.new(
+        button.Size.X.Scale,
+        button.Size.X.Offset,
+        button.Size.Y.Scale * vScale,
+        button.Size.Y.Offset
+    )
+
+    local currentNote = ""
+    local function setNote(value)
+        currentNote = tostring(value or "")
+        note.Text = currentNote
+    end
+    setNote(config.Note or config.Description or "")
+
+    return {
+        GetNote = function()
+            return currentNote
+        end,
+        SetNote = setNote,
+    }
+end
+
+local function createLibraryButtonRow(config)
+    local row, playPress = createButtonRow(
+        config.Name,
+        config.Name,
+        tostring(config.ButtonText or config.Text or "Click"),
+        tostring(config.ConfirmText or "Clicked!")
+    )
+    local button = findDescendant(row, "Action")
+    local noteController = nil
+    if config.Note ~= nil or config.Description ~= nil then
+        noteController = addNoteToButtonRow(row, config, button)
+    end
+    connectSafeActivation(button, function()
+        safeCallback(config.Callback)
+    end)
+
+    return row, {
+        Press = function()
+            
+            if playPress then
+                playPress()
+            end
+            safeCallback(config.Callback)
+        end,
+        GetNote = noteController and noteController.GetNote,
+        SetNote = noteController and noteController.SetNote,
+    }
+end
+
+local function createLibraryInputRow(config)
+    local row, normalizeText = createInputRow(
+        config.Name,
+        config.Name,
+        tostring(config.Placeholder or "Type...")
+    )
+    local input = findDescendant(row, "Input")
+    input.Text = normalizeText(config.Default)
+
+    local main = row:FindFirstChild("Main")
+    local title = main:FindFirstChild("Label")
+    local field = main:FindFirstChild("Field")
+    local aspect = row:FindFirstChildOfClass("UIAspectRatioConstraint")
+    local noteVScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
+    local fieldLeft = CONTROL_LAYOUT.WideCenterX - CONTROL_LAYOUT.WideWidth / 2
+    local currentNote = ""
+
+    local noteLabel = Instance.new("TextLabel")
+    noteLabel.Name = "Note"
+    noteLabel.Active = false
+    noteLabel.AnchorPoint = Vector2.new(0, 0.5)
+    noteLabel.BackgroundTransparency = 1
+    noteLabel.BorderSizePixel = 0
+    noteLabel.Position = UDim2.fromScale(0.025, 0.755)
+    noteLabel.Size = UDim2.fromScale(math.max(0.3, fieldLeft - 0.045), 0.3)
+    noteLabel.Text = ""
+    noteLabel.TextWrapped = false
+    noteLabel.TextXAlignment = Enum.TextXAlignment.Left
+    noteLabel.TextYAlignment = Enum.TextYAlignment.Center
+    noteLabel.Visible = false
+    noteLabel.ZIndex = 5
+    noteLabel.Parent = main
+    applyPlainTextStyle(noteLabel)
+    noteLabel.TextTransparency = 0.32
+
+    local noteStroke = noteLabel:FindFirstChildOfClass("UIStroke")
+    if noteStroke then
+        noteStroke.Thickness = 0.06
+        noteStroke.Transparency = 0.2
+    end
+
+    local function setNote(value)
+        currentNote = tostring(value or "")
+        local hasNote = currentNote ~= ""
+        noteLabel.Text = currentNote
+        noteLabel.Visible = hasNote
+        if aspect and aspect.Parent then
+            aspect.AspectRatio = hasNote and ROW_ASPECT_WITH_NOTE or ROW_ASPECT
+        end
+        row:SetAttribute(
+            "ChilliResponsiveAspect",
+            hasNote and ROW_ASPECT_WITH_NOTE or ROW_ASPECT
+        )
+        if hasNote then
+            title.Position = UDim2.fromScale(0.025, 0.34)
+            title.Size = UDim2.fromScale(0.65, 0.64 * noteVScale * NOTE_TITLE_SCALE)
+            field.Size = UDim2.fromScale(CONTROL_LAYOUT.WideWidth, 0.62 * noteVScale)
+        else
+            title.Position = UDim2.fromScale(0.025, 0.5)
+            title.Size = UDim2.fromScale(0.65, 0.64)
+            field.Size = UDim2.fromScale(CONTROL_LAYOUT.WideWidth, 0.62)
+        end
+    end
+
+    setNote(config.Note or config.Description or "")
+
+    input.FocusLost:Connect(function(enterPressed)
+        input.Text = normalizeText(input.Text)
+        safeCallback(config.Callback, input.Text, enterPressed)
+    end)
+
+    return row, {
+        GetValue = function()
+            return input.Text
+        end,
+        GetNote = function()
+            return currentNote
+        end,
+        SetNote = setNote,
+        SetValue = function(value, fireCallback)
+            input.Text = normalizeText(value)
+            if fireCallback ~= false then
+                safeCallback(config.Callback, input.Text, false)
+            end
+        end,
+    }
+end
+
+local function createLibraryNoteToggleRow(config)
+    
+    
+    local row, controller = createLibraryToggleRow(config)
+    local vScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
+    local aspect = row:FindFirstChildOfClass("UIAspectRatioConstraint")
+    local main = findDescendant(row, "Main")
+    local title = findDescendant(main, "Label")
+    local switch = findDescendant(main, "Switch")
+
+    if aspect then
+        aspect.AspectRatio = ROW_ASPECT_WITH_NOTE
+    end
+
+    title.Position = UDim2.fromScale(0.025, 0.34)
+    title.Size = UDim2.fromScale(
+        0.62,
+        0.64 * vScale * NOTE_TITLE_SCALE
+    )
+
+    local note = Instance.new("TextLabel")
+    note.Name = "Note"
+    note.Active = false
+    note.AnchorPoint = Vector2.new(0, 0.5)
+    note.BackgroundTransparency = 1
+    note.BorderSizePixel = 0
+    note.Position = UDim2.fromScale(NOTE_LEFT, 0.755)
+    note.Size = UDim2.fromScale(noteWidthFor(switch), 0.3)
+    note.Text = tostring(config.Note or config.Description or "")
+    note.TextWrapped = false
+    note.TextXAlignment = Enum.TextXAlignment.Left
+    note.TextYAlignment = Enum.TextYAlignment.Center
+    note.ZIndex = 5
+    note.Parent = main
+    applyPlainTextStyle(note)
+    note.TextTransparency = 0.32
+
+    local noteStroke = note:FindFirstChildOfClass("UIStroke")
+    if noteStroke then
+        noteStroke.Thickness = 0.06
+        noteStroke.Transparency = 0.2
+    end
+
+    switch.Size = UDim2.fromScale(0.142, 0.75 * vScale)
+
+    
+    
+    
+    local currentNote = note.Text
+    controller.GetNote = function()
+        return currentNote
+    end
+    controller.SetNote = function(value)
+        currentNote = tostring(value or "")
+        note.Text = currentNote
+    end
+    return row, controller
+end
+
+
+
+
+
+local function createLibraryDropdownRow(config, forceMulti, actionMode)
+    local rawOptions = config.Options or config.Values or config.List
+    assert(type(rawOptions) == "table", "Dropdown features must be provided as a table")
+    assert(#rawOptions > 0, "Dropdown requires at least one feature")
+
+    local function copyOptions(source)
+        local result = {}
+        for index, option in ipairs(source) do
+            result[index] = tostring(option)
+        end
+        return result
+    end
+
+    local options = copyOptions(rawOptions)
+    local multiSelect = forceMulti == true or config.Multi == true
+    local currentNote = tostring(config.Note or config.Description or "")
+
+    
+    
+    local actionSpec = nil
+    if actionMode then
+        actionSpec = {
+            Hint = tostring(
+                config.Hint
+                    or config.Guide
+                    or config.Prompt
+                    or (
+                        multiSelect
+                and "Tick the features you want, then press the button"
+                or "Pick a feature, then press the button"
+                    )
+            ),
+            ButtonText = tostring(
+                config.ButtonText or config.ActionText or "Apply"
+            ),
+            OnApply = function(values, indices)
+                safeCallback(config.Callback, values, indices)
+            end,
+        }
+    end
+
+    local function findOptionIndex(choice)
+        if type(choice) == "number" then
+            return math.clamp(math.floor(choice), 1, #options)
+        end
+        for index, option in ipairs(options) do
+            if option == tostring(choice) then
+                return index
+            end
+        end
+        return nil
+    end
+
+    local function normalizeDefault(choice)
+        if multiSelect and type(choice) == "table" then
+            local validChoices = {}
+            for _, item in ipairs(choice) do
+                local index = findOptionIndex(item)
+                if index then
+                    table.insert(validChoices, options[index])
+                end
+            end
+            return validChoices
+        end
+        return findOptionIndex(choice) or 1
+    end
+
+    
+    
+    
+    
+    local row = Instance.new("Frame")
+    row.Name = config.Name
+    row.Active = false
+    row.AnchorPoint = Vector2.new(0.5, 0.5)
+    row.BackgroundTransparency = 1
+    row.BorderSizePixel = 0
+    row.ClipsDescendants = false
+    row.Position = UDim2.fromScale(0.5, 0.5)
+    row.Size = UDim2.new(ROW_WIDTH_SCALE, 0, 0, 1)
+    row.ZIndex = 3
+
+    
+    
+    
+    local function hostWidthScale()
+        if RESIZE_KEEPS_OPTION_WIDTH then
+            return ROW_WIDTH_SCALE / ContentScale.X
+        end
+        return ROW_WIDTH_SCALE
+    end
+
+    ContentScale.OnChanged(function()
+        if row.Parent == nil then
+            return false
+        end
+        row.Size = UDim2.new(
+            hostWidthScale(),
+            0,
+            0,
+            math.max(1, row.Size.Y.Offset)
+        )
+    end)
+
+    local primitiveRow = nil
+    local primitiveController = nil
+    local mountSerial = 0
+
+    local function mountDropdown(selectedValue)
+        closeActiveDropdown()
+        mountSerial = mountSerial + 1
+        local serial = mountSerial
+
+        if primitiveRow then
+            primitiveRow:Destroy()
+        end
+
+        local mountedRow, mountedController = createDropdownRow(
+            config.Name .. "Dropdown",
+            config.Name,
+            options,
+            normalizeDefault(selectedValue),
+            multiSelect,
+            actionSpec,
+            currentNote
+        )
+        primitiveRow = mountedRow
+        primitiveController = mountedController
+        primitiveRow.AnchorPoint = Vector2.new(0.5, 0)
+        primitiveRow.Position = UDim2.fromScale(0.5, 0)
+        primitiveRow.Size = UDim2.new(1, 0, 0, 1)
+        primitiveRow.Parent = row
+
+        local function syncHostHeight()
+            if serial ~= mountSerial
+                or primitiveRow ~= mountedRow
+                or mountedRow.Parent == nil
+            then
+                return
+            end
+            row.Size = UDim2.new(
+                hostWidthScale(),
+                0,
+                0,
+                math.max(1, math.ceil(mountedRow.AbsoluteSize.Y))
+            )
+        end
+
+        mountedRow:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+            syncHostHeight
+        )
+        
+        
+        
+        for index = 1, (actionSpec and 0 or #options) do
+            local item = findDescendant(mountedRow, "Option" .. index)
+            connectSafeActivation(item, function()
+                
+                
+                
+                
+                
+                
+                task.defer(function()
+                    RunService.Heartbeat:Wait()
+                    if serial ~= mountSerial
+                        or primitiveController ~= mountedController
+                        or mountedRow.Parent == nil
+                    then
+                        return
+                    end
+                    safeCallback(
+                        config.Callback,
+                        mountedController.GetValue()
+                    )
+                end)
+            end)
+        end
+
+        syncHostHeight()
+        task.defer(syncHostHeight)
+    end
+
+    mountDropdown(config.Default)
+
+    return row, {
+        GetValue = function()
+            return primitiveController.GetValue()
+        end,
+        SetValue = function(value, fireCallback)
+            primitiveController.SetValue(value)
+            
+            if fireCallback ~= false and not actionSpec then
+                safeCallback(config.Callback, primitiveController.GetValue())
+            end
+        end,
+        SetOptions = function(newOptions, selectedValue, fireCallback)
+            assert(
+                type(newOptions) == "table" and #newOptions > 0,
+                "Dropdown SetOptions can danh sach khong rong"
+            )
+            local previousValue = primitiveController.GetValue()
+            options = copyOptions(newOptions)
+            mountDropdown(selectedValue or previousValue)
+            if fireCallback ~= false and not actionSpec then
+                safeCallback(config.Callback, primitiveController.GetValue())
+            end
+        end,
+        Close = function()
+            closeActiveDropdown()
+        end,
+        GetNote = function()
+            return currentNote
+        end,
+        SetNote = function(value)
+            currentNote = tostring(value or "")
+            if primitiveController and primitiveController.SetNote then
+                primitiveController.SetNote(currentNote)
+            end
+        end,
+        
+        Apply = actionSpec and function()
+            primitiveController.Apply()
+        end or nil,
+        SetHint = actionSpec and function(text)
+            actionSpec.Hint = tostring(text or "")
+            primitiveController.SetHint(actionSpec.Hint)
+        end or nil,
+        SetActionText = actionSpec and function(text)
+            actionSpec.ButtonText = tostring(
+                text or actionSpec.ButtonText
+            )
+            primitiveController.SetActionText(actionSpec.ButtonText)
+        end or nil,
+    }
+end
+
+
+
+
+
+local TAB_LAYOUT = {
+    Span = 0.895,
+    NormalHeight = 0.130,
+    GapRatio = 0.023 / 0.130,
+}
+local SECTION_ARROW = {
+    Scale = 0.65,
+    Spacing = 0.15,
+    Arm = 0.22,
+}
+local SECTION_HEADER_ASPECT = 16
+
+local sideButtonLayout = Instance.new("UIListLayout")
+sideButtonLayout.FillDirection = Enum.FillDirection.Vertical
+sideButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+sideButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+sideButtonLayout.SortOrder = Enum.SortOrder.LayoutOrder
+sideButtonLayout.Parent = sideButtons
+
+local sideButtonPadding = Instance.new("UIPadding")
+sideButtonPadding.Name = "TabPadding"
+sideButtonPadding.PaddingTop = UDim.new(0.067, 0)
+sideButtonPadding.Parent = sideButtons
+
+
+
+
+
+
+local TabColumns = {}
+do
+    local function buildColumn(name, anchorX, edgeX)
+        local frame = Instance.new("Frame")
+        frame.Name = name
+        frame.Active = false
+        frame.AnchorPoint = Vector2.new(anchorX, 0.5)
+        frame.BackgroundTransparency = 1
+        frame.BorderSizePixel = 0
+        frame.Position = UDim2.new(edgeX, 0, 0.558, 0)
+        frame.Size = UDim2.new(0.2612044513, 0, 1, 0)
+        frame.ZIndex = 99
+        frame.Parent = mainFrame
+
+        local layout = Instance.new("UIListLayout")
+        layout.Name = "TabLayout"
+        layout.FillDirection = Enum.FillDirection.Vertical
+        layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        layout.VerticalAlignment = Enum.VerticalAlignment.Top
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Parent = frame
+
+        local padding = Instance.new("UIPadding")
+        padding.Name = "TabPadding"
+        padding.PaddingTop = UDim.new(0.077, 0)
+        padding.Parent = frame
+
+        return {
+            Frame = frame,
+            Layout = layout,
+            Padding = padding,
+            AnchorX = anchorX,
+            EdgeX = edgeX,
+        }
+    end
+
+    TabColumns.Left = {
+        Frame = sideButtons,
+        Layout = sideButtonLayout,
+        Padding = sideButtonPadding,
+        AnchorX = 1,
+        EdgeX = -0.025,
+        CenterY = 0.558,
+        TopPadding = 0.067,
+        Width = 0.2612044513,
+        GapRatio = TAB_LAYOUT.GapRatio,
+    }
+    TabColumns.Right = buildColumn("SideButtonsRight", 0, 1.025)
+    TabColumns.Right.CenterY = 0.558
+    TabColumns.Right.TopPadding = 0.067
+    TabColumns.Right.Width = 0.2612044513
+end
+
+
+
+do
+    local function attachDock(column)
+        local dock = Instance.new("Frame")
+        dock.Name = "TabDock"
+        dock.Active = false
+        dock.BackgroundColor3 = Runtime.Theme.Dock
+        dock.BackgroundTransparency = 0
+        dock.BorderSizePixel = 0
+        dock.Visible = false
+        dock.ZIndex = 90
+        dock.Parent = mainFrame
+        Runtime.addCorner(dock, Runtime.Theme.Corner)
+        addScaledStroke(dock, Enum.ApplyStrokeMode.Border, 0.012)
+
+        local queued = false
+        local function refresh()
+            queued = false
+            local columnFrame = column.Frame
+            if not columnFrame.Parent then
+                return
+            end
+            local top, bottom
+            for _, child in ipairs(columnFrame:GetChildren()) do
+                if child:IsA("GuiButton") and child.Visible then
+                    local childTop = child.AbsolutePosition.Y
+                    local childBottom = childTop + child.AbsoluteSize.Y
+                    top = top and math.min(top, childTop) or childTop
+                    bottom = bottom and math.max(bottom, childBottom) or childBottom
+                end
+            end
+            if not top then
+                dock.Visible = false
+                return
+            end
+            local pad = math.max(6, math.floor(columnFrame.AbsoluteSize.X * 0.04))
+            local origin = mainFrame.AbsolutePosition
+            dock.Position = UDim2.fromOffset(
+                columnFrame.AbsolutePosition.X - origin.X - pad,
+                top - origin.Y - pad
+            )
+            dock.Size = UDim2.fromOffset(
+                columnFrame.AbsoluteSize.X + pad * 2,
+                (bottom - top) + pad * 2
+            )
+            dock.Visible = true
+        end
+        local function queueRefresh()
+            if queued then
+                return
+            end
+            queued = true
+            task.defer(refresh)
+        end
+
+        trackRootConnection(column.Frame:GetPropertyChangedSignal("AbsolutePosition"):Connect(queueRefresh))
+        trackRootConnection(column.Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(queueRefresh))
+        trackRootConnection(column.Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queueRefresh))
+        trackRootConnection(column.Frame.ChildAdded:Connect(queueRefresh))
+        trackRootConnection(column.Frame.ChildRemoved:Connect(queueRefresh))
+        queueRefresh()
+    end
+    for _, column in pairs(TabColumns) do
+        attachDock(column)
+    end
+end
+
+ContentScale.OnChanged(function(scaleX, scaleY)
+    for _, column in pairs(TabColumns) do
+        local gap = (column.EdgeX < 0) and (-0.025 / scaleX)
+            or (1 + 0.025 / scaleX)
+        column.Frame.Position = UDim2.new(
+            gap,
+            0,
+            column.CenterY or 0.558,
+            0
+        )
+        column.Frame.Size = UDim2.new(
+            (column.Width or 0.2612044513) / scaleX,
+            0,
+            1,
+            0
+        )
+        column.Padding.PaddingTop = UDim.new(
+            (column.TopPadding or 0.067) / scaleY,
+            0
+        )
+    end
+end)
+
+
+local function createSectionHeader(title, layoutOrder, clipViewport)
+    local header = Instance.new("TextLabel")
+    header.Name = title
+    header.Active = false
+    header.AnchorPoint = Vector2.new(0.5, 0.5)
+    header.BackgroundTransparency = 1
+    header.BorderSizePixel = 0
+    header.LayoutOrder = layoutOrder
+    
+    
+    
+    header.Size = UDim2.new(0.97, 0, 0, 36)
+    header.Text = title
+    header.TextWrapped = true
+    header.TextXAlignment = Enum.TextXAlignment.Center
+    header.TextYAlignment = Enum.TextYAlignment.Center
+    header.ZIndex = 4
+
+    applyShinyTextStyle(header, normalTextFont)
+
+    
+    
+    local arrowClip = Instance.new("Frame")
+    arrowClip.Name = "ArrowClip"
+    arrowClip.Active = false
+    arrowClip.AnchorPoint = Vector2.new(0.5, 0.5)
+    arrowClip.BackgroundTransparency = 1
+    arrowClip.BorderSizePixel = 0
+    arrowClip.ClipsDescendants = true
+    arrowClip.Position = UDim2.fromScale(0.4, 0.5)
+    arrowClip.Size = UDim2.fromOffset(1, 1)
+    arrowClip.ZIndex = header.ZIndex + 2
+    arrowClip.Parent = header
+
+    local arrow = Instance.new("Frame")
+    arrow.Name = "Arrow"
+    arrow.Active = false
+    arrow.AnchorPoint = Vector2.new(0.5, 0.5)
+    arrow.BackgroundTransparency = 1
+    arrow.BorderSizePixel = 0
+    arrow.Position = UDim2.fromScale(0.5, 0.5)
+    arrow.Size = UDim2.fromOffset(1, 1)
+    arrow.ZIndex = header.ZIndex + 2
+    arrow.Parent = arrowClip
+
+    local armThickness = SECTION_ARROW.Arm
+    local armInset = armThickness / 2
+    local armLength = 0.56569 + armInset
+    local armCenterX = 0.30 + 0.35355 * armInset
+    local armCenterY = 0.50 + 0.35355 * armInset
+    local outlineWidth = 0.06499999761581421 / SECTION_ARROW.Scale
+
+    local function addChevronLayer(thickness, length, colors, zIndex)
+        for _, arm in ipairs({
+            {
+                armCenterX,
+                45,
+            },
+            {
+                1 - armCenterX,
+                -45,
+            },
+        }) do
+            local piece = Instance.new("Frame")
+            piece.Name = "Arm"
+            piece.Active = false
+            piece.AnchorPoint = Vector2.new(0.5, 0.5)
+            piece.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            piece.BorderSizePixel = 0
+            piece.Position = UDim2.fromScale(arm[1], armCenterY)
+            piece.Rotation = arm[2]
+            piece.Size = UDim2.fromScale(length, thickness)
+            piece.ZIndex = zIndex
+            piece.Parent = arrow
+
+            local gradient = Instance.new("UIGradient")
+            gradient.Color = colors
+            gradient.Rotation = 90
+            gradient.Parent = piece
+        end
+    end
+
+    addChevronLayer(
+        armThickness + outlineWidth * 2,
+        armLength + outlineWidth * 2,
+        blueStrokeGradient,
+        header.ZIndex + 2
+    )
+    addChevronLayer(
+        armThickness,
+        armLength,
+        shinyTextGradient,
+        header.ZIndex + 3
+    )
+
+    local visualHalfWidth = 0.5
+        - (
+            armCenterX
+            - (armLength + armThickness + outlineWidth * 4) * 0.35355
+        )
+
+    local function layoutArrow()
+        local width = header.AbsoluteSize.X
+        local height = header.AbsoluteSize.Y
+        if width <= 0 or height <= 0 then
+            return
+        end
+        local size = height * SECTION_ARROW.Scale
+        local spacing = height * SECTION_ARROW.Spacing
+        local textWidth = math.min(header.TextBounds.X, width)
+        local reach = size * visualHalfWidth
+        local centerX = (width - textWidth) / 2 - spacing - reach
+        
+        
+        arrowClip.Size = UDim2.fromOffset(size * 1.35, size * 1.35)
+        arrowClip.Position = UDim2.new(
+            0,
+            math.max(centerX, reach),
+            0.5,
+            0
+        )
+        arrow.Size = UDim2.fromOffset(size, size)
+    end
+
+    local function updateArrowVisibility()
+        if not clipViewport then
+            arrowClip.Visible = true
+            return
+        end
+
+        local viewportTop = clipViewport.AbsolutePosition.Y
+        local viewportBottom = viewportTop + clipViewport.AbsoluteSize.Y
+        local arrowTop = arrowClip.AbsolutePosition.Y
+        local arrowBottom = arrowTop + arrowClip.AbsoluteSize.Y
+        arrowClip.Visible = arrowTop >= viewportTop
+            and arrowBottom <= viewportBottom
+    end
+
+    header:GetPropertyChangedSignal("TextBounds"):Connect(layoutArrow)
+    header:GetPropertyChangedSignal("AbsoluteSize"):Connect(layoutArrow)
+    header:GetPropertyChangedSignal("AbsolutePosition"):Connect(
+        updateArrowVisibility
+    )
+    arrowClip:GetPropertyChangedSignal("AbsolutePosition"):Connect(
+        updateArrowVisibility
+    )
+    arrowClip:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+        updateArrowVisibility
+    )
+    if clipViewport then
+        clipViewport:GetPropertyChangedSignal("CanvasPosition"):Connect(
+            updateArrowVisibility
+        )
+        clipViewport:GetPropertyChangedSignal("AbsolutePosition"):Connect(
+            updateArrowVisibility
+        )
+        clipViewport:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+            updateArrowVisibility
+        )
+    end
+    task.defer(layoutArrow)
+    task.defer(updateArrowVisibility)
+
+    local button = Instance.new("TextButton")
+    button.Name = "SectionButton"
+    button.Active = true
+    button.AutoButtonColor = false
+    button.BackgroundTransparency = 1
+    button.BorderSizePixel = 0
+    button.Position = UDim2.fromScale(0, 0)
+    button.Size = UDim2.fromScale(1, 1)
+    button.Text = ""
+    button.ZIndex = header.ZIndex + 4
+    button.Parent = header
+
+    return header, arrow, button
+end
+
+
+
+
+local WindowMethods = {}
+local TabMethods = {}
+local SectionMethods = {}
+local OptionMethods = {}
+local StateMethods = {}
+local ExclusiveGroupMethods = {}
+local SurfaceMethods = {}
+local ApiImpl = {}
+Runtime.optionChangedHook = nil
+Runtime.stateChangedHook = nil
+
+
+Runtime.configLoadedHook = nil
+
+
+Runtime.quickRefreshHook = nil
+
+WindowMethods.__index = WindowMethods
+TabMethods.__index = TabMethods
+SectionMethods.__index = SectionMethods
+OptionMethods.__index = OptionMethods
+StateMethods.__index = StateMethods
+ExclusiveGroupMethods.__index = ExclusiveGroupMethods
+SurfaceMethods.__index = SurfaceMethods
+
+local STATE_NO_CHANGE = {}
+local MAX_STATE_TRANSACTION_STEPS = 256
+
+local function assertObject(object, expectedKind)
+    assert(
+        type(object) == "table"
+            and object._kind == expectedKind
+            and not object._destroyed,
+        ("API nay chi dung duoc tren %s con hoat dong"):format(expectedKind)
+    )
+end
+
+local function copyLinkedValue(value, visited)
+    if type(value) ~= "table" then
+        return value
+    end
+    visited = visited or {}
+    if visited[value] then
+        return nil
+    end
+    visited[value] = true
+    local result = {}
+    for key, child in pairs(value) do
+        local copiedKey = copyLinkedValue(key, visited)
+        if copiedKey ~= nil then
+            result[copiedKey] = copyLinkedValue(child, visited)
+        end
+    end
+    visited[value] = nil
+    return result
+end
+
+local function linkedValuesEqual(left, right, visited)
+    if left == right then
+        return true
+    end
+    if type(left) ~= type(right) or type(left) ~= "table" then
+        return false
+    end
+    visited = visited or {}
+    if visited[left] == right then
+        return true
+    end
+    visited[left] = right
+    for key, value in pairs(left) do
+        if not linkedValuesEqual(value, right[key], visited) then
+            return false
+        end
+    end
+    for key in pairs(right) do
+        if left[key] == nil then
+            return false
+        end
+    end
+    return true
+end
+
+local function callStateTransform(callback, fallback, ...)
+    if type(callback) ~= "function" then
+        return fallback
+    end
+    local arguments = table.pack(...)
+    local ok, result = xpcall(function()
+        return callback(table.unpack(arguments, 1, arguments.n))
+    end, function(message)
+        return debug.traceback(tostring(message), 2)
+    end)
+    if not ok then
+        return fallback
+    end
+    return result
+end
+
+local function resolveState(object)
+    if type(object) == "table" and object._kind == "State" then
+        assertObject(object, "State")
+        return object
+    end
+    if type(object) == "table" and object._kind == "Option" then
+        assertObject(object, "Option")
+        assert(object.State, "This feature has no state to link")
+        return object.State
+    end
+    error("Provide a State or a feature with a state", 3)
+end
+
+local function choosePrimaryOption(state)
+    state._primaryOption = nil
+    local fallback = nil
+    for option in pairs(state._views) do
+        if not option._destroyed and option.Instance ~= nil then
+            if not fallback then
+                fallback = option
+            end
+            if type(option._userCallback) == "function" then
+                state._primaryOption = option
+                return
+            end
+        end
+    end
+    state._primaryOption = fallback
+end
+
+local function syncStateViews(state)
+    for option, binding in pairs(state._views) do
+        if option._destroyed or option.Instance == nil then
+            state._views[option] = nil
+        elseif option._controller.SetValue then
+            local mappedValue = callStateTransform(
+                binding.ToOption,
+                state.Value,
+                copyLinkedValue(state.Value),
+                option,
+                state
+            )
+            option._stateApplying = true
+            local ok, problem = xpcall(function()
+                option._controller.SetValue(
+                    copyLinkedValue(mappedValue),
+                    false
+                )
+            end, function(message)
+                return debug.traceback(tostring(message), 2)
+            end)
+            option._stateApplying = false
+            if not ok then
+            end
+        end
+    end
+    if state._primaryOption
+        and (
+            state._primaryOption._destroyed
+            or state._primaryOption.Instance == nil
+        )
+    then
+        choosePrimaryOption(state)
+    end
+end
+
+local function markStateChanged(transaction, state)
+    if transaction.changed[state] then
+        return
+    end
+    transaction.changed[state] = true
+    table.insert(transaction.order, state)
+end
+
+ApiImpl[1] = function(self, value, transaction, sourceOption)
+    if self._destroyed then
+        return false
+    end
+    if transaction.steps >= MAX_STATE_TRANSACTION_STEPS then
+        if not transaction.warned then
+            transaction.warned = true
+            
+            
+        end
+        return false
+    end
+
+    local normalized = callStateTransform(
+        self.Normalize,
+        value,
+        copyLinkedValue(value),
+        self
+    )
+    if normalized == STATE_NO_CHANGE then
+        return false
+    end
+
+    for group in pairs(self._groups) do
+        if not ApiImpl[17](group, self, normalized) then
+            syncStateViews(self)
+            return false
+        end
+    end
+
+    if linkedValuesEqual(self.Value, normalized) then
+        syncStateViews(self)
+        return false
+    end
+
+    transaction.steps = transaction.steps + 1
+    self.Value = copyLinkedValue(normalized)
+    markStateChanged(transaction, self)
+    syncStateViews(self)
+
+    for group in pairs(self._groups) do
+        ApiImpl[18](group, self, transaction)
+    end
+
+    for _, link in ipairs(self._links) do
+        if link.Connected then
+            local targetValue = callStateTransform(
+                link.Transform,
+                self.Value,
+                copyLinkedValue(self.Value),
+                copyLinkedValue(link.Target.Value),
+                self,
+                link.Target
+            )
+            if targetValue ~= STATE_NO_CHANGE then
+                ApiImpl[1](link.Target, targetValue, transaction, sourceOption)
+            end
+        end
+    end
+    return true
+end
+
+local function stateUsesPrimaryCallback(state)
+    return not state._registered or type(state.Callback) ~= "function"
+end
+
+local function runStateTransaction(
+    state,
+    value,
+    fireCallback,
+    sourceOption,
+    sourceArguments
+)
+    local transaction = {
+        changed = {},
+        fireCallback = fireCallback ~= false,
+        order = {},
+        sourceArguments = sourceArguments,
+        sourceOption = sourceOption,
+        steps = 0,
+        warned = false,
+    }
+    ApiImpl[1](state, value, transaction, sourceOption)
+
+    if transaction.fireCallback then
+        for _, changedState in ipairs(transaction.order) do
+            safeCallback(
+                changedState.Callback,
+                copyLinkedValue(changedState.Value),
+                changedState,
+                sourceOption
+            )
+            local primaryOption = changedState._primaryOption
+            if stateUsesPrimaryCallback(changedState)
+                and primaryOption
+                and not primaryOption._destroyed
+                and type(primaryOption._userCallback) == "function"
+            then
+                if primaryOption == sourceOption
+                    and sourceArguments
+                then
+                    safeCallback(
+                        primaryOption._userCallback,
+                        table.unpack(
+                            sourceArguments,
+                            1,
+                            sourceArguments.n
+                        )
+                    )
+                else
+                    safeCallback(
+                        primaryOption._userCallback,
+                        primaryOption._controller.GetValue()
+                    )
+                end
+            end
+            for _, subscriber in ipairs(changedState._subscribers) do
+                if subscriber.Connected then
+                    safeCallback(
+                        subscriber.Callback,
+                        copyLinkedValue(changedState.Value),
+                        changedState,
+                        sourceOption
+                    )
+                end
+            end
+        end
+
+        local changedOption = sourceOption
+        if not changedOption or changedOption._destroyed then
+            for _, changedState in ipairs(transaction.order) do
+                for option in pairs(changedState._views) do
+                    if not option._destroyed and not option._configIgnored then
+                        changedOption = option
+                        break
+                    end
+                end
+                if changedOption then
+                    break
+                end
+            end
+        end
+        if changedOption and Runtime.optionChangedHook then
+            Runtime.optionChangedHook(changedOption)
+        elseif #transaction.order > 0 and Runtime.stateChangedHook then
+            Runtime.stateChangedHook(transaction.order[1])
+        end
+    end
+    return #transaction.order > 0
+end
+
+local function createStateObject(window, config, registered)
+    local state = setmetatable({
+        _kind = "State",
+        _destroyed = false,
+        _configIgnored = config.Save == false or config.Config == false,
+        _groups = setmetatable({}, { __mode = "k" }),
+        _links = {},
+        _registered = registered == true,
+        _subscribers = {},
+        _views = setmetatable({}, { __mode = "k" }),
+        Callback = config.Callback,
+        Name = tostring(config.Name or "State"),
+        Normalize = config.Normalize,
+        Value = copyLinkedValue(config.Default),
+        Window = window,
+    }, StateMethods)
+    window._stateObjects[state] = true
+    return state
+end
+
+ApiImpl[2] = function(self)
+    assertObject(self, "State")
+    return copyLinkedValue(self.Value)
+end
+
+ApiImpl[3] = function(self, value, fireCallback)
+    assertObject(self, "State")
+    runStateTransaction(self, value, fireCallback, nil)
+    return self
+end
+
+ApiImpl[4] = function(self, callback)
+    assertObject(self, "State")
+    assert(type(callback) == "function", "Subscribe can callback function")
+    local connection = {
+        Callback = callback,
+        Connected = true,
+    }
+    function connection:Disconnect()
+        self.Connected = false
+    end
+    table.insert(self._subscribers, connection)
+    return connection
+end
+
+ApiImpl[5] = function(self, target, transform, options)
+    assertObject(self, "State")
+    target = resolveState(target)
+    assert(target.Window == self.Window, "Hai State phai thuoc cung Window")
+    options = type(options) == "table" and options or {}
+    local link = {
+        Connected = true,
+        Source = self,
+        Target = target,
+        Transform = type(transform) == "function" and transform or nil,
+    }
+    function link:Disconnect()
+        self.Connected = false
+    end
+    table.insert(self._links, link)
+    if options.Immediate == true then
+        local mapped = callStateTransform(
+            link.Transform,
+            self.Value,
+            copyLinkedValue(self.Value),
+            copyLinkedValue(target.Value),
+            self,
+            target
+        )
+        if mapped ~= STATE_NO_CHANGE then
+            ApiImpl[3](target, mapped, options.FireCallback)
+        end
+    end
+    return link
+end
+
+ApiImpl[6] = function(self, target, targetValue, options)
+    if targetValue == nil then
+        targetValue = true
+    end
+    return ApiImpl[5](self, target, function(value)
+        if value == true then
+            return copyLinkedValue(targetValue)
+        end
+        return STATE_NO_CHANGE
+    end, options)
+end
+
+ApiImpl[7] = function(self, target, targetValue, options)
+    if targetValue == nil then
+        targetValue = false
+    end
+    return ApiImpl[5](self, target, function(value)
+        if value == false then
+            return copyLinkedValue(targetValue)
+        end
+        return STATE_NO_CHANGE
+    end, options)
+end
+
+ApiImpl[8] = function(self,
+    target,
+    predicate,
+    targetValue,
+    options
+)
+    assert(type(predicate) == "function", "LinkWhen can predicate function")
+    return ApiImpl[5](self, target, function(value, currentTarget, source, targetState)
+        if predicate(value, currentTarget, source, targetState) then
+            if type(targetValue) == "function" then
+                return targetValue(
+                    value,
+                    currentTarget,
+                    source,
+                    targetState
+                )
+            end
+            return copyLinkedValue(targetValue)
+        end
+        return STATE_NO_CHANGE
+    end, options)
+end
+
+ApiImpl[9] = function(self, targets, transform, options)
+    assert(type(targets) == "table", "LinkMany can danh sach target")
+    local bundle = {
+        Connected = true,
+        Links = {},
+    }
+    for _, target in ipairs(targets) do
+        table.insert(bundle.Links, ApiImpl[5](self, target, transform, options))
+    end
+    function bundle:Disconnect()
+        self.Connected = false
+        for _, link in ipairs(self.Links) do
+            link:Disconnect()
+        end
+    end
+    return bundle
+end
+
+ApiImpl[10] = function(self, targets, targetValue, options)
+    assert(type(targets) == "table", "LinkManyWhenTrue can danh sach target")
+    local bundle = {
+        Connected = true,
+        Links = {},
+    }
+    for _, target in ipairs(targets) do
+        table.insert(
+            bundle.Links,
+            ApiImpl[6](self, target, targetValue, options)
+        )
+    end
+    function bundle:Disconnect()
+        self.Connected = false
+        for _, link in ipairs(self.Links) do
+            link:Disconnect()
+        end
+    end
+    return bundle
+end
+
+ApiImpl[11] = function(self, target, options)
+    return ApiImpl[5](self, target, function(value)
+        return not value
+    end, options)
+end
+
+ApiImpl[12] = function(self,
+    target,
+    forwardTransform,
+    backwardTransform,
+    options
+)
+    target = resolveState(target)
+    local forward = ApiImpl[5](self, target, forwardTransform, options)
+    local backward = ApiImpl[5](target, self, backwardTransform, {
+        Immediate = false,
+    })
+    local pair = {
+        Connected = true,
+        Forward = forward,
+        Backward = backward,
+    }
+    function pair:Disconnect()
+        self.Connected = false
+        self.Forward:Disconnect()
+        self.Backward:Disconnect()
+    end
+    return pair
+end
+
+
+
+ApiImpl[13] = function(self)
+    assertObject(self, "State")
+    local window = self.Window
+    local groups = {}
+    for group in pairs(self._groups) do
+        table.insert(groups, group)
+    end
+    for _, group in ipairs(groups) do
+        if not group._destroyed then
+            group:Remove(self)
+        end
+    end
+    for _, link in ipairs(self._links) do
+        link.Connected = false
+    end
+    for state in pairs(window._stateObjects) do
+        for _, link in ipairs(state._links) do
+            if link.Source == self or link.Target == self then
+                link.Connected = false
+            end
+        end
+    end
+    for _, subscriber in ipairs(self._subscribers) do
+        subscriber.Connected = false
+    end
+    for option in pairs(self._views) do
+        option.State = nil
+        option._stateBinding = nil
+    end
+    self._views = {}
+    self._links = {}
+    self._subscribers = {}
+    self._groups = {}
+    self._destroyed = true
+    window._stateObjects[self] = nil
+    if self._registered then
+        window._stateByName[self.Name] = nil
+        for index, state in ipairs(window.States) do
+            if state == self then
+                table.remove(window.States, index)
+                break
+            end
+        end
+    end
+end
+
+ApiImpl[14] = function(self)
+    local count = 0
+    for member in pairs(self._members) do
+        if member.Value == true then
+            count = count + 1
+        end
+    end
+    return count
+end
+
+ApiImpl[15] = function(self, excludedState)
+    local oldestState = nil
+    local oldestOrder = math.huge
+    for member in pairs(self._members) do
+        if member ~= excludedState and member.Value == true then
+            local order = self._activationOrder[member] or 0
+            if order < oldestOrder then
+                oldestOrder = order
+                oldestState = member
+            end
+        end
+    end
+    return oldestState
+end
+
+ApiImpl[16] = function(self,
+    preferredState,
+    transaction,
+    fireCallback
+)
+    while ApiImpl[14](self) > self.MaxActive do
+        
+        local oldestState = ApiImpl[15](self, preferredState)
+            or ApiImpl[15](self, nil)
+        if not oldestState then
+            break
+        end
+
+        local changed = false
+        if transaction then
+            changed = ApiImpl[1](oldestState, false, transaction, nil)
+        else
+            local wasActive = oldestState.Value == true
+            ApiImpl[3](oldestState, false, fireCallback)
+            changed = wasActive and oldestState.Value ~= true
+        end
+        if not changed then
+            break
+        end
+    end
+end
+
+ApiImpl[17] = function(self, state, value)
+    if value ~= false or state.Value ~= true then
+        return true
+    end
+    return ApiImpl[14](self) - 1 >= self.MinActive
+end
+
+ApiImpl[18] = function(self, state, transaction)
+    if state.Value == true then
+        self._nextActivationOrder = self._nextActivationOrder + 1
+        self._activationOrder[state] = self._nextActivationOrder
+        ApiImpl[16](self, state, transaction, nil)
+    else
+        self._activationOrder[state] = nil
+    end
+end
+
+ApiImpl[19] = function(self, object)
+    assertObject(self, "ExclusiveGroup")
+    local state = resolveState(object)
+    assert(state.Window == self.Window, "State and Feature must belong to the same Window")
+    if self._members[state] then
+        return self
+    end
+    self._members[state] = true
+    state._groups[self] = true
+    if state.Value == true then
+        self._nextActivationOrder = self._nextActivationOrder + 1
+        self._activationOrder[state] = self._nextActivationOrder
+        ApiImpl[16](self, state, nil, false)
+    end
+    return self
+end
+
+ApiImpl[20] = function(self, object)
+    assertObject(self, "ExclusiveGroup")
+    local state = resolveState(object)
+    self._members[state] = nil
+    self._activationOrder[state] = nil
+    state._groups[self] = nil
+    return self
+end
+
+ApiImpl[21] = function(self, objects)
+    assertObject(self, "ExclusiveGroup")
+    assert(type(objects) == "table", "AddMany requires a State/Feature list")
+    for _, object in ipairs(objects) do
+        ApiImpl[19](self, object)
+    end
+    return self
+end
+
+
+
+ApiImpl[22] = function(self, object, fireCallback)
+    assertObject(self, "ExclusiveGroup")
+    local state = resolveState(object)
+    assert(self._members[state], "This State/Feature is not in the group")
+    ApiImpl[3](state, true, fireCallback)
+    return self
+end
+
+ApiImpl[23] = function(self)
+    assertObject(self, "ExclusiveGroup")
+    local active = {}
+    for state in pairs(self._members) do
+        if state.Value == true then
+            table.insert(active, state)
+        end
+    end
+    table.sort(active, function(left, right)
+        return (self._activationOrder[left] or 0)
+            < (self._activationOrder[right] or 0)
+    end)
+    return active
+end
+
+ApiImpl[24] = function(self)
+    assertObject(self, "ExclusiveGroup")
+    return self.MinActive, self.MaxActive
+end
+
+ApiImpl[25] = function(self, maximum, fireCallback)
+    assertObject(self, "ExclusiveGroup")
+    local parsed = tonumber(maximum)
+    assert(parsed, "MaxActive phai la mot so")
+    self.MaxActive = math.max(1, math.floor(parsed))
+    if self.MinActive > self.MaxActive then
+        self.MinActive = self.MaxActive
+    end
+    self.AllowNone = self.MinActive == 0
+    ApiImpl[16](self, nil, nil, fireCallback)
+    return self
+end
+
+ApiImpl[26] = function(self, minimum)
+    assertObject(self, "ExclusiveGroup")
+    local parsed = tonumber(minimum)
+    assert(parsed, "MinActive phai la mot so")
+    self.MinActive = math.clamp(
+        math.floor(parsed),
+        0,
+        self.MaxActive
+    )
+    self.AllowNone = self.MinActive == 0
+    return self
+end
+
+ApiImpl[27] = function(self, allowNone)
+    assertObject(self, "ExclusiveGroup")
+    self.MinActive = allowNone and 0 or math.max(1, self.MinActive)
+    self.AllowNone = self.MinActive == 0
+    return self
+end
+
+
+ApiImpl[28] = function(self)
+    assertObject(self, "ExclusiveGroup")
+    self._destroyed = true
+    for state in pairs(self._members) do
+        state._groups[self] = nil
+    end
+    self._members = {}
+    self._activationOrder = {}
+    if self.Window then
+        self.Window._exclusiveGroupByName[self.Name] = nil
+        for index, group in ipairs(self.Window.ExclusiveGroups) do
+            if group == self then
+                table.remove(self.Window.ExclusiveGroups, index)
+                break
+            end
+        end
+    end
+end
+
+local function bindOptionToState(option, state, config)
+    assertObject(state, "State")
+    assert(
+        state.Window == option.Section.Tab.Window,
+        "State and Feature must belong to the same Window"
+    )
+    local binding = {
+        FromOption = config.OptionToState,
+        ToOption = config.StateToOption,
+    }
+    option.State = state
+    option._stateBinding = binding
+    state._views[option] = binding
+    if not state._primaryOption
+        or (
+            type(state._primaryOption._userCallback) ~= "function"
+            and type(option._userCallback) == "function"
+        )
+    then
+        state._primaryOption = option
+    end
+    syncStateViews(state)
+end
+
+local function createOptionHandle(section, optionType, row, controller)
+    local option = setmetatable({
+        _kind = "Option",
+        _destroyed = false,
+        _controller = controller or {},
+        _manualVisible = true,
+        _resolvedVisible = true,
+        _visibilityDependencies = {},
+        _visibilityDependents = {},
+        Section = section,
+        Type = optionType,
+        Name = row.Name,
+        Instance = row,
+    }, OptionMethods)
+
+    table.insert(section.Options, option)
+    return option
+end
+
+ApiImpl[29] = function(self)
+    assertObject(self, "Option")
+    local getter = self._controller.GetValue
+    if getter then
+        return getter()
+    end
+    return nil
+end
+
+ApiImpl[30] = function(self, value, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetValue
+    assert(setter, ("%s khong ho tro Set()"):format(self.Type))
+    if self.State and not self._stateApplying then
+        setter(value, false)
+        local optionValue = self._controller.GetValue()
+        local stateValue = callStateTransform(
+            self._stateBinding.FromOption,
+            optionValue,
+            copyLinkedValue(optionValue),
+            self,
+            self.State
+        )
+        runStateTransaction(self.State, stateValue, fireCallback, self)
+        if fireCallback ~= false
+            and not stateUsesPrimaryCallback(self.State)
+        then
+            safeCallback(self._userCallback, self._controller.GetValue())
+        end
+        return self
+    end
+    setter(value, fireCallback)
+    return self
+end
+
+ApiImpl[31] = function(self)
+    assertObject(self, "Option")
+    assert(self.State, ("%s khong co state"):format(self.Type))
+    return self.State
+end
+
+ApiImpl[32] = function(self, state, config)
+    assertObject(self, "Option")
+    assert(self._controller.GetValue and self._controller.SetValue,
+        ("%s khong ho tro State"):format(self.Type))
+    state = resolveState(state)
+    assert(state.Window == self.Section.Tab.Window,
+        "State and Feature must belong to the same Window")
+    local oldState = self.State
+    if oldState then
+        oldState._views[self] = nil
+        choosePrimaryOption(oldState)
+        if not oldState._registered
+            and next(oldState._views) == nil
+            and not oldState._destroyed
+        then
+            ApiImpl[13](oldState)
+        end
+    end
+    bindOptionToState(self, state, type(config) == "table" and config or {})
+    return self
+end
+
+ApiImpl[33] = function(self, other, config)
+    return ApiImpl[32](self, resolveState(other), config)
+end
+
+
+ApiImpl[34] = function(self, target, transform, options)
+    return ApiImpl[5](ApiImpl[31](self), target, transform, options)
+end
+
+ApiImpl[35] = function(self, target, targetValue, options)
+    return ApiImpl[6](ApiImpl[31](self), target, targetValue, options)
+end
+
+ApiImpl[36] = function(self, target, targetValue, options)
+    return ApiImpl[7](ApiImpl[31](self), target, targetValue, options)
+end
+
+ApiImpl[37] = function(self, target, predicate, targetValue, options)
+    return ApiImpl[8](ApiImpl[31](self),
+        target,
+        predicate,
+        targetValue,
+        options
+    )
+end
+
+ApiImpl[38] = function(self, targets, transform, options)
+    return ApiImpl[9](ApiImpl[31](self), targets, transform, options)
+end
+
+ApiImpl[39] = function(self, targets, targetValue, options)
+    return ApiImpl[10](ApiImpl[31](self),
+        targets,
+        targetValue,
+        options
+    )
+end
+
+ApiImpl[40] = function(self, target, options)
+    return ApiImpl[11](ApiImpl[31](self), target, options)
+end
+
+ApiImpl[41] = function(self,
+    target,
+    forwardTransform,
+    backwardTransform,
+    options
+)
+    return ApiImpl[12](ApiImpl[31](self),
+        target,
+        forwardTransform,
+        backwardTransform,
+        options
+    )
+end
+
+ApiImpl[42] = function(self, group)
+    assertObject(self, "Option")
+    assertObject(group, "ExclusiveGroup")
+    ApiImpl[19](group, self)
+    return self
+end
+
+
+
+local function dependencyMatches(dependency)
+    local value = ApiImpl[2](dependency.Source)
+    if dependency.Predicate then
+        local ok, result = pcall(
+            dependency.Predicate,
+            copyLinkedValue(value),
+            dependency.Source,
+            dependency.Child
+        )
+        return ok and result == true
+    end
+    return linkedValuesEqual(value, dependency.Expected)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local function resolvedOptionVisibility(option, seen)
+    if option._manualVisible == false then
+        return false
+    end
+    for _, dependency in ipairs(option._visibilityDependencies or {}) do
+        if dependency.Connected then
+            if not dependencyMatches(dependency) then
+                return false
+            end
+            local sourceOption = dependency.SourceOption
+            if sourceOption and not sourceOption._destroyed then
+                seen = seen or {}
+                if not seen[sourceOption] then
+                    seen[sourceOption] = true
+                    if not resolvedOptionVisibility(sourceOption, seen) then
+                        return false
+                    end
+                end
+            end
+        end
+    end
+    return true
+end
+
+ApiImpl[43] = function(self)
+    
+    
+    
+    
+    local hostWidth = #(self._visibilityDependencies or {}) > 0 and 0.96 or 1
+    if self._subOfParent then
+        hostWidth = 0.9
+    end
+    self._visibilityHostWidth = hostWidth
+    if self._visibilityHost and self._visibilityHost.Parent then
+        local oldSize = self._visibilityHost.Size
+        self._visibilityHost.Size = UDim2.new(
+            hostWidth,
+            0,
+            oldSize.Y.Scale,
+            oldSize.Y.Offset
+        )
+        return self._visibilityHost
+    end
+
+    local row = self.Instance
+    local parent = row and row.Parent
+    if not row or not parent then
+        return row
+    end
+
+    local host = Instance.new("Frame")
+    host.Name = row.Name .. "CollapsibleContent"
+    host.Active = false
+    host.BackgroundTransparency = 1
+    host.BorderSizePixel = 0
+    host.ClipsDescendants = true
+    host.LayoutOrder = row.LayoutOrder
+    host.Size = UDim2.new(
+        hostWidth,
+        0,
+        0,
+        math.max(1, row.AbsoluteSize.Y)
+    )
+    host.Visible = row.Visible
+    host.ZIndex = row.ZIndex
+    host.Parent = parent
+
+    row.LayoutOrder = 1
+    row.AnchorPoint = Vector2.new(0.5, 0)
+    row.Position = UDim2.fromScale(0.5, 0)
+    row.Visible = true
+    row.Parent = host
+
+    self._visibilityHost = host
+    self._visibilityAnimating = false
+    self._visibilityHostConnections = self._visibilityHostConnections or {}
+
+    local function syncExpandedHeight()
+        if self._destroyed or not host.Parent or not row.Parent then
+            return
+        end
+        local height = math.max(1, row.AbsoluteSize.Y, row.Size.Y.Offset)
+        self._visibilityExpandedHeight = height
+        if not self._visibilityAnimating and self._resolvedVisible ~= false then
+            host.Size = UDim2.new(
+                self._visibilityHostWidth or 1,
+                0,
+                0,
+                height
+            )
+        end
+    end
+    table.insert(
+        self._visibilityHostConnections,
+        row:GetPropertyChangedSignal("AbsoluteSize"):Connect(syncExpandedHeight)
+    )
+    table.insert(
+        self._visibilityHostConnections,
+        row:GetPropertyChangedSignal("Size"):Connect(syncExpandedHeight)
+    )
+    syncExpandedHeight()
+    return host
+end
+
+ApiImpl[44] = function(self, animated)
+    assertObject(self, "Option")
+    local previous = self._resolvedVisible
+    local visible = resolvedOptionVisibility(self)
+    self._resolvedVisible = visible
+
+    
+    
+    
+    
+    
+    
+    
+    
+    if previous ~= visible and not self._cascadingVisibility then
+        self._cascadingVisibility = true
+        for _, dependency in ipairs(self._visibilityDependents or {}) do
+            local child = dependency.Child
+            if dependency.Connected
+                and child
+                and not child._destroyed
+            then
+                ApiImpl[44](child, animated)
+            end
+        end
+        self._cascadingVisibility = false
+    end
+
+    local host = ApiImpl[43](self)
+    if not host then
+        return self
+    end
+
+    
+    
+    if self._preSearchVisible ~= nil then
+        self._preSearchVisible = visible
+        host.Visible = self._searchMatched == true and visible
+        task.defer(self.Section._refreshHeight)
+        return self
+    end
+
+    self._visibilityRevision = (self._visibilityRevision or 0) + 1
+    local revision = self._visibilityRevision
+    local wasAnimating = self._visibilityTween ~= nil
+    if self._visibilityTween then
+        self._visibilityTween:Cancel()
+        self._visibilityTween = nil
+    end
+    if host.Visible == visible and not wasAnimating then
+        return self
+    end
+    if not visible and self._controller.Close then
+        self._controller.Close()
+    end
+
+    local row = self.Instance
+    local expandedHeight = math.max(
+        1,
+        self._visibilityExpandedHeight or 0,
+        row and row.AbsoluteSize.Y or 0,
+        row and row.Size.Y.Offset or 0
+    )
+    self._visibilityExpandedHeight = expandedHeight
+    local targetSize = UDim2.new(
+        self._visibilityHostWidth or 1,
+        0,
+        0,
+        visible and expandedHeight or 0
+    )
+
+    if visible then
+        
+        
+        host.Visible = true
+    end
+    if animated == false then
+        self._visibilityAnimating = false
+        host.Size = targetSize
+        host.Visible = visible
+        task.defer(self.Section._refreshHeight)
+        return self
+    end
+
+    self._visibilityAnimating = true
+    local info = TweenInfo.new(
+        0.28,
+        Enum.EasingStyle.Quint,
+        Enum.EasingDirection.Out
+    )
+    self._visibilityTween = TweenService:Create(host, info, {
+        Size = targetSize,
+    })
+    self._visibilityTween.Completed:Connect(function()
+        if self._destroyed
+            or revision ~= self._visibilityRevision
+            or not self._visibilityHost
+        then
+            return
+        end
+        self._visibilityTween = nil
+        self._visibilityAnimating = false
+        host.Visible = visible
+        if visible then
+            host.Size = UDim2.new(
+                self._visibilityHostWidth or 1,
+                0,
+                0,
+                self._visibilityExpandedHeight or expandedHeight
+            )
+        end
+        self.Section._refreshHeight()
+        if self.Section._stabilizeLayout then
+            self.Section._stabilizeLayout()
+        end
+    end)
+    self._visibilityTween:Play()
+    task.defer(self.Section._refreshHeight)
+    return self
+end
+
+ApiImpl[45] = function(self, visible, animated)
+    assertObject(self, "Option")
+    self._manualVisible = visible == true
+    return ApiImpl[44](self, animated)
+end
+
+ApiImpl[46] = function(self)
+    assertObject(self, "Option")
+    local visibilityObject = self._visibilityHost or self.Instance
+    return visibilityObject.Visible == true
+end
+
+
+
+
+
+ApiImpl[47] = function(self, source, options)
+    assertObject(self, "Option")
+    options = type(options) == "table" and options or {}
+    if type(source) == "string" then
+        source = self.Section._optionByName[source]
+    end
+    local sourceOption = source
+    local sourceState = resolveState(source)
+    assert(
+        sourceState.Window == self.Section.Tab.Window,
+        "Visibility source and Feature must belong to the same Window"
+    )
+    if sourceOption and sourceOption._kind == "Option" then
+        assert(
+            sourceOption.Type == "toggle" or sourceOption.Type == "switch",
+            "ShowWhen source must be a Toggle/Switch or State"
+        )
+    end
+
+    local expected = options.Value
+    if expected == nil then
+        expected = options.Equals
+    end
+    if expected == nil then
+        expected = true
+    end
+    local dependency = {
+        Child = self,
+        Connected = true,
+        Expected = copyLinkedValue(expected),
+        Predicate = type(options.Predicate) == "function"
+            and options.Predicate
+            or nil,
+        Source = sourceState,
+        
+        
+        
+        SourceOption = sourceOption
+            and sourceOption._kind == "Option"
+            and sourceOption
+            or nil,
+    }
+    function dependency:Disconnect()
+        if not self.Connected then
+            return
+        end
+        self.Connected = false
+        if self.Connection then
+            self.Connection:Disconnect()
+        end
+        if self.Child and not self.Child._destroyed then
+            ApiImpl[44](self.Child, false)
+        end
+    end
+
+    table.insert(self._visibilityDependencies, dependency)
+    if sourceOption and sourceOption._kind == "Option" then
+        table.insert(sourceOption._visibilityDependents, dependency)
+    end
+    dependency.Connection = ApiImpl[4](sourceState, function()
+        if dependency.Connected and not self._destroyed then
+            ApiImpl[44](self, options.Animated ~= false)
+        end
+    end)
+    ApiImpl[44](self, false)
+    return dependency
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ApiImpl[48] = function(self, source)
+    assertObject(self, "Option")
+    if type(source) == "string" then
+        source = self.Section._optionByName[source]
+    end
+    assertObject(source, "Option")
+    assert(
+        source.Section.Tab.Window == self.Section.Tab.Window,
+        "SubOf parent and child must belong to the same Window"
+    )
+    assert(source ~= self, "An option cannot be a sub-option of itself")
+
+    self._subOfParent = source
+    source._subOptions = source._subOptions or {}
+    table.insert(source._subOptions, self)
+
+    
+    
+    
+    
+    if not self._subAspectApplied then
+        local aspect = self.Instance
+            and self.Instance:FindFirstChildOfClass("UIAspectRatioConstraint")
+        if aspect then
+            self._subAspectApplied = true
+            aspect.AspectRatio = aspect.AspectRatio * 1.16
+        end
+    end
+
+    
+    
+    
+    ApiImpl[44](self, false)
+    return self
+end
+
+
+
+ApiImpl[49] = function(self)
+    assertObject(self, "Option")
+    local list = {}
+    for index, child in ipairs(self._subOptions or {}) do
+        list[index] = child
+    end
+    return list
+end
+
+ApiImpl[50] = function(self, ...)
+    assertObject(self, "Option")
+    for index = 1, select("#", ...) do
+        local child = select(index, ...)
+        assertObject(child, "Option")
+        ApiImpl[48](child, self)
+    end
+    return self
+end
+
+ApiImpl[51] = function(self, ...)
+    assertObject(self, "Option")
+    assert(
+        self.Type == "toggle" or self.Type == "switch",
+        "ShowOptions can only be called from a Toggle/Switch"
+    )
+    for index = 1, select("#", ...) do
+        local child = select(index, ...)
+        assertObject(child, "Option")
+        ApiImpl[47](child, self)
+    end
+    return self
+end
+
+ApiImpl[52] = function(self)
+    assertObject(self, "Option")
+    local getter = self._controller.GetNote
+    assert(getter, ("%s khong ho tro Note"):format(self.Type))
+    return getter()
+end
+
+ApiImpl[53] = function(self, note)
+    assertObject(self, "Option")
+    local setter = self._controller.SetNote
+    assert(setter, ("%s khong ho tro SetNote()"):format(self.Type))
+    setter(note)
+    task.defer(self.Section._refreshHeight)
+    if self.Section._stabilizeLayout then
+        self.Section._stabilizeLayout()
+    end
+    return self
+end
+
+ApiImpl[54] = function(self, options, selectedValue, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetOptions
+    assert(setter, ("%s khong ho tro SetOptions()"):format(self.Type))
+    setter(options, selectedValue, false)
+    ApiImpl[30](self, ApiImpl[29](self), fireCallback)
+    return self
+end
+
+ApiImpl[55] = function(self)
+    assertObject(self, "Option")
+    local getter = self._controller.GetRange
+    assert(getter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    return getter()
+end
+
+ApiImpl[56] = function(self, minimum, maximum, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetRange
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(minimum, maximum, false)
+    ApiImpl[30](self, ApiImpl[29](self), fireCallback)
+    return self
+end
+
+ApiImpl[57] = function(self, minimum, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetMin
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(minimum, false)
+    ApiImpl[30](self, ApiImpl[29](self), fireCallback)
+    return self
+end
+
+ApiImpl[58] = function(self, maximum, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetMax
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(maximum, false)
+    ApiImpl[30](self, ApiImpl[29](self), fireCallback)
+    return self
+end
+
+ApiImpl[59] = function(self)
+    assertObject(self, "Option")
+    local getter = self._controller.GetDecimals
+    assert(getter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    return getter()
+end
+
+ApiImpl[60] = function(self, enabled, decimalPlaces, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetDecimals
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(enabled, decimalPlaces, false)
+    ApiImpl[30](self, ApiImpl[29](self), fireCallback)
+    return self
+end
+
+ApiImpl[61] = function(self, increment, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetIncrement
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(increment, false)
+    ApiImpl[30](self, ApiImpl[29](self), fireCallback)
+    return self
+end
+
+
+
+
+
+ApiImpl[62] = function(self)
+    assertObject(self, "Option")
+    local getter = self._controller.GetUnit
+    assert(getter, ("%s khong ho tro Unit"):format(self.Type))
+    return getter()
+end
+
+ApiImpl[63] = function(self, unit, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetUnit
+    assert(setter, ("%s khong ho tro Unit"):format(self.Type))
+    setter(unit, fireCallback)
+    return self
+end
+
+ApiImpl[64] = function(self, units, selected, fireCallback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetUnits
+    assert(setter, ("%s khong ho tro Unit"):format(self.Type))
+    setter(units, selected, fireCallback)
+    return self
+end
+
+ApiImpl[65] = function(self, enabled)
+    assertObject(self, "Option")
+    local setter = self._controller.SetUnitEnabled
+    assert(setter, ("%s khong ho tro Unit"):format(self.Type))
+    setter(enabled)
+    return self
+end
+
+ApiImpl[66] = function(self, enabled)
+    assertObject(self, "Option")
+    local setter = self._controller.SetUnitSelectorEnabled
+    assert(setter, ("%s khong ho tro Unit"):format(self.Type))
+    setter(enabled)
+    return self
+end
+
+ApiImpl[67] = function(self, formatFn)
+    assertObject(self, "Option")
+    local setter = self._controller.SetUnitFormat
+    assert(setter, ("%s khong ho tro Unit"):format(self.Type))
+    setter(formatFn)
+    return self
+end
+
+ApiImpl[68] = function(self, callback)
+    assertObject(self, "Option")
+    local setter = self._controller.SetUnitCallback
+    assert(setter, ("%s khong ho tro Unit"):format(self.Type))
+    setter(callback)
+    return self
+end
+
+ApiImpl[69] = function(self, formatFn)
+    assertObject(self, "Option")
+    local setter = self._controller.SetValueFormat
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(formatFn)
+    return self
+end
+
+ApiImpl[70] = function(self, parseFn)
+    assertObject(self, "Option")
+    local setter = self._controller.SetValueParse
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(parseFn)
+    return self
+end
+
+ApiImpl[71] = function(self)
+    assertObject(self, "Option")
+    local getter = self._controller.GetValueColors
+    assert(getter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    return getter()
+end
+
+ApiImpl[72] = function(self, colors)
+    assertObject(self, "Option")
+    local setter = self._controller.SetValueColors
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(colors)
+    return self
+end
+
+ApiImpl[73] = function(self, enabled)
+    assertObject(self, "Option")
+    local setter = self._controller.SetValueColorEnabled
+    assert(setter, ("%s khong phai Slider/Slidebar"):format(self.Type))
+    setter(enabled)
+    return self
+end
+
+
+
+
+ApiImpl[74] = function(self)
+    assertObject(self, "Option")
+    return ("%s > %s > %s"):format(
+        self.Section.Tab.Name,
+        self.Section.Name,
+        self.Name
+    )
+end
+
+ApiImpl[75] = function(self)
+    assertObject(self, "Option")
+    return self._quickName or self.DisplayName or self.Name
+end
+
+ApiImpl[76] = function(self, name)
+    assertObject(self, "Option")
+    self._quickName = name ~= nil and tostring(name) or nil
+    if Runtime.quickRefreshHook then
+        Runtime.quickRefreshHook()
+    end
+    return self
+end
+
+ApiImpl[77] = function(self)
+    assertObject(self, "Option")
+    return self._keybindGroup
+end
+
+ApiImpl[78] = function(self, name)
+    assertObject(self, "Option")
+    self._keybindGroup = name ~= nil and tostring(name) or nil
+    return self
+end
+
+ApiImpl[79] = function(self)
+    assertObject(self, "Option")
+    return self._quickIgnored ~= true
+end
+
+ApiImpl[80] = function(self, enabled)
+    assertObject(self, "Option")
+    self._quickIgnored = enabled == false
+    if Runtime.quickRefreshHook then
+        Runtime.quickRefreshHook()
+    end
+    return self
+end
+
+ApiImpl[81] = function(self)
+    assertObject(self, "Option")
+    local press = self._controller.Press
+    assert(press, ("%s khong phai Button"):format(self.Type))
+    press()
+    return self
+end
+
+
+
+
+ApiImpl[82] = function(self)
+    assertObject(self, "Option")
+    local apply = self._controller.Apply
+    assert(apply, ("%s khong ho tro Apply()"):format(self.Type))
+    apply()
+    return self
+end
+
+ApiImpl[83] = function(self, text)
+    assertObject(self, "Option")
+    local setter = self._controller.SetHint
+    assert(setter, ("%s khong ho tro SetHint()"):format(self.Type))
+    setter(text)
+    return self
+end
+
+ApiImpl[84] = function(self, text)
+    assertObject(self, "Option")
+    local setter = self._controller.SetActionText
+    assert(setter, ("%s khong ho tro SetActionText()"):format(self.Type))
+    setter(text)
+    return self
+end
+
+ApiImpl[85] = function(self)
+    assertObject(self, "Option")
+    local section = self.Section
+    self._destroyed = true
+
+    self._visibilityRevision = (self._visibilityRevision or 0) + 1
+    if self._visibilityTween then
+        self._visibilityTween:Cancel()
+        self._visibilityTween = nil
+    end
+    for _, connection in ipairs(self._visibilityHostConnections or {}) do
+        if connection.Connected then
+            connection:Disconnect()
+        end
+    end
+    self._visibilityHostConnections = {}
+    for _, dependency in ipairs(self._visibilityDependencies or {}) do
+        dependency.Connected = false
+        if dependency.Connection then
+            dependency.Connection:Disconnect()
+        end
+    end
+    self._visibilityDependencies = {}
+    for _, dependency in ipairs(self._visibilityDependents or {}) do
+        dependency:Disconnect()
+    end
+    self._visibilityDependents = {}
+
+    if self._controller.Close then
+        self._controller.Close()
+    end
+    if self._controller.Destroy then
+        local ok, problem = pcall(self._controller.Destroy)
+        if not ok then
+        end
+    end
+
+    local state = self.State
+    if state then
+        state._views[self] = nil
+        choosePrimaryOption(state)
+        self.State = nil
+        self._stateBinding = nil
+        if not state._registered
+            and next(state._views) == nil
+            and not state._destroyed
+        then
+            ApiImpl[13](state)
+        end
+    end
+
+    section._optionByName[self.Name] = nil
+    for index, option in ipairs(section.Options) do
+        if option == self then
+            table.remove(section.Options, index)
+            break
+        end
+    end
+    if self._visibilityHost then
+        self._visibilityHost:Destroy()
+        self._visibilityHost = nil
+        self.Instance = nil
+    elseif self.Instance then
+        self.Instance:Destroy()
+        self.Instance = nil
+    end
+    self._controller = {}
+    if not section._destroyed then
+        task.defer(section._refreshHeight)
+    end
+end
+
+
+local function bindResponsiveFixedRowHeight(section, row)
+    local callback = Protected[1]
+    assert(type(callback) == "function", "Protected UI engine is not ready.")
+    return callback(section, row)
+end
+
+
+local function addRowToSection(section, optionType, row, controller)
+    assertObject(section, "Section")
+    section._nextOptionOrder = section._nextOptionOrder + 1
+    row.LayoutOrder = section._nextOptionOrder
+    row.Parent = section._content
+    local cleanupResponsive = bindResponsiveFixedRowHeight(section, row)
+    
+    
+    local rowSizeConnection = row:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+        section._refreshHeight
+    )
+    controller = controller or {}
+    local originalDestroy = controller.Destroy
+    local controllerDestroyed = false
+    controller.Destroy = function()
+        if controllerDestroyed then
+            return
+        end
+        controllerDestroyed = true
+        if originalDestroy then
+            originalDestroy()
+        end
+        cleanupResponsive()
+        if rowSizeConnection.Connected then
+            rowSizeConnection:Disconnect()
+        end
+    end
+    task.defer(section._refreshHeight)
+    if section._stabilizeLayout then
+        section._stabilizeLayout()
+    end
+    return createOptionHandle(section, optionType, row, controller)
+end
+
+
+local optionFactories = {
+    [1] = function(config) return createLibraryButtonRow(config) end,
+    [2] = function(config) return createLibraryDropdownRow(config, false) end,
+    [3] = function(config) return createLibraryDropdownRow(config, true) end,
+    [4] = function(config) return createLibraryDropdownRow(config, false, true) end,
+    [5] = function(config) return createLibraryDropdownRow(config, true, true) end,
+    [6] = function(config) return createLibraryInputRow(config) end,
+    [7] = function(config) return createLibraryTextRow(config) end,
+    [8] = function(config) return createLibrarySliderRow(config) end,
+    [9] = function(config)
+        if config.Note ~= nil or config.Description ~= nil then
+            return createLibraryNoteToggleRow(config)
+        end
+        return createLibraryToggleRow(config)
+    end,
+}
+
+optionFactories[10] = (function()
+    local DEFAULT_STYLE = {
+        TextScale = 1,
+        TitleScale = 1,
+        Font = "Gotham",
+        LineHeight = 1.16,
+        Padding = 1,
+        Alignment = "Left",
+        BackgroundTransparency = 0,
+        TextColor = Color3.fromRGB(235, 235, 235),
+        TextStrokeTransparency = 0.7,
+        GroupColor = Runtime.Theme.Accent,
+        GroupSpacing = true,
+        MaxLines = 0,
+        ImageLines = 2.3,
+        ItemSpacing = 0.35,
+        SpotlightLines = 5,
+        SpotlightBackgroundColor = Color3.fromRGB(0, 0, 0),
+        SpotlightBackgroundTransparency = 1,
+        SpotlightModelScale = 1,
+        SpotlightDividerColor = false,
+        ScrollBarColor = Color3.fromRGB(255, 255, 255),
+        ItemBackgroundColor = Color3.fromRGB(255, 255, 255),
+        ItemBackgroundTransparency = 1,
+        SelectedBackgroundColor = Runtime.Theme.Accent,
+        SelectedBackgroundTransparency = 0.86,
+        HoverBackgroundColor = Color3.fromRGB(255, 255, 255),
+        HoverBackgroundTransparency = 0.93,
+        TitlePartSpacing = 0.34,
+    }
+
+    local BODY_RATIO = 0.026
+    local SPIN_RATE = 20
+    local SPIN_SPEED = math.rad(28)
+    local VISIBILITY_CHECK = 0.5
+
+    local SELECTED_COLOR = Runtime.Theme.Accent
+    local HOVER_COLOR = Color3.fromRGB(255, 255, 255)
+    local DEFAULT_IMAGE_COLOR = Color3.fromRGB(90, 90, 110)
+
+    local FONTS = {
+        ["gotham"] = normalTextFont,
+        ["gotham medium"] = Font.new(
+            "rbxasset://fonts/families/GothamSSm.json",
+            Enum.FontWeight.Medium,
+            Enum.FontStyle.Normal
+        ),
+        ["fredoka"] = Font.new(
+            "rbxasset://fonts/families/FredokaOne.json",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal
+        ),
+        ["code"] = Font.new(
+            "rbxasset://fonts/families/RobotoMono.json",
+            Enum.FontWeight.Bold,
+            Enum.FontStyle.Normal
+        ),
+    }
+
+    local ALIGNMENTS = {
+        left = Enum.TextXAlignment.Left,
+        center = Enum.TextXAlignment.Center,
+        right = Enum.TextXAlignment.Right,
+    }
+
+    local function resolveFont(value)
+        if typeof(value) == "Font" then
+            return value
+        end
+        if typeof(value) == "EnumItem" then
+            local ok, font = pcall(Font.fromEnum, value)
+            if ok then
+                return font
+            end
+        end
+        return FONTS[string.lower(tostring(value))] or normalTextFont
+    end
+
+    local function mergeStyle(style, patch)
+        if type(patch) ~= "table" then
+            return
+        end
+        for key, value in pairs(patch) do
+            if DEFAULT_STYLE[key] ~= nil then
+                style[key] = value
+            end
+        end
+    end
+
+    local function toHex(color, fallback)
+        if typeof(color) == "Color3" then
+            return "#" .. color:ToHex()
+        end
+        if type(color) == "string" and color ~= "" then
+            return color
+        end
+        return fallback
+    end
+
+    local function toColor3(value, fallback)
+        if typeof(value) == "Color3" then
+            return value
+        end
+        if type(value) == "string" then
+            local ok, color = pcall(Color3.fromHex, value)
+            if ok then
+                return color
+            end
+        end
+        return fallback
+    end
+
+    local function escapeText(text)
+        return (string.gsub(tostring(text), "[<>&]", {
+            ["<"] = "&lt;",
+            [">"] = "&gt;",
+            ["&"] = "&amp;",
+        }))
+    end
+
+    local function plainText(text)
+        local plain = string.gsub(tostring(text), "<[^>]*>", "")
+        plain = string.gsub(plain, "&lt;", "<")
+        plain = string.gsub(plain, "&gt;", ">")
+        plain = string.gsub(plain, "&amp;", "&")
+        return string.lower(plain)
+    end
+
+    local function splitLines(text)
+        local lines = {}
+        for line in string.gmatch(tostring(text) .. "\n", "(.-)\n") do
+            table.insert(lines, { Text = line })
+        end
+        return lines
+    end
+
+    local function normalizeItem(item)
+        if type(item) == "table" then
+            return {
+                Text = tostring(item.Text or ""),
+                Title = item.Title ~= nil and tostring(item.Title) or nil,
+                Gradient = item.Gradient,
+                TitleParts = item.TitleParts,
+                TopRightText = item.TopRightText ~= nil and tostring(item.TopRightText) or nil,
+                Image = item.Image ~= nil and tostring(item.Image) or nil,
+                ImageColor = item.ImageColor,
+                Id = item.Id,
+            }
+        end
+        return { Text = tostring(item) }
+    end
+
+    -- Generic title-part data used by callers that need independently styled
+    -- pieces (for example two labels with different fonts and gradients).
+    -- This is rendering capability only; callers own all feature semantics.
+    local function normalizeTitleParts(parts)
+        local list = {}
+        if type(parts) ~= "table" then
+            return list
+        end
+        for _, part in ipairs(parts) do
+            if type(part) == "table" and part.Text ~= nil then
+                table.insert(list, {
+                    Text = tostring(part.Text),
+                    Color = part.Color,
+                    Gradient = part.Gradient,
+                    StrokeGradient = part.StrokeGradient,
+                    Font = part.Font,
+                    Scale = part.Scale,
+                    StrokeColor = part.StrokeColor,
+                    StrokeTransparency = part.StrokeTransparency,
+                    StrokeThickness = part.StrokeThickness,
+                })
+            end
+        end
+        return list
+    end
+
+    local function normalizeItems(items)
+        local list = {}
+        if type(items) == "table" then
+            for _, item in ipairs(items) do
+                table.insert(list, normalizeItem(item))
+            end
+        end
+        return list
+    end
+
+    local function normalizeGroups(groups)
+        local list = {}
+        if type(groups) == "table" then
+            for _, group in ipairs(groups) do
+                if type(group) == "table" then
+                    table.insert(list, {
+                        Title = tostring(group.Title or group.Name or ""),
+                        Color = group.Color,
+                        Items = normalizeItems(group.Items),
+                    })
+                end
+            end
+        end
+        return list
+    end
+
+    local function cloneForViewport(template)
+        if typeof(template) ~= "Instance" then
+            return nil
+        end
+        local ok, copy = pcall(function()
+            return template:Clone()
+        end)
+        if not ok or not copy then
+            return nil
+        end
+        for _, descendant in ipairs(copy:GetDescendants()) do
+            if descendant:IsA("LuaSourceContainer")
+                or descendant:IsA("ParticleEmitter")
+                or descendant:IsA("Trail")
+                or descendant:IsA("Beam")
+                or descendant:IsA("Light")
+                or descendant:IsA("Sound")
+                or descendant:IsA("Fire")
+                or descendant:IsA("Smoke")
+                or descendant:IsA("Sparkles")
+            then
+                descendant:Destroy()
+            elseif descendant:IsA("BasePart") then
+                descendant.Anchored = true
+                descendant.CanCollide = false
+                descendant.CastShadow = false
+            end
+        end
+        if copy:IsA("BasePart") then
+            copy.Anchored = true
+        end
+        return copy
+    end
+
+    local function isShown(gui)
+        if not gui:IsDescendantOf(game) then
+            return false
+        end
+        local node = gui
+        while node do
+            if node:IsA("GuiObject") and not node.Visible then
+                return false
+            end
+            if node:IsA("LayerCollector") then
+                return node.Enabled
+            end
+            node = node.Parent
+        end
+        return false
+    end
+
+    local function makeCorner(parent)
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 4)
+        corner.Parent = parent
+        return corner
+    end
+
+    local function makeFixedStroke(parent, color)
+        local stroke = Instance.new("UIStroke")
+        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        stroke.Color = color
+        stroke.LineJoinMode = Enum.LineJoinMode.Round
+        stroke.Thickness = 1
+        stroke.Parent = parent
+        return stroke
+    end
+
+    local function makeTextStroke(label)
+        local stroke = Instance.new("UIStroke")
+        stroke.Name = "TextOutline"
+        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+        stroke.Color = Runtime.Theme.Stroke
+        stroke.LineJoinMode = Enum.LineJoinMode.Round
+        pcall(function()
+            stroke.StrokeSizingMode = Enum.StrokeSizingMode.FixedSize
+        end)
+        stroke.Thickness = 1
+        stroke.Transparency = 0
+        stroke.Parent = label
+        return stroke
+    end
+
+    local function applyGradient(label, source)
+        local existing = label:FindFirstChild("ChilliGradient")
+        if source == nil then
+            if existing then
+                existing:Destroy()
+            end
+            return
+        end
+        if typeof(source) == "Instance" and source:IsA("UIGradient") then
+            if existing then
+                existing:Destroy()
+            end
+            local ok, copy = pcall(function()
+                return source:Clone()
+            end)
+            if ok and copy then
+                copy.Name = "ChilliGradient"
+                copy.Parent = label
+            end
+            return
+        end
+        if typeof(source) == "ColorSequence" then
+            local gradient = existing
+            if not gradient then
+                gradient = Instance.new("UIGradient")
+                gradient.Name = "ChilliGradient"
+                gradient.Parent = label
+            end
+            gradient.Color = source
+        end
+    end
+
+    local function createLibraryParagraphRow(config)
+        local style = {}
+        for key, value in pairs(DEFAULT_STYLE) do
+            style[key] = value
+        end
+        mergeStyle(style, config.Style)
+
+        local content = {
+            Title = config.Title ~= nil and tostring(config.Title) or tostring(config.Name),
+            ShowTitle = config.ShowTitle ~= false,
+            Header = config.Header ~= nil and tostring(config.Header) or "",
+            Text = "",
+            Items = {},
+            Groups = nil,
+            SearchEnabled = config.Search == true,
+            SearchPlaceholder = tostring(config.SearchPlaceholder or "Search..."),
+            Query = "",
+            Selected = config.Selected,
+            Spotlight = nil,
+        }
+        if type(config.Groups) == "table" then
+            content.Groups = normalizeGroups(config.Groups)
+        elseif type(config.Items) == "table" then
+            content.Items = normalizeItems(config.Items)
+        else
+            content.Text = tostring(config.Text or config.Value or "")
+            content.Items = splitLines(content.Text)
+        end
+        local onItemClick = type(config.OnItemClick) == "function" and config.OnItemClick or nil
+
+        local row = createLibraryTextRow({
+            Name = config.Name,
+            Text = content.Title,
+        })
+        local labelAspect = row:FindFirstChildOfClass("UIAspectRatioConstraint")
+        if labelAspect then
+            labelAspect:Destroy()
+        end
+        row:SetAttribute("ChilliResponsiveAspect", nil)
+        row.ClipsDescendants = false
+        row.Size = UDim2.new(ROW_WIDTH_SCALE, 0, 0, 1)
+
+        local main = row:FindFirstChild("Main")
+        local title = main:FindFirstChild("Label")
+        local plateStroke = main:FindFirstChildOfClass("UIStroke")
+        main.ClipsDescendants = true
+        title.AnchorPoint = Vector2.new(0, 0)
+
+        local function hostWidthScale()
+            if RESIZE_KEEPS_OPTION_WIDTH then
+                return ROW_WIDTH_SCALE / ContentScale.X
+            end
+            return ROW_WIDTH_SCALE
+        end
+
+        local searchField = Instance.new("Frame")
+        searchField.Name = "SearchField"
+        searchField.Active = false
+        searchField.AnchorPoint = Vector2.new(0.5, 0.5)
+        searchField.BackgroundColor3 = Runtime.Theme.Field
+        searchField.BackgroundTransparency = 0
+        searchField.BorderSizePixel = 0
+        searchField.Visible = false
+        searchField.ZIndex = 4
+        searchField.Parent = main
+        addScaledStroke(searchField, Enum.ApplyStrokeMode.Border, 0.1)
+
+        local searchUnderline = Instance.new("Frame")
+        searchUnderline.Name = "Underline"
+        searchUnderline.Active = false
+        searchUnderline.AnchorPoint = Vector2.new(0.5, 1)
+        searchUnderline.BackgroundColor3 = Runtime.Theme.Accent
+        searchUnderline.BorderSizePixel = 0
+        searchUnderline.Position = UDim2.fromScale(0.5, 1)
+        searchUnderline.Size = UDim2.fromScale(0, 0.11)
+        searchUnderline.ZIndex = 6
+        searchUnderline.Parent = searchField
+
+        local searchBox = Instance.new("TextBox")
+        searchBox.Name = "SearchInput"
+        searchBox.Active = true
+        searchBox.AnchorPoint = Vector2.new(0.5, 0.5)
+        searchBox.BackgroundTransparency = 1
+        searchBox.BorderSizePixel = 0
+        searchBox.ClearTextOnFocus = false
+        searchBox.MultiLine = false
+        searchBox.Position = UDim2.fromScale(0.5, 0.5)
+        searchBox.Size = UDim2.fromScale(0.9, 0.56)
+        searchBox.Text = ""
+        searchBox.PlaceholderText = content.SearchPlaceholder
+        searchBox.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
+        searchBox.TextXAlignment = Enum.TextXAlignment.Center
+        searchBox.TextYAlignment = Enum.TextYAlignment.Center
+        searchBox.ZIndex = 5
+        searchBox.Parent = searchField
+        applyPlainTextStyle(searchBox)
+
+        local function tweenSearchFocus(focused)
+            TweenService:Create(searchField, TweenInfo.new(0.16), {
+                BackgroundColor3 = focused and Runtime.Theme.ItemHover or Runtime.Theme.Field,
+            }):Play()
+            TweenService:Create(
+                searchUnderline,
+                TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+                { Size = UDim2.fromScale(focused and 1 or 0, 0.11) }
+            ):Play()
+        end
+
+        local spotFrame = Instance.new("Frame")
+        spotFrame.Name = "Spotlight"
+        spotFrame.Active = false
+        spotFrame.BackgroundTransparency = 1
+        spotFrame.BorderSizePixel = 0
+        spotFrame.Visible = false
+        spotFrame.ZIndex = 5
+        spotFrame.Parent = main
+
+        local spotView = Instance.new("ViewportFrame")
+        spotView.Name = "Model"
+        spotView.Ambient = Color3.fromRGB(170, 170, 180)
+        spotView.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        spotView.BackgroundTransparency = 1
+        spotView.BorderSizePixel = 0
+        spotView.LightColor = Color3.fromRGB(255, 255, 255)
+        spotView.LightDirection = Vector3.new(-0.6, -1, -0.4)
+        spotView.ZIndex = 6
+        spotView.Parent = spotFrame
+        local spotViewCorner = makeCorner(spotView)
+        local spotCamera = Instance.new("Camera")
+        spotCamera.FieldOfView = 40
+        spotCamera.Parent = spotView
+        spotView.CurrentCamera = spotCamera
+
+        local spotText = Instance.new("TextLabel")
+        spotText.Name = "Info"
+        spotText.Active = false
+        spotText.BackgroundTransparency = 1
+        spotText.BorderSizePixel = 0
+        spotText.RichText = true
+        spotText.Text = ""
+        spotText.TextScaled = false
+        spotText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        spotText.TextWrapped = true
+        spotText.TextXAlignment = Enum.TextXAlignment.Left
+        spotText.TextYAlignment = Enum.TextYAlignment.Center
+        spotText.ZIndex = 6
+        spotText.Parent = spotFrame
+
+        local spotTitle = Instance.new("TextLabel")
+        spotTitle.Name = "SpotlightTitle"
+        spotTitle.Active = false
+        spotTitle.BackgroundTransparency = 1
+        spotTitle.BorderSizePixel = 0
+        spotTitle.FontFace = normalTextFont
+        spotTitle.Text = ""
+        spotTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+        spotTitle.TextScaled = false
+        spotTitle.TextStrokeTransparency = 1
+        spotTitle.TextWrapped = false
+        spotTitle.TextXAlignment = Enum.TextXAlignment.Left
+        spotTitle.TextYAlignment = Enum.TextYAlignment.Center
+        spotTitle.Visible = false
+        spotTitle.ZIndex = 6
+        spotTitle.Parent = spotFrame
+        local spotTitleStroke = makeTextStroke(spotTitle)
+        local spotTitleParts = {
+            { Label = spotTitle, Stroke = spotTitleStroke, GradientSource = nil, Spec = nil },
+        }
+
+        local spotDivider = Instance.new("Frame")
+        spotDivider.Name = "SpotlightDivider"
+        spotDivider.Active = false
+        spotDivider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        spotDivider.BackgroundTransparency = 0.45
+        spotDivider.BorderSizePixel = 0
+        spotDivider.Visible = false
+        spotDivider.ZIndex = 6
+        spotDivider.Parent = main
+
+        local viewport = Instance.new("ScrollingFrame")
+        viewport.Name = "BodyViewport"
+        viewport.Active = true
+        viewport.BackgroundTransparency = 1
+        viewport.BorderSizePixel = 0
+        viewport.CanvasSize = UDim2.new()
+        viewport.ElasticBehavior = Enum.ElasticBehavior.Never
+        viewport.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
+        viewport.ScrollBarImageTransparency = 0
+        viewport.ScrollingDirection = Enum.ScrollingDirection.Y
+        viewport.ZIndex = 5
+        viewport.Parent = main
+
+        local destroyed = false
+        local titleDirty = true
+        local searchDirty = true
+        local contentDirty = true
+        local layoutDirty = true
+        local selectionDirty = false
+        local spotlightDirty = false
+        local lastWidth = -1
+
+        local rows = {}
+        local specs = {}
+
+        local function createTitlePart(parent, zIndex)
+            local label = Instance.new("TextLabel")
+            label.Name = "TitlePart"
+            label.Active = false
+            label.BackgroundTransparency = 1
+            label.BorderSizePixel = 0
+            label.FontFace = normalTextFont
+            label.Text = ""
+            label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            label.TextScaled = false
+            label.TextStrokeTransparency = 1
+            label.TextTruncate = Enum.TextTruncate.AtEnd
+            label.TextWrapped = false
+            label.TextXAlignment = Enum.TextXAlignment.Left
+            label.TextYAlignment = Enum.TextYAlignment.Center
+            label.Visible = false
+            label.ZIndex = zIndex
+            label.Parent = parent
+            return {
+                Label = label,
+                Stroke = makeTextStroke(label),
+                GradientSource = nil,
+                StrokeGradientSource = nil,
+                Spec = nil,
+            }
+        end
+
+        local function syncTitleParts(records, parent, parts, legacyTitle, legacyGradient, zIndex)
+            local normalized = normalizeTitleParts(parts)
+            if #normalized == 0 and legacyTitle ~= nil then
+                normalized[1] = { Text = tostring(legacyTitle), Gradient = legacyGradient }
+            end
+            local changed = false
+            for index, part in ipairs(normalized) do
+                local titlePart = records[index]
+                if not titlePart then
+                    titlePart = createTitlePart(parent, zIndex)
+                    records[index] = titlePart
+                    changed = true
+                end
+                if titlePart.Label.Text ~= part.Text then
+                    titlePart.Label.Text = part.Text
+                    changed = true
+                end
+                if titlePart.GradientSource ~= part.Gradient then
+                    titlePart.GradientSource = part.Gradient
+                    applyGradient(titlePart.Label, part.Gradient)
+                    changed = true
+                end
+                if titlePart.StrokeGradientSource ~= part.StrokeGradient then
+                    titlePart.StrokeGradientSource = part.StrokeGradient
+                    applyGradient(titlePart.Stroke, part.StrokeGradient)
+                    changed = true
+                end
+                if titlePart.Spec ~= part then
+                    changed = true
+                end
+                titlePart.Spec = part
+                titlePart.Label.Visible = true
+            end
+            for index = #normalized + 1, #records do
+                local titlePart = records[index]
+                if titlePart.Label.Visible then
+                    titlePart.Label.Visible = false
+                    changed = true
+                end
+                titlePart.Spec = nil
+            end
+            return #normalized > 0, changed
+        end
+
+        local function layoutTitleParts(records, x, y, width, height, baseSize, defaultFont, alignment, spacing)
+            local visible = {}
+            local totalWidth = 0
+            for _, titlePart in ipairs(records) do
+                local part = titlePart.Spec
+                if part then
+                    local label = titlePart.Label
+                    local partSize = math.max(8, math.floor(baseSize * math.max(0.3, tonumber(part.Scale) or 1) + 0.5))
+                    label.FontFace = resolveFont(part.Font or defaultFont)
+                    label.TextSize = partSize
+                    label.TextColor3 = toColor3(part.Color, Color3.fromRGB(255, 255, 255))
+                    -- TextBounds is zero while a fresh unwrapped label still has
+                    -- zero width. Give it the available box before measuring.
+                    label.Size = UDim2.fromOffset(math.max(1, width), math.max(1, height))
+                    local stroke = titlePart.Stroke
+                    stroke.Color = toColor3(part.StrokeColor, Color3.fromRGB(0, 0, 0))
+                    stroke.Transparency = math.clamp(tonumber(part.StrokeTransparency) or 0, 0, 1)
+                    stroke.Thickness = math.max(0.5, tonumber(part.StrokeThickness) or math.max(1, partSize * 0.1))
+                    local measuredWidth = label.TextBounds.X
+                    if measuredWidth <= 0 then
+                        local characterCount = utf8.len(label.Text) or #label.Text
+                        measuredWidth = characterCount * partSize * 0.62
+                        -- Roblox updates TextBounds after the label has a real
+                        -- width. Reflow on the next frame to replace the safe
+                        -- estimate with the exact font measurement.
+                        layoutDirty = true
+                    end
+                    local measured = math.max(1, math.ceil(measuredWidth + partSize * 0.08))
+                    table.insert(visible, { Part = titlePart, Width = measured })
+                    totalWidth += measured
+                end
+            end
+            if #visible == 0 then
+                return
+            end
+            local gap = math.max(0, spacing) * (#visible - 1)
+            local naturalWidth = totalWidth + gap
+            local scale = naturalWidth > width and math.max(0.2, (width - gap) / math.max(1, totalWidth)) or 1
+            local usedWidth = gap
+            for _, entry in ipairs(visible) do
+                entry.Width = math.max(1, math.floor(entry.Width * scale))
+                usedWidth += entry.Width
+            end
+            local cursor = x
+            if alignment == Enum.TextXAlignment.Center then
+                cursor = x + math.max(0, (width - usedWidth) / 2)
+            elseif alignment == Enum.TextXAlignment.Right then
+                cursor = x + math.max(0, width - usedWidth)
+            end
+            for _, entry in ipairs(visible) do
+                local label = entry.Part.Label
+                label.Position = UDim2.fromOffset(cursor, y)
+                label.Size = UDim2.fromOffset(entry.Width, height)
+                cursor += entry.Width + spacing
+            end
+        end
+
+        local function trimmedQuery()
+            if not content.SearchEnabled then
+                return ""
+            end
+            return string.lower(string.match(content.Query, "^%s*(.-)%s*$") or "")
+        end
+
+        local function matches(text, query)
+            return query == "" or string.find(plainText(text), query, 1, true) ~= nil
+        end
+
+        local function paintRow(record)
+            local spec = record.Spec
+            local isItem = spec ~= nil and spec.Kind == "item"
+            if isItem and spec.Id ~= nil and spec.Id == content.Selected then
+                record.Frame.BackgroundColor3 = toColor3(style.SelectedBackgroundColor, SELECTED_COLOR)
+                record.Frame.BackgroundTransparency = math.clamp(
+                    tonumber(style.SelectedBackgroundTransparency) or 0.86,
+                    0,
+                    1
+                )
+            elseif isItem and record.Hovered and onItemClick then
+                record.Frame.BackgroundColor3 = toColor3(style.HoverBackgroundColor, HOVER_COLOR)
+                record.Frame.BackgroundTransparency = math.clamp(
+                    tonumber(style.HoverBackgroundTransparency) or 0.93,
+                    0,
+                    1
+                )
+            elseif isItem then
+                record.Frame.BackgroundColor3 = toColor3(style.ItemBackgroundColor, HOVER_COLOR)
+                record.Frame.BackgroundTransparency = math.clamp(
+                    tonumber(style.ItemBackgroundTransparency) or 1,
+                    0,
+                    1
+                )
+            else
+                record.Frame.BackgroundTransparency = 1
+            end
+        end
+
+        local function newRow()
+            local frame = Instance.new("Frame")
+            frame.Name = "Entry"
+            frame.Active = false
+            frame.BackgroundColor3 = HOVER_COLOR
+            frame.BackgroundTransparency = 1
+            frame.BorderSizePixel = 0
+            frame.ZIndex = 6
+            frame.Parent = viewport
+            local corner = makeCorner(frame)
+
+            local image = Instance.new("ImageLabel")
+            image.Name = "Icon"
+            image.BackgroundColor3 = Runtime.Theme.Field
+            image.BackgroundTransparency = 0
+            image.BorderSizePixel = 0
+            image.ScaleType = Enum.ScaleType.Fit
+            image.Visible = false
+            image.ZIndex = 7
+            image.Parent = frame
+            local imageCorner = makeCorner(image)
+            local imageStroke = makeFixedStroke(image, DEFAULT_IMAGE_COLOR)
+
+            local label = Instance.new("TextLabel")
+            label.Name = "Text"
+            label.Active = false
+            label.BackgroundTransparency = 1
+            label.BorderSizePixel = 0
+            label.RichText = true
+            label.Text = ""
+            label.TextScaled = false
+            label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            label.TextWrapped = true
+            label.TextYAlignment = Enum.TextYAlignment.Top
+            label.ZIndex = 7
+            label.Parent = frame
+
+            local titleLabel = Instance.new("TextLabel")
+            titleLabel.Name = "Title"
+            titleLabel.Active = false
+            titleLabel.BackgroundTransparency = 1
+            titleLabel.BorderSizePixel = 0
+            titleLabel.FontFace = normalTextFont
+            titleLabel.Text = ""
+            titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            titleLabel.TextScaled = false
+            titleLabel.TextStrokeTransparency = 1
+            titleLabel.TextWrapped = false
+            titleLabel.TextYAlignment = Enum.TextYAlignment.Center
+            titleLabel.Visible = false
+            titleLabel.ZIndex = 7
+            titleLabel.Parent = frame
+            local titleStroke = makeTextStroke(titleLabel)
+
+            local topRightLabel = Instance.new("TextLabel")
+            topRightLabel.Name = "TopRightText"
+            topRightLabel.Active = false
+            topRightLabel.BackgroundTransparency = 1
+            topRightLabel.BorderSizePixel = 0
+            topRightLabel.RichText = true
+            topRightLabel.Text = ""
+            topRightLabel.TextScaled = false
+            topRightLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            topRightLabel.TextWrapped = false
+            topRightLabel.TextXAlignment = Enum.TextXAlignment.Right
+            topRightLabel.TextYAlignment = Enum.TextYAlignment.Center
+            topRightLabel.Visible = false
+            topRightLabel.ZIndex = 7
+            topRightLabel.Parent = frame
+
+            local button = Instance.new("TextButton")
+            button.Name = "Hit"
+            button.AutoButtonColor = false
+            button.BackgroundTransparency = 1
+            button.BorderSizePixel = 0
+            button.Size = UDim2.fromScale(1, 1)
+            button.Text = ""
+            button.Visible = false
+            button.ZIndex = 8
+            button.Parent = frame
+
+            local record = {
+                Frame = frame,
+                Corner = corner,
+                Image = image,
+                ImageCorner = imageCorner,
+                ImageStroke = imageStroke,
+                Label = label,
+                TitleLabel = titleLabel,
+                TitleStroke = titleStroke,
+                TitleParts = {
+                    { Label = titleLabel, Stroke = titleStroke, GradientSource = nil, Spec = nil },
+                },
+                TopRightLabel = topRightLabel,
+                TopRightText = nil,
+                TitleText = nil,
+                GradientSource = nil,
+                Button = button,
+                Text = nil,
+                ImageId = nil,
+                MeasuredWidth = -1,
+                MeasuredKey = nil,
+                MeasuredHeight = 0,
+                Hovered = false,
+                Spec = nil,
+            }
+
+            button.MouseEnter:Connect(function()
+                record.Hovered = true
+                paintRow(record)
+            end)
+            button.MouseLeave:Connect(function()
+                record.Hovered = false
+                paintRow(record)
+            end)
+            button.Activated:Connect(function()
+                local spec = record.Spec
+                if spec and spec.Kind == "item" and spec.Id ~= nil then
+                    content.Selected = spec.Id
+                    selectionDirty = true
+                    if onItemClick then
+                        pcall(onItemClick, spec.Id, spec.Source)
+                    end
+                end
+            end)
+            return record
+        end
+
+        local function composeSpecs()
+            local query = trimmedQuery()
+            local list = {}
+            local shown = 0
+
+            if content.Header ~= "" then
+                table.insert(list, { Kind = "header", Text = content.Header })
+            end
+
+            local function pushItem(item)
+                table.insert(list, {
+                    Kind = "item",
+                    Text = item.Text,
+                    Title = item.Title,
+                    Gradient = item.Gradient,
+                    TitleParts = item.TitleParts,
+                    TopRightText = item.TopRightText,
+                    Image = item.Image,
+                    ImageColor = item.ImageColor,
+                    Id = item.Id,
+                    Source = item,
+                })
+                shown += 1
+            end
+
+            local function itemMatches(item)
+                if matches(item.Text, query)
+                    or (item.Title and matches(item.Title, query))
+                    or (item.TopRightText and matches(item.TopRightText, query))
+                then
+                    return true
+                end
+                for _, part in ipairs(normalizeTitleParts(item.TitleParts)) do
+                    if matches(part.Text, query) then
+                        return true
+                    end
+                end
+                return false
+            end
+
+            if content.Groups then
+                local defaultHex = toHex(style.GroupColor, "#3AFF37")
+                for _, group in ipairs(content.Groups) do
+                    local titleHit = query ~= "" and matches(group.Title, query)
+                    local visible = {}
+                    for _, item in ipairs(group.Items) do
+                        if titleHit or itemMatches(item) then
+                            table.insert(visible, item)
+                        end
+                    end
+                    if #visible > 0 or (query == "" and group.Title ~= "") then
+                        if group.Title ~= "" then
+                            table.insert(list, {
+                                Kind = "group",
+                                Gap = style.GroupSpacing and #list > 0,
+                                Text = string.format(
+                                    '<b><font color="%s">%s</font></b> <font color="#AAAAAA">(%d)</font>',
+                                    toHex(group.Color, defaultHex),
+                                    group.Title,
+                                    #group.Items
+                                ),
+                            })
+                        end
+                        for _, item in ipairs(visible) do
+                            pushItem(item)
+                        end
+                    end
+                end
+            else
+                for _, item in ipairs(content.Items) do
+                    if itemMatches(item) then
+                        pushItem(item)
+                    end
+                end
+            end
+
+            if query ~= "" and shown == 0 then
+                table.insert(list, {
+                    Kind = "message",
+                    Text = string.format('<font color="#888899">No results for "%s"</font>', escapeText(query)),
+                })
+            end
+            return list
+        end
+
+        local function applySpecs(list)
+            local changed = #list ~= #specs
+            specs = list
+            for index, spec in ipairs(list) do
+                local record = rows[index]
+                if not record then
+                    record = newRow()
+                    rows[index] = record
+                    changed = true
+                end
+                if record.Spec == nil or record.Spec.Kind ~= spec.Kind or (record.Spec.Gap ~= spec.Gap) then
+                    changed = true
+                end
+                record.Spec = spec
+                if not record.Frame.Visible then
+                    record.Frame.Visible = true
+                    changed = true
+                end
+                if record.Text ~= spec.Text then
+                    record.Text = spec.Text
+                    record.Label.Text = spec.Text
+                    record.MeasuredWidth = -1
+                    changed = true
+                end
+                local topRightText = spec.Kind == "item" and spec.TopRightText or nil
+                if record.TopRightText ~= topRightText then
+                    record.TopRightText = topRightText
+                    record.TopRightLabel.Text = topRightText or ""
+                    record.TopRightLabel.Visible = topRightText ~= nil and topRightText ~= ""
+                    record.MeasuredWidth = -1
+                    changed = true
+                end
+                local imageId = spec.Kind == "item" and spec.Image or nil
+                if record.ImageId ~= imageId then
+                    record.ImageId = imageId
+                    record.Image.Image = imageId or ""
+                    record.Image.Visible = imageId ~= nil
+                    record.MeasuredWidth = -1
+                    changed = true
+                end
+                if imageId then
+                    local color = toColor3(spec.ImageColor, DEFAULT_IMAGE_COLOR)
+                    if record.ImageStroke.Color ~= color then
+                        record.ImageStroke.Color = color
+                    end
+                end
+                local hasTitleParts, titleChanged = syncTitleParts(
+                    record.TitleParts,
+                    record.Frame,
+                    spec.Kind == "item" and spec.TitleParts or nil,
+                    spec.Kind == "item" and spec.Title or nil,
+                    spec.Kind == "item" and spec.Gradient or nil,
+                    7
+                )
+                record.TitleText = hasTitleParts and true or nil
+                if titleChanged then
+                    record.MeasuredWidth = -1
+                    changed = true
+                end
+                record.Button.Visible = spec.Kind == "item" and spec.Id ~= nil
+                paintRow(record)
+            end
+            for index = #list + 1, #rows do
+                local record = rows[index]
+                if record.Frame.Visible then
+                    record.Frame.Visible = false
+                    changed = true
+                end
+                record.Spec = nil
+            end
+            return changed
+        end
+
+        local spotTemplate = nil
+        local spotGradientSource = nil
+        local spotModel = nil
+        local spotCenter = Vector3.zero
+        local spotDistance = 10
+        local spinAngle = 0
+
+        local function updateCamera()
+            if not spotModel then
+                return
+            end
+            local direction = Vector3.new(math.sin(spinAngle), 0.35, math.cos(spinAngle)).Unit
+            spotCamera.CFrame = CFrame.lookAt(spotCenter + direction * spotDistance, spotCenter)
+        end
+
+        local function applySpotlight()
+            local spot = content.Spotlight
+            local hadModel = spotModel ~= nil
+            local hadTitle = spotTitle.Visible
+            local wasShown = spotFrame.Visible
+            if not spot then
+                if spotModel then
+                    spotModel:Destroy()
+                    spotModel = nil
+                end
+                spotTemplate = nil
+                spotGradientSource = nil
+                spotFrame.Visible = false
+                spotDivider.Visible = false
+                return wasShown
+            end
+
+            spotFrame.Visible = true
+            local text = tostring(spot.Text or "")
+            if spotText.Text ~= text then
+                spotText.Text = text
+            end
+            local hasTitleParts = syncTitleParts(
+                spotTitleParts,
+                spotFrame,
+                spot.TitleParts,
+                spot.Title ~= nil and tostring(spot.Title) or nil,
+                spot.Gradient,
+                6
+            )
+            spotTitle.Visible = hasTitleParts
+            spotDivider.BackgroundColor3 = typeof(style.SpotlightDividerColor) == "Color3"
+                and style.SpotlightDividerColor
+                or toColor3(spot.Color, Color3.fromRGB(255, 255, 255))
+
+            if spot.Model ~= spotTemplate then
+                spotTemplate = spot.Model
+                if spotModel then
+                    spotModel:Destroy()
+                    spotModel = nil
+                end
+                local copy = cloneForViewport(spot.Model)
+                if copy then
+                    local boxCFrame, boxSize
+                    if copy:IsA("Model") then
+                        boxCFrame, boxSize = copy:GetBoundingBox()
+                    elseif copy:IsA("BasePart") then
+                        boxCFrame, boxSize = copy.CFrame, copy.Size
+                    end
+                    if boxCFrame then
+                        spotCenter = boxCFrame.Position
+                        local modelScale = math.max(0.25, tonumber(style.SpotlightModelScale) or 1)
+                        spotDistance = (boxSize.Magnitude * 0.5)
+                            / math.tan(math.rad(spotCamera.FieldOfView / 2))
+                            * 1.05
+                            / modelScale
+                        copy.Parent = spotView
+                        spotModel = copy
+                        updateCamera()
+                    else
+                        copy:Destroy()
+                    end
+                end
+            end
+            spotView.Visible = spotModel ~= nil
+            return (not wasShown) or hadModel ~= (spotModel ~= nil) or hadTitle ~= hasTitleParts
+        end
+
+        local function layout()
+            local host = row.Parent
+            local rowWidth = row.AbsoluteSize.X
+            if not host or rowWidth <= 0 then
+                return
+            end
+            lastWidth = rowWidth
+
+            local referenceWidth = host.AbsoluteSize.X * ROW_WIDTH_SCALE / math.max(ContentScale.X, 0.001)
+            if referenceWidth <= 0 then
+                referenceWidth = rowWidth
+            end
+
+            local bandHeight = referenceWidth / ROW_ASPECT * 0.85
+            local sideInset = rowWidth * 0.025
+            local padY = bandHeight * 0.2 * math.max(0, tonumber(style.Padding) or 1)
+            local showTitle = content.ShowTitle and content.Title ~= ""
+            local showSearch = content.SearchEnabled
+            local headerHeight = (showTitle or showSearch) and bandHeight or 0
+            local alignment = ALIGNMENTS[string.lower(tostring(style.Alignment))] or Enum.TextXAlignment.Left
+            local textSize = math.max(
+                8,
+                math.floor(referenceWidth * BODY_RATIO * math.max(0.3, tonumber(style.TextScale) or 1) + 0.5)
+            )
+            local lineHeight = math.max(0.8, tonumber(style.LineHeight) or 1.16)
+            local lineUnit = textSize * lineHeight
+            local barWidth = math.max(2, math.floor(referenceWidth * 0.006 + 0.5))
+            local font = resolveFont(style.Font)
+            local textColor = typeof(style.TextColor) == "Color3" and style.TextColor or DEFAULT_STYLE.TextColor
+            local strokeTransparency = math.clamp(tonumber(style.TextStrokeTransparency) or 0.7, 0, 1)
+            local imageSize = math.floor(lineUnit * math.max(1, tonumber(style.ImageLines) or 2.3) + 0.5)
+            local itemGap = math.floor(lineUnit * math.max(0, tonumber(style.ItemSpacing) or 0.35) + 0.5)
+            local cornerRadius = UDim.new(0, math.max(2, math.floor(lineUnit * 0.35)))
+            local fineStroke = math.max(1, math.floor(textSize * 0.1 + 0.5))
+            local titleSize = math.max(textSize, math.floor(textSize * 1.2 + 0.5))
+            local titleLineHeight = math.ceil(titleSize * lineHeight)
+            local titleStrokeThickness = math.max(1, math.floor(titleSize * 0.14 + 0.5))
+            local titlePartSpacing = math.floor(lineUnit * math.max(0, tonumber(style.TitlePartSpacing) or 0.34) + 0.5)
+
+            if plateStroke then
+                pcall(function()
+                    plateStroke.StrokeSizingMode = Enum.StrokeSizingMode.FixedSize
+                end)
+                plateStroke.Thickness = math.max(1, bandHeight * 0.05)
+            end
+            main.BackgroundTransparency = math.clamp(tonumber(style.BackgroundTransparency) or 0, 0, 1)
+            spotView.BackgroundColor3 = toColor3(style.SpotlightBackgroundColor, Color3.fromRGB(0, 0, 0))
+            spotView.BackgroundTransparency = math.clamp(
+                tonumber(style.SpotlightBackgroundTransparency) or 1,
+                0,
+                1
+            )
+            viewport.ScrollBarImageColor3 = toColor3(style.ScrollBarColor, Color3.fromRGB(255, 255, 255))
+
+            local fieldWidth = rowWidth * CONTROL_LAYOUT.WideWidth
+            local fieldCenterX = rowWidth * CONTROL_LAYOUT.WideCenterX
+            searchField.Visible = showSearch
+            if showSearch then
+                searchField.Size = UDim2.fromOffset(fieldWidth, bandHeight * 0.62)
+                searchField.Position = UDim2.fromOffset(fieldCenterX, bandHeight / 2)
+            end
+
+            local titleHeight = bandHeight * 0.64 * math.max(0.3, tonumber(style.TitleScale) or 1)
+            local titleRight = showSearch and (fieldCenterX - fieldWidth / 2 - sideInset) or (rowWidth - sideInset)
+            title.Visible = showTitle
+            title.Position = UDim2.fromOffset(sideInset, (bandHeight - titleHeight) / 2)
+            title.Size = UDim2.fromOffset(math.max(1, titleRight - sideInset), titleHeight)
+            title.TextXAlignment = showSearch and Enum.TextXAlignment.Left or alignment
+
+            local viewWidth = math.max(1, rowWidth - sideInset * 2)
+            local y = headerHeight > 0 and headerHeight or padY
+
+            if spotFrame.Visible then
+                local spotHeight = math.floor(lineUnit * math.max(3, tonumber(style.SpotlightLines) or 5) + 0.5)
+                local hasModel = spotModel ~= nil
+                local textLeft = hasModel and (spotHeight + math.floor(lineUnit * 0.8)) or 0
+                local infoWidth = math.max(1, viewWidth - textLeft)
+                local spotTitleHeight = spotTitle.Visible and titleLineHeight or 0
+                spotFrame.Position = UDim2.fromOffset(sideInset, y)
+                spotFrame.Size = UDim2.fromOffset(viewWidth, spotHeight)
+                spotView.Size = UDim2.fromOffset(spotHeight, spotHeight)
+                spotViewCorner.CornerRadius = cornerRadius
+                spotTitle.Position = UDim2.fromOffset(textLeft, 0)
+                spotTitle.Size = UDim2.fromOffset(infoWidth, spotTitleHeight)
+                layoutTitleParts(
+                    spotTitleParts,
+                    textLeft,
+                    0,
+                    infoWidth,
+                    spotTitleHeight,
+                    titleSize,
+                    font,
+                    alignment,
+                    titlePartSpacing
+                )
+                spotText.Position = UDim2.fromOffset(textLeft, spotTitleHeight)
+                spotText.Size = UDim2.fromOffset(infoWidth, math.max(1, spotHeight - spotTitleHeight))
+                spotText.FontFace = font
+                spotText.TextSize = textSize
+                spotText.LineHeight = lineHeight
+                spotText.TextColor3 = textColor
+                spotText.TextStrokeTransparency = strokeTransparency
+                spotText.TextYAlignment = spotTitleHeight > 0 and Enum.TextYAlignment.Top or Enum.TextYAlignment.Center
+                y += spotHeight + itemGap
+                local dividerHeight = math.max(1, math.floor(textSize * 0.12 + 0.5))
+                spotDivider.Visible = true
+                spotDivider.Position = UDim2.fromOffset(sideInset, y)
+                spotDivider.Size = UDim2.fromOffset(viewWidth, dividerHeight)
+                y += dividerHeight + itemGap
+            else
+                spotDivider.Visible = false
+            end
+
+            local styleKey = table.concat({
+                tostring(style.Font),
+                textSize,
+                lineHeight,
+                strokeTransparency,
+                tostring(alignment),
+                tostring(textColor),
+                imageSize,
+            }, "|")
+
+            local function placeRows(availableWidth)
+                local offset = 0
+                for index, spec in ipairs(specs) do
+                    local record = rows[index]
+                    local isItem = spec.Kind == "item"
+                    local hasImage = record.ImageId ~= nil
+                    local innerPad = isItem and math.floor(lineUnit * 0.25) or 0
+                    local vPad = isItem and math.floor(lineUnit * 0.18) or 0
+                    local textX = hasImage and (imageSize + math.floor(lineUnit * 0.6)) or 0
+                    local labelWidth = math.max(1, availableWidth - textX - innerPad * 2)
+
+                    if record.MeasuredWidth ~= labelWidth or record.MeasuredKey ~= styleKey then
+                        local label = record.Label
+                        label.FontFace = font
+                        label.TextSize = textSize
+                        label.LineHeight = lineHeight
+                        label.TextColor3 = textColor
+                        label.TextStrokeTransparency = strokeTransparency
+                        label.TextXAlignment = alignment
+                        label.Size = UDim2.fromOffset(labelWidth, 100000)
+                        record.MeasuredHeight = math.max(textSize, math.ceil(label.TextBounds.Y))
+                        record.MeasuredWidth = labelWidth
+                        record.MeasuredKey = styleKey
+                    end
+
+                    local rowTitleHeight = 0
+                    if record.TitleText or record.TopRightText then
+                        rowTitleHeight = titleLineHeight
+                    end
+
+                    if spec.Kind == "group" and spec.Gap then
+                        offset += math.floor(lineUnit * 0.5)
+                    end
+                    local textHeight = record.MeasuredHeight
+                    local rowHeight = math.max(textHeight + rowTitleHeight, hasImage and imageSize or 0) + vPad * 2
+
+                    record.Frame.Position = UDim2.fromOffset(0, offset)
+                    record.Frame.Size = UDim2.fromOffset(availableWidth, rowHeight)
+                    record.Corner.CornerRadius = cornerRadius
+                    if hasImage then
+                        record.Image.Position = UDim2.fromOffset(innerPad, math.floor((rowHeight - imageSize) / 2))
+                        record.Image.Size = UDim2.fromOffset(imageSize, imageSize)
+                        record.ImageCorner.CornerRadius = cornerRadius
+                        record.ImageStroke.Thickness = fineStroke
+                    end
+                    local textTop = math.floor((rowHeight - textHeight - rowTitleHeight) / 2)
+                    local topRightWidth = 0
+                    if record.TopRightText then
+                        local topRightLabel = record.TopRightLabel
+                        topRightLabel.FontFace = font
+                        topRightLabel.TextSize = textSize
+                        topRightLabel.TextColor3 = textColor
+                        topRightLabel.TextStrokeTransparency = strokeTransparency
+                        topRightLabel.Size = UDim2.fromOffset(labelWidth, rowTitleHeight)
+                        local measuredWidth = topRightLabel.TextBounds.X
+                        if measuredWidth <= 0 then
+                            local plain = plainText(record.TopRightText)
+                            measuredWidth = (utf8.len(plain) or #plain) * textSize * 0.55
+                            layoutDirty = true
+                        end
+                        topRightWidth = math.min(
+                            labelWidth * 0.42,
+                            math.max(textSize * 3, math.ceil(measuredWidth + textSize * 0.25))
+                        )
+                        topRightLabel.Position = UDim2.fromOffset(
+                            innerPad + textX + labelWidth - topRightWidth,
+                            textTop
+                        )
+                        topRightLabel.Size = UDim2.fromOffset(topRightWidth, rowTitleHeight)
+                    end
+                    if record.TitleText then
+                        local titleWidth = math.max(
+                            1,
+                            labelWidth - topRightWidth - (topRightWidth > 0 and titlePartSpacing or 0)
+                        )
+                        layoutTitleParts(
+                            record.TitleParts,
+                            innerPad + textX,
+                            textTop,
+                            titleWidth,
+                            rowTitleHeight,
+                            titleSize,
+                            font,
+                            alignment,
+                            titlePartSpacing
+                        )
+                    end
+                    record.Label.Position = UDim2.fromOffset(innerPad + textX, textTop + rowTitleHeight)
+                    record.Label.Size = UDim2.fromOffset(labelWidth, textHeight)
+
+                    offset += rowHeight + (isItem and itemGap or math.floor(itemGap * 0.5))
+                end
+                return math.max(textSize, offset)
+            end
+
+            local maxLines = math.max(0, math.floor(tonumber(style.MaxLines) or 0))
+            local limit = maxLines > 0 and math.ceil(lineUnit * maxLines) or math.huge
+            local contentHeight = placeRows(viewWidth)
+            local scrolls = contentHeight > limit
+            if scrolls then
+                contentHeight = placeRows(math.max(1, viewWidth - barWidth * 3))
+            end
+            local viewHeight = math.min(contentHeight, limit)
+
+            viewport.Position = UDim2.fromOffset(sideInset, y)
+            viewport.Size = UDim2.fromOffset(viewWidth, viewHeight)
+            viewport.CanvasSize = UDim2.fromOffset(0, contentHeight)
+            viewport.ScrollBarThickness = scrolls and barWidth or 0
+            viewport.ScrollingEnabled = scrolls
+
+            local plateHeight = y + viewHeight + padY
+            row.Size = UDim2.new(hostWidthScale(), 0, 0, math.max(1, math.ceil(plateHeight / 0.85)))
+        end
+
+        searchBox.Focused:Connect(function()
+            tweenSearchFocus(true)
+        end)
+        searchBox.FocusLost:Connect(function()
+            tweenSearchFocus(false)
+        end)
+        searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+            if content.Query ~= searchBox.Text then
+                content.Query = searchBox.Text
+                contentDirty = true
+            end
+        end)
+
+        row:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+            if math.abs(row.AbsoluteSize.X - lastWidth) >= 0.5 then
+                layoutDirty = true
+            end
+        end)
+
+        ContentScale.OnChanged(function()
+            if destroyed then
+                return false
+            end
+            layoutDirty = true
+        end)
+
+        local onScreen = true
+        local visibilityClock = VISIBILITY_CHECK
+        local spinClock = 0
+
+        local heartbeat = RunService.Heartbeat:Connect(function(deltaTime)
+            if destroyed or not row.Parent then
+                return
+            end
+            visibilityClock += deltaTime
+            if visibilityClock >= VISIBILITY_CHECK then
+                visibilityClock = 0
+                onScreen = isShown(row)
+            end
+
+            if titleDirty then
+                titleDirty = false
+                title.Text = content.Title
+                layoutDirty = true
+            end
+            if searchDirty then
+                searchDirty = false
+                searchBox.PlaceholderText = content.SearchPlaceholder
+                if searchBox.Text ~= content.Query then
+                    searchBox.Text = content.Query
+                end
+                contentDirty = true
+                layoutDirty = true
+            end
+            if contentDirty then
+                contentDirty = false
+                if applySpecs(composeSpecs()) then
+                    layoutDirty = true
+                end
+            end
+            if selectionDirty then
+                selectionDirty = false
+                for _, record in ipairs(rows) do
+                    if record.Spec then
+                        paintRow(record)
+                    end
+                end
+            end
+            if spotlightDirty then
+                spotlightDirty = false
+                if applySpotlight() then
+                    layoutDirty = true
+                end
+            end
+            if layoutDirty then
+                layoutDirty = false
+                if not pcall(layout) then
+                    layoutDirty = true
+                end
+            end
+
+            local spot = content.Spotlight
+            if spotModel and onScreen and spot and spot.Spin ~= false then
+                spinClock += deltaTime
+                if spinClock >= 1 / SPIN_RATE then
+                    spinAngle = (spinAngle + SPIN_SPEED * spinClock) % (math.pi * 2)
+                    spinClock = 0
+                    updateCamera()
+                end
+            end
+        end)
+
+        local controller = {}
+
+        function controller.GetValue()
+            return content.Text
+        end
+
+        function controller.SetValue(value)
+            content.Text = tostring(value or "")
+            content.Items = splitLines(content.Text)
+            content.Groups = nil
+            contentDirty = true
+        end
+
+        function controller.GetTitle()
+            return content.Title
+        end
+
+        function controller.SetTitle(value)
+            content.Title = tostring(value or "")
+            titleDirty = true
+        end
+
+        function controller.GetStyle()
+            local copy = {}
+            for key, value in pairs(style) do
+                copy[key] = value
+            end
+            return copy
+        end
+
+        function controller.SetStyle(patch)
+            mergeStyle(style, patch)
+            contentDirty = true
+            layoutDirty = true
+        end
+
+        function controller.SetHeader(value)
+            content.Header = tostring(value or "")
+            contentDirty = true
+        end
+
+        function controller.SetItems(items)
+            content.Items = normalizeItems(items)
+            content.Groups = nil
+            contentDirty = true
+        end
+
+        function controller.SetGroups(groups)
+            content.Groups = normalizeGroups(groups)
+            contentDirty = true
+        end
+
+        function controller.AppendItem(item, groupTitle)
+            local entry = normalizeItem(item)
+            if groupTitle ~= nil then
+                content.Groups = content.Groups or {}
+                local target = nil
+                for _, group in ipairs(content.Groups) do
+                    if group.Title == tostring(groupTitle) then
+                        target = group
+                        break
+                    end
+                end
+                if not target then
+                    target = { Title = tostring(groupTitle), Items = {} }
+                    table.insert(content.Groups, target)
+                end
+                table.insert(target.Items, entry)
+            else
+                table.insert(content.Items, entry)
+            end
+            contentDirty = true
+        end
+
+        function controller.SetSearchEnabled(enabled)
+            content.SearchEnabled = enabled == true
+            contentDirty = true
+            layoutDirty = true
+        end
+
+        function controller.SetSearchQuery(query)
+            content.Query = tostring(query or "")
+            searchDirty = true
+        end
+
+        function controller.GetSearchQuery()
+            return content.Query
+        end
+
+        function controller.SetSpotlight(spot)
+            if type(spot) == "table" then
+                content.Spotlight = {
+                    Model = spot.Model,
+                    Title = spot.Title,
+                    Gradient = spot.Gradient,
+                    TitleParts = spot.TitleParts,
+                    Text = spot.Text,
+                    Color = spot.Color,
+                    Spin = spot.Spin,
+                }
+            else
+                content.Spotlight = nil
+            end
+            spotlightDirty = true
+        end
+
+        function controller.SetSelected(id)
+            content.Selected = id
+            selectionDirty = true
+        end
+
+        function controller.GetSelected()
+            return content.Selected
+        end
+
+        function controller.Destroy()
+            destroyed = true
+            heartbeat:Disconnect()
+            if spotModel then
+                spotModel:Destroy()
+                spotModel = nil
+            end
+        end
+
+        return row, controller
+    end
+
+    return createLibraryParagraphRow
+end)()
+
+optionFactories[11] = (function()
+    local CANVAS_STYLE = {
+        TextScale = 1,
+        TitleScale = 1,
+        Font = "Gotham",
+        LineHeight = 1.16,
+        Padding = 1,
+        Alignment = "Left",
+        BackgroundColor = Runtime.Theme.Row,
+        BackgroundTransparency = 0,
+        StrokeColor = Runtime.Theme.Stroke,
+        StrokeTransparency = 0,
+        StrokeScale = 0.05,
+        CornerScale = 0.35,
+        ScrollBarColor = Color3.fromRGB(255, 255, 255),
+        ScrollBarTransparency = 0,
+        TextColor = Color3.fromRGB(235, 235, 235),
+        TextStrokeTransparency = 0.7,
+        MinLines = 4,
+        MaxLines = 0,
+        AutoHeight = true,
+        ClipContent = true,
+    }
+
+    local CANVAS_BODY_RATIO = 0.026
+    local CANVAS_VISIBILITY_CHECK = 0.5
+    local CANVAS_SPIN_RATE = 20
+    local CANVAS_SPIN_SPEED = math.rad(28)
+
+    local CANVAS_FONTS = {
+        ["gotham"] = normalTextFont,
+        ["gotham medium"] = Font.new(
+            "rbxasset://fonts/families/GothamSSm.json",
+            Enum.FontWeight.Medium,
+            Enum.FontStyle.Normal
+        ),
+        ["fredoka"] = Font.new(
+            "rbxasset://fonts/families/FredokaOne.json",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal
+        ),
+        ["code"] = Font.new(
+            "rbxasset://fonts/families/RobotoMono.json",
+            Enum.FontWeight.Bold,
+            Enum.FontStyle.Normal
+        ),
+    }
+
+    local CANVAS_ALIGN = {
+        left = Enum.TextXAlignment.Left,
+        center = Enum.TextXAlignment.Center,
+        right = Enum.TextXAlignment.Right,
+    }
+
+    local function canvasFont(value)
+        if typeof(value) == "Font" then
+            return value
+        end
+        if typeof(value) == "EnumItem" then
+            local ok, font = pcall(Font.fromEnum, value)
+            if ok then
+                return font
+            end
+        end
+        if type(value) == "string" then
+            return CANVAS_FONTS[string.lower(value)] or normalTextFont
+        end
+        return nil
+    end
+
+    local function canvasColor(value, fallback)
+        if typeof(value) == "Color3" then
+            return value
+        end
+        if type(value) == "string" then
+            local ok, color = pcall(Color3.fromHex, value)
+            if ok then
+                return color
+            end
+        end
+        return fallback
+    end
+
+    local function canvasNumber(value, fallback)
+        local number = tonumber(value)
+        if number == nil then
+            return fallback
+        end
+        return number
+    end
+
+    local function canvasMerge(style, patch)
+        if type(patch) ~= "table" then
+            return false
+        end
+        local changed = false
+        for key, value in pairs(patch) do
+            if CANVAS_STYLE[key] ~= nil and style[key] ~= value then
+                style[key] = value
+                changed = true
+            end
+        end
+        return changed
+    end
+
+    local function canvasGradient(target, source, rotation)
+        local existing = target:FindFirstChild("ChilliCanvasGradient")
+        if source == nil then
+            if existing then
+                existing:Destroy()
+            end
+            return
+        end
+        if typeof(source) == "Instance" and source:IsA("UIGradient") then
+            if existing then
+                existing:Destroy()
+            end
+            local ok, copy = pcall(function()
+                return source:Clone()
+            end)
+            if ok and copy then
+                copy.Name = "ChilliCanvasGradient"
+                if rotation ~= nil then
+                    copy.Rotation = rotation
+                end
+                copy.Parent = target
+            end
+            return
+        end
+        if typeof(source) == "ColorSequence" then
+            local gradient = existing
+            if not gradient then
+                gradient = Instance.new("UIGradient")
+                gradient.Name = "ChilliCanvasGradient"
+                gradient.Parent = target
+            end
+            gradient.Color = source
+            if rotation ~= nil then
+                gradient.Rotation = rotation
+            end
+        end
+    end
+
+    local function canvasCorner(target, radius)
+        local corner = target:FindFirstChildOfClass("UICorner")
+        if radius == nil or radius <= 0 then
+            if corner then
+                corner:Destroy()
+            end
+            return nil
+        end
+        if not corner then
+            corner = Instance.new("UICorner")
+            corner.Parent = target
+        end
+        corner.CornerRadius = UDim.new(0, math.floor(radius + 0.5))
+        return corner
+    end
+
+    local function canvasStroke(target, color, thickness, transparency, mode)
+        local stroke = target:FindFirstChildOfClass("UIStroke")
+        if thickness == nil or thickness <= 0 then
+            if stroke then
+                stroke:Destroy()
+            end
+            return nil
+        end
+        if not stroke then
+            stroke = Instance.new("UIStroke")
+            stroke.LineJoinMode = Enum.LineJoinMode.Round
+            stroke.Parent = target
+        end
+        stroke.ApplyStrokeMode = mode or Enum.ApplyStrokeMode.Contextual
+        stroke.Color = color or Color3.fromRGB(0, 0, 0)
+        stroke.Thickness = math.max(0.01, thickness)
+        stroke.Transparency = math.clamp(canvasNumber(transparency, 0), 0, 1)
+        return stroke
+    end
+
+    local function canvasClone(template)
+        if typeof(template) ~= "Instance" then
+            return nil
+        end
+        local ok, copy = pcall(function()
+            return template:Clone()
+        end)
+        if not ok or not copy then
+            return nil
+        end
+        for _, descendant in ipairs(copy:GetDescendants()) do
+            if descendant:IsA("LuaSourceContainer")
+                or descendant:IsA("ParticleEmitter")
+                or descendant:IsA("Trail")
+                or descendant:IsA("Beam")
+                or descendant:IsA("Light")
+                or descendant:IsA("Sound")
+                or descendant:IsA("Fire")
+                or descendant:IsA("Smoke")
+                or descendant:IsA("Sparkles")
+            then
+                descendant:Destroy()
+            elseif descendant:IsA("BasePart") then
+                descendant.Anchored = true
+                descendant.CanCollide = false
+                descendant.CastShadow = false
+            end
+        end
+        if copy:IsA("BasePart") then
+            copy.Anchored = true
+        end
+        return copy
+    end
+
+    local function canvasShown(gui)
+        if typeof(gui) ~= "Instance" or not gui:IsDescendantOf(game) then
+            return false
+        end
+        local node = gui
+        while node do
+            if node:IsA("GuiObject") and not node.Visible then
+                return false
+            end
+            if node:IsA("LayerCollector") then
+                return node.Enabled
+            end
+            node = node.Parent
+        end
+        return false
+    end
+
+    local function canvasSizeOf(spec, metrics)
+        if typeof(spec.Size) == "UDim2" then
+            return spec.Size
+        end
+        local widthScale = tonumber(spec.WidthScale)
+        local width = tonumber(spec.Width)
+        local heightScale = tonumber(spec.HeightScale)
+        local height = tonumber(spec.Height)
+        local x
+        if widthScale then
+            x = UDim.new(widthScale, 0)
+        elseif width then
+            x = UDim.new(0, math.floor(width * metrics.Unit + 0.5))
+        else
+            x = UDim.new(1, 0)
+        end
+        local y
+        if heightScale then
+            y = UDim.new(heightScale, 0)
+        else
+            y = UDim.new(0, math.floor((height or 1) * metrics.Unit + 0.5))
+        end
+        return UDim2.new(x.Scale, x.Offset, y.Scale, y.Offset)
+    end
+
+    local function canvasPositionOf(spec, metrics)
+        if typeof(spec.Position) == "UDim2" then
+            return spec.Position
+        end
+        return UDim2.fromOffset(
+            math.floor(tonumber(spec.X or 0) * metrics.Unit + 0.5),
+            math.floor(tonumber(spec.Y or 0) * metrics.Unit + 0.5)
+        )
+    end
+
+    local function canvasParentOf(surface, value)
+        if type(value) == "table" and type(value.Get) == "function" then
+            value = value.Get()
+        end
+        if typeof(value) == "Instance" then
+            return value
+        end
+        return surface._root
+    end
+
+    local function canvasQueueParent(surface, instance, parent)
+        table.insert(surface._pendingParents, { instance, parent })
+        surface._dirty = true
+    end
+
+    local function canvasBaseApply(surface, instance, spec)
+        local metrics = surface._metrics
+        instance.Size = canvasSizeOf(spec, metrics)
+        instance.Position = canvasPositionOf(spec, metrics)
+        if typeof(spec.AnchorPoint) == "Vector2" then
+            instance.AnchorPoint = spec.AnchorPoint
+        end
+        if spec.LayoutOrder ~= nil then
+            instance.LayoutOrder = tonumber(spec.LayoutOrder) or 0
+        end
+        if spec.ZIndex ~= nil then
+            instance.ZIndex = tonumber(spec.ZIndex) or instance.ZIndex
+        end
+        if spec.Visible ~= nil then
+            instance.Visible = spec.Visible ~= false
+        end
+        local background = canvasColor(spec.Background, nil)
+        if background then
+            instance.BackgroundColor3 = background
+            instance.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 0), 0, 1)
+        elseif spec.BackgroundTransparency ~= nil then
+            instance.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 1), 0, 1)
+        end
+        if spec.Corner ~= nil then
+            canvasCorner(instance, canvasNumber(spec.Corner, 0) * metrics.Unit)
+        end
+        if spec.Clip ~= nil then
+            instance.ClipsDescendants = spec.Clip == true
+        end
+    end
+
+    local function canvasMakeHandle(surface, instance, kind, spec, apply)
+        local handle = { Kind = kind, Spec = spec }
+
+        function handle.Get()
+            return instance
+        end
+
+        function handle.Apply()
+            apply()
+            return handle
+        end
+
+        function handle.Set(patch)
+            if type(patch) == "table" then
+                for key, value in pairs(patch) do
+                    spec[key] = value
+                end
+            end
+            surface._queue(handle)
+            return handle
+        end
+
+        function handle.SetVisible(visible)
+            spec.Visible = visible ~= false
+            instance.Visible = visible ~= false
+            return handle
+        end
+
+        function handle.Destroy()
+            for index = #surface._elements, 1, -1 do
+                if surface._elements[index] == handle then
+                    table.remove(surface._elements, index)
+                end
+            end
+            instance:Destroy()
+            surface._dirty = true
+        end
+
+        table.insert(surface._elements, handle)
+        surface._queue(handle)
+        return handle
+    end
+
+    local function canvasCreateFrame(surface, spec)
+        local frame = Instance.new(spec.Scrolling == true and "ScrollingFrame" or "Frame")
+        frame.Name = tostring(spec.Name or "Panel")
+        frame.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(0, 0, 0))
+        frame.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 1), 0, 1)
+        frame.BorderSizePixel = 0
+        frame.ZIndex = tonumber(spec.ZIndex) or 6
+        if frame:IsA("ScrollingFrame") then
+            frame.Active = true
+            frame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+            frame.CanvasSize = UDim2.new()
+            frame.ElasticBehavior = Enum.ElasticBehavior.Never
+            frame.ScrollBarImageColor3 = canvasColor(spec.ScrollBarColor, surface._style.ScrollBarColor)
+            frame.ScrollingDirection = Enum.ScrollingDirection.Y
+        end
+        if spec.Layout ~= nil then
+            local layout = Instance.new("UIListLayout")
+            layout.FillDirection = string.lower(tostring(spec.Layout)) == "row"
+                    and Enum.FillDirection.Horizontal
+                or Enum.FillDirection.Vertical
+            layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+            layout.SortOrder = Enum.SortOrder.LayoutOrder
+            layout.VerticalAlignment = Enum.VerticalAlignment.Top
+            layout.Parent = frame
+        end
+        canvasQueueParent(surface, frame, canvasParentOf(surface, spec.Parent))
+
+        local handle = canvasMakeHandle(surface, frame, "Frame", spec, function()
+            canvasBaseApply(surface, frame, spec)
+            if spec.StrokeColor ~= nil or spec.StrokeThickness ~= nil then
+                canvasStroke(
+                    frame,
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(0, 0, 0)),
+                    canvasNumber(spec.StrokeThickness, 0.06) * surface._metrics.Unit,
+                    spec.StrokeTransparency,
+                    Enum.ApplyStrokeMode.Border
+                )
+            end
+            if spec.Gradient ~= nil then
+                canvasGradient(frame, spec.Gradient, spec.GradientRotation)
+            end
+            local layout = frame:FindFirstChildOfClass("UIListLayout")
+            if layout then
+                layout.Padding = UDim.new(0, math.floor(canvasNumber(spec.Spacing, 0.2) * surface._metrics.Unit + 0.5))
+            end
+            if frame:IsA("ScrollingFrame") then
+                frame.ScrollBarThickness = math.max(2, math.floor(surface._metrics.TextSize * 0.5))
+            end
+            if spec.AutoHeight == true then
+                frame.AutomaticSize = Enum.AutomaticSize.Y
+            end
+        end)
+        return handle
+    end
+
+    local function canvasCreateText(surface, spec)
+        local label = Instance.new("TextLabel")
+        label.Name = tostring(spec.Name or "Text")
+        label.Active = false
+        label.BackgroundTransparency = 1
+        label.BorderSizePixel = 0
+        label.RichText = spec.Rich ~= false
+        label.Text = ""
+        label.TextScaled = false
+        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        label.TextStrokeTransparency = 1
+        label.TextWrapped = spec.Wrap ~= false
+        label.TextYAlignment = Enum.TextYAlignment.Top
+        label.ZIndex = tonumber(spec.ZIndex) or 7
+        canvasQueueParent(surface, label, canvasParentOf(surface, spec.Parent))
+
+        return canvasMakeHandle(surface, label, "Text", spec, function()
+            local metrics = surface._metrics
+            local style = surface._style
+            label.Text = tostring(spec.Text or "")
+            label.RichText = spec.Rich ~= false
+            label.TextWrapped = spec.Wrap ~= false
+            label.FontFace = canvasFont(spec.Font) or metrics.Font
+            label.TextSize = math.max(6, math.floor(metrics.TextSize * canvasNumber(spec.Scale, 1) + 0.5))
+            label.LineHeight = canvasNumber(spec.LineHeight, metrics.LineHeight)
+            label.TextColor3 = canvasColor(spec.Color, style.TextColor)
+            label.TextTransparency = math.clamp(canvasNumber(spec.Transparency, 0), 0, 1)
+            label.TextStrokeColor3 = canvasColor(spec.TextStrokeColor, Color3.fromRGB(0, 0, 0))
+            label.TextStrokeTransparency = math.clamp(
+                canvasNumber(spec.TextStrokeTransparency, style.TextStrokeTransparency),
+                0,
+                1
+            )
+            label.TextXAlignment = CANVAS_ALIGN[string.lower(tostring(spec.Align or ""))] or metrics.Align
+            local vAlign = string.lower(tostring(spec.VAlign or "top"))
+            label.TextYAlignment = vAlign == "center" and Enum.TextYAlignment.Center
+                or (vAlign == "bottom" and Enum.TextYAlignment.Bottom or Enum.TextYAlignment.Top)
+            canvasGradient(label, spec.Gradient, spec.GradientRotation)
+            if spec.StrokeThickness ~= nil or spec.StrokeColor ~= nil then
+                canvasStroke(
+                    label,
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(0, 0, 0)),
+                    canvasNumber(spec.StrokeThickness, 0.1) * label.TextSize,
+                    spec.StrokeTransparency,
+                    Enum.ApplyStrokeMode.Contextual
+                )
+            end
+            canvasBaseApply(surface, label, spec)
+            if typeof(spec.Size) ~= "UDim2" and spec.Height == nil and spec.HeightScale == nil then
+                local width = label.Size.X
+                label.Size = UDim2.new(width.Scale, width.Offset, 0, 100000)
+                local measured = math.max(label.TextSize, math.ceil(label.TextBounds.Y))
+                label.Size = UDim2.new(width.Scale, width.Offset, 0, measured)
+            end
+        end)
+    end
+
+    local function canvasCreateButton(surface, spec)
+        local button = Instance.new("TextButton")
+        button.Name = tostring(spec.Name or "Button")
+        button.AutoButtonColor = false
+        button.BackgroundColor3 = canvasColor(spec.Background, Runtime.Theme.Item)
+        button.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 0), 0, 1)
+        button.BorderSizePixel = 0
+        button.RichText = spec.Rich ~= false
+        button.Text = ""
+        button.TextScaled = false
+        button.TextStrokeTransparency = 1
+        button.ZIndex = tonumber(spec.ZIndex) or 8
+        canvasQueueParent(surface, button, canvasParentOf(surface, spec.Parent))
+
+        local hovered, pressed, enabled = false, false, true
+
+        local function paint()
+            local base = math.clamp(canvasNumber(spec.BackgroundTransparency, 0), 0, 1)
+            local target = base
+            if not enabled then
+                target = math.clamp(base + 0.25, 0, 1)
+            elseif pressed then
+                target = math.clamp(canvasNumber(spec.PressTransparency, base - 0.18), 0, 1)
+            elseif hovered then
+                target = math.clamp(canvasNumber(spec.HoverTransparency, base - 0.12), 0, 1)
+            end
+            button.BackgroundTransparency = target
+            if enabled and spec.Background == nil then
+                button.BackgroundColor3 = pressed and Runtime.Theme.ItemChosen or (hovered and Runtime.Theme.ItemHover or Runtime.Theme.Item)
+            end
+            button.TextTransparency = enabled and math.clamp(canvasNumber(spec.Transparency, 0), 0, 1) or 0.4
+        end
+
+        local handle = canvasMakeHandle(surface, button, "Button", spec, function()
+            local metrics = surface._metrics
+            button.Text = tostring(spec.Text or "")
+            button.RichText = spec.Rich ~= false
+            button.FontFace = canvasFont(spec.Font) or metrics.Font
+            button.TextSize = math.max(6, math.floor(metrics.TextSize * canvasNumber(spec.Scale, 1) + 0.5))
+            button.TextColor3 = canvasColor(spec.Color, Color3.fromRGB(255, 255, 255))
+            button.TextXAlignment = CANVAS_ALIGN[string.lower(tostring(spec.Align or "center"))]
+                or Enum.TextXAlignment.Center
+            canvasGradient(button, spec.Gradient, spec.GradientRotation)
+            canvasStroke(
+                button,
+                canvasColor(spec.StrokeColor, Color3.fromRGB(0, 0, 0)),
+                canvasNumber(spec.StrokeThickness, 0.05) * metrics.Unit,
+                spec.StrokeTransparency,
+                Enum.ApplyStrokeMode.Border
+            )
+            canvasCorner(button, canvasNumber(spec.Corner, 0.3) * metrics.Unit)
+            local size = canvasSizeOf(spec, metrics)
+            if typeof(spec.Size) ~= "UDim2" and spec.Width == nil and spec.WidthScale == nil then
+                size = UDim2.new(0, math.floor(button.TextBounds.X + metrics.Unit), size.Y.Scale, size.Y.Offset)
+            end
+            button.Size = size
+            button.Position = canvasPositionOf(spec, metrics)
+            if spec.LayoutOrder ~= nil then
+                button.LayoutOrder = tonumber(spec.LayoutOrder) or 0
+            end
+            paint()
+        end)
+
+        button.MouseEnter:Connect(function()
+            hovered = true
+            paint()
+        end)
+        button.MouseLeave:Connect(function()
+            hovered, pressed = false, false
+            paint()
+        end)
+        button.MouseButton1Down:Connect(function()
+            pressed = true
+            paint()
+        end)
+        button.MouseButton1Up:Connect(function()
+            pressed = false
+            paint()
+        end)
+        button.Activated:Connect(function()
+            if enabled and type(spec.Callback) == "function" then
+                pcall(spec.Callback, handle)
+            end
+        end)
+
+        function handle.SetText(text)
+            spec.Text = tostring(text or "")
+            button.Text = spec.Text
+            return handle
+        end
+
+        function handle.SetCallback(callback)
+            spec.Callback = callback
+            return handle
+        end
+
+        function handle.SetEnabled(value)
+            enabled = value ~= false
+            paint()
+            return handle
+        end
+
+        return handle
+    end
+
+    local function canvasCreateImage(surface, spec)
+        local image = Instance.new("ImageLabel")
+        image.Name = tostring(spec.Name or "Image")
+        image.Active = false
+        image.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(0, 0, 0))
+        image.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 1), 0, 1)
+        image.BorderSizePixel = 0
+        image.ScaleType = Enum.ScaleType.Fit
+        image.ZIndex = tonumber(spec.ZIndex) or 7
+        canvasQueueParent(surface, image, canvasParentOf(surface, spec.Parent))
+
+        local handle = canvasMakeHandle(surface, image, "Image", spec, function()
+            local metrics = surface._metrics
+            image.Image = tostring(spec.Image or "")
+            image.ImageColor3 = canvasColor(spec.ImageColor, Color3.fromRGB(255, 255, 255))
+            image.ImageTransparency = math.clamp(canvasNumber(spec.Transparency, 0), 0, 1)
+            if spec.ScaleType ~= nil then
+                local mode = string.lower(tostring(spec.ScaleType))
+                image.ScaleType = mode == "stretch" and Enum.ScaleType.Stretch
+                    or (mode == "crop" and Enum.ScaleType.Crop or Enum.ScaleType.Fit)
+            end
+            canvasBaseApply(surface, image, spec)
+            if typeof(spec.Size) ~= "UDim2" and spec.Width == nil and spec.WidthScale == nil then
+                local height = image.Size.Y.Offset
+                image.Size = UDim2.fromOffset(height, height)
+            end
+            if spec.StrokeColor ~= nil or spec.StrokeThickness ~= nil then
+                canvasStroke(
+                    image,
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(255, 255, 255)),
+                    canvasNumber(spec.StrokeThickness, 0.08) * metrics.Unit,
+                    spec.StrokeTransparency,
+                    Enum.ApplyStrokeMode.Border
+                )
+            end
+            canvasCorner(image, canvasNumber(spec.Corner, 0.3) * metrics.Unit)
+        end)
+
+        function handle.SetImage(value)
+            spec.Image = value
+            image.Image = tostring(value or "")
+            return handle
+        end
+
+        return handle
+    end
+
+    local function canvasCreateBar(surface, spec)
+        local track = Instance.new("Frame")
+        track.Name = tostring(spec.Name or "Bar")
+        track.BackgroundColor3 = canvasColor(spec.Background, Runtime.Theme.Field)
+        track.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 0.25), 0, 1)
+        track.BorderSizePixel = 0
+        track.ClipsDescendants = true
+        track.ZIndex = tonumber(spec.ZIndex) or 7
+        canvasQueueParent(surface, track, canvasParentOf(surface, spec.Parent))
+
+        local fill = Instance.new("Frame")
+        fill.Name = "Fill"
+        fill.BackgroundColor3 = canvasColor(spec.FillColor, Runtime.Theme.Accent)
+        fill.BackgroundTransparency = math.clamp(canvasNumber(spec.FillTransparency, 0), 0, 1)
+        fill.BorderSizePixel = 0
+        fill.Position = UDim2.fromScale(0, 0)
+        fill.Size = UDim2.fromScale(0, 1)
+        fill.ZIndex = track.ZIndex + 1
+        fill.Parent = track
+
+        local handle = canvasMakeHandle(surface, track, "Bar", spec, function()
+            local metrics = surface._metrics
+            canvasBaseApply(surface, track, spec)
+            if typeof(spec.Size) ~= "UDim2" and spec.Height == nil and spec.HeightScale == nil then
+                track.Size = UDim2.new(track.Size.X.Scale, track.Size.X.Offset, 0, math.max(2, math.floor(metrics.Unit * 0.32)))
+            end
+            track.BackgroundColor3 = canvasColor(spec.Background, Runtime.Theme.Field)
+            fill.BackgroundColor3 = canvasColor(spec.FillColor, Runtime.Theme.Accent)
+            fill.Size = UDim2.fromScale(math.clamp(canvasNumber(spec.Alpha, 0), 0, 1), 1)
+            canvasCorner(track, canvasNumber(spec.Corner, 0.16) * metrics.Unit)
+            canvasCorner(fill, canvasNumber(spec.Corner, 0.16) * metrics.Unit)
+            canvasGradient(fill, spec.FillGradient, spec.GradientRotation)
+        end)
+
+        function handle.SetAlpha(alpha)
+            spec.Alpha = alpha
+            fill.Size = UDim2.fromScale(math.clamp(canvasNumber(alpha, 0), 0, 1), 1)
+            return handle
+        end
+
+        return handle
+    end
+
+    local function canvasCreateModel(surface, spec)
+        local view = Instance.new("ViewportFrame")
+        view.Name = tostring(spec.Name or "Model")
+        view.Ambient = canvasColor(spec.Ambient, Color3.fromRGB(170, 170, 180))
+        view.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(0, 0, 0))
+        view.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 1), 0, 1)
+        view.BorderSizePixel = 0
+        view.LightColor = canvasColor(spec.LightColor, Color3.fromRGB(255, 255, 255))
+        view.LightDirection = typeof(spec.LightDirection) == "Vector3" and spec.LightDirection
+            or Vector3.new(-0.6, -1, -0.4)
+        view.ZIndex = tonumber(spec.ZIndex) or 7
+        canvasQueueParent(surface, view, canvasParentOf(surface, spec.Parent))
+
+        local camera = Instance.new("Camera")
+        camera.FieldOfView = canvasNumber(spec.FieldOfView, 40)
+        camera.Parent = view
+        view.CurrentCamera = camera
+
+        local state = {
+            Template = nil,
+            Model = nil,
+            Center = Vector3.zero,
+            Radius = nil,
+            Distance = 10,
+            Angle = 0,
+            Spin = spec.Spin ~= false,
+            Height = canvasNumber(spec.CameraHeight, 0.35),
+            Zoom = canvasNumber(spec.Zoom, 1.05),
+        }
+
+        local function place()
+            if not state.Model then
+                return
+            end
+            local direction = Vector3.new(math.sin(state.Angle), state.Height, math.cos(state.Angle)).Unit
+            camera.CFrame = CFrame.lookAt(state.Center + direction * state.Distance, state.Center)
+        end
+
+        local function mount(template)
+            if state.Model then
+                state.Model:Destroy()
+                state.Model = nil
+            end
+            state.Template = template
+            local copy = canvasClone(template)
+            if not copy then
+                return
+            end
+            local boxCFrame, boxSize
+            if copy:IsA("Model") then
+                boxCFrame, boxSize = copy:GetBoundingBox()
+            elseif copy:IsA("BasePart") then
+                boxCFrame, boxSize = copy.CFrame, copy.Size
+            end
+            if not boxCFrame then
+                copy:Destroy()
+                return
+            end
+            state.Center = boxCFrame.Position
+            state.Radius = boxSize.Magnitude * 0.5
+            state.Distance = state.Radius / math.tan(math.rad(camera.FieldOfView / 2)) * state.Zoom
+            copy.Parent = view
+            state.Model = copy
+            place()
+        end
+
+        local handle = canvasMakeHandle(surface, view, "Model", spec, function()
+            local metrics = surface._metrics
+            canvasBaseApply(surface, view, spec)
+            if typeof(spec.Size) ~= "UDim2" and spec.Width == nil and spec.WidthScale == nil then
+                local height = view.Size.Y.Offset
+                view.Size = UDim2.fromOffset(height, height)
+            end
+            if spec.Corner ~= nil then
+                canvasCorner(view, canvasNumber(spec.Corner, 0) * metrics.Unit)
+            end
+            if spec.StrokeColor ~= nil or spec.StrokeThickness ~= nil then
+                canvasStroke(
+                    view,
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(255, 255, 255)),
+                    canvasNumber(spec.StrokeThickness, 0.08) * metrics.Unit,
+                    spec.StrokeTransparency,
+                    Enum.ApplyStrokeMode.Border
+                )
+            end
+            local zoom = canvasNumber(spec.Zoom, 1.05)
+            if zoom ~= state.Zoom and state.Radius then
+                state.Distance = state.Radius / math.tan(math.rad(camera.FieldOfView / 2)) * zoom
+            end
+            state.Zoom = zoom
+            state.Height = canvasNumber(spec.CameraHeight, 0.35)
+            if spec.Model ~= state.Template then
+                mount(spec.Model)
+            end
+            view.Visible = spec.Visible ~= false and state.Model ~= nil
+        end)
+
+        function handle.SetModel(template)
+            spec.Model = template
+            surface._queue(handle)
+            return handle
+        end
+
+        function handle.SetSpin(value)
+            state.Spin = value ~= false
+            return handle
+        end
+
+        function handle.Step(delta)
+            if state.Model and state.Spin then
+                state.Angle = (state.Angle + CANVAS_SPIN_SPEED * delta) % (math.pi * 2)
+                place()
+            end
+        end
+
+        table.insert(surface._models, handle)
+        return handle
+    end
+
+    local function createLibraryCanvasRow(config)
+        local style = {}
+        for key, value in pairs(CANVAS_STYLE) do
+            style[key] = value
+        end
+        canvasMerge(style, config.Style)
+
+        local titleText = config.Title ~= nil and tostring(config.Title) or tostring(config.Name)
+        local titleEnabled = config.ShowTitle ~= false
+        local searchEnabled = config.Search == true
+        local searchPlaceholder = tostring(config.SearchPlaceholder or "Search...")
+
+        local row = createLibraryTextRow({
+            Name = config.Name,
+            Text = titleText,
+        })
+        local aspect = row:FindFirstChildOfClass("UIAspectRatioConstraint")
+        if aspect then
+            aspect:Destroy()
+        end
+        row:SetAttribute("ChilliResponsiveAspect", nil)
+        row.ClipsDescendants = false
+        row.Size = UDim2.new(ROW_WIDTH_SCALE, 0, 0, 1)
+
+        local plate = row:FindFirstChild("Main")
+        local title = plate:FindFirstChild("Label")
+        local plateStroke = plate:FindFirstChildOfClass("UIStroke")
+        plate.ClipsDescendants = style.ClipContent ~= false
+        title.AnchorPoint = Vector2.new(0, 0)
+
+        local function hostWidthScale()
+            if RESIZE_KEEPS_OPTION_WIDTH then
+                return ROW_WIDTH_SCALE / ContentScale.X
+            end
+            return ROW_WIDTH_SCALE
+        end
+
+        local searchField = Instance.new("Frame")
+        searchField.Name = "SearchField"
+        searchField.AnchorPoint = Vector2.new(0.5, 0.5)
+        searchField.BackgroundColor3 = Runtime.Theme.Field
+        searchField.BackgroundTransparency = 0
+        searchField.BorderSizePixel = 0
+        searchField.Visible = false
+        searchField.ZIndex = 4
+        searchField.Parent = plate
+        addScaledStroke(searchField, Enum.ApplyStrokeMode.Border, 0.1)
+
+        local searchBox = Instance.new("TextBox")
+        searchBox.Name = "SearchInput"
+        searchBox.Active = true
+        searchBox.AnchorPoint = Vector2.new(0.5, 0.5)
+        searchBox.BackgroundTransparency = 1
+        searchBox.BorderSizePixel = 0
+        searchBox.ClearTextOnFocus = false
+        searchBox.MultiLine = false
+        searchBox.Position = UDim2.fromScale(0.5, 0.5)
+        searchBox.Size = UDim2.fromScale(0.9, 0.56)
+        searchBox.Text = ""
+        searchBox.PlaceholderText = searchPlaceholder
+        searchBox.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
+        searchBox.TextXAlignment = Enum.TextXAlignment.Center
+        searchBox.ZIndex = 5
+        searchBox.Parent = searchField
+        applyPlainTextStyle(searchBox)
+
+        local scroll = Instance.new("ScrollingFrame")
+        scroll.Name = "CanvasScroll"
+        scroll.Active = true
+        scroll.BackgroundTransparency = 1
+        scroll.BorderSizePixel = 0
+        scroll.CanvasSize = UDim2.new()
+        scroll.ElasticBehavior = Enum.ElasticBehavior.Never
+        scroll.ScrollBarImageColor3 = style.ScrollBarColor
+        scroll.ScrollBarImageTransparency = style.ScrollBarTransparency
+        scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+        scroll.ZIndex = 5
+        scroll.Parent = plate
+
+
+        local dockFrame = Instance.new("Frame")
+        dockFrame.Name = "CanvasDock"
+        dockFrame.BackgroundTransparency = 1
+        dockFrame.BorderSizePixel = 0
+        dockFrame.ClipsDescendants = false
+        dockFrame.Visible = false
+        dockFrame.ZIndex = 7
+        dockFrame.Parent = plate
+
+        local dockRule = Instance.new("Frame")
+        dockRule.Name = "CanvasDockRule"
+        dockRule.BackgroundColor3 = Color3.fromRGB(170, 174, 184)
+        dockRule.BorderSizePixel = 0
+        dockRule.Visible = false
+        dockRule.ZIndex = 7
+        dockRule.Parent = plate
+        local root = Instance.new("Frame")
+        root.Name = "CanvasRoot"
+        root.AutomaticSize = Enum.AutomaticSize.Y
+        root.BackgroundTransparency = 1
+        root.BorderSizePixel = 0
+        root.Position = UDim2.fromScale(0, 0)
+        root.Size = UDim2.new(1, 0, 0, 0)
+        root.ZIndex = 6
+        root.Parent = scroll
+
+        if string.lower(tostring(config.Layout or "stack")) ~= "free" then
+            local layout = Instance.new("UIListLayout")
+            layout.Name = "CanvasLayout"
+            layout.FillDirection = Enum.FillDirection.Vertical
+            layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+            layout.SortOrder = Enum.SortOrder.LayoutOrder
+            layout.VerticalAlignment = Enum.VerticalAlignment.Top
+            layout.Parent = root
+        end
+
+        local surface = setmetatable({
+            _kind = "Surface",
+            _style = style,
+            _root = root,
+            _scroll = scroll,
+            _plate = plate,
+            _row = row,
+            _elements = {},
+            _models = {},
+            _pendingParents = {},
+            _pendingApply = {},
+            _resizeHandlers = {},
+            _metrics = {
+                Unit = 16,
+                TextSize = 13,
+                LineHeight = style.LineHeight,
+                Font = normalTextFont,
+                Align = Enum.TextXAlignment.Left,
+                Width = 0,
+            },
+            _query = "",
+            _dockUnits = 0,
+            _dockGap = 0.22,
+            _dockRule = true,
+            _contentHeight = nil,
+            _dirty = true,
+            _alive = true,
+        }, SurfaceMethods)
+
+        function surface._queue(handle)
+            table.insert(surface._pendingApply, handle)
+            surface._dirty = true
+        end
+
+        local function flushParents()
+            local pending = surface._pendingParents
+            for index = #pending, 1, -1 do
+                local entry = pending[index]
+                local instance, parent = entry[1], entry[2]
+                if instance.Parent == nil and parent and parent.Parent ~= nil then
+                    local ok = pcall(function()
+                        instance.Parent = parent
+                    end)
+                    if ok then
+                        table.remove(pending, index)
+                    end
+                elseif instance.Parent ~= nil then
+                    table.remove(pending, index)
+                end
+            end
+        end
+
+        local function layout()
+            local host = row.Parent
+            local rowWidth = row.AbsoluteSize.X
+            if not host or rowWidth <= 0 then
+                return
+            end
+            local referenceWidth = host.AbsoluteSize.X * ROW_WIDTH_SCALE / math.max(ContentScale.X, 0.001)
+            if referenceWidth <= 0 then
+                referenceWidth = rowWidth
+            end
+
+            local bandHeight = referenceWidth / ROW_ASPECT * 0.85
+            local sideInset = rowWidth * 0.025
+            local padY = bandHeight * 0.2 * canvasNumber(style.Padding, 1)
+            local textSize = math.max(
+                8,
+                math.floor(referenceWidth * CANVAS_BODY_RATIO * canvasNumber(style.TextScale, 1) + 0.5)
+            )
+            local lineHeight = math.max(0.8, canvasNumber(style.LineHeight, 1.16))
+            local unit = textSize * lineHeight
+            local contentWidth = math.max(1, rowWidth - sideInset * 2)
+
+            local metrics = surface._metrics
+            metrics.TextSize = textSize
+            metrics.LineHeight = lineHeight
+            metrics.Unit = unit
+            metrics.Width = contentWidth
+            metrics.Font = canvasFont(style.Font) or normalTextFont
+            metrics.Align = CANVAS_ALIGN[string.lower(tostring(style.Alignment))] or Enum.TextXAlignment.Left
+
+            plate.BackgroundColor3 = canvasColor(style.BackgroundColor, Runtime.Theme.Row)
+            plate.BackgroundTransparency = math.clamp(canvasNumber(style.BackgroundTransparency, 0), 0, 1)
+            plate.ClipsDescendants = style.ClipContent ~= false
+            if plateStroke then
+                pcall(function()
+                    plateStroke.StrokeSizingMode = Enum.StrokeSizingMode.FixedSize
+                end)
+                plateStroke.Color = canvasColor(style.StrokeColor, Runtime.Theme.Stroke)
+                plateStroke.Transparency = math.clamp(canvasNumber(style.StrokeTransparency, 0), 0, 1)
+                plateStroke.Thickness = math.max(1, bandHeight * canvasNumber(style.StrokeScale, 0.05))
+            end
+
+            local showTitle = titleEnabled and titleText ~= ""
+            local headerHeight = (showTitle or searchEnabled) and bandHeight or 0
+            local fieldWidth = rowWidth * CONTROL_LAYOUT.WideWidth
+            local fieldCenterX = rowWidth * CONTROL_LAYOUT.WideCenterX
+            searchField.Visible = searchEnabled
+            if searchEnabled then
+                searchField.Size = UDim2.fromOffset(fieldWidth, bandHeight * 0.62)
+                searchField.Position = UDim2.fromOffset(fieldCenterX, bandHeight / 2)
+            end
+
+            local titleHeight = bandHeight * 0.64 * canvasNumber(style.TitleScale, 1)
+            local titleRight = searchEnabled and (fieldCenterX - fieldWidth / 2 - sideInset)
+                or (rowWidth - sideInset)
+            title.Visible = showTitle
+            title.Text = titleText
+            title.Position = UDim2.fromOffset(sideInset, (bandHeight - titleHeight) / 2)
+            title.Size = UDim2.fromOffset(math.max(1, titleRight - sideInset), titleHeight)
+            title.TextXAlignment = searchEnabled and Enum.TextXAlignment.Left or metrics.Align
+
+            local top = headerHeight > 0 and headerHeight or padY
+            if surface._dockUnits > 0 then
+                local dockHeight = math.floor(surface._dockUnits * unit + 0.5)
+                local dockGap = math.floor(canvasNumber(surface._dockGap, 0.22) * unit + 0.5)
+                local dockRuleHeight = surface._dockRule ~= false
+                    and math.max(1, math.floor(textSize * 0.12 + 0.5))
+                    or 0
+                dockFrame.Visible = true
+                dockFrame.Position = UDim2.fromOffset(sideInset, top)
+                dockFrame.Size = UDim2.fromOffset(contentWidth, dockHeight)
+                dockRule.Visible = dockRuleHeight > 0
+                if dockRuleHeight > 0 then
+                    dockRule.BackgroundColor3 = canvasColor(surface._dockRuleColor, Color3.fromRGB(170, 174, 184))
+                    dockRule.Position = UDim2.fromOffset(sideInset, top + dockHeight + dockGap)
+                    dockRule.Size = UDim2.fromOffset(contentWidth, dockRuleHeight)
+                    top += dockHeight + dockGap * 2 + dockRuleHeight
+                else
+                    top += dockHeight + dockGap
+                end
+            else
+                dockFrame.Visible = false
+                dockRule.Visible = false
+            end
+            flushParents()
+
+            for _, handler in ipairs(surface._resizeHandlers) do
+                pcall(handler, surface._api, contentWidth, unit)
+            end
+            flushParents()
+            for _, handle in ipairs(surface._elements) do
+                pcall(handle.Apply)
+            end
+
+            local contentHeight = surface._contentHeight
+            if contentHeight == nil then
+                contentHeight = math.ceil(root.AbsoluteSize.Y)
+            end
+            contentHeight = math.max(
+                contentHeight,
+                math.ceil(unit * math.max(0, canvasNumber(style.MinLines, 0))),
+                1
+            )
+            local maxLines = math.max(0, math.floor(canvasNumber(style.MaxLines, 0)))
+            local limit = maxLines > 0 and math.ceil(unit * maxLines) or math.huge
+            local viewHeight = math.min(contentHeight, limit)
+            local scrolls = contentHeight > viewHeight + 0.5
+            local barWidth = math.max(2, math.floor(referenceWidth * 0.006 + 0.5))
+
+            scroll.Position = UDim2.fromOffset(sideInset, top)
+            scroll.Size = UDim2.fromOffset(contentWidth, viewHeight)
+            scroll.CanvasSize = UDim2.fromOffset(0, contentHeight)
+            scroll.ScrollBarThickness = scrolls and barWidth or 0
+            scroll.ScrollingEnabled = scrolls
+            scroll.ScrollBarImageColor3 = canvasColor(style.ScrollBarColor, Color3.fromRGB(255, 255, 255))
+            scroll.ScrollBarImageTransparency = math.clamp(canvasNumber(style.ScrollBarTransparency, 0), 0, 1)
+
+            local plateHeight = math.max(1, math.ceil(top + viewHeight + padY))
+            local rowGap = math.ceil(bandHeight * 0.15 / 0.85)
+            plate.Size = UDim2.new(1, 0, 0, plateHeight)
+            row.Size = UDim2.new(hostWidthScale(), 0, 0, plateHeight + rowGap)
+        end
+
+        local lastWidth, lastRootHeight = -1, -1
+        local visibilityClock, spinClock, onScreen = CANVAS_VISIBILITY_CHECK, 0, true
+
+        row:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+            if math.abs(row.AbsoluteSize.X - lastWidth) >= 0.5 then
+                lastWidth = row.AbsoluteSize.X
+                surface._dirty = true
+            end
+        end)
+
+        root:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+            if math.abs(root.AbsoluteSize.Y - lastRootHeight) >= 0.5 then
+                lastRootHeight = root.AbsoluteSize.Y
+                surface._dirty = true
+            end
+        end)
+
+        ContentScale.OnChanged(function()
+            if not surface._alive then
+                return false
+            end
+            surface._dirty = true
+        end)
+
+        searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+            if surface._query ~= searchBox.Text then
+                surface._query = searchBox.Text
+                if type(config.OnSearch) == "function" then
+                    pcall(config.OnSearch, surface, surface._query)
+                end
+                surface._dirty = true
+            end
+        end)
+
+        searchBox.Focused:Connect(function()
+            TweenService:Create(searchField, TweenInfo.new(0.16), { BackgroundColor3 = Runtime.Theme.ItemHover }):Play()
+        end)
+        searchBox.FocusLost:Connect(function()
+            TweenService:Create(searchField, TweenInfo.new(0.16), { BackgroundColor3 = Runtime.Theme.Field }):Play()
+        end)
+
+        local heartbeat = RunService.Heartbeat:Connect(function(deltaTime)
+            if not surface._alive or row.Parent == nil then
+                return
+            end
+            visibilityClock += deltaTime
+            if visibilityClock >= CANVAS_VISIBILITY_CHECK then
+                visibilityClock = 0
+                onScreen = canvasShown(row)
+            end
+
+            if #surface._pendingParents > 0 then
+                flushParents()
+                surface._dirty = true
+            end
+
+            local pending = surface._pendingApply
+            if #pending > 0 then
+                for index = 1, #pending do
+                    pcall(pending[index].Apply)
+                end
+                table.clear(pending)
+                surface._dirty = true
+            end
+
+            if surface._dirty then
+                surface._dirty = false
+                if not pcall(layout) then
+                    surface._dirty = true
+                end
+            end
+
+            if onScreen and #surface._models > 0 then
+                spinClock += deltaTime
+                if spinClock >= 1 / CANVAS_SPIN_RATE then
+                    local step = spinClock
+                    spinClock = 0
+                    for _, model in ipairs(surface._models) do
+                        pcall(model.Step, step)
+                    end
+                end
+            end
+        end)
+
+        surface._impl = {
+            Root = function()
+                return root
+            end,
+            Dock = function()
+                return dockFrame
+            end,
+            SetDock = function(units, options)
+                surface._dockUnits = math.max(0, canvasNumber(units, 0))
+                if type(options) == "table" then
+                    if options.Gap ~= nil then
+                        surface._dockGap = canvasNumber(options.Gap, 0.22)
+                    end
+                    if options.Divider ~= nil then
+                        surface._dockRule = options.Divider ~= false
+                    end
+                    if options.DividerColor ~= nil then
+                        surface._dockRuleColor = options.DividerColor
+                    end
+                end
+                surface._dirty = true
+            end,
+            Scroll = function()
+                return scroll
+            end,
+            Plate = function()
+                return plate
+            end,
+            Unit = function()
+                return surface._metrics.Unit
+            end,
+            Width = function()
+                return surface._metrics.Width
+            end,
+            TextSize = function()
+                return surface._metrics.TextSize
+            end,
+            LineHeight = function()
+                return surface._metrics.LineHeight
+            end,
+            Font = function()
+                return surface._metrics.Font
+            end,
+            Query = function()
+                return surface._query
+            end,
+            Metrics = function()
+                local metrics = surface._metrics
+                return {
+                    Unit = metrics.Unit,
+                    Width = metrics.Width,
+                    TextSize = metrics.TextSize,
+                    LineHeight = metrics.LineHeight,
+                    Font = metrics.Font,
+                }
+            end,
+            SetContentHeight = function(pixels)
+                surface._contentHeight = tonumber(pixels)
+                surface._dirty = true
+            end,
+            SetContentLines = function(lines)
+                local count = tonumber(lines)
+                surface._contentHeight = count and math.ceil(count * surface._metrics.Unit) or nil
+                surface._dirty = true
+            end,
+            Invalidate = function()
+                surface._dirty = true
+            end,
+            Clear = function()
+                for index = #surface._elements, 1, -1 do
+                    local handle = surface._elements[index]
+                    surface._elements[index] = nil
+                    local instance = handle.Get()
+                    if instance then
+                        instance:Destroy()
+                    end
+                end
+                table.clear(surface._models)
+                table.clear(surface._pendingParents)
+                table.clear(surface._pendingApply)
+                surface._dirty = true
+            end,
+            OnResize = function(handler)
+                if type(handler) == "function" then
+                    table.insert(surface._resizeHandlers, handler)
+                end
+            end,
+            SetStyle = function(patch)
+                canvasMerge(style, patch)
+                surface._dirty = true
+            end,
+            GetStyle = function()
+                local copy = {}
+                for key, value in pairs(style) do
+                    copy[key] = value
+                end
+                return copy
+            end,
+            SetTitle = function(value)
+                titleText = tostring(value or "")
+                surface._dirty = true
+            end,
+            SetSearchEnabled = function(value)
+                searchEnabled = value == true
+                surface._dirty = true
+            end,
+            SetSearchQuery = function(value)
+                surface._query = tostring(value or "")
+                searchBox.Text = surface._query
+                surface._dirty = true
+            end,
+            Attach = function(instance, parent)
+                if typeof(instance) == "Instance" then
+                    canvasQueueParent(surface, instance, canvasParentOf(surface, parent))
+                end
+                return instance
+            end,
+            Frame = function(spec)
+                return canvasCreateFrame(surface, type(spec) == "table" and spec or {})
+            end,
+            Text = function(spec)
+                return canvasCreateText(surface, type(spec) == "table" and spec or {})
+            end,
+            Button = function(spec)
+                return canvasCreateButton(surface, type(spec) == "table" and spec or {})
+            end,
+            Image = function(spec)
+                return canvasCreateImage(surface, type(spec) == "table" and spec or {})
+            end,
+            Model = function(spec)
+                return canvasCreateModel(surface, type(spec) == "table" and spec or {})
+            end,
+            Bar = function(spec)
+                return canvasCreateBar(surface, type(spec) == "table" and spec or {})
+            end,
+        }
+
+        surface._api = setmetatable({ _impl = surface._impl }, SurfaceMethods)
+
+        local builder = type(config.Build) == "function" and config.Build or nil
+        if builder then
+            table.insert(surface._resizeHandlers, 1, function(api, width, unit)
+                if builder then
+                    local pending = builder
+                    builder = nil
+                    pcall(pending, api, width, unit)
+                end
+            end)
+        end
+
+        local controller = {}
+
+        function controller.GetSurface()
+            return surface._api
+        end
+
+        function controller.GetTitle()
+            return titleText
+        end
+
+        function controller.SetTitle(value)
+            titleText = tostring(value or "")
+            surface._dirty = true
+        end
+
+        function controller.GetStyle()
+            return surface._impl.GetStyle()
+        end
+
+        function controller.SetStyle(patch)
+            surface._impl.SetStyle(patch)
+        end
+
+        function controller.SetSearchEnabled(value)
+            surface._impl.SetSearchEnabled(value)
+        end
+
+        function controller.SetSearchQuery(value)
+            surface._impl.SetSearchQuery(value)
+        end
+
+        function controller.GetSearchQuery()
+            return surface._query
+        end
+
+        function controller.Destroy()
+            surface._alive = false
+            heartbeat:Disconnect()
+            for _, handle in ipairs(surface._elements) do
+                local instance = handle.Get()
+                if instance then
+                    instance:Destroy()
+                end
+            end
+            table.clear(surface._elements)
+            table.clear(surface._models)
+        end
+
+        return row, controller
+    end
+
+    return createLibraryCanvasRow
+end)()
+local ACTION_OPTION_TYPES = { [4] = true, [5] = true }
+
+ApiImpl[86] = function(self, optionType, config)
+    assertObject(self, "Section")
+    local typeCode, normalizedType = Runtime[101](optionType)
+    local isActionOption = ACTION_OPTION_TYPES[typeCode] == true
+    local factory = optionFactories[typeCode]
+    assert(factory, ("Unsupported feature type: %s"):format(optionType))
+
+    local optionConfig = normalizeConfig(config, optionType)
+    assert(
+        not self._optionByName[optionConfig.Name],
+        ("Feature '%s' already exists in Section '%s'")
+            :format(optionConfig.Name, self.Name)
+    )
+    local requestedState = nil
+    if optionConfig.State ~= nil then
+        assert(
+            typeCode ~= 1,
+            "Button khong co value nen khong the bind State"
+        )
+        requestedState = resolveState(optionConfig.State)
+        assert(
+            requestedState.Window == self.Tab.Window,
+            "State and Feature must belong to the same Window"
+        )
+        optionConfig.Default = callStateTransform(
+            optionConfig.StateToOption,
+            requestedState.Value,
+            copyLinkedValue(requestedState.Value),
+            nil,
+            requestedState
+        )
+    end
+    local userCallback = optionConfig.Callback
+    local optionHandle = nil
+    optionConfig.Callback = function(value, ...)
+        local callbackArguments = table.pack(value, ...)
+        local stateChanged = false
+        if optionHandle and optionHandle.State then
+            local stateValue = callStateTransform(
+                optionHandle._stateBinding.FromOption,
+                value,
+                copyLinkedValue(value),
+                optionHandle,
+                optionHandle.State
+            )
+            stateChanged = runStateTransaction(
+                optionHandle.State,
+                stateValue,
+                true,
+                optionHandle,
+                callbackArguments
+            ) == true
+        end
+
+        
+        
+        
+        
+        local firedByState = stateChanged
+            and optionHandle ~= nil
+            and optionHandle.State ~= nil
+            and stateUsesPrimaryCallback(optionHandle.State)
+            and optionHandle.State._primaryOption == optionHandle
+
+        if (isActionOption and not firedByState)
+            or not optionHandle
+            or not optionHandle.State
+            or not stateUsesPrimaryCallback(optionHandle.State)
+        then
+            safeCallback(
+                userCallback,
+                table.unpack(
+                    callbackArguments,
+                    1,
+                    callbackArguments.n
+                )
+            )
+        end
+        if optionHandle
+            and not optionHandle.State
+            and Runtime.optionChangedHook
+        then
+            Runtime.optionChangedHook(optionHandle)
+        end
+    end
+    
+    local rowConfig = optionConfig
+    if optionConfig.DisplayName ~= nil then
+        rowConfig = copyTable(optionConfig)
+        rowConfig.Name = tostring(optionConfig.DisplayName)
+    end
+    local row, controller = factory(rowConfig)
+    row.Name = optionConfig.Name
+    optionHandle = addRowToSection(
+        self,
+        normalizedType,
+        row,
+        controller
+    )
+    optionHandle.DisplayName = tostring(
+        optionConfig.DisplayName or optionConfig.Name
+    )
+    optionHandle._userCallback = userCallback
+    
+    
+    
+    optionHandle._sourceConfig = optionConfig
+    
+    
+    
+    
+    
+    
+    
+    
+    optionHandle._quickName = optionConfig.QuickName
+        and tostring(optionConfig.QuickName)
+        or nil
+    optionHandle._quickPinDefault = optionConfig.Pin == true
+    optionHandle._quickBarDefault = optionConfig.QuickBar
+        or optionConfig.QuickGroup
+        or optionConfig.Bar
+    optionHandle._quickKeyDefault = optionConfig.Keybind
+    optionHandle._quickIgnored = optionConfig.QuickIgnore == true
+        or optionConfig.Quick == false
+    
+    
+    
+    optionHandle._keybindGroup = optionConfig.KeybindGroup ~= nil
+        and tostring(optionConfig.KeybindGroup)
+        or nil
+    self._optionByName[optionHandle.Name] = optionHandle
+    if controller.GetValue and controller.SetValue then
+        local state = requestedState
+        if not state then
+            state = createStateObject(self.Tab.Window, {
+                Name = (
+                    self.Tab.Name
+                    .. " > "
+                    .. self.Name
+                    .. " > "
+                    .. optionHandle.Name
+                ),
+                Default = controller.GetValue(),
+                Save = false,
+            }, false)
+        end
+        bindOptionToState(optionHandle, state, optionConfig)
+    elseif requestedState then
+        error(
+            ("%s khong ho tro State vi khong co GetValue/SetValue")
+                :format(optionHandle.Type),
+            2
+        )
+    end
+
+    
+    
+    local visibilitySource = optionConfig.ShowWhen
+        or optionConfig.DependsOn
+        or optionConfig.VisibleWhen
+    if visibilitySource ~= nil then
+        local visibilityOptions = type(optionConfig.Visibility) == "table"
+                and copyTable(optionConfig.Visibility)
+            or {}
+        if optionConfig.ShowWhenValue ~= nil then
+            visibilityOptions.Value = optionConfig.ShowWhenValue
+        elseif optionConfig.VisibleWhenValue ~= nil then
+            visibilityOptions.Value = optionConfig.VisibleWhenValue
+        end
+        if optionConfig.VisibilityPredicate ~= nil then
+            visibilityOptions.Predicate = optionConfig.VisibilityPredicate
+        end
+        if optionConfig.AnimateVisibility ~= nil then
+            visibilityOptions.Animated = optionConfig.AnimateVisibility
+        end
+        ApiImpl[47](optionHandle, visibilitySource, visibilityOptions)
+    end
+
+    
+    local subSource = optionConfig.SubOf
+        or optionConfig.ChildOf
+        or optionConfig.Under
+    if subSource ~= nil then
+        ApiImpl[48](optionHandle, subSource)
+    end
+    return optionHandle
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ApiImpl[87] = function(self, expanded, animated)
+    assertObject(self, "Section")
+    expanded = expanded == true
+    if self.Expanded == expanded and animated ~= false then
+        return self
+    end
+
+    closeActiveDropdown()
+    self._measureExpandedHeight()
+    self.Expanded = expanded
+    self._animationSerial = self._animationSerial + 1
+    local serial = self._animationSerial
+    local targetHeight = expanded and self._expandedHeight or 0
+    local targetRotation = expanded and 0 or -90
+
+    if self._heightTween then
+        self._heightTween:Cancel()
+    end
+    if self._arrowTween then
+        self._arrowTween:Cancel()
+    end
+
+    
+    
+    
+    self._group.ClipsDescendants = true
+
+    if expanded then
+        
+        
+        self._group.Visible = true
+    end
+
+    if animated == false then
+        self._group.Size = UDim2.new(1, 0, 0, targetHeight)
+        self._group.Visible = expanded
+        self._group.ClipsDescendants = not expanded
+        self._arrow.Rotation = targetRotation
+        task.defer(self._refreshContainer)
+        task.defer(self.Tab._updateCanvas)
+        return self
+    end
+
+    local info = TweenInfo.new(
+        0.28,
+        Enum.EasingStyle.Quint,
+        Enum.EasingDirection.Out
+    )
+    self._heightTween = TweenService:Create(
+        self._group,
+        info,
+        {
+            Size = UDim2.new(1, 0, 0, targetHeight),
+        }
+    )
+    self._arrowTween = TweenService:Create(
+        self._arrow,
+        TweenInfo.new(
+            0.24,
+            Enum.EasingStyle.Quad,
+            Enum.EasingDirection.Out
+        ),
+        {
+            Rotation = targetRotation,
+        }
+    )
+
+    self._heightTween.Completed:Connect(function()
+        if serial == self._animationSerial then
+            self._heightTween = nil
+            self._arrowTween = nil
+            self._group.Visible = self.Expanded
+            self._group.ClipsDescendants = not self.Expanded
+            self._refreshHeight()
+            self._refreshContainer()
+        end
+    end)
+    self._heightTween:Play()
+    self._arrowTween:Play()
+    return self
+end
+
+ApiImpl[88] = function(self)
+    return ApiImpl[87](self, not self.Expanded, true)
+end
+
+ApiImpl[89] = function(self)
+    assertObject(self, "Section")
+    self._destroyed = true
+    closeActiveDropdown()
+    self._animationSerial = self._animationSerial + 1
+    if self._heightTween then
+        self._heightTween:Cancel()
+        self._heightTween = nil
+    end
+    if self._arrowTween then
+        self._arrowTween:Cancel()
+        self._arrowTween = nil
+    end
+    for index = #self.Options, 1, -1 do
+        local option = self.Options[index]
+        if option and not option._destroyed then
+            ApiImpl[85](option)
+        end
+    end
+    for index = #self._connections, 1, -1 do
+        local connection = self._connections[index]
+        if connection.Connected then
+            connection:Disconnect()
+        end
+        self._connections[index] = nil
+    end
+    self.Tab._sectionByName[self.Name] = nil
+    for index, section in ipairs(self.Tab.Sections) do
+        if section == self then
+            table.remove(self.Tab.Sections, index)
+            break
+        end
+    end
+    self._container:Destroy()
+    if not self.Tab._destroyed then
+        task.defer(self.Tab._updateCanvas)
+    end
+end
+
+ApiImpl[90] = function(self, config)
+    assertObject(self, "Tab")
+    local sectionConfig = normalizeConfig(config, "Section")
+    assert(
+        not self._sectionByName[sectionConfig.Name],
+        ("Section '%s' da ton tai trong Tab '%s'")
+            :format(sectionConfig.Name, self.Name)
+    )
+
+    local initiallyExpanded = sectionConfig.Expanded
+    if initiallyExpanded == nil then
+        initiallyExpanded = self.SectionsExpanded
+    end
+
+    self._nextSectionOrder = self._nextSectionOrder + 1
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    local container = Instance.new("Frame")
+    container.Name = sectionConfig.Name .. "Section"
+    container.Active = false
+    container.BackgroundTransparency = 1
+    container.BorderSizePixel = 0
+    container.ClipsDescendants = false
+    container.LayoutOrder = self._nextSectionOrder
+    container.Size = UDim2.new(1, 0, 0, 0)
+    container.ZIndex = 3
+    container.Parent = self.Page
+
+    local sectionLayout = Instance.new("UIListLayout")
+    sectionLayout.Name = "SectionLayout"
+    sectionLayout.FillDirection = Enum.FillDirection.Vertical
+    sectionLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    sectionLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+    sectionLayout.Padding = UDim.new(0, 2)
+    sectionLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    sectionLayout.Parent = container
+
+    local sectionDisplayName = tostring(
+        sectionConfig.DisplayName or sectionConfig.Name
+    )
+    local header, arrow, headerButton = createSectionHeader(
+        sectionDisplayName,
+        1,
+        self.Page
+    )
+    header.Parent = container
+
+    local lastHeaderWidth = -1
+    local function updateHeaderHeight(force)
+        if not force and (Runtime.windowAnimating or not self.Page.Visible) then
+            return
+        end
+        local availableWidth = container.AbsoluteSize.X
+        if availableWidth <= 0 then
+            availableWidth = self.Page.AbsoluteSize.X
+        end
+        if availableWidth <= 0 then
+            return
+        end
+        local scale = ContentScale.X
+        local referenceWidth = availableWidth / scale
+        if math.abs(referenceWidth - lastHeaderWidth) < 0.5 then
+            return
+        end
+        lastHeaderWidth = referenceWidth
+        local headerHeight = math.max(
+            1,
+            math.floor(
+                referenceWidth * 0.97 / SECTION_HEADER_ASPECT + 0.5
+            )
+        )
+        local headerWidthScale = 0.97
+        if RESIZE_KEEPS_OPTION_WIDTH then
+            headerWidthScale = 0.97 / scale
+        end
+        header.Size = UDim2.new(headerWidthScale, 0, 0, headerHeight)
+    end
+
+    ContentScale.OnChanged(function()
+        if container.Parent == nil then
+            return false
+        end
+        updateHeaderHeight()
+    end)
+
+    local group = Instance.new("Frame")
+    group.Name = "CollapsibleContent"
+    group.Active = false
+    group.BackgroundTransparency = 1
+    group.BorderSizePixel = 0
+    group.ClipsDescendants = true
+    group.LayoutOrder = 2
+    group.Size = UDim2.new(1, 0, 0, 0)
+    group.ZIndex = 3
+    group.Parent = container
+
+    local content = Instance.new("Frame")
+    content.Name = "Content"
+    content.Active = false
+    content.BackgroundTransparency = 1
+    content.BorderSizePixel = 0
+    content.Position = UDim2.fromScale(0, 0)
+    content.Size = UDim2.new(1, 0, 0, 1)
+    content.ZIndex = 3
+    content.Parent = group
+
+    local contentLayout = Instance.new("UIListLayout")
+    contentLayout.Name = "OptionLayout"
+    contentLayout.FillDirection = Enum.FillDirection.Vertical
+    contentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    contentLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+    contentLayout.Padding = UDim.new(0, 0)
+    contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    contentLayout.Parent = content
+
+    local section = setmetatable({
+        _kind = "Section",
+        _destroyed = false,
+        _container = container,
+        _header = header,
+        _arrow = arrow,
+        _group = group,
+        _content = content,
+        _connections = {},
+        _layout = contentLayout,
+        _optionByName = {},
+        _sectionLayout = sectionLayout,
+        _expandedHeight = 0,
+        _nextOptionOrder = 0,
+        _animationSerial = 0,
+        DisplayName = sectionDisplayName,
+        Expanded = initiallyExpanded ~= false,
+        Name = sectionConfig.Name,
+        Options = {},
+        Tab = self,
+    }, SectionMethods)
+
+    local containerRefreshQueued = false
+    section._refreshContainer = function()
+        if containerRefreshQueued or section._destroyed then
+            return
+        end
+        containerRefreshQueued = true
+        task.defer(function()
+            containerRefreshQueued = false
+            if section._destroyed then
+                return
+            end
+            local measuredHeight = math.max(
+                0,
+                math.ceil(sectionLayout.AbsoluteContentSize.Y)
+            )
+            local summedHeight = 0
+            local visibleCount = 0
+            for _, child in ipairs(container:GetChildren()) do
+                if child:IsA("GuiObject") and child.Visible then
+                    visibleCount = visibleCount + 1
+                    summedHeight = summedHeight + math.max(
+                        0,
+                        child.AbsoluteSize.Y
+                    )
+                end
+            end
+            if visibleCount > 1 then
+                summedHeight = summedHeight
+                    + (visibleCount - 1)
+                        * (
+                            sectionLayout.Padding.Offset
+                            + sectionLayout.Padding.Scale
+                                * container.AbsoluteSize.Y
+                        )
+            end
+            local sectionHeight = math.max(
+                measuredHeight,
+                math.ceil(summedHeight)
+            )
+            container.Size = UDim2.new(1, 0, 0, sectionHeight)
+            self._updateCanvas()
+        end)
+    end
+
+    
+    
+    
+    local heightRefreshQueued = false
+    local heightRefreshAgain = false
+    section._measureExpandedHeight = function()
+        local measuredHeight = math.max(
+            0,
+            math.ceil(contentLayout.AbsoluteContentSize.Y)
+        )
+        local summedHeight = 0
+        local visibleCount = 0
+        for _, child in ipairs(content:GetChildren()) do
+            if child:IsA("GuiObject") and child.Visible then
+                visibleCount = visibleCount + 1
+                local childHeight = child.AbsoluteSize.Y
+                if childHeight <= 0 then
+                    childHeight = math.max(0, child.Size.Y.Offset)
+                end
+                summedHeight = summedHeight + childHeight
+            end
+        end
+        if visibleCount > 1 then
+            summedHeight = summedHeight
+                + (visibleCount - 1)
+                    * (
+                        contentLayout.Padding.Offset
+                        + contentLayout.Padding.Scale
+                            * content.AbsoluteSize.Y
+                    )
+        end
+        section._expandedHeight = math.max(
+            measuredHeight,
+            math.ceil(summedHeight)
+        )
+        return section._expandedHeight
+    end
+
+    local function applyMeasuredHeight()
+        section._measureExpandedHeight()
+        content.Size = UDim2.new(
+            1,
+            0,
+            0,
+            math.max(section._expandedHeight, 1)
+        )
+        if not section._heightTween then
+            group.Size = UDim2.new(
+                1,
+                0,
+                0,
+                section.Expanded and section._expandedHeight or 0
+            )
+            group.Visible = section.Expanded
+            group.ClipsDescendants = not section.Expanded
+        end
+        section._refreshContainer()
+    end
+
+    section._refreshHeight = function()
+        if section._destroyed then
+            return
+        end
+        if heightRefreshQueued then
+            heightRefreshAgain = true
+            return
+        end
+        heightRefreshQueued = true
+        task.defer(function()
+            if section._destroyed then
+                heightRefreshQueued = false
+                return
+            end
+            
+            
+            
+            
+            if Runtime.windowAnimating then
+                heightRefreshQueued = false
+                task.delay(0.12, section._refreshHeight)
+                return
+            end
+            
+            
+            if not section.Tab.Page.Visible then
+                heightRefreshQueued = false
+                return
+            end
+            applyMeasuredHeight()
+            heightRefreshQueued = false
+            if heightRefreshAgain then
+                heightRefreshAgain = false
+                section._refreshHeight()
+            end
+        end)
+    end
+
+    
+    section._refreshLayout = function()
+        if section._destroyed then
+            return
+        end
+        updateHeaderHeight(true)
+        for _, updater in ipairs(section._rowUpdaters or {}) do
+            updater(true)
+        end
+        applyMeasuredHeight()
+        section._refreshContainer()
+    end
+
+    local stabilizationSerial = 0
+    local stabilizationRunning = false
+    section._stabilizeLayout = function()
+        stabilizationSerial = stabilizationSerial + 1
+        if stabilizationRunning then
+            return
+        end
+        stabilizationRunning = true
+        task.spawn(function()
+            local observedSerial = -1
+            local quietFrames = 0
+            while quietFrames < 2 and not section._destroyed do
+                RunService.Heartbeat:Wait()
+                applyMeasuredHeight()
+                if observedSerial == stabilizationSerial then
+                    quietFrames = quietFrames + 1
+                else
+                    observedSerial = stabilizationSerial
+                    quietFrames = 0
+                end
+            end
+            stabilizationRunning = false
+            if not section._destroyed
+                and observedSerial ~= stabilizationSerial
+            then
+                section._stabilizeLayout()
+            end
+        end)
+    end
+
+    table.insert(section._connections, contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
+        section._refreshHeight
+    ))
+    table.insert(section._connections, self.Page:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+        section._refreshHeight
+    ))
+    table.insert(section._connections, self.Page:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+        updateHeaderHeight
+    ))
+    table.insert(section._connections, container:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+        updateHeaderHeight
+    ))
+    table.insert(section._connections, sectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
+        section._refreshContainer
+    ))
+    table.insert(section._connections, header:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+        section._refreshContainer
+    ))
+    table.insert(section._connections, connectSafeActivation(headerButton, function()
+        ApiImpl[88](section)
+    end))
+
+    table.insert(self.Sections, section)
+    self._sectionByName[section.Name] = section
+    updateHeaderHeight()
+    ApiImpl[87](section, section.Expanded, false)
+    task.defer(updateHeaderHeight)
+    task.defer(section._refreshHeight)
+    task.defer(section._refreshContainer)
+    return section
+end
+
+
+ApiImpl[91] = function(self)
+    assertObject(self, "Tab")
+    ApiImpl[94](self.Window, self)
+    return self
+end
+
+ApiImpl[92] = function(self)
+    assertObject(self, "Tab")
+    assert(
+        self ~= self.Window.DefaultTab,
+        "Khong the xoa DefaultTab; UI luon phai co it nhat 1 tab"
+    )
+    self._destroyed = true
+    for index = #self.Sections, 1, -1 do
+        local section = self.Sections[index]
+        if section and not section._destroyed then
+            ApiImpl[89](section)
+        end
+    end
+    self.Page:Destroy()
+    self.Button:Destroy()
+
+    for index, tab in ipairs(self.Window.Tabs) do
+        if tab == self then
+            table.remove(self.Window.Tabs, index)
+            break
+        end
+    end
+    self.Window._tabByName[self.Name] = nil
+
+    if self.Window.SelectedTab == self then
+        ApiImpl[94](self.Window, self.Window.DefaultTab)
+    end
+    ApiImpl[93](self.Window)
+end
+
+ApiImpl[93] = function(self)
+    assertObject(self, "Window")
+    local count = #self.Tabs
+    if count == 0 then
+        return
+    end
+    
+    
+    local scale = ContentScale.Y
+    
+    for _, column in pairs(TabColumns) do
+        local columnTabs = {}
+        for _, tab in ipairs(self.Tabs) do
+            if tab.Column == column then
+                table.insert(columnTabs, tab)
+            end
+        end
+        local columnCount = #columnTabs
+        if columnCount > 0 then
+            local gapRatio = column.GapRatio or TAB_LAYOUT.GapRatio
+            local fittedHeight = TAB_LAYOUT.Span
+                * scale
+                / (
+                    columnCount
+                    + math.max(columnCount - 1, 0) * gapRatio
+                )
+            local tabHeight = math.min(
+                TAB_LAYOUT.NormalHeight,
+                fittedHeight
+            ) / scale
+            column.Layout.Padding = UDim.new(
+                tabHeight * gapRatio,
+                0
+            )
+            for index, tab in ipairs(columnTabs) do
+                tab.Button.LayoutOrder = index
+                tab.Button.Size = UDim2.new(1, 0, tabHeight, 0)
+            end
+        end
+    end
+end
+
+local function setTabSelected(tab, selected)
+    tab.Page.Visible = selected
+    local base = tab.Button:FindFirstChild("Main")
+    local fill = base and base:FindFirstChild("ColorFrame")
+    if not fill then
+        return
+    end
+    local label = fill:FindFirstChild("Label")
+    local fillColor = selected and Runtime.Theme.Accent or Runtime.Theme.TabIdle
+    local textColor = selected and Runtime.Theme.Text or Runtime.Theme.TabIdleText
+    if tab.Button:GetAttribute("ThemeReady") then
+        local info = TweenInfo.new(
+            0.14,
+            Enum.EasingStyle.Quad,
+            Enum.EasingDirection.Out
+        )
+        TweenService:Create(fill, info, { BackgroundColor3 = fillColor }):Play()
+        if label then
+            TweenService:Create(label, info, { TextColor3 = textColor }):Play()
+        end
+    else
+        tab.Button:SetAttribute("ThemeReady", true)
+        fill.BackgroundColor3 = fillColor
+        if label then
+            label.TextColor3 = textColor
+        end
+    end
+end
+
+ApiImpl[94] = function(self, tabOrName)
+    assertObject(self, "Window")
+    local tab = tabOrName
+    if type(tabOrName) == "string" then
+        tab = self._tabByName[tabOrName]
+    end
+    assertObject(tab, "Tab")
+    assert(tab.Window == self, "Tab nay khong thuoc Window hien tai")
+
+    closeActiveDropdown()
+    for _, candidate in ipairs(self.Tabs) do
+        setTabSelected(candidate, candidate == tab)
+    end
+    self.SelectedTab = tab
+    Protected[2](tab)
+    task.defer(function()
+        for _, section in ipairs(tab.Sections) do
+            if section._refreshLayout then
+                section._refreshLayout()
+            end
+        end
+        tab._updateCanvas()
+    end)
+    return tab
+end
+
+ApiImpl[95] = function(self, config)
+    assertObject(self, "Window")
+    local tabConfig = normalizeConfig(config, "Tab")
+    assert(
+        not self._tabByName[tabConfig.Name],
+        ("Tab '%s' da ton tai"):format(tabConfig.Name)
+    )
+
+    local page
+    if #self.Tabs == 0 then
+        page = objects.obj25
+    else
+        page = Instance.new("ScrollingFrame")
+        page.Parent = mainFrame
+    end
+    local _, updateCanvas = Protected[3](page, tabConfig.Name)
+    if not page.Parent then
+        page.Parent = mainFrame
+    end
+
+    
+    local side = tostring(tabConfig.Side or "Left")
+    local column = TabColumns[side] or TabColumns.Left
+    local tabDisplayName = tostring(tabConfig.DisplayName or tabConfig.Name)
+    local button = createRebirthStyleButton(
+        column.Frame,
+        tabDisplayName,
+        #self.Tabs + 1
+    )
+
+    local tab = setmetatable({
+        _kind = "Tab",
+        _destroyed = false,
+        _nextSectionOrder = 0,
+        _sectionByName = {},
+        _updateCanvas = updateCanvas,
+        Button = button,
+        Column = column,
+        DisplayName = tabDisplayName,
+        Name = tabConfig.Name,
+        Page = page,
+        SectionsExpanded = tabConfig.SectionsExpanded ~= false,
+        Side = (column == TabColumns.Right) and "Right" or "Left",
+        Sections = {},
+        Window = self,
+    }, TabMethods)
+
+    tab._applySearch = Protected[4](tab)
+    tab._searchQuery = ""
+
+    table.insert(self.Tabs, tab)
+    self._tabByName[tab.Name] = tab
+    connectSafeActivation(button, function()
+        ApiImpl[94](self, tab)
+    end)
+
+    ApiImpl[93](self)
+    if not self.SelectedTab then
+        ApiImpl[94](self, tab)
+    else
+        setTabSelected(tab, false)
+    end
+    return tab
+end
+
+
+ApiImpl[96] = function(self, name)
+    assertObject(self, "Window")
+    return self._tabByName[name]
+end
+
+ApiImpl[97] = function(self)
+    assertObject(self, "Window")
+    return self.DefaultTab
+end
+
+ApiImpl[98] = function(self, config)
+    assertObject(self, "Window")
+    local stateConfig = normalizeConfig(config, "State")
+    assert(
+        not self._stateByName[stateConfig.Name],
+        ("State '%s' da ton tai"):format(stateConfig.Name)
+    )
+    if stateConfig.Default == nil then
+        stateConfig.Default = false
+    end
+    local state = createStateObject(self, stateConfig, true)
+    table.insert(self.States, state)
+    self._stateByName[state.Name] = state
+    return state
+end
+
+ApiImpl[99] = function(self, name)
+    assertObject(self, "Window")
+    return self._stateByName[tostring(name)]
+end
+
+ApiImpl[100] = function(self, config)
+    assertObject(self, "Window")
+    local groupConfig = normalizeConfig(config or {
+        Name = "Exclusive Group " .. tostring(#self.ExclusiveGroups + 1),
+    }, "Exclusive Group")
+    assert(
+        not self._exclusiveGroupByName[groupConfig.Name],
+        ("ExclusiveGroup '%s' da ton tai"):format(groupConfig.Name)
+    )
+    local maximum = math.max(
+        1,
+        math.floor(tonumber(groupConfig.MaxActive) or 1)
+    )
+    local defaultMinimum = groupConfig.AllowNone == false and 1 or 0
+    local minimum = math.clamp(
+        math.floor(tonumber(groupConfig.MinActive) or defaultMinimum),
+        0,
+        maximum
+    )
+    local group = setmetatable({
+        _kind = "ExclusiveGroup",
+        _destroyed = false,
+        _activationOrder = setmetatable({}, { __mode = "k" }),
+        _members = setmetatable({}, { __mode = "k" }),
+        _nextActivationOrder = 0,
+        AllowNone = minimum == 0,
+        MaxActive = maximum,
+        MinActive = minimum,
+        Name = groupConfig.Name,
+        Window = self,
+    }, ExclusiveGroupMethods)
+    table.insert(self.ExclusiveGroups, group)
+    self._exclusiveGroupByName[group.Name] = group
+    if type(groupConfig.Members) == "table" then
+        for _, member in ipairs(groupConfig.Members) do
+            ApiImpl[19](group, member)
+        end
+    end
+    return group
+end
+
+ApiImpl[101] = function(self, name)
+    assertObject(self, "Window")
+    return self._exclusiveGroupByName[tostring(name)]
+end
+
+
+
+
+
+ApiImpl[102] = function(self)
+    assertObject(self, "Window")
+    playOpenAnimation(function()
+        if self._destroyed or not Runtime.chilliIsOpen then
+            return
+        end
+        local tab = self.SelectedTab
+        if tab and not tab._destroyed then
+            
+            for _, section in ipairs(tab.Sections) do
+                if section._refreshLayout then
+                    section._refreshLayout()
+                end
+            end
+            tab._updateCanvas()
+        end
+    end)
+    return self
+end
+
+ApiImpl[103] = function(self)
+    assertObject(self, "Window")
+    closeActiveDropdown()
+    playCloseAnimation()
+    return self
+end
+
+ApiImpl[104] = function(self)
+    assertObject(self, "Window")
+    if Runtime.chilliIsOpen then
+        return ApiImpl[103](self)
+    end
+    return ApiImpl[102](self)
+end
+
+do
+    local function paragraphMethod(index, methodName, returnsValue)
+        ApiImpl[index] = function(self, ...)
+            assertObject(self, "Option")
+            local method = self._controller[methodName]
+            assert(
+                method,
+                ("%s does not support %s()"):format(self.Type, methodName)
+            )
+            if returnsValue then
+                return method(...)
+            end
+            method(...)
+            return self
+        end
+    end
+
+    paragraphMethod(107, "SetTitle", false)
+    paragraphMethod(108, "GetTitle", true)
+    paragraphMethod(109, "SetStyle", false)
+    paragraphMethod(110, "GetStyle", true)
+    paragraphMethod(111, "SetHeader", false)
+    paragraphMethod(112, "SetItems", false)
+    paragraphMethod(113, "SetGroups", false)
+    paragraphMethod(114, "AppendItem", false)
+    paragraphMethod(115, "SetSearchEnabled", false)
+    paragraphMethod(116, "SetSearchQuery", false)
+    paragraphMethod(117, "GetSearchQuery", true)
+    paragraphMethod(118, "SetSpotlight", false)
+    paragraphMethod(119, "SetSelected", false)
+    paragraphMethod(120, "GetSelected", true)
+    paragraphMethod(121, "GetSurface", true)
+end
+
+do
+    local surfaceNames = {
+        "Root", "Scroll", "Plate", "Unit", "Width", "TextSize", "LineHeight", "Font",
+        "Query", "Metrics", "SetContentHeight", "SetContentLines", "Invalidate", "Clear",
+        "OnResize", "SetStyle", "GetStyle", "SetTitle", "SetSearchEnabled", "SetSearchQuery",
+        "Attach", "Frame", "Text", "Button", "Image", "Model", "Bar", "Dock", "SetDock",
+    }
+    for offset, methodName in ipairs(surfaceNames) do
+        ApiImpl[121 + offset] = function(self, ...)
+            local impl = type(self) == "table" and self._impl or nil
+            assert(impl, ("%s() requires a surface"):format(methodName))
+            local method = impl[methodName]
+            assert(method, ("surface does not support %s()"):format(methodName))
+            local result = method(...)
+            if result == nil then
+                return self
+            end
+            return result
+        end
+    end
+end
+
+local ChilliLibrary = {
+    NoStateChange = STATE_NO_CHANGE,
+    Version = "3.22.0",
+    SplitDefaultsApi = "manual-defaults-v1",
+}
+
+ChilliLibrary.Rich = {
+    Bullet = utf8.char(0x2022),
+}
+
+function ChilliLibrary.Rich.Escape(text)
+    return (string.gsub(tostring(text), "[<>&]", {
+        ["<"] = "&lt;",
+        [">"] = "&gt;",
+        ["&"] = "&amp;",
+    }))
+end
+
+function ChilliLibrary.Rich.Color(color, text)
+    local hex = typeof(color) == "Color3" and ("#" .. color:ToHex()) or tostring(color)
+    return string.format('<font color="%s">%s</font>', hex, tostring(text))
+end
+
+function ChilliLibrary.Rich.Bold(text)
+    return "<b>" .. tostring(text) .. "</b>"
+end
+
+function ChilliLibrary.Rich.Italic(text)
+    return "<i>" .. tostring(text) .. "</i>"
+end
+
+function ChilliLibrary.Rich.Muted(text)
+    return ChilliLibrary.Rich.Color("#AAAAAA", text)
+end
+
+function ChilliLibrary.Rich.Rule(count)
+    return ChilliLibrary.Rich.Color("#444455", string.rep(utf8.char(0x2500), tonumber(count) or 38))
+end
+
+function ChilliLibrary.Rich.Join(lines)
+    return table.concat(lines, "\n")
+end
+
+
+ApiImpl[105] = function(self)
+    assertObject(self, "Window")
+    clearAllNotifications()
+    closeActiveDropdown()
+
+    for index = #self.Tabs, 1, -1 do
+        local tab = self.Tabs[index]
+        if tab ~= self.DefaultTab and not tab._destroyed then
+            ApiImpl[92](tab)
+        end
+    end
+    if self.DefaultTab and not self.DefaultTab._destroyed then
+        for index = #self.DefaultTab.Sections, 1, -1 do
+            local section = self.DefaultTab.Sections[index]
+            if not section._destroyed then
+                ApiImpl[89](section)
+            end
+        end
+        self.DefaultTab._destroyed = true
+    end
+
+    for index = #self.ExclusiveGroups, 1, -1 do
+        local group = self.ExclusiveGroups[index]
+        if not group._destroyed then
+            ApiImpl[28](group)
+        end
+    end
+
+    local states = {}
+    for state in pairs(self._stateObjects) do
+        table.insert(states, state)
+    end
+    for _, state in ipairs(states) do
+        if not state._destroyed then
+            ApiImpl[13](state)
+        end
+    end
+
+    self._destroyed = true
+    ChilliLibrary.Window = nil
+    ContentScale.ReflowTabs = nil
+    hudAnimationSerial = hudAnimationSerial + 1
+    cancelHudTween()
+    if Runtime.windowDragController then
+        Runtime.windowDragController.Cancel()
+    end
+    cancelWindowTween()
+    if leftCenterFrame and leftCenterFrame.Parent then
+        leftCenterFrame.Position = hudRestorePosition
+        leftCenterFrame.Visible = true
+    end
+    if sourceLeftCenterScreen and sourceLeftCenterScreen.Parent then
+        sourceLeftCenterScreen.Enabled = true
+    end
+    launcherGui:SetAttribute("HudRestorePosition", nil)
+    launcherGui:SetAttribute("LeftCenterHiddenByLibrary", nil)
+    launcherGui:SetAttribute("LeftCenterScreenDisabledByLibrary", nil)
+    disconnectRootConnections()
+    disconnectSourceConnections()
+    if rootGui.Parent then
+        rootGui:Destroy()
+    end
+    if launcherGui.Parent then
+        launcherGui:Destroy()
+    end
+end
+
+ApiImpl[106] = function(self, config)
+    assert(not self.Window, "ChilliLibrary chi quan ly 1 Window cho UI nay")
+    local windowConfig = normalizeConfig(config or {
+        Name = "Chilli Hub",
+    }, "Chilli Hub")
+    local window = setmetatable({
+        _kind = "Window",
+        _destroyed = false,
+        _exclusiveGroupByName = {},
+        _stateObjects = setmetatable({}, { __mode = "k" }),
+        _stateByName = {},
+        _tabByName = {},
+        ExclusiveGroups = {},
+        Name = windowConfig.Name,
+        SelectedTab = nil,
+        States = {},
+        Tabs = {},
+    }, WindowMethods)
+
+    self.Window = window
+    ContentScale.ReflowTabs = function()
+        if not window._destroyed then
+            ApiImpl[93](window)
+        end
+    end
+    window.DefaultTab = ApiImpl[95](window,
+        tostring(windowConfig.DefaultTab or "Main")
+    )
+    return window
+end
+
+
+
+
+
+
+
+
+(function()
+local U0 = "https://raw.githubusercontent.com/tienkhanh1/spicy/refs/heads/main/ChilliLibraryEngine"
+local B0 = {
+    [1] = 0x43534833,
+    [2] = Protected, [3] = Runtime,
+    [4] = UserInputService, [5] = TweenService, [6] = RunService,
+    [7] = OWNER_ATTRIBUTE, [8] = parent, [9] = objects,
+    [10] = rootGui, [11] = mainFrame, [12] = topBar,
+    [13] = closeButton, [14] = trackRootConnection,
+    [15] = launcherGui, [16] = chilliButton,
+    [17] = applyOriginalStrokeSizing, [18] = makeDraggable,
+    [19] = connectSafeActivation, [20] = makeButtonFeedback,
+    [21] = closedWindowPosition, [22] = ContentScale,
+    [23] = setLeftCenterHidden, [24] = RESIZE_KEEPS_OPTION_WIDTH,
+    [25] = applyResizeSize, [26] = normalTextFont,
+    [27] = italicTextFont, [28] = applyShinyTextStyle,
+    [29] = applyPlainTextStyle, [30] = rebirthOuterGradient,
+    [31] = addRedGradient, [32] = addScaledStroke,
+    [33] = createRebirthStyleButton, [34] = ACCENT_GRADIENT,
+    [35] = ROW_ASPECT, [36] = ROW_WIDTH_SCALE,
+    [37] = CHEVRON_COLOR, [38] = UNIT_CHEVRON_COLOR,
+    [39] = ROW_ASPECT_WITH_NOTE, [40] = attachScaleFeedback,
+    [41] = buildFixedRow, [42] = closeActiveDropdown,
+    [43] = safeCallback, [44] = copyTable, [45] = ChilliLibrary,
+    [46] = ApiImpl,
+    [47] = { ChilliLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
+}
+local S0 = game:HttpGet(U0)
+local F0, E0 = loadstring(S0)
+assert(F0, E0)
+local O0, I0 = pcall(F0)
+assert(O0 and type(I0) == "function", tostring(I0))
+local O1, R1 = pcall(I0, B0, C0)
+assert(O1 and R1 == 0x51C71AA, tostring(R1))
+end)()
+return ChilliLibrary
+end
