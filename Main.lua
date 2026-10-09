@@ -244,9 +244,20 @@ pcall(chilliSetProperty, objects.obj3, "ApplyStrokeMode", Enum.ApplyStrokeMode.B
 pcall(chilliSetProperty, objects.obj3, "Color", Runtime.Theme.Stroke)
 pcall(chilliSetProperty, objects.obj3, "Enabled", true)
 pcall(chilliSetProperty, objects.obj3, "LineJoinMode", Enum.LineJoinMode.Round)
-pcall(chilliSetProperty, objects.obj3, "Thickness", 0.004)
+pcall(chilliSetProperty, objects.obj3, "Thickness", 0.006)
 pcall(chilliSetProperty, objects.obj3, "Transparency", 0)
 objects.obj3.Parent = objects.obj2
+do
+    local borderGradient = Instance.new("UIGradient")
+    borderGradient.Name = "BorderGradient"
+    borderGradient.Rotation = 45
+    borderGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Runtime.Theme.Accent),
+        ColorSequenceKeypoint.new(0.5, Runtime.Theme.Stroke),
+        ColorSequenceKeypoint.new(1, Runtime.Theme.AccentDark),
+    })
+    borderGradient.Parent = objects.obj3
+end
 
 objects.obj4 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj4, "Name", "Top")
@@ -281,6 +292,26 @@ pcall(chilliSetProperty, objects.obj5, "LineJoinMode", Enum.LineJoinMode.Round)
 pcall(chilliSetProperty, objects.obj5, "Thickness", 0.03)
 pcall(chilliSetProperty, objects.obj5, "Transparency", 0)
 objects.obj5.Parent = objects.obj4
+do
+    local line = Instance.new("Frame")
+    line.Name = "AccentLine"
+    line.Active = false
+    line.AnchorPoint = Vector2.new(0.5, 1)
+    line.BackgroundColor3 = Runtime.Theme.Accent
+    line.BorderSizePixel = 0
+    line.Position = UDim2.new(0.5, 0, 1, 0)
+    line.Size = UDim2.new(0.96, 0, 0, 2)
+    line.ZIndex = 3
+    local fade = Instance.new("UIGradient")
+    fade.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 1),
+        NumberSequenceKeypoint.new(0.25, 0.15),
+        NumberSequenceKeypoint.new(0.75, 0.15),
+        NumberSequenceKeypoint.new(1, 1),
+    })
+    fade.Parent = line
+    line.Parent = objects.obj4
+end
 
 objects.obj6 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj6, "Name", "Color")
@@ -694,7 +725,7 @@ pcall(chilliSetProperty, objects.obj25, "LayoutOrder", 1)
 pcall(chilliSetProperty, objects.obj25, "CanvasPosition", Vector2.new(0,0))
 pcall(chilliSetProperty, objects.obj25, "CanvasSize", UDim2.new(0,0,0,642))
 pcall(chilliSetProperty, objects.obj25, "AutomaticCanvasSize", Enum.AutomaticSize.None)
-pcall(chilliSetProperty, objects.obj25, "ScrollBarThickness", 6)
+pcall(chilliSetProperty, objects.obj25, "ScrollBarThickness", 4)
 pcall(chilliSetProperty, objects.obj25, "ScrollBarImageColor3", Runtime.Theme.Accent)
 pcall(chilliSetProperty, objects.obj25, "ScrollBarImageTransparency", 0)
 pcall(chilliSetProperty, objects.obj25, "ScrollingDirection", Enum.ScrollingDirection.XY)
@@ -2559,13 +2590,13 @@ end)
 
 local normalTextFont = Font.new(
     "rbxasset://fonts/families/GothamSSm.json",
-    Enum.FontWeight.ExtraBold,
+    Enum.FontWeight.SemiBold,
     Enum.FontStyle.Normal
 )
 
 local italicTextFont = Font.new(
     "rbxasset://fonts/families/GothamSSm.json",
-    Enum.FontWeight.ExtraBold,
+    Enum.FontWeight.SemiBold,
     Enum.FontStyle.Italic
 )
 
@@ -2800,7 +2831,7 @@ sideButtons.BorderSizePixel = 0
 
 
 sideButtons.Position = UDim2.new(-0.025, 0, 0.558, 0)
-sideButtons.Size = UDim2.new(0.2612044513, 0, 1, 0)
+sideButtons.Size = UDim2.new(0.215, 0, 1, 0)
 sideButtons.ZIndex = 99
 sideButtons.Parent = mainFrame
 
@@ -2935,6 +2966,14 @@ local function buildRowPlate(parent, labelText)
     main.ZIndex = 3
     main.Parent = parent
     Runtime.addCorner(main, Runtime.Theme.Corner)
+    local sheen = Instance.new("UIGradient")
+    sheen.Name = "Sheen"
+    sheen.Rotation = 90
+    sheen.Color = ColorSequence.new(
+        Color3.fromRGB(255, 255, 255),
+        Color3.fromRGB(212, 212, 226)
+    )
+    sheen.Parent = main
     addScaledStroke(main, Enum.ApplyStrokeMode.Border, 0.05)
 
     local label = Instance.new("TextLabel")
@@ -6356,8 +6395,8 @@ end
 
 
 local TAB_LAYOUT = {
-    Span = 0.895,
-    NormalHeight = 0.130,
+    Span = 0.95,
+    NormalHeight = 0.118,
     GapRatio = 0.023 / 0.130,
 }
 local SECTION_ARROW = {
@@ -6395,7 +6434,7 @@ do
         frame.BackgroundTransparency = 1
         frame.BorderSizePixel = 0
         frame.Position = UDim2.new(edgeX, 0, 0.558, 0)
-        frame.Size = UDim2.new(0.2612044513, 0, 1, 0)
+        frame.Size = UDim2.new(0.215, 0, 1, 0)
         frame.ZIndex = 99
         frame.Parent = mainFrame
 
@@ -6429,16 +6468,86 @@ do
         EdgeX = -0.025,
         CenterY = 0.558,
         TopPadding = 0.067,
-        Width = 0.2612044513,
+        Width = 0.215,
         GapRatio = TAB_LAYOUT.GapRatio,
     }
     TabColumns.Right = buildColumn("SideButtonsRight", 0, 1.025)
     TabColumns.Right.CenterY = 0.558
     TabColumns.Right.TopPadding = 0.067
-    TabColumns.Right.Width = 0.2612044513
+    TabColumns.Right.Width = 0.215
 end
 
 
+
+Runtime.pageTarget = setmetatable({}, { __mode = "k" })
+Runtime.pageBound = setmetatable({}, { __mode = "k" })
+Runtime.pageBusy = false
+
+function Runtime.layoutContent()
+    local sx = ContentScale.X
+    local margin = 0.014 / sx
+    local function used(column)
+        if not column then
+            return 0
+        end
+        for _, child in ipairs(column.Frame:GetChildren()) do
+            if child:IsA("GuiButton") then
+                return (column.Width or 0.215) / sx + margin
+            end
+        end
+        return 0
+    end
+    local x0 = margin + used(TabColumns.Left)
+    local x1 = 1 - margin - used(TabColumns.Right)
+    for _, page in ipairs(mainFrame:GetChildren()) do
+        if page:IsA("ScrollingFrame") and page:GetAttribute("ChilliPage") then
+            local target = {
+                Position = UDim2.new((x0 + x1) / 2, 0, 0.57, 0),
+                Size = UDim2.new(x1 - x0, 0, 0.83, 0),
+            }
+            Runtime.pageTarget[page] = target
+            local function enforce()
+                if Runtime.pageBusy then
+                    return
+                end
+                local want = Runtime.pageTarget[page]
+                if not want then
+                    return
+                end
+                Runtime.pageBusy = true
+                page.AnchorPoint = Vector2.new(0.5, 0.5)
+                if page.Position ~= want.Position then
+                    page.Position = want.Position
+                end
+                if page.Size ~= want.Size then
+                    page.Size = want.Size
+                end
+                Runtime.pageBusy = false
+            end
+            enforce()
+            if not Runtime.pageBound[page] then
+                Runtime.pageBound[page] = true
+                trackRootConnection(page:GetPropertyChangedSignal("Position"):Connect(enforce))
+                trackRootConnection(page:GetPropertyChangedSignal("Size"):Connect(enforce))
+            end
+        end
+    end
+end
+
+ContentScale.OnChanged(function(scaleX, scaleY)
+    local margin = 0.014 / scaleX
+    for _, column in pairs(TabColumns) do
+        local isLeft = column == TabColumns.Left
+        column.Frame.AnchorPoint = Vector2.new(isLeft and 0 or 1, 0.5)
+        column.Frame.Position = UDim2.new(isLeft and margin or (1 - margin), 0, 0.57, 0)
+        column.Frame.Size = UDim2.new((column.Width or 0.215) / scaleX, 0, 0.83, 0)
+        column.Padding.PaddingTop = UDim.new(0.025, 0)
+        column.Padding.PaddingBottom = UDim.new(0.025, 0)
+        column.Padding.PaddingLeft = UDim.new(0.07, 0)
+        column.Padding.PaddingRight = UDim.new(0.07, 0)
+    end
+    Runtime.layoutContent()
+end)
 
 do
     local function attachDock(column)
@@ -6458,31 +6567,25 @@ do
         local function refresh()
             queued = false
             local columnFrame = column.Frame
-            if not columnFrame.Parent then
-                return
-            end
-            local top, bottom
+            local hasTabs = false
             for _, child in ipairs(columnFrame:GetChildren()) do
-                if child:IsA("GuiButton") and child.Visible then
-                    local childTop = child.AbsolutePosition.Y
-                    local childBottom = childTop + child.AbsoluteSize.Y
-                    top = top and math.min(top, childTop) or childTop
-                    bottom = bottom and math.max(bottom, childBottom) or childBottom
+                if child:IsA("GuiButton") then
+                    hasTabs = true
+                    break
                 end
             end
-            if not top then
+            if not hasTabs then
                 dock.Visible = false
                 return
             end
-            local pad = math.max(6, math.floor(columnFrame.AbsoluteSize.X * 0.04))
             local origin = mainFrame.AbsolutePosition
             dock.Position = UDim2.fromOffset(
-                columnFrame.AbsolutePosition.X - origin.X - pad,
-                top - origin.Y - pad
+                columnFrame.AbsolutePosition.X - origin.X,
+                columnFrame.AbsolutePosition.Y - origin.Y
             )
             dock.Size = UDim2.fromOffset(
-                columnFrame.AbsoluteSize.X + pad * 2,
-                (bottom - top) + pad * 2
+                columnFrame.AbsoluteSize.X,
+                columnFrame.AbsoluteSize.Y
             )
             dock.Visible = true
         end
@@ -6496,7 +6599,6 @@ do
 
         trackRootConnection(column.Frame:GetPropertyChangedSignal("AbsolutePosition"):Connect(queueRefresh))
         trackRootConnection(column.Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(queueRefresh))
-        trackRootConnection(column.Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(queueRefresh))
         trackRootConnection(column.Frame.ChildAdded:Connect(queueRefresh))
         trackRootConnection(column.Frame.ChildRemoved:Connect(queueRefresh))
         queueRefresh()
@@ -6505,29 +6607,6 @@ do
         attachDock(column)
     end
 end
-
-ContentScale.OnChanged(function(scaleX, scaleY)
-    for _, column in pairs(TabColumns) do
-        local gap = (column.EdgeX < 0) and (-0.025 / scaleX)
-            or (1 + 0.025 / scaleX)
-        column.Frame.Position = UDim2.new(
-            gap,
-            0,
-            column.CenterY or 0.558,
-            0
-        )
-        column.Frame.Size = UDim2.new(
-            (column.Width or 0.2612044513) / scaleX,
-            0,
-            1,
-            0
-        )
-        column.Padding.PaddingTop = UDim.new(
-            (column.TopPadding or 0.067) / scaleY,
-            0
-        )
-    end
-end)
 
 
 local function createSectionHeader(title, layoutOrder, clipViewport)
@@ -6549,6 +6628,7 @@ local function createSectionHeader(title, layoutOrder, clipViewport)
     header.ZIndex = 4
 
     applyShinyTextStyle(header, normalTextFont)
+    header.TextColor3 = Runtime.Theme.AccentLight
 
     
     
@@ -12123,6 +12203,7 @@ ApiImpl[93] = function(self)
             end
         end
     end
+    Runtime.layoutContent()
 end
 
 local function setTabSelected(tab, selected)
@@ -12133,6 +12214,8 @@ local function setTabSelected(tab, selected)
         return
     end
     local label = fill:FindFirstChild("Label")
+    local edge = base:FindFirstChildOfClass("UIStroke")
+    local edgeColor = selected and Runtime.Theme.AccentLight or Runtime.Theme.Stroke
     local fillColor = selected and Runtime.Theme.Accent or Runtime.Theme.TabIdle
     local textColor = selected and Runtime.Theme.Text or Runtime.Theme.TabIdleText
     if tab.Button:GetAttribute("ThemeReady") then
@@ -12142,12 +12225,18 @@ local function setTabSelected(tab, selected)
             Enum.EasingDirection.Out
         )
         TweenService:Create(fill, info, { BackgroundColor3 = fillColor }):Play()
+        if edge then
+            TweenService:Create(edge, info, { Color = edgeColor }):Play()
+        end
         if label then
             TweenService:Create(label, info, { TextColor3 = textColor }):Play()
         end
     else
         tab.Button:SetAttribute("ThemeReady", true)
         fill.BackgroundColor3 = fillColor
+        if edge then
+            edge.Color = edgeColor
+        end
         if label then
             label.TextColor3 = textColor
         end
@@ -12199,6 +12288,7 @@ ApiImpl[95] = function(self, config)
     if not page.Parent then
         page.Parent = mainFrame
     end
+    page:SetAttribute("ChilliPage", true)
 
     
     local side = tostring(tabConfig.Side or "Left")
