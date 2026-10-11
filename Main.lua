@@ -288,14 +288,15 @@ local Library = {
 		AccentStyle = "Gradient",
 		WallpaperTransparency = 0.92,
 		WallpaperDimming = 0.35,
-		BackgroundEffect = "Floating Bubbles",
+		BackgroundEffect = (UIS.TouchEnabled and not UIS.KeyboardEnabled) and "Subtle Ambient Glow" or "Floating Bubbles",
+		LowLag = false,
 		AutoSaveEnabled = true,
-		AcrylicEnabled = true,
+		AcrylicEnabled = false,
 		BaseTheme = "NeverloseCrimson",
 		BgMode = "Theme",
-		BgColor1 = "#1A1033",
-		BgColor2 = "#0B1B3A",
-		BgColor3 = "#2A0F2E",
+		BgColor1 = "#4F46E5",
+		BgColor2 = "#2B277E",
+		BgColor3 = "#161440",
 		BgUse3 = false,
 		BgAngle = 45,
 		BgAnimate = false,
@@ -316,9 +317,32 @@ local Reg = {
 	Borders = {}, Texts = {}, Renderers = {}, Panels = {},
 }
 
+local regCount = 0
+local function compactReg()
+	for k, list in pairs(Reg) do
+		local n = {}
+		if k == "Texts" then
+			for _, e in ipairs(list) do
+				if e.obj and e.obj.Parent then n[#n + 1] = e end
+			end
+		elseif k == "Renderers" then
+			for _, e in ipairs(list) do
+				if not e.owner or e.owner.Parent then n[#n + 1] = e end
+			end
+		else
+			for _, o in ipairs(list) do
+				if o and o.Parent then n[#n + 1] = o end
+			end
+		end
+		Reg[k] = n
+	end
+end
+
 local function reg(cat, obj)
 	local t = Reg[cat]
 	if t then t[#t + 1] = obj end
+	regCount = regCount + 1
+	if regCount % 400 == 0 then compactReg() end
 	return obj
 end
 
@@ -673,7 +697,7 @@ local function saveUiSettings(force)
 		accent = s.AccentStyle, effect = s.BackgroundEffect, sound = s.SoundEnabled, volume = s.SoundVolume,
 		floating = s.ShowFloatingToggle, transparency = s.WindowTransparency, controls = s.ControlsPosition,
 		keymode = s.KeybindMode, key = s.ToggleKey, logo = s.CustomLogoUrl, wallpaper = s.CustomWallpaperId,
-		wallT = s.WallpaperTransparency, wallD = s.WallpaperDimming, acrylic = s.AcrylicEnabled, autosave = s.AutoSaveEnabled,
+		wallT = s.WallpaperTransparency, wallD = s.WallpaperDimming, acrylic = s.AcrylicEnabled, autosave = s.AutoSaveEnabled, lowlag = s.LowLag,
 		bgMode = s.BgMode, bgC1 = s.BgColor1, bgC2 = s.BgColor2, bgC3 = s.BgColor3, bgUse3 = s.BgUse3, bgAngle = s.BgAngle,
 		bgAnim = s.BgAnimate, glass = s.GlassSidebar, panelT = s.PanelTransparency,
 	})
@@ -705,6 +729,7 @@ local function loadUiSettings()
 	if type(d.wallD) == "number" then s.WallpaperDimming = math.clamp(d.wallD, 0, 1) end
 	if type(d.acrylic) == "boolean" then s.AcrylicEnabled = d.acrylic end
 	if type(d.autosave) == "boolean" then s.AutoSaveEnabled = d.autosave end
+	if type(d.lowlag) == "boolean" then s.LowLag = d.lowlag end
 	if d.bgMode == "Theme" or d.bgMode == "Solid" or d.bgMode == "Gradient" then s.BgMode = d.bgMode end
 	if hexToColor(d.bgC1) then s.BgColor1 = d.bgC1 end
 	if hexToColor(d.bgC2) then s.BgColor2 = d.bgC2 end
@@ -869,7 +894,7 @@ local function newRow(sec, opts)
 		BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
 		LayoutOrder = sec._n,
 	}, sec._holder)
-	new("UISizeConstraint", { MinSize = Vector2.new(0, 22) }, row)
+	new("UISizeConstraint", { MinSize = Vector2.new(0, 30) }, row)
 	local title = tostring(opts.Title or opts.Name or "")
 	local content = tostring(opts.Content or opts.Description or "")
 	local entry = { Frame = row, SearchText = string.lower(title .. " " .. content), _content = content }
@@ -884,8 +909,8 @@ local function textBlock(parent, title, content, reserve)
 		BackgroundTransparency = 1, Size = UDim2.new(1, -(reserve or 0), 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
 	}, parent)
 	vlist(col, 2)
-	local t = lbl(col, { Font = F.Medium, TextSize = 12.5, Text = title, LayoutOrder = 1 }, "TextBody")
-	local d = lbl(col, { Font = F.Regular, TextSize = 11, Text = content, LayoutOrder = 2 }, "TextDim")
+	local t = lbl(col, { Font = F.Medium, TextSize = 13.5, Text = title, LayoutOrder = 1 }, "TextBody")
+	local d = lbl(col, { Font = F.Regular, TextSize = 11.5, Text = content, LayoutOrder = 2 }, "TextDim")
 	t.Visible = title ~= ""
 	d.Visible = content ~= ""
 	return col, t, d
@@ -957,18 +982,18 @@ local function makeBtn(parent, props)
 		if kind == "accent" then
 			fill.BackgroundColor3 = WHITE
 			ApplyGradient(fill, Theme.Grad1, Theme.Grad2, 45)
-			st.Transparency = 1
+			st.Enabled = false
 			text.TextColor3 = WHITE
 		else
 			if g then g:Destroy() end
-			st.Transparency = 0
+			st.Enabled = true
 			if kind == "green" then
 				fill.BackgroundColor3 = Theme.Success
-				st.Transparency = 1
+				st.Enabled = false
 				text.TextColor3 = WHITE
 			elseif kind == "red" then
 				fill.BackgroundColor3 = Theme.Danger
-				st.Transparency = 1
+				st.Enabled = false
 				text.TextColor3 = WHITE
 			elseif kind == "dim" then
 				fill.BackgroundColor3 = Theme.Box
@@ -1005,7 +1030,7 @@ local function makeTrack(sec, parent, props)
 		Text = "", AutoButtonColor = false, BackgroundTransparency = 1, Size = props.Size or UDim2.new(1, 0, 0, 20),
 		Position = props.Position or UDim2.new(), LayoutOrder = props.LayoutOrder or 0,
 	}, parent)
-	local trackH = props.TrackH or 6
+	local trackH = props.TrackH or 8
 	local Track = new("Frame", {
 		Size = UDim2.new(1, 0, 0, trackH), Position = UDim2.new(0, 0, 0.5, -trackH / 2),
 		BackgroundColor3 = props.BarFrom and WHITE or Theme.SubBox, BorderSizePixel = 0,
@@ -1022,7 +1047,7 @@ local function makeTrack(sec, parent, props)
 	ApplyGradient(Fill, Theme.Grad1, Theme.Grad2, 0)
 	if props.BarFrom then Fill.Visible = false end
 	local Knob = new("Frame", {
-		Size = UDim2.fromOffset(12, 12), Position = UDim2.new(0, -6, 0.5, -6), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 2,
+		Size = UDim2.fromOffset(18, 18), Position = UDim2.new(0, -9, 0.5, -9), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 2,
 	}, Track)
 	round(Knob)
 	if props.BarFrom then stroke(Knob, Color3.fromRGB(20, 20, 30), 1.2, 0.2) end
@@ -1035,10 +1060,9 @@ local function makeTrack(sec, parent, props)
 		p = math.clamp(p, 0, 1)
 		api.pct = p
 		Fill.Size = UDim2.new(p, 0, 1, 0)
-		Knob.Position = UDim2.new(p, -6, 0.5, -6)
+		Knob.Position = UDim2.new(p, -9, 0.5, -9)
 	end
 
-	local dragging = false
 	local function fromX(x)
 		local w = math.max(Track.AbsoluteSize.X, 1)
 		local p = math.clamp((x - Track.AbsolutePosition.X) / w, 0, 1)
@@ -1047,22 +1071,18 @@ local function makeTrack(sec, parent, props)
 	end
 	hit.InputBegan:Connect(function(i)
 		if isPress(i) then
-			dragging = true
 			PlaySound("Click")
 			pcall(function() sec._page.ScrollingEnabled = false end)
+			win._active = {
+				onMove = function(inp) fromX(inp.Position.X) end,
+				onEnd = function()
+					pcall(function() sec._page.ScrollingEnabled = true end)
+					if api.onChange then api.onChange(api.pct, true) end
+				end,
+			}
 			fromX(i.Position.X)
 		end
 	end)
-	track(win, UIS.InputChanged:Connect(function(i)
-		if dragging and isMove(i) then fromX(i.Position.X) end
-	end))
-	track(win, UIS.InputEnded:Connect(function(i)
-		if dragging and isPress(i) then
-			dragging = false
-			pcall(function() sec._page.ScrollingEnabled = true end)
-			if api.onChange then api.onChange(api.pct, true) end
-		end
-	end))
 	return api
 end
 
@@ -1075,19 +1095,19 @@ local function addToggle(sec, opts)
 	local title = tostring(opts.Title or opts.Name or "")
 	local content = tostring(opts.Content or opts.Description or "")
 	local row, entry = newRow(sec, opts)
-	local col, t, d = textBlock(row, title, content, 48)
-	col.Position = UDim2.new(0, 0, 0, 2)
+	local col, t, d = textBlock(row, title, content, 62)
+	col.Position = UDim2.new(0, 0, 0, 4)
 
 	local hit = new("TextButton", {
 		Text = "", AutoButtonColor = false, BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), ZIndex = 1,
 	}, row)
 	local Pill = new("TextButton", {
-		Size = UDim2.fromOffset(38, 20), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0),
+		Size = UDim2.fromOffset(50, 28), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0),
 		BackgroundColor3 = Theme.SubBox, Text = "", AutoButtonColor = false, ZIndex = 2, BorderSizePixel = 0,
 	}, row)
 	round(Pill)
 	local Knob = new("Frame", {
-		Size = UDim2.fromOffset(14, 14), Position = UDim2.new(0, 3, 0.5, -7), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 3,
+		Size = UDim2.fromOffset(22, 22), Position = UDim2.new(0, 3, 0.5, -11), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 3,
 	}, Pill)
 	round(Knob)
 
@@ -1100,12 +1120,12 @@ local function addToggle(sec, opts)
 		if el.Value then
 			Pill.BackgroundColor3 = WHITE
 			ApplyGradient(Pill, Theme.Grad1, Theme.Grad2, 45)
-			pos = UDim2.new(1, -17, 0.5, -7)
+			pos = UDim2.new(1, -25, 0.5, -11)
 		else
 			local g = Pill:FindFirstChildOfClass("UIGradient")
 			if g then g:Destroy() end
 			Pill.BackgroundColor3 = Theme.SubBox
-			pos = UDim2.new(0, 3, 0.5, -7)
+			pos = UDim2.new(0, 3, 0.5, -11)
 		end
 		if anim then Tween(Knob, 0.2, { Position = pos }) else Knob.Position = pos end
 	end
@@ -1172,7 +1192,7 @@ local function addSlider(sec, opts)
 		BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 1,
 	}, row)
 	local textCol = new("Frame", {
-		BackgroundTransparency = 1, Size = UDim2.new(1, -70, 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
+		BackgroundTransparency = 1, Size = UDim2.new(1, -82, 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
 	}, topRow)
 	vlist(textCol, 2)
 	local up = function(s) return string.upper(s) end
@@ -1181,17 +1201,17 @@ local function addSlider(sec, opts)
 	t.Visible = title ~= ""
 	d.Visible = content ~= ""
 	local valLbl = new("TextLabel", {
-		Size = UDim2.new(0, 65, 0, 15), Position = UDim2.new(1, -65, 0, 0), BackgroundTransparency = 1,
+		Size = UDim2.new(0, 78, 0, 18), Position = UDim2.new(1, -78, 0, 0), BackgroundTransparency = 1,
 		Font = F.Bold, TextSize = 11.5, TextColor3 = WHITE, TextXAlignment = Enum.TextXAlignment.Right,
 		Text = "", RichText = false,
 	}, topRow)
 	ApplyGradient(valLbl, Theme.Grad1, Theme.Grad2, 0)
 
-	local trackRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 20), LayoutOrder = 2 }, row)
+	local trackRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 30), LayoutOrder = 2 }, row)
 
 	local function stepBtn(text, pos)
 		local b = new("TextButton", {
-			Size = UDim2.fromOffset(20, 20), Position = pos, BackgroundColor3 = Theme.SubBox, Text = text, Font = F.Bold,
+			Size = UDim2.fromOffset(28, 28), Position = pos, BackgroundColor3 = Theme.SubBox, Text = text, Font = F.Bold,
 			TextSize = 13.5, AutoButtonColor = false, BorderSizePixel = 0, TextColor3 = Theme.TextDim,
 		}, trackRow)
 		round(b)
@@ -1200,9 +1220,9 @@ local function addSlider(sec, opts)
 		regText(b, "TextDim")
 		return b
 	end
-	local btnDown = stepBtn("-", UDim2.new(0, 0, 0, 0))
-	local bar = makeTrack(sec, trackRow, { Size = UDim2.new(1, -54, 0, 20), Position = UDim2.new(0, 27, 0, 0) })
-	local btnUp = stepBtn("+", UDim2.new(1, -20, 0, 0))
+	local btnDown = stepBtn("-", UDim2.new(0, 0, 0.5, -14))
+	local bar = makeTrack(sec, trackRow, { Size = UDim2.new(1, -74, 0, 30), Position = UDim2.new(0, 37, 0, 0) })
+	local btnUp = stepBtn("+", UDim2.new(1, -28, 0.5, -14))
 
 	local el = { Type = "Slider" }
 	local saved = cfgGet(key, opts)
@@ -1288,19 +1308,19 @@ local function addDropdown(sec, opts)
 	d.Visible = content ~= ""
 
 	local Box = new("TextButton", {
-		Size = UDim2.new(1, 0, 0, 28), BackgroundColor3 = Theme.SubBox, Text = "", AutoButtonColor = false, LayoutOrder = 2,
+		Size = UDim2.new(1, 0, 0, 38), BackgroundColor3 = Theme.SubBox, Text = "", AutoButtonColor = false, LayoutOrder = 2,
 		BorderSizePixel = 0,
 	}, row)
 	corner(Box, 10)
 	bstroke(Box, 1, 0)
 	reg("SubBoxes", Box)
 	local vLbl = lbl(Box, {
-		Size = UDim2.new(1, -26, 1, 0), Position = UDim2.new(0, 10, 0, 0), AutomaticSize = Enum.AutomaticSize.None,
+		Size = UDim2.new(1, -30, 1, 0), Position = UDim2.new(0, 12, 0, 0), AutomaticSize = Enum.AutomaticSize.None,
 		Font = F.Medium, TextSize = 12, TextWrapped = false, TextTruncate = Enum.TextTruncate.AtEnd,
 		TextYAlignment = Enum.TextYAlignment.Center, RichText = false,
 	}, "TextTitle")
 	local chev = new("ImageLabel", {
-		Size = UDim2.fromOffset(12, 12), Position = UDim2.new(1, -20, 0.5, -6), BackgroundTransparency = 1,
+		Size = UDim2.fromOffset(14, 14), Position = UDim2.new(1, -24, 0.5, -7), BackgroundTransparency = 1,
 		Image = Icons.ChevronDown, ImageColor3 = Theme.TextDim,
 	}, Box)
 
@@ -1308,7 +1328,7 @@ local function addDropdown(sec, opts)
 		BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), ClipsDescendants = true, Visible = false, LayoutOrder = 3,
 	}, row)
 	local sbFrame = new("Frame", {
-		Size = UDim2.new(1, 0, 0, 24), BackgroundColor3 = Theme.SubBox, BorderSizePixel = 0, Visible = false,
+		Size = UDim2.new(1, 0, 0, 32), BackgroundColor3 = Theme.SubBox, BorderSizePixel = 0, Visible = false,
 	}, panel)
 	corner(sbFrame, 8)
 	bstroke(sbFrame, 1, 0)
@@ -1319,7 +1339,7 @@ local function addDropdown(sec, opts)
 		TextSize = 11.5, TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false,
 	}, sbFrame)
 	local list = new("ScrollingFrame", {
-		BackgroundTransparency = 1, BorderSizePixel = 0, Position = UDim2.new(0, 0, 0, 0), Size = UDim2.new(1, 0, 0, 24),
+		BackgroundTransparency = 1, BorderSizePixel = 0, Position = UDim2.new(0, 0, 0, 0), Size = UDim2.new(1, 0, 0, 30),
 		CanvasSize = UDim2.new(0, 0, 0, 0), AutomaticCanvasSize = Enum.AutomaticSize.Y, ScrollBarThickness = 2,
 		ScrollBarImageColor3 = Theme.Border, ScrollingDirection = Enum.ScrollingDirection.Y,
 	}, panel)
@@ -1401,11 +1421,11 @@ local function addDropdown(sec, opts)
 	end
 
 	local function panelHeight()
-		local searchH = (#options > 7) and 28 or 0
+		local searchH = (#options > 7) and 38 or 0
 		sbFrame.Visible = searchH > 0
 		list.Position = UDim2.new(0, 0, 0, searchH)
 		local n = math.max(1, math.min(visibleCount(), maxVisible))
-		local listH = n * 24 + (n - 1) * 3
+		local listH = n * 30 + (n - 1) * 3
 		list.Size = UDim2.new(1, 0, 0, listH)
 		return searchH + listH + 2
 	end
@@ -1458,57 +1478,72 @@ local function addDropdown(sec, opts)
 		end
 	end
 
-	local function rebuild(animate)
+	local dirty = true
+	local function buildItems()
 		for _, b in ipairs(itemButtons) do b:Destroy() end
 		itemButtons = {}
+		for idx, o in ipairs(options) do
+			local b = new("TextButton", {
+				Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = Theme.Box, Text = "", AutoButtonColor = false,
+				LayoutOrder = idx, BorderSizePixel = 0,
+			}, list)
+			b:SetAttribute("opt", o)
+			corner(b, 8)
+			new("TextLabel", {
+				Name = "Txt", Size = UDim2.new(1, -38, 1, 0), Position = UDim2.new(0, 12, 0, 0), BackgroundTransparency = 1,
+				Font = F.Regular, TextSize = 12.5, TextColor3 = Theme.TextBody, TextXAlignment = Enum.TextXAlignment.Left,
+				TextTruncate = Enum.TextTruncate.AtEnd, Text = o, RichText = false,
+			}, b)
+			new("ImageLabel", {
+				Name = "Chk", Size = UDim2.fromOffset(14, 14), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -10, 0.5, 0),
+				BackgroundTransparency = 1, Image = Icons.Check, ImageColor3 = Theme.AccentLight, Visible = false,
+			}, b)
+			b.MouseEnter:Connect(function()
+				if not isSel(o) and current ~= o then Tween(b, 0.12, { BackgroundColor3 = Theme.SubBox }) end
+			end)
+			b.MouseLeave:Connect(function() paintItem(b) end)
+			b.Activated:Connect(function()
+				if el._locked then return end
+				PlaySound("Click")
+				if multi then
+					if isSel(o) then
+						for i, s in ipairs(selected) do
+							if s == o then table.remove(selected, i) break end
+						end
+					else
+						selected[#selected + 1] = o
+					end
+					paintItem(b)
+					commit(false)
+				else
+					current = o
+					for _, ob in ipairs(itemButtons) do paintItem(ob) end
+					commit(false)
+					setOpen(false)
+				end
+			end)
+			itemButtons[#itemButtons + 1] = b
+		end
+		dirty = false
+	end
+
+	local function applyFilter()
 		local q = searchBox.Text:lower()
 		local order = 0
-		for _, o in ipairs(options) do
-			if q == "" or o:lower():find(q, 1, true) then
+		for _, b in ipairs(itemButtons) do
+			local show = q == "" or b:GetAttribute("opt"):lower():find(q, 1, true) ~= nil
+			b.Visible = show
+			if show then
 				order = order + 1
-				local b = new("TextButton", {
-					Size = UDim2.new(1, 0, 0, 24), BackgroundColor3 = Theme.Box, Text = "", AutoButtonColor = false,
-					LayoutOrder = order, BorderSizePixel = 0,
-				}, list)
-				b:SetAttribute("opt", o)
-				corner(b, 8)
-				new("TextLabel", {
-					Name = "Txt", Size = UDim2.new(1, -34, 1, 0), Position = UDim2.new(0, 10, 0, 0), BackgroundTransparency = 1,
-					Font = F.Regular, TextSize = 11.5, TextColor3 = Theme.TextBody, TextXAlignment = Enum.TextXAlignment.Left,
-					TextTruncate = Enum.TextTruncate.AtEnd, Text = o, RichText = false,
-				}, b)
-				new("ImageLabel", {
-					Name = "Chk", Size = UDim2.fromOffset(12, 12), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -8, 0.5, 0),
-					BackgroundTransparency = 1, Image = Icons.Check, ImageColor3 = Theme.AccentLight, Visible = false,
-				}, b)
-				paintItem(b)
-				b.MouseEnter:Connect(function()
-					if not isSel(o) and current ~= o then Tween(b, 0.12, { BackgroundColor3 = Theme.SubBox }) end
-				end)
-				b.MouseLeave:Connect(function() paintItem(b) end)
-				b.Activated:Connect(function()
-					if el._locked then return end
-					PlaySound("Click")
-					if multi then
-						if isSel(o) then
-							for i, s in ipairs(selected) do
-								if s == o then table.remove(selected, i) break end
-							end
-						else
-							selected[#selected + 1] = o
-						end
-						paintItem(b)
-						commit(false)
-					else
-						current = o
-						for _, ob in ipairs(itemButtons) do paintItem(ob) end
-						commit(false)
-						setOpen(false)
-					end
-				end)
-				itemButtons[#itemButtons + 1] = b
+				b.LayoutOrder = order
 			end
 		end
+	end
+
+	local function rebuild(animate)
+		if dirty then buildItems() end
+		applyFilter()
+		for _, b in ipairs(itemButtons) do paintItem(b) end
 		if open and not animate then panel.Size = UDim2.new(1, 0, 0, panelHeight()) end
 	end
 
@@ -1518,7 +1553,10 @@ local function addDropdown(sec, opts)
 		setOpen(not open)
 	end)
 	searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-		if open then rebuild(false) end
+		if open then
+			applyFilter()
+			panel.Size = UDim2.new(1, 0, 0, panelHeight())
+		end
 	end)
 	refreshText()
 	onTheme(function()
@@ -1562,6 +1600,7 @@ local function addDropdown(sec, opts)
 			end
 		end
 		commit(true)
+		dirty = true
 		if open then rebuild(false) end
 	end
 	el.SetOptions = el.Refresh
@@ -1585,7 +1624,7 @@ local function addInput(sec, opts)
 	vlist(row, 3)
 	local up = function(s) return string.upper(s) end
 
-	local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 32), LayoutOrder = 1 }, row)
+	local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 42), LayoutOrder = 1 }, row)
 	local t = lbl(line, {
 		Size = UDim2.new(0.4, -8, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11,
 		Text = up(title), TextYAlignment = Enum.TextYAlignment.Center,
@@ -1593,8 +1632,8 @@ local function addInput(sec, opts)
 	t.Visible = title ~= ""
 	local hasTitle = title ~= ""
 	local tb = new("TextBox", {
-		Size = hasTitle and UDim2.new(0.6, 0, 0, 26) or UDim2.new(1, 0, 0, 26),
-		Position = hasTitle and UDim2.new(0.4, 0, 0.5, -13) or UDim2.new(0, 0, 0.5, -13), BackgroundColor3 = Theme.SubBox, Text = "",
+		Size = hasTitle and UDim2.new(0.6, 0, 0, 34) or UDim2.new(1, 0, 0, 34),
+		Position = hasTitle and UDim2.new(0.4, 0, 0.5, -17) or UDim2.new(0, 0, 0.5, -17), BackgroundColor3 = Theme.SubBox, Text = "",
 		PlaceholderText = tostring(opts.Placeholder or ""), PlaceholderColor3 = Theme.TextMuted, Font = F.Regular, TextSize = 11,
 		TextColor3 = Theme.TextTitle, TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false, BorderSizePixel = 0,
 		TextTruncate = Enum.TextTruncate.AtEnd,
@@ -1664,14 +1703,14 @@ local function addButton(sec, opts)
 		corner(btn, 10)
 		local rs = bstroke(btn, 1, 0)
 		reg("SubBoxes", btn)
-		padding(btn, 10, 30, 6, 6)
+		padding(btn, 14, 38, 11, 11)
 		vlist(btn, 2)
-		local t = lbl(btn, { Font = F.Bold, TextSize = 12, Text = title, LayoutOrder = 1 }, "TextTitle")
+		local t = lbl(btn, { Font = F.Bold, TextSize = 13, Text = title, LayoutOrder = 1 }, "TextTitle")
 		local d = lbl(btn, { Font = F.Regular, TextSize = 10, Text = content, LayoutOrder = 2 }, "TextDim")
 		t.Visible = title ~= ""
 		d.Visible = content ~= ""
 		local ic = new("ImageLabel", {
-			Size = UDim2.fromOffset(14, 14), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 22, 0.5, 0),
+			Size = UDim2.fromOffset(17, 17), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 28, 0.5, 0),
 			BackgroundTransparency = 1, Image = opts.Icon or Icons.ChevronDown, ImageColor3 = Theme.AccentLight, Rotation = opts.Icon and 0 or -90,
 		}, btn)
 		reg("AccentLights", ic)
@@ -1692,7 +1731,7 @@ local function addButton(sec, opts)
 	vlist(row, 5)
 	local d = lbl(row, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 1 }, "TextDim")
 	d.Visible = content ~= ""
-	local pair = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 32), LayoutOrder = 2 }, row)
+	local pair = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 42), LayoutOrder = 2 }, row)
 	local b1 = makeBtn(pair, { Size = UDim2.new(0.5, -3, 1, 0), Position = UDim2.new(0, 0, 0, 0), Kind = "accent", Radius = 10, TextSize = 11.5 })
 	local b2 = makeBtn(pair, { Size = UDim2.new(0.5, -3, 1, 0), Position = UDim2.new(0.5, 3, 0, 0), Kind = "sub", Radius = 10, TextSize = 11.5 })
 	b1.setText(esc(title ~= "" and title or "Run"))
@@ -1729,7 +1768,7 @@ local function addParagraph(sec, opts)
 	corner(card, 10)
 	bstroke(card, 1, 0)
 	reg("SubBoxes", card)
-	padding(card, 10, 10, 8, 8)
+	padding(card, 14, 14, 11, 11)
 	vlist(card, 3)
 	local t = lbl(card, { Font = F.Bold, TextSize = 12, Text = title, LayoutOrder = 1 }, "TextTitle")
 	local d = lbl(card, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 2 }, "TextDim")
@@ -1783,10 +1822,10 @@ local function addKeybind(sec, opts)
 	local title = tostring(opts.Title or opts.Name or "")
 	local content = tostring(opts.Content or opts.Description or "")
 	local row, entry = newRow(sec, opts)
-	local col, t, d = textBlock(row, title, content, 86)
+	local col, t, d = textBlock(row, title, content, 106)
 	col.Position = UDim2.new(0, 0, 0, 2)
 	local bind = makeBtn(row, {
-		Size = UDim2.fromOffset(76, 24), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0), Kind = "sub", Radius = 8,
+		Size = UDim2.fromOffset(92, 32), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0), Kind = "sub", Radius = 8,
 	})
 
 	local el = { Type = "Keybind" }
@@ -1851,9 +1890,9 @@ local function addColorPicker(sec, opts)
 	local top = new("Frame", {
 		BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 1,
 	}, row)
-	local col, t, d = textBlock(top, title, content, 48)
+	local col, t, d = textBlock(top, title, content, 62)
 	local swatch = new("TextButton", {
-		Text = "", AutoButtonColor = false, Size = UDim2.fromOffset(38, 20), AnchorPoint = Vector2.new(1, 0.5),
+		Text = "", AutoButtonColor = false, Size = UDim2.fromOffset(50, 28), AnchorPoint = Vector2.new(1, 0.5),
 		Position = UDim2.new(1, 0, 0.5, 0), BackgroundColor3 = WHITE, BorderSizePixel = 0,
 	}, top)
 	corner(swatch, 8)
@@ -1919,7 +1958,7 @@ end
 ----------------------------------------------------------------------
 local function addActionList(sec, opts)
 	opts = opts or {}
-	local rowH = 46
+	local rowH = 56
 	local visibleRows = math.max(1, tonumber(opts.VisibleRows) or 5)
 	local btnW = tonumber(opts.ButtonWidth) or 72
 	local title = tostring(opts.Title or "")
@@ -1963,12 +2002,12 @@ local function addActionList(sec, opts)
 				TextWrapped = false, TextTruncate = Enum.TextTruncate.AtEnd,
 			}, role)
 		end
-		rec.name = cell({ 0, 10 }, 7, UDim2.new(0.38, -10, 0, 18), 18, F.Bold, 10.5, "TextTitle")
-		rec.sub = cell({ 0, 10 }, 26, UDim2.new(0.38, -10, 0, 16), 16, F.Regular, 9, "TextDim")
-		rec.status = cell({ 0.4, 0 }, 7, UDim2.new(0.6, -14, 0, 18), 18, F.Medium, 10, "TextBody")
-		rec.statusSub = cell({ 0.4, 0 }, 26, UDim2.new(0.6, -14, 0, 16), 16, F.Regular, 8.5, "TextDim")
+		rec.name = cell({ 0, 12 }, 9, UDim2.new(0.38, -10, 0, 18), 18, F.Bold, 10.5, "TextTitle")
+		rec.sub = cell({ 0, 12 }, 32, UDim2.new(0.38, -10, 0, 16), 16, F.Regular, 9, "TextDim")
+		rec.status = cell({ 0.4, 0 }, 9, UDim2.new(0.6, -14, 0, 18), 18, F.Medium, 10, "TextBody")
+		rec.statusSub = cell({ 0.4, 0 }, 32, UDim2.new(0.6, -14, 0, 16), 16, F.Regular, 8.5, "TextDim")
 		rec.btn = makeBtn(f, {
-			Size = UDim2.fromOffset(btnW, 26), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -8, 0.5, 0), Kind = "accent",
+			Size = UDim2.fromOffset(btnW, 32), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -8, 0.5, 0), Kind = "accent",
 		})
 		rec.btn.btn.Visible = false
 		local function setter(text, color)
@@ -2071,7 +2110,7 @@ local function addLiveChat(sec, opts)
 	padding(msgs, 8, 8, 8, 8)
 	vlist(msgs, 4)
 
-	local inputRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 28), LayoutOrder = 4 }, row)
+	local inputRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 38), LayoutOrder = 4 }, row)
 	local box = new("TextBox", {
 		Size = UDim2.new(1, -74, 1, 0), BackgroundColor3 = Theme.SubBox, Text = "", PlaceholderText = "Type a message...",
 		PlaceholderColor3 = Theme.TextMuted, Font = F.Regular, TextSize = 11, TextColor3 = Theme.TextTitle,
@@ -2164,7 +2203,7 @@ local function addSupportCard(sec, opts)
 	local d = lbl(card, { Font = F.Regular, TextSize = 11, Text = content, LayoutOrder = 2 }, "TextDim")
 	local links = opts.Links or Library.SupportLinks or {}
 	for i, ln in ipairs(links) do
-		local b = makeBtn(card, { Size = UDim2.new(1, 0, 0, 30), Kind = "accent", Radius = 10, LayoutOrder = 2 + i, TextSize = 11.5 })
+		local b = makeBtn(card, { Size = UDim2.new(1, 0, 0, 40), Kind = "accent", Radius = 10, LayoutOrder = 2 + i, TextSize = 12.5 })
 		b.setText(esc("Copy " .. tostring(ln.Name or ln.Title or "Link")))
 		b.btn.Activated:Connect(function()
 			PlaySound("Click")
@@ -2210,7 +2249,7 @@ local function addModeSelector(sec, opts)
 	vlist(row, 4)
 	local t = lbl(row, { Font = F.Bold, TextSize = 11, Text = string.upper(title), LayoutOrder = 1 }, "TextDim")
 	t.Visible = title ~= ""
-	local btnRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 28), LayoutOrder = 2 }, row)
+	local btnRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 38), LayoutOrder = 2 }, row)
 	new("UIListLayout", {
 		FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder,
 	}, btnRow)
@@ -2225,7 +2264,7 @@ local function addModeSelector(sec, opts)
 	local n = math.max(#modes, 1)
 	for i, m in ipairs(modes) do
 		local b = makeBtn(btnRow, {
-			Size = UDim2.new(1 / n, -((n - 1) * 6) / n, 1, 0), Kind = "off", Radius = 14, TextSize = 11, LayoutOrder = i,
+			Size = UDim2.new(1 / n, -((n - 1) * 6) / n, 1, 0), Kind = "off", Radius = 19, TextSize = 12.5, LayoutOrder = i,
 		})
 		b.setText(esc(m))
 		btns[m] = b
@@ -2261,9 +2300,9 @@ local function addColorPalette(sec, opts)
 	local row, entry = newRow(sec, { Title = "Quick accent palettes" })
 	vlist(row, 4)
 	lbl(row, { Font = F.Bold, TextSize = 11, Text = "QUICK ACCENT PALETTES (ONE-TAP)", LayoutOrder = 1 }, "TextMuted")
-	local grid = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 58), LayoutOrder = 2 }, row)
+	local grid = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 76), LayoutOrder = 2 }, row)
 	new("UIGridLayout", {
-		CellSize = UDim2.new(0.2, -6, 0, 24), CellPadding = UDim2.new(0, 6, 0, 6), HorizontalAlignment = Enum.HorizontalAlignment.Center,
+		CellSize = UDim2.new(0.2, -6, 0, 32), CellPadding = UDim2.new(0, 6, 0, 6), HorizontalAlignment = Enum.HorizontalAlignment.Center,
 		VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
 	}, grid)
 	for i, pal in ipairs(Palettes) do
@@ -2293,7 +2332,7 @@ local function addColorPickerRow(sec, opts)
 	opts = opts or {}
 	local title = tostring(opts.Title or opts.Name or "")
 	local row, entry = newRow(sec, opts)
-	local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 34) }, row)
+	local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 44) }, row)
 	local t = lbl(line, {
 		Size = UDim2.new(0.5, 0, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11, Text = string.upper(title),
 		TextYAlignment = Enum.TextYAlignment.Center,
@@ -2352,7 +2391,7 @@ local function addDangerButton(sec, opts)
 		AutoButtonColor = false, BorderSizePixel = 0,
 	}, row)
 	corner(btn, 10)
-	padding(btn, 32, 10, 7, 7)
+	padding(btn, 38, 14, 11, 11)
 	vlist(btn, 2)
 	new("ImageLabel", {
 		Size = UDim2.fromOffset(14, 14), AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, -22, 0.5, 0),
@@ -2380,7 +2419,7 @@ local function addColorSliders(sec, opts)
 	local title = tostring(opts.Title or opts.Name or "")
 	local row, entry = newRow(sec, opts)
 	vlist(row, 4)
-	local head = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 24), LayoutOrder = 1 }, row)
+	local head = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 32), LayoutOrder = 1 }, row)
 	local t = lbl(head, {
 		Size = UDim2.new(1, -120, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11, Text = string.upper(title),
 		TextYAlignment = Enum.TextYAlignment.Center,
@@ -2422,17 +2461,17 @@ local function addColorSliders(sec, opts)
 		end
 	end
 	for i = 1, 3 do
-		local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 20), LayoutOrder = 1 + i }, row)
+		local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 30), LayoutOrder = 1 + i }, row)
 		lbl(line, {
 			Size = UDim2.new(0, 16, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11, Text = names[i],
 			TextYAlignment = Enum.TextYAlignment.Center,
 		}, "TextDim")
 		tracks[i] = makeTrack(sec, line, {
-			Size = UDim2.new(1, -62, 0, 20), Position = UDim2.new(0, 20, 0, 0), BarFrom = Color3.new(0, 0, 0), BarTo = Color3.new(1, 1, 1),
-			TrackH = 8,
+			Size = UDim2.new(1, -78, 0, 30), Position = UDim2.new(0, 24, 0, 0), BarFrom = Color3.new(0, 0, 0), BarTo = Color3.new(1, 1, 1),
+			TrackH = 12,
 		})
 		vals[i] = lbl(line, {
-			Size = UDim2.new(0, 34, 1, 0), Position = UDim2.new(1, -34, 0, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold,
+			Size = UDim2.new(0, 46, 1, 0), Position = UDim2.new(1, -46, 0, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold,
 			TextSize = 11, TextXAlignment = Enum.TextXAlignment.Right, TextYAlignment = Enum.TextYAlignment.Center, TextWrapped = false,
 		}, "TextBody")
 		tracks[i].onChange = function(p, final)
@@ -2535,7 +2574,7 @@ local function buildSection(win, tab, name, wide, badge, icon)
 	Card.BackgroundTransparency = Library.Settings.PanelTransparency or 0
 
 	if hasHeader then
-		local header = new("Frame", { Size = UDim2.new(1, 0, 0, 34), BackgroundTransparency = 1 }, Card)
+		local header = new("Frame", { Size = UDim2.new(1, 0, 0, 42), BackgroundTransparency = 1 }, Card)
 		local bIcon = new("ImageLabel", {
 			Size = UDim2.new(0, 14, 0, 14), Position = UDim2.new(0, 12, 0.5, -7), BackgroundTransparency = 1,
 			Image = icon or Icons.Logo, ImageColor3 = Theme.AccentLight,
@@ -2563,11 +2602,11 @@ local function buildSection(win, tab, name, wide, badge, icon)
 	end
 
 	local Container = new("Frame", {
-		Name = "Container", Size = UDim2.new(1, 0, 0, 0), Position = UDim2.new(0, 0, 0, hasHeader and 34 or 0), BackgroundTransparency = 1,
+		Name = "Container", Size = UDim2.new(1, 0, 0, 0), Position = UDim2.new(0, 0, 0, hasHeader and 42 or 0), BackgroundTransparency = 1,
 		AutomaticSize = Enum.AutomaticSize.Y,
 	}, Card)
-	vlist(Container, 7)
-	padding(Container, 12, 12, 8, 12)
+	vlist(Container, 10)
+	padding(Container, 14, 14, 12, 16)
 
 	local sec = {
 		Name = name, _win = win, _tab = tab, _page = tab._page, _n = 0, _holder = Container, _card = Card,
@@ -2634,7 +2673,7 @@ local function buildEffects(Fx)
 	do -- Bubbles
 		local c = canvas("BubbleCanvas")
 		local items = {}
-		for i = 1, 16 do
+		for i = 1, 10 do
 			local sz = rnd(14, 38)
 			local b = new("Frame", {
 				Size = UDim2.new(0, sz, 0, sz), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = Theme.AccentLight,
@@ -2662,7 +2701,7 @@ local function buildEffects(Fx)
 			step = function(t, dt, h)
 				for _, it in ipairs(items) do
 					local cur = it.o.Position
-					local ny = cur.Y.Scale - (it.speed / h)
+					local ny = cur.Y.Scale - (it.speed * dt / h)
 					local nx = it.bx + math.sin(t * it.fq + it.ph) * it.amp
 					if ny < -0.08 then
 						ny = 1.05
@@ -2679,9 +2718,9 @@ local function buildEffects(Fx)
 		local c = canvas("MatrixCanvas")
 		local chars = { "0", "1", "X", "Z", "7", "4", "A", "F", "9", "3", "#", "*", "+", "%", "0", "1" }
 		local items = {}
-		for i = 1, 16 do
+		for i = 1, 12 do
 			local l = new("TextLabel", {
-				Size = UDim2.new(0, 16, 0, 16), AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new((i - 0.5) / 16, 0, rnd(0, 100) / 100, 0),
+				Size = UDim2.new(0, 16, 0, 16), AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new((i - 0.5) / 12, 0, rnd(0, 100) / 100, 0),
 				BackgroundTransparency = 1, Font = Enum.Font.Code, TextSize = 11.5, TextColor3 = Theme.AccentLight,
 				TextTransparency = rnd(25, 75) / 100, Text = chars[rnd(1, #chars)], ZIndex = 0,
 			}, c)
@@ -2693,7 +2732,7 @@ local function buildEffects(Fx)
 			step = function(t, dt, h)
 				for _, it in ipairs(items) do
 					local cur = it.o.Position
-					local ny = cur.Y.Scale + (it.speed / h)
+					local ny = cur.Y.Scale + (it.speed * dt / h)
 					if ny > 1.06 then
 						ny = -0.06
 						it.o.Text = chars[rnd(1, #chars)]
@@ -2712,7 +2751,7 @@ local function buildEffects(Fx)
 	do -- Fireflies
 		local c = canvas("FireflyCanvas")
 		local items = {}
-		for i = 1, 18 do
+		for i = 1, 12 do
 			local sz = rnd(5, 10)
 			local bx, by = rnd(5, 95) / 100, rnd(8, 92) / 100
 			local f = new("Frame", {
@@ -2741,7 +2780,7 @@ local function buildEffects(Fx)
 	do -- Embers
 		local c = canvas("EmberCanvas")
 		local items = {}
-		for i = 1, 18 do
+		for i = 1, 12 do
 			local sz = rnd(4, 8)
 			local sx = rnd(4, 96) / 100
 			local e = new("Frame", {
@@ -2756,7 +2795,7 @@ local function buildEffects(Fx)
 			step = function(t, dt, h)
 				for _, it in ipairs(items) do
 					local cur = it.o.Position
-					local ny = cur.Y.Scale - (it.speed / h)
+					local ny = cur.Y.Scale - (it.speed * dt / h)
 					local nx = it.bx + math.sin(t * it.fq + it.ph) * it.amp
 					if ny < -0.06 then
 						ny = 1.05
@@ -2772,7 +2811,7 @@ local function buildEffects(Fx)
 	do -- Snow
 		local c = canvas("SnowCanvas")
 		local items = {}
-		for i = 1, 20 do
+		for i = 1, 14 do
 			local sz = rnd(3, 7)
 			local sx = rnd(2, 98) / 100
 			local s = new("Frame", {
@@ -2787,7 +2826,7 @@ local function buildEffects(Fx)
 			step = function(t, dt, h)
 				for _, it in ipairs(items) do
 					local cur = it.o.Position
-					local ny = cur.Y.Scale + (it.speed / h)
+					local ny = cur.Y.Scale + (it.speed * dt / h)
 					local nx = it.bx + math.sin(t * it.fq + it.ph) * it.amp
 					if ny > 1.06 then
 						ny = -0.06
@@ -2827,9 +2866,7 @@ local function attachDrag(win, handle, target, onTap)
 			local delta = inp.Position - dragStart
 			if delta.Magnitude > 6 then moved = true end
 			if moved then
-				Tween(target, 0.04, {
-					Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y),
-				}, Enum.EasingStyle.Linear)
+				target.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 			end
 		end
 	end))
@@ -2879,6 +2916,18 @@ function Library.Window(self, opts)
 	protect(gui)
 	gui.Parent = getParent()
 	win.Gui = gui
+	-- despachante unico de arraste (sliders / seletores): 2 conexoes em vez de uma por elemento
+	track(win, UIS.InputChanged:Connect(function(inp)
+		local a = win._active
+		if a and isMove(inp) then a.onMove(inp) end
+	end))
+	track(win, UIS.InputEnded:Connect(function(inp)
+		local a = win._active
+		if a and isPress(inp) then
+			win._active = nil
+			a.onEnd(inp)
+		end
+	end))
 
 	local root = new("Frame", {
 		Name = "SenaRoot", BackgroundTransparency = 1, Size = UDim2.fromOffset(0, 0), Position = UDim2.fromScale(0.5, 0.5),
@@ -2920,7 +2969,7 @@ function Library.Window(self, opts)
 	-- fundo
 	local Wallpaper = new("ImageLabel", {
 		Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, ScaleType = Enum.ScaleType.Crop, ZIndex = 0,
-		ImageTransparency = S.WallpaperTransparency, Image = "",
+		ImageTransparency = S.WallpaperTransparency, Image = "", Visible = false,
 		ImageColor3 = Color3.fromRGB(
 			math.floor(255 * (1 - S.WallpaperDimming)), math.floor(255 * (1 - S.WallpaperDimming)), math.floor(255 * (1 - S.WallpaperDimming))
 		),
@@ -2939,7 +2988,10 @@ function Library.Window(self, opts)
 	if S.CustomWallpaperId and S.CustomWallpaperId ~= "" then
 		task.spawn(function()
 			local res = LoadCustomImage(S.CustomWallpaperId, "")
-			if res and res ~= "" and Wallpaper.Parent then Wallpaper.Image = res end
+			if res and res ~= "" and Wallpaper.Parent then
+				Wallpaper.Image = res
+				Wallpaper.Visible = true
+			end
 		end)
 	end
 	local Fx = new("Frame", {
@@ -2949,9 +3001,10 @@ function Library.Window(self, opts)
 	local Effects = buildEffects(Fx)
 	local function setEffect(mode)
 		S.BackgroundEffect = mode
+		Fx.Visible = Effects[mode] ~= nil
 		for name, e in pairs(Effects) do e.canvas.Visible = (name == mode) end
 	end
-	for name, e in pairs(Effects) do e.canvas.Visible = (name == S.BackgroundEffect) end
+	setEffect(S.BackgroundEffect)
 
 	-- header
 	local Header = new("Frame", { Name = "Header", Size = UDim2.new(1, 0, 0, 44), BackgroundTransparency = 1 }, Main)
@@ -3063,8 +3116,8 @@ function Library.Window(self, opts)
 	regText(SubLabel, "TextDim")
 	-- botao System & Theme no topo da janela
 	local sysBtn = makeBtn(Header, {
-		Size = UDim2.fromOffset(142, 26), AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 82, 0.5, 0), Kind = "off",
-		Radius = 13, TextSize = 12,
+		Size = UDim2.fromOffset(154, 30), AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 82, 0.5, 0), Kind = "off",
+		Radius = 15, TextSize = 12.5,
 	})
 	sysBtn.label.Position = UDim2.new(0, 28, 0, 0)
 	sysBtn.label.Size = UDim2.new(1, -34, 1, 0)
@@ -3278,11 +3331,15 @@ function Library.Window(self, opts)
 	reg("Accents", flAura)
 	task.spawn(function()
 		while Floating and Floating.Parent do
-			Tween(flAura, 1.4, { Size = UDim2.new(1, 16, 1, 16), BackgroundTransparency = 0.82 }, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
-			task.wait(1.4)
-			if not Floating or not Floating.Parent then break end
-			Tween(flAura, 1.4, { Size = UDim2.new(1, 8, 1, 8), BackgroundTransparency = 0.94 }, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
-			task.wait(1.4)
+			if S.LowLag then
+				task.wait(1)
+			else
+				Tween(flAura, 1.4, { Size = UDim2.new(1, 16, 1, 16), BackgroundTransparency = 0.82 }, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+				task.wait(1.4)
+				if not Floating or not Floating.Parent then break end
+				Tween(flAura, 1.4, { Size = UDim2.new(1, 8, 1, 8), BackgroundTransparency = 0.94 }, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+				task.wait(1.4)
+			end
 		end
 	end)
 	local flGlow = new("Frame", {
@@ -3356,17 +3413,26 @@ function Library.Window(self, opts)
 		end
 	end)
 
-	-- loop de animacao (efeitos + anel girando)
-	track(win, RunService.RenderStepped:Connect(function()
-		if flGrad and flGrad.Parent then flGrad.Rotation = (tick() * 120) % 360 end
-		if not Main.Visible then return end
-		if S.BgMode == "Gradient" and S.BgAnimate then BgGrad.Rotation = ((S.BgAngle or 45) + tick() * 15) % 360 end
-		local mode = S.BackgroundEffect
-		local e = Effects[mode]
+	-- loop de animacao (efeitos + anel girando), limitado a ~25 fps
+	local acc, ringAcc = 0, 0
+	track(win, RunService.RenderStepped:Connect(function(dt)
+		if S.LowLag then return end
+		ringAcc = ringAcc + dt
+		if ringAcc >= 0.04 then
+			ringAcc = 0
+			if Floating.Visible and flGrad and flGrad.Parent then flGrad.Rotation = (os.clock() * 120) % 360 end
+		end
+		if not Main.Visible or win._minimized then return end
+		acc = acc + dt
+		if acc < 0.04 then return end
+		local k = acc * 60
+		acc = 0
+		if S.BgMode == "Gradient" and S.BgAnimate then BgGrad.Rotation = ((S.BgAngle or 45) + os.clock() * 15) % 360 end
+		local e = Effects[S.BackgroundEffect]
 		if not e then return end
 		local h = Main.AbsoluteSize.Y
 		if h <= 0 then h = WH end
-		e.step(tick(), 0, h)
+		e.step(os.clock(), k, h)
 	end))
 
 	-- tecla de atalho
@@ -3401,7 +3467,7 @@ function Library.Window(self, opts)
 		vlist(Page, 10)
 
 		local TabBtn = new("TextButton", {
-			Name = "Nav_" .. TabTitle, Size = UDim2.new(1, 0, 0, 38), BackgroundColor3 = Theme.SubBox, BackgroundTransparency = 0.85,
+			Name = "Nav_" .. TabTitle, Size = UDim2.new(1, 0, 0, 44), BackgroundColor3 = Theme.SubBox, BackgroundTransparency = 0.85,
 			Text = "", AutoButtonColor = false, LayoutOrder = order, BorderSizePixel = 0,
 		}, NavScroll)
 		corner(TabBtn, 10)
@@ -4038,39 +4104,43 @@ function Library.Window(self, opts)
 			update()
 		end
 
-		-- presets de degrade
+		-- presets de degrade: cada preset e UMA cor em 3 tons (cor -> mais escuro -> ainda mais escuro)
+		local function ramp(base)
+			local h, sat, v = Color3.toHSV(base)
+			return base, Color3.fromHSV(h, sat, v * 0.55), Color3.fromHSV(h, sat, v * 0.28)
+		end
 		local BgPresets = {
-			{ "Midnight", "#1A1033", "#0B1B3A", "#2A0F2E", 45 }, { "Aurora", "#0F2027", "#203A43", "#2C5364", 60 },
-			{ "Sunset", "#2D1B3D", "#7A2E4D", "#B5532F", 35 }, { "Ocean", "#051937", "#004D7A", "#008793", 55 },
-			{ "Emerald", "#03170D", "#0A4A2E", "#127A4B", 50 }, { "Rose", "#1F0A14", "#5A1030", "#8E1B4B", 40 },
-			{ "Graphite", "#0E0F13", "#1B1D26", "#2A2D3A", 90 }, { "Neon", "#0A0A1F", "#240046", "#3C096C", 45 },
-			{ "Ember", "#1A0B05", "#5C1F0B", "#9C3A0F", 30 }, { "Arctic", "#0B1E2D", "#17435E", "#2D7BA3", 65 },
+			{ "Midnight", Color3.fromRGB(79, 70, 229), 45 }, { "Aurora", Color3.fromRGB(45, 212, 191), 60 },
+			{ "Sunset", Color3.fromRGB(249, 115, 22), 35 }, { "Ocean", Color3.fromRGB(14, 165, 233), 55 },
+			{ "Emerald", Color3.fromRGB(16, 185, 129), 50 }, { "Rose", Color3.fromRGB(244, 63, 94), 40 },
+			{ "Graphite", Color3.fromRGB(156, 163, 175), 90 }, { "Snow", Color3.fromRGB(232, 236, 245), 45 },
+			{ "Neon", Color3.fromRGB(168, 85, 247), 45 }, { "Arctic", Color3.fromRGB(125, 211, 252), 65 },
 		}
 		do
 			local row = newRow(BgBox, { Title = "gradient presets" })
 			vlist(row, 4)
 			lbl(row, { Font = F.Bold, TextSize = 11, Text = "GRADIENT PRESETS (ONE-TAP)", LayoutOrder = 1 }, "TextMuted")
-			local grid = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 80), LayoutOrder = 2 }, row)
+			local grid = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 100), LayoutOrder = 2 }, row)
 			new("UIGridLayout", {
-				CellSize = UDim2.new(0.2, -6, 0, 34), CellPadding = UDim2.new(0, 6, 0, 6), HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				CellSize = UDim2.new(0.2, -6, 0, 44), CellPadding = UDim2.new(0, 6, 0, 6), HorizontalAlignment = Enum.HorizontalAlignment.Center,
 				VerticalAlignment = Enum.VerticalAlignment.Top, SortOrder = Enum.SortOrder.LayoutOrder,
 			}, grid)
 			for i, pr in ipairs(BgPresets) do
-				local c1, c2, c3 = hexToColor(pr[2]), hexToColor(pr[3]), hexToColor(pr[4])
+				local c1, c2, c3 = ramp(pr[2])
 				local b = new("TextButton", {
 					Text = "", AutoButtonColor = false, BackgroundColor3 = WHITE, BorderSizePixel = 0, LayoutOrder = i,
 				}, grid)
-				corner(b, 8)
+				corner(b, 10)
 				new("UIGradient", {
 					Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, c1), ColorSequenceKeypoint.new(0.5, c2), ColorSequenceKeypoint.new(1, c3),
 					}),
-					Rotation = pr[5],
+					Rotation = pr[3],
 				}, b)
 				local st = stroke(b, WHITE, 1.2, 0.6)
 				new("TextLabel", {
-					Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Font = F.Bold, TextSize = 11, Text = pr[1],
-					TextColor3 = WHITE, TextStrokeTransparency = 0.6, ZIndex = 2, RichText = false,
+					Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Font = F.Bold, TextSize = 12, Text = pr[1],
+					TextColor3 = WHITE, TextStrokeTransparency = 0.5, ZIndex = 2, RichText = false,
 				}, b)
 				b.MouseEnter:Connect(function()
 					Tween(st, 0.15, { Transparency = 0, Thickness = 1.8 })
@@ -4080,14 +4150,14 @@ function Library.Window(self, opts)
 				b.Activated:Connect(function()
 					PlaySound("Click")
 					S.BgMode = "Gradient"
-					S.BgColor1, S.BgColor2, S.BgColor3 = pr[2], pr[3], pr[4]
+					S.BgColor1, S.BgColor2, S.BgColor3 = hex(c1), hex(c2), hex(c3)
 					S.BgUse3 = true
-					S.BgAngle = pr[5]
+					S.BgAngle = pr[3]
 					if cs1 then cs1:Set(c1, true) end
 					if cs2 then cs2:Set(c2, true) end
 					if cs3 then cs3:Set(c3, true) end
 					if use3Tog then use3Tog:Set(true, true) end
-					if angleSld then angleSld:Set(pr[5], true) end
+					if angleSld then angleSld:Set(pr[3], true) end
 					if modeSel then modeSel:Set("Gradient", true) end
 					bgChanged()
 					note("BACKGROUND", "Gradient preset: " .. pr[1], "BG")
@@ -4233,6 +4303,15 @@ function Library.Window(self, opts)
 				saveUiSettings()
 			end,
 		})
+		GlassBox:AddToggle({
+			Title = "LOW-LAG MODE", Content = "Pauses background effects and ring animation for maximum FPS", NoSave = true,
+			Default = S.LowLag == true,
+			Callback = function(v)
+				S.LowLag = v
+				saveUiSettings()
+				note("LOW-LAG MODE", v and "Animations paused for max performance" or "Animations enabled", "PERF")
+			end,
+		})
 		GlassBox:AddSlider({
 			Title = "WINDOW TRANSPARENCY", Min = 0, Max = 80, Default = math.floor((S.WindowTransparency or 0) * 100 + 0.5),
 			Suffix = "%", NoSave = true,
@@ -4305,7 +4384,11 @@ function Library.Window(self, opts)
 			Title = "WALLPAPER IMAGE...", Placeholder = "https://... or Decal ID", Default = S.CustomWallpaperId or "", NoSave = true,
 			Callback = function(txt)
 				if txt and txt ~= "" then
-					task.spawn(function() Wallpaper.Image = LoadCustomImage(txt, "") end)
+					task.spawn(function()
+						local res = LoadCustomImage(txt, "")
+						Wallpaper.Image = res
+						Wallpaper.Visible = res ~= ""
+					end)
 					S.CustomWallpaperId = txt
 					saveUiSettings()
 				end
