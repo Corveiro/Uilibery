@@ -9,7 +9,7 @@
 		Sec:AddToggle / AddSlider / AddDropdown / AddInput / AddButton / AddParagraph / AddSubSection
 		Sec:AddActionList / AddLiveChat / AddSupportCard / AddKeybind / AddColorPicker
 		Win:AddForum({Name="Forum", Icon="forum", Section="Config Forum"})
-		Win:AddSettingsTab()                                -- opcional: temas, efeitos de fundo, som...
+		-- O painel "System & Theme" abre pelo botao no topo da janela (Window({SystemTab=false}) desliga)
 		Lib:Notify({Title="", Content="", Duration=3})
 		Lib:SetTheme("StarHubGold")                         -- troca de tema ao vivo
 
@@ -292,6 +292,15 @@ local Library = {
 		AutoSaveEnabled = true,
 		AcrylicEnabled = true,
 		BaseTheme = "NeverloseCrimson",
+		BgMode = "Theme",
+		BgColor1 = "#1A1033",
+		BgColor2 = "#0B1B3A",
+		BgColor3 = "#2A0F2E",
+		BgUse3 = false,
+		BgAngle = 45,
+		BgAnimate = false,
+		GlassSidebar = true,
+		PanelTransparency = 0,
 	},
 }
 genv.__SenaLibInstance = Library
@@ -304,7 +313,7 @@ local Theme = Themes.NeverloseCrimson
 ----------------------------------------------------------------------
 local Reg = {
 	Gradients = {}, Accents = {}, AccentLights = {}, Backgrounds = {}, Sidebars = {}, Boxes = {}, SubBoxes = {},
-	Borders = {}, Texts = {}, Renderers = {},
+	Borders = {}, Texts = {}, Renderers = {}, Panels = {},
 }
 
 local function reg(cat, obj)
@@ -665,6 +674,8 @@ local function saveUiSettings(force)
 		floating = s.ShowFloatingToggle, transparency = s.WindowTransparency, controls = s.ControlsPosition,
 		keymode = s.KeybindMode, key = s.ToggleKey, logo = s.CustomLogoUrl, wallpaper = s.CustomWallpaperId,
 		wallT = s.WallpaperTransparency, wallD = s.WallpaperDimming, acrylic = s.AcrylicEnabled, autosave = s.AutoSaveEnabled,
+		bgMode = s.BgMode, bgC1 = s.BgColor1, bgC2 = s.BgColor2, bgC3 = s.BgColor3, bgUse3 = s.BgUse3, bgAngle = s.BgAngle,
+		bgAnim = s.BgAnimate, glass = s.GlassSidebar, panelT = s.PanelTransparency,
 	})
 end
 
@@ -694,6 +705,15 @@ local function loadUiSettings()
 	if type(d.wallD) == "number" then s.WallpaperDimming = math.clamp(d.wallD, 0, 1) end
 	if type(d.acrylic) == "boolean" then s.AcrylicEnabled = d.acrylic end
 	if type(d.autosave) == "boolean" then s.AutoSaveEnabled = d.autosave end
+	if d.bgMode == "Theme" or d.bgMode == "Solid" or d.bgMode == "Gradient" then s.BgMode = d.bgMode end
+	if hexToColor(d.bgC1) then s.BgColor1 = d.bgC1 end
+	if hexToColor(d.bgC2) then s.BgColor2 = d.bgC2 end
+	if hexToColor(d.bgC3) then s.BgColor3 = d.bgC3 end
+	if type(d.bgUse3) == "boolean" then s.BgUse3 = d.bgUse3 end
+	if type(d.bgAngle) == "number" then s.BgAngle = d.bgAngle % 360 end
+	if type(d.bgAnim) == "boolean" then s.BgAnimate = d.bgAnim end
+	if type(d.glass) == "boolean" then s.GlassSidebar = d.glass end
+	if type(d.panelT) == "number" then s.PanelTransparency = math.clamp(d.panelT, 0, 0.6) end
 	rebuildTheme()
 end
 
@@ -985,20 +1005,32 @@ local function makeTrack(sec, parent, props)
 		Text = "", AutoButtonColor = false, BackgroundTransparency = 1, Size = props.Size or UDim2.new(1, 0, 0, 20),
 		Position = props.Position or UDim2.new(), LayoutOrder = props.LayoutOrder or 0,
 	}, parent)
+	local trackH = props.TrackH or 6
 	local Track = new("Frame", {
-		Size = UDim2.new(1, 0, 0, 6), Position = UDim2.new(0, 0, 0.5, -3), BackgroundColor3 = Theme.SubBox, BorderSizePixel = 0,
+		Size = UDim2.new(1, 0, 0, trackH), Position = UDim2.new(0, 0, 0.5, -trackH / 2),
+		BackgroundColor3 = props.BarFrom and WHITE or Theme.SubBox, BorderSizePixel = 0,
 	}, hit)
 	round(Track)
-	reg("SubBoxes", Track)
+	local barGrad
+	if props.BarFrom then
+		barGrad = new("UIGradient", { Color = ColorSequence.new(props.BarFrom, props.BarTo or props.BarFrom) }, Track)
+	else
+		reg("SubBoxes", Track)
+	end
 	local Fill = new("Frame", { Size = UDim2.new(0, 0, 1, 0), BackgroundColor3 = WHITE, BorderSizePixel = 0 }, Track)
 	round(Fill)
 	ApplyGradient(Fill, Theme.Grad1, Theme.Grad2, 0)
+	if props.BarFrom then Fill.Visible = false end
 	local Knob = new("Frame", {
 		Size = UDim2.fromOffset(12, 12), Position = UDim2.new(0, -6, 0.5, -6), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 2,
 	}, Track)
 	round(Knob)
+	if props.BarFrom then stroke(Knob, Color3.fromRGB(20, 20, 30), 1.2, 0.2) end
 
 	local api = { pct = 0, onChange = nil, hit = hit }
+	function api.setBar(c1, c2)
+		if barGrad then barGrad.Color = ColorSequence.new(c1, c2) end
+	end
 	function api.set(p)
 		p = math.clamp(p, 0, 1)
 		api.pct = p
@@ -1199,6 +1231,7 @@ local function addSlider(sec, opts)
 		if el._locked then return end
 		local v = snap(min + p * (max - min))
 		valLbl.Text = fmtNum(v, decimals) .. suffix
+		if not final and opts.OnDrag then fire(opts.OnDrag, v) end
 		if final then commit(v, false) end
 	end
 	btnDown.Activated:Connect(function()
@@ -2342,12 +2375,106 @@ local function addDangerButton(sec, opts)
 	return attachCommon(el, row, t, d, entry)
 end
 
+local function addColorSliders(sec, opts)
+	opts = opts or {}
+	local title = tostring(opts.Title or opts.Name or "")
+	local row, entry = newRow(sec, opts)
+	vlist(row, 4)
+	local head = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 24), LayoutOrder = 1 }, row)
+	local t = lbl(head, {
+		Size = UDim2.new(1, -120, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11, Text = string.upper(title),
+		TextYAlignment = Enum.TextYAlignment.Center,
+	}, "TextTitle")
+	local color = typeof(opts.Default) == "Color3" and opts.Default or Theme.Accent
+	local swatch = new("TextButton", {
+		Size = UDim2.new(0, 22, 0, 22), Position = UDim2.new(1, -112, 0.5, -11), BackgroundColor3 = color, Text = "",
+		AutoButtonColor = false, BorderSizePixel = 0,
+	}, head)
+	round(swatch)
+	stroke(swatch, WHITE, 1, 0.4)
+	local hexLbl = new("TextLabel", {
+		Size = UDim2.new(0, 70, 1, 0), Position = UDim2.new(1, -84, 0, 0), BackgroundTransparency = 1, Font = F.Bold, TextSize = 11.5,
+		TextXAlignment = Enum.TextXAlignment.Left, Text = hex(color), TextColor3 = Theme.AccentLight, RichText = false,
+	}, head)
+	reg("AccentLights", hexLbl)
+	local palIcon = new("ImageLabel", {
+		Size = UDim2.new(0, 16, 0, 16), Position = UDim2.new(1, -16, 0.5, -8), BackgroundTransparency = 1, Image = Icons.Palette,
+		ImageColor3 = Theme.TextDim,
+	}, head)
+	onTheme(function() palIcon.ImageColor3 = Theme.TextDim end, palIcon)
+
+	local ch = { math.floor(color.R * 255 + 0.5), math.floor(color.G * 255 + 0.5), math.floor(color.B * 255 + 0.5) }
+	local names = { "R", "G", "B" }
+	local tracks, vals = {}, {}
+	local el = { Type = "ColorSliders", Value = color }
+	local function currentColor() return Color3.fromRGB(ch[1], ch[2], ch[3]) end
+	local function refresh()
+		local c = currentColor()
+		el.Value = c
+		swatch.BackgroundColor3 = c
+		hexLbl.Text = hex(c)
+		tracks[1].setBar(Color3.fromRGB(0, ch[2], ch[3]), Color3.fromRGB(255, ch[2], ch[3]))
+		tracks[2].setBar(Color3.fromRGB(ch[1], 0, ch[3]), Color3.fromRGB(ch[1], 255, ch[3]))
+		tracks[3].setBar(Color3.fromRGB(ch[1], ch[2], 0), Color3.fromRGB(ch[1], ch[2], 255))
+		for i = 1, 3 do
+			tracks[i].set(ch[i] / 255)
+			vals[i].Text = tostring(ch[i])
+		end
+	end
+	for i = 1, 3 do
+		local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 20), LayoutOrder = 1 + i }, row)
+		lbl(line, {
+			Size = UDim2.new(0, 16, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11, Text = names[i],
+			TextYAlignment = Enum.TextYAlignment.Center,
+		}, "TextDim")
+		tracks[i] = makeTrack(sec, line, {
+			Size = UDim2.new(1, -62, 0, 20), Position = UDim2.new(0, 20, 0, 0), BarFrom = Color3.new(0, 0, 0), BarTo = Color3.new(1, 1, 1),
+			TrackH = 8,
+		})
+		vals[i] = lbl(line, {
+			Size = UDim2.new(0, 34, 1, 0), Position = UDim2.new(1, -34, 0, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold,
+			TextSize = 11, TextXAlignment = Enum.TextXAlignment.Right, TextYAlignment = Enum.TextYAlignment.Center, TextWrapped = false,
+		}, "TextBody")
+		tracks[i].onChange = function(p, final)
+			if el._locked then return end
+			ch[i] = math.floor(p * 255 + 0.5)
+			refresh()
+			local c = currentColor()
+			fire(opts.Live, c)
+			if final then fire(opts.Callback, c, hex(c)) end
+		end
+	end
+	refresh()
+
+	function el.Set(self, c, silent)
+		if typeof(c) ~= "Color3" then return end
+		ch = { math.floor(c.R * 255 + 0.5), math.floor(c.G * 255 + 0.5), math.floor(c.B * 255 + 0.5) }
+		refresh()
+		if not silent then fire(opts.Callback, c, hex(c)) end
+	end
+	el.SetValue = el.Set
+	function el.Get() return el.Value end
+	el.GetValue = el.Get
+	swatch.Activated:Connect(function()
+		if el._locked then return end
+		PlaySound("Click")
+		sec._win:OpenColorPicker(currentColor(), function(newCol, newHex)
+			ch = { math.floor(newCol.R * 255 + 0.5), math.floor(newCol.G * 255 + 0.5), math.floor(newCol.B * 255 + 0.5) }
+			refresh()
+			fire(opts.Live, newCol)
+			fire(opts.Callback, newCol, newHex)
+		end, title)
+	end)
+	return attachCommon(el, row, t, nil, entry, string.upper)
+end
+
 local ADDERS = {
 	AddToggle = addToggle, AddSlider = addSlider, AddDropdown = addDropdown, AddInput = addInput,
 	AddButton = addButton, AddParagraph = addParagraph, AddSubSection = addSubSection, AddKeybind = addKeybind,
 	AddColorPicker = addColorPicker, AddActionList = addActionList, AddLiveChat = addLiveChat,
 	AddSupportCard = addSupportCard, AddModeSelector = addModeSelector, AddColorPalette = addColorPalette,
 	AddColorPickerRow = addColorPickerRow, AddActionRow = addButton, AddDangerButton = addDangerButton,
+	AddColorSliders = addColorSliders,
 }
 
 local function buildSection(win, tab, name, wide, badge, icon)
@@ -2356,6 +2483,7 @@ local function buildSection(win, tab, name, wide, badge, icon)
 		forceSide = wide
 		wide = false
 	end
+	wide = true -- layout em coluna unica: toda secao ocupa a largura toda
 	tab._order = tab._order + 1
 	local parentFrame
 	local side
@@ -2403,6 +2531,8 @@ local function buildSection(win, tab, name, wide, badge, icon)
 	corner(Card, 12)
 	local cs = bstroke(Card, 1, 0)
 	reg("Boxes", Card)
+	reg("Panels", Card)
+	Card.BackgroundTransparency = Library.Settings.PanelTransparency or 0
 
 	if hasHeader then
 		local header = new("Frame", { Size = UDim2.new(1, 0, 0, 34), BackgroundTransparency = 1 }, Card)
@@ -2764,6 +2894,7 @@ function Library.Window(self, opts)
 	reg("Borders", mainStroke)
 	win.Main = Main
 	Library._current = win
+	local BgGrad = new("UIGradient", { Enabled = false }, Main)
 
 	local winScale = new("UIScale", {}, Main)
 	local function updateScale()
@@ -2930,10 +3061,49 @@ function Library.Window(self, opts)
 		TextSize = 11, Text = WinSub, TextColor3 = Theme.TextDim, RichText = false,
 	}, Header)
 	regText(SubLabel, "TextDim")
+	-- botao System & Theme no topo da janela
+	local sysBtn = makeBtn(Header, {
+		Size = UDim2.fromOffset(142, 26), AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 82, 0.5, 0), Kind = "off",
+		Radius = 13, TextSize = 12,
+	})
+	sysBtn.label.Position = UDim2.new(0, 28, 0, 0)
+	sysBtn.label.Size = UDim2.new(1, -34, 1, 0)
+	sysBtn.setText(esc("System & Theme"))
+	local sysIcon = new("ImageLabel", {
+		Size = UDim2.fromOffset(14, 14), Position = UDim2.new(0, 10, 0.5, -7), BackgroundTransparency = 1, Image = Icons.Settings,
+		ImageColor3 = Theme.TextDim, ZIndex = 3,
+	}, sysBtn.btn)
+	local function updateSysBtn()
+		local on = win.ActiveTab ~= nil and win.ActiveTab._system == true
+		sysBtn.setKind(on and "accent" or "off")
+		sysIcon.ImageColor3 = on and WHITE or Theme.TextDim
+	end
+	win._updateSysBtn = updateSysBtn
+	onTheme(updateSysBtn, sysBtn.btn)
+	sysBtn.btn.Activated:Connect(function()
+		PlaySound("TabSwitch")
+		MicroBounce(sysBtn.btn)
+		local sys = win._sysTab
+		if not sys then return end
+		if win.ActiveTab == sys then
+			local back = win._prevTab
+			if not back or back == sys then
+				for _, tb in ipairs(win._tabsList) do
+					if not tb._system then back = tb break end
+				end
+			end
+			if back and back ~= sys then back.Select() end
+		else
+			sys.Select()
+		end
+	end)
+
 	local function setControlsPosition(pos)
 		S.ControlsPosition = pos
 		if pos == "Right" then
 			Traffic.Position = UDim2.new(1, -78, 0, 0)
+			sysBtn.btn.AnchorPoint = Vector2.new(1, 0.5)
+			sysBtn.btn.Position = UDim2.new(1, -92, 0.5, 0)
 			TitleLabel.AnchorPoint = Vector2.new(0, 0)
 			TitleLabel.Position = UDim2.new(0, 18, 0, 8)
 			TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -2942,6 +3112,8 @@ function Library.Window(self, opts)
 			SubLabel.TextXAlignment = Enum.TextXAlignment.Left
 		else
 			Traffic.Position = UDim2.new(0, 14, 0, 0)
+			sysBtn.btn.AnchorPoint = Vector2.new(0, 0.5)
+			sysBtn.btn.Position = UDim2.new(0, 82, 0.5, 0)
 			TitleLabel.AnchorPoint = Vector2.new(1, 0)
 			TitleLabel.Position = UDim2.new(1, -18, 0, 8)
 			TitleLabel.TextXAlignment = Enum.TextXAlignment.Right
@@ -2961,6 +3133,45 @@ function Library.Window(self, opts)
 	}, Body)
 	corner(Sidebar, 16)
 	reg("Sidebars", Sidebar)
+
+	-- fundo da janela: cor do tema, cor solida ou degrade de ate 3 cores
+	local bgListeners = {}
+	win._bgListeners = bgListeners
+	local function applyWindowBg()
+		local mode = S.BgMode
+		local c1 = hexToColor(S.BgColor1) or Color3.fromRGB(26, 16, 51)
+		local c2 = hexToColor(S.BgColor2) or Color3.fromRGB(11, 27, 58)
+		local c3 = hexToColor(S.BgColor3) or c2
+		if mode == "Gradient" then
+			Main.BackgroundColor3 = WHITE
+			BgGrad.Enabled = true
+			if S.BgUse3 then
+				BgGrad.Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, c1), ColorSequenceKeypoint.new(0.5, c2), ColorSequenceKeypoint.new(1, c3),
+				})
+			else
+				BgGrad.Color = ColorSequence.new(c1, c2)
+			end
+			BgGrad.Rotation = S.BgAngle or 45
+		elseif mode == "Solid" then
+			BgGrad.Enabled = false
+			Main.BackgroundColor3 = c1
+		else
+			BgGrad.Enabled = false
+			Main.BackgroundColor3 = Theme.Background
+		end
+		if mode ~= "Theme" and S.GlassSidebar ~= false then
+			Sidebar.BackgroundColor3 = Color3.new(0, 0, 0)
+			Sidebar.BackgroundTransparency = 0.55
+		else
+			Sidebar.BackgroundColor3 = Theme.Sidebar
+			Sidebar.BackgroundTransparency = 0
+		end
+		for _, f in ipairs(bgListeners) do pcall(f) end
+	end
+	win.ApplyWindowBg = applyWindowBg
+	applyWindowBg()
+	onTheme(applyWindowBg, Main)
 	local SideLine = new("Frame", {
 		Size = UDim2.new(0, 1, 1, 0), Position = UDim2.new(1, -1, 0, 0), BackgroundColor3 = Theme.Border, BorderSizePixel = 0,
 	}, Sidebar)
@@ -3149,6 +3360,7 @@ function Library.Window(self, opts)
 	track(win, RunService.RenderStepped:Connect(function()
 		if flGrad and flGrad.Parent then flGrad.Rotation = (tick() * 120) % 360 end
 		if not Main.Visible then return end
+		if S.BgMode == "Gradient" and S.BgAnimate then BgGrad.Rotation = ((S.BgAngle or 45) + tick() * 15) % 360 end
 		local mode = S.BackgroundEffect
 		local e = Effects[mode]
 		if not e then return end
@@ -3193,6 +3405,7 @@ function Library.Window(self, opts)
 			Text = "", AutoButtonColor = false, LayoutOrder = order, BorderSizePixel = 0,
 		}, NavScroll)
 		corner(TabBtn, 10)
+		if o._hidden then TabBtn.Visible = false end
 		local tabStroke = stroke(TabBtn, Theme.Border, 1, 0.75)
 		local activeGlow = new("Frame", {
 			Name = "ActiveGlow", Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.8,
@@ -3267,7 +3480,7 @@ function Library.Window(self, opts)
 			end
 		end
 
-		local tab = { Name = TabTitle, Title = TabTitle, Page = Page, Button = TabBtn, _win = win, _page = Page, _order = 0, _cols = nil }
+		local tab = { Name = TabTitle, Title = TabTitle, Page = Page, Button = TabBtn, _win = win, _page = Page, _order = 0, _cols = nil, _system = o._system }
 
 		local function applyState(active)
 			if active then
@@ -3351,6 +3564,7 @@ function Library.Window(self, opts)
 
 		local function activate()
 			if win.ActiveTab == tab then return end
+			if win.ActiveTab and not win.ActiveTab._system then win._prevTab = win.ActiveTab end
 			PlaySound("TabSwitch")
 			MicroBounce(TabBtn)
 			for _, t in ipairs(win._tabsList) do
@@ -3364,6 +3578,7 @@ function Library.Window(self, opts)
 			applyState(true)
 			rightIndicator.ImageTransparency = 1
 			if not BadgeText then Tween(rightIndicator, 0.2, { ImageTransparency = 0.35 }) end
+			if win._updateSysBtn then win._updateSysBtn() end
 		end
 		TabBtn.Activated:Connect(activate)
 		tab.Select = activate
@@ -3694,9 +3909,10 @@ function Library.Window(self, opts)
 		picker.open(color, cb, ttl)
 	end
 
-	-- aba System & Theme (igual a da StarHubUI)
+	-- painel System & Theme (abre pelo botao no topo da janela)
 	function win.AddSystemTab(_)
-		local tab = win.AddTab(win, { Name = "System & Theme", Icon = "settings", _system = true, _order = 9000 })
+		local tab = win.AddTab(win, { Name = "System & Theme", Icon = "settings", _system = true, _hidden = true, _order = 9000 })
+		win._sysTab = tab
 		local names, keyByName = {}, {}
 		for k, th in pairs(Themes) do
 			names[#names + 1] = th.Name
@@ -3712,8 +3928,10 @@ function Library.Window(self, opts)
 			if p2Row then p2Row:Set(Theme.Grad2 or Theme.AccentLight, true) end
 		end
 
-		-- coluna esquerda
-		local ThemeBox = tab:AddSection("THEMES & ACCENT COLOR", "Left", "PALETTE", Icons.Palette)
+		----------------------------------------------------------------
+		-- 1) Temas e cor de destaque
+		----------------------------------------------------------------
+		local ThemeBox = tab:AddSection("THEMES & ACCENT COLOR", nil, "PALETTE", Icons.Palette)
 		ThemeBox:AddModeSelector({
 			Title = "ACCENT COLOR STYLE", Options = { "Gradient Mode", "Solid Mode" },
 			Default = (S.AccentStyle == "Solid") and "Solid Mode" or "Gradient Mode", NoSave = true,
@@ -3755,7 +3973,223 @@ function Library.Window(self, opts)
 			end,
 		})
 
-		local GlassBox = tab:AddSection("INTERFACE & WINDOW CONTROLS", "Left", nil, Icons.Visuals)
+		----------------------------------------------------------------
+		-- 2) Fundo da janela (cor solida / degrade com sliders de cor)
+		----------------------------------------------------------------
+		local BgBox = tab:AddSection("WINDOW BACKGROUND", nil, "GRADIENT", Icons.Visuals)
+		local modeSel, cs1, cs2, cs3, use3Tog, angleSld
+		local function bgChanged()
+			win.ApplyWindowBg()
+			saveUiSettings()
+		end
+		local function forceGradientMode()
+			if S.BgMode == "Theme" then
+				S.BgMode = "Gradient"
+				if modeSel then modeSel:Set("Gradient", true) end
+			end
+		end
+
+		modeSel = BgBox:AddModeSelector({
+			Title = "BACKGROUND MODE", Options = { "Theme", "Solid", "Gradient" }, Default = S.BgMode or "Theme", NoSave = true,
+			Callback = function(m)
+				S.BgMode = m
+				bgChanged()
+			end,
+		})
+
+		-- preview ao vivo
+		do
+			local row = newRow(BgBox, { Title = "live preview" })
+			vlist(row, 4)
+			lbl(row, { Font = F.Bold, TextSize = 11, Text = "LIVE PREVIEW", LayoutOrder = 1 }, "TextDim")
+			local pv = new("Frame", { Size = UDim2.new(1, 0, 0, 58), BackgroundColor3 = WHITE, BorderSizePixel = 0, LayoutOrder = 2 }, row)
+			corner(pv, 10)
+			bstroke(pv, 1, 0)
+			local pg = new("UIGradient", { Enabled = false }, pv)
+			new("TextLabel", {
+				Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Font = F.Bold, TextSize = 14, Text = WinTitle,
+				TextColor3 = WHITE, TextStrokeTransparency = 0.7, RichText = false,
+			}, pv)
+			local function update()
+				local mode = S.BgMode
+				local c1 = hexToColor(S.BgColor1) or Color3.fromRGB(26, 16, 51)
+				local c2 = hexToColor(S.BgColor2) or Color3.fromRGB(11, 27, 58)
+				local c3 = hexToColor(S.BgColor3) or c2
+				if mode == "Gradient" then
+					pv.BackgroundColor3 = WHITE
+					pg.Enabled = true
+					if S.BgUse3 then
+						pg.Color = ColorSequence.new({
+							ColorSequenceKeypoint.new(0, c1), ColorSequenceKeypoint.new(0.5, c2), ColorSequenceKeypoint.new(1, c3),
+						})
+					else
+						pg.Color = ColorSequence.new(c1, c2)
+					end
+					pg.Rotation = S.BgAngle or 45
+				elseif mode == "Solid" then
+					pg.Enabled = false
+					pv.BackgroundColor3 = c1
+				else
+					pg.Enabled = false
+					pv.BackgroundColor3 = Theme.Background
+				end
+			end
+			bgListeners[#bgListeners + 1] = update
+			update()
+		end
+
+		-- presets de degrade
+		local BgPresets = {
+			{ "Midnight", "#1A1033", "#0B1B3A", "#2A0F2E", 45 }, { "Aurora", "#0F2027", "#203A43", "#2C5364", 60 },
+			{ "Sunset", "#2D1B3D", "#7A2E4D", "#B5532F", 35 }, { "Ocean", "#051937", "#004D7A", "#008793", 55 },
+			{ "Emerald", "#03170D", "#0A4A2E", "#127A4B", 50 }, { "Rose", "#1F0A14", "#5A1030", "#8E1B4B", 40 },
+			{ "Graphite", "#0E0F13", "#1B1D26", "#2A2D3A", 90 }, { "Neon", "#0A0A1F", "#240046", "#3C096C", 45 },
+			{ "Ember", "#1A0B05", "#5C1F0B", "#9C3A0F", 30 }, { "Arctic", "#0B1E2D", "#17435E", "#2D7BA3", 65 },
+		}
+		do
+			local row = newRow(BgBox, { Title = "gradient presets" })
+			vlist(row, 4)
+			lbl(row, { Font = F.Bold, TextSize = 11, Text = "GRADIENT PRESETS (ONE-TAP)", LayoutOrder = 1 }, "TextMuted")
+			local grid = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 80), LayoutOrder = 2 }, row)
+			new("UIGridLayout", {
+				CellSize = UDim2.new(0.2, -6, 0, 34), CellPadding = UDim2.new(0, 6, 0, 6), HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				VerticalAlignment = Enum.VerticalAlignment.Top, SortOrder = Enum.SortOrder.LayoutOrder,
+			}, grid)
+			for i, pr in ipairs(BgPresets) do
+				local c1, c2, c3 = hexToColor(pr[2]), hexToColor(pr[3]), hexToColor(pr[4])
+				local b = new("TextButton", {
+					Text = "", AutoButtonColor = false, BackgroundColor3 = WHITE, BorderSizePixel = 0, LayoutOrder = i,
+				}, grid)
+				corner(b, 8)
+				new("UIGradient", {
+					Color = ColorSequence.new({
+						ColorSequenceKeypoint.new(0, c1), ColorSequenceKeypoint.new(0.5, c2), ColorSequenceKeypoint.new(1, c3),
+					}),
+					Rotation = pr[5],
+				}, b)
+				local st = stroke(b, WHITE, 1.2, 0.6)
+				new("TextLabel", {
+					Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Font = F.Bold, TextSize = 11, Text = pr[1],
+					TextColor3 = WHITE, TextStrokeTransparency = 0.6, ZIndex = 2, RichText = false,
+				}, b)
+				b.MouseEnter:Connect(function()
+					Tween(st, 0.15, { Transparency = 0, Thickness = 1.8 })
+					MicroBounce(b)
+				end)
+				b.MouseLeave:Connect(function() Tween(st, 0.15, { Transparency = 0.6, Thickness = 1.2 }) end)
+				b.Activated:Connect(function()
+					PlaySound("Click")
+					S.BgMode = "Gradient"
+					S.BgColor1, S.BgColor2, S.BgColor3 = pr[2], pr[3], pr[4]
+					S.BgUse3 = true
+					S.BgAngle = pr[5]
+					if cs1 then cs1:Set(c1, true) end
+					if cs2 then cs2:Set(c2, true) end
+					if cs3 then cs3:Set(c3, true) end
+					if use3Tog then use3Tog:Set(true, true) end
+					if angleSld then angleSld:Set(pr[5], true) end
+					if modeSel then modeSel:Set("Gradient", true) end
+					bgChanged()
+					note("BACKGROUND", "Gradient preset: " .. pr[1], "BG")
+				end)
+			end
+		end
+
+		-- sliders de cor (R / G / B) de cada cor do fundo
+		cs1 = BgBox:AddColorSliders({
+			Title = "BACKGROUND COLOR 1", Default = hexToColor(S.BgColor1) or Color3.fromRGB(26, 16, 51),
+			Live = function(c)
+				S.BgColor1 = hex(c)
+				forceGradientMode()
+				win.ApplyWindowBg()
+			end,
+			Callback = function(c)
+				S.BgColor1 = hex(c)
+				forceGradientMode()
+				bgChanged()
+			end,
+		})
+		cs2 = BgBox:AddColorSliders({
+			Title = "BACKGROUND COLOR 2", Default = hexToColor(S.BgColor2) or Color3.fromRGB(11, 27, 58),
+			Live = function(c)
+				S.BgColor2 = hex(c)
+				forceGradientMode()
+				win.ApplyWindowBg()
+			end,
+			Callback = function(c)
+				S.BgColor2 = hex(c)
+				forceGradientMode()
+				bgChanged()
+			end,
+		})
+		use3Tog = BgBox:AddToggle({
+			Title = "USE THIRD COLOR", Content = "Blend a third color into the middle/end of the gradient", NoSave = true, Default = S.BgUse3 == true,
+			Callback = function(v)
+				S.BgUse3 = v
+				forceGradientMode()
+				bgChanged()
+			end,
+		})
+		cs3 = BgBox:AddColorSliders({
+			Title = "BACKGROUND COLOR 3 (OPTIONAL)", Default = hexToColor(S.BgColor3) or Color3.fromRGB(42, 15, 46),
+			Live = function(c)
+				S.BgColor3 = hex(c)
+				forceGradientMode()
+				win.ApplyWindowBg()
+			end,
+			Callback = function(c)
+				S.BgColor3 = hex(c)
+				forceGradientMode()
+				bgChanged()
+			end,
+		})
+		angleSld = BgBox:AddSlider({
+			Title = "GRADIENT ANGLE", Min = 0, Max = 360, Increment = 5, Default = math.floor((S.BgAngle or 45) + 0.5), Suffix = "deg",
+			NoSave = true,
+			OnDrag = function(v)
+				S.BgAngle = v
+				win.ApplyWindowBg()
+			end,
+			Callback = function(v)
+				S.BgAngle = v
+				bgChanged()
+			end,
+		})
+		BgBox:AddToggle({
+			Title = "ANIMATE GRADIENT", Content = "Slowly rotates the gradient (Gradient mode)", NoSave = true, Default = S.BgAnimate == true,
+			Callback = function(v)
+				S.BgAnimate = v
+				if not v then win.ApplyWindowBg() end
+				saveUiSettings()
+			end,
+		})
+		BgBox:AddToggle({
+			Title = "GLASS SIDEBAR", Content = "Translucent sidebar over a custom background", NoSave = true, Default = S.GlassSidebar ~= false,
+			Callback = function(v)
+				S.GlassSidebar = v
+				bgChanged()
+			end,
+		})
+		local function applyPanelT(v)
+			S.PanelTransparency = v / 100
+			for _, f in ipairs(Reg.Panels) do
+				if f and f.Parent then f.BackgroundTransparency = v / 100 end
+			end
+		end
+		BgBox:AddSlider({
+			Title = "PANEL TRANSPARENCY", Content = "Lets the background show through the cards", Min = 0, Max = 60,
+			Default = math.floor((S.PanelTransparency or 0) * 100 + 0.5), Suffix = "%", NoSave = true,
+			OnDrag = applyPanelT,
+			Callback = function(v)
+				applyPanelT(v)
+				saveUiSettings()
+			end,
+		})
+
+		----------------------------------------------------------------
+		-- 3) Interface e controles da janela
+		----------------------------------------------------------------
+		local GlassBox = tab:AddSection("INTERFACE & WINDOW CONTROLS", nil, nil, Icons.Visuals)
 		GlassBox:AddModeSelector({
 			Title = "CONTROLS ALIGNMENT", Options = { "Left (macOS)", "Right (Windows)" }, NoSave = true,
 			Default = S.ControlsPosition == "Left" and "Left (macOS)" or "Right (Windows)",
@@ -3792,8 +4226,7 @@ function Library.Window(self, opts)
 			end,
 		})
 		GlassBox:AddToggle({
-			Title = "ACRYLIC GLASS EFFECT", Content = "Enables translucent glossy backdrop", NoSave = true,
-			Default = S.AcrylicEnabled ~= false,
+			Title = "ACRYLIC GLASS EFFECT", Content = "Enables translucent glossy backdrop", NoSave = true, Default = S.AcrylicEnabled ~= false,
 			Callback = function(v)
 				S.AcrylicEnabled = v
 				Acrylic.Visible = v
@@ -3803,6 +4236,7 @@ function Library.Window(self, opts)
 		GlassBox:AddSlider({
 			Title = "WINDOW TRANSPARENCY", Min = 0, Max = 80, Default = math.floor((S.WindowTransparency or 0) * 100 + 0.5),
 			Suffix = "%", NoSave = true,
+			OnDrag = function(v) Main.BackgroundTransparency = v / 100 end,
 			Callback = function(v)
 				S.WindowTransparency = v / 100
 				Main.BackgroundTransparency = v / 100
@@ -3810,10 +4244,12 @@ function Library.Window(self, opts)
 			end,
 		})
 
-		local AudioBox = tab:AddSection("AUDIO & HAPTICS", "Left", nil, Icons.Zap)
+		----------------------------------------------------------------
+		-- 4) Audio
+		----------------------------------------------------------------
+		local AudioBox = tab:AddSection("AUDIO & HAPTICS", nil, nil, Icons.Zap)
 		AudioBox:AddToggle({
-			Title = "UI SOUND EFFECTS", Content = "Toggle interactive bubble audio on clicks and switches", NoSave = true,
-			Default = S.SoundEnabled,
+			Title = "UI SOUND EFFECTS", Content = "Toggle interactive bubble audio on clicks and switches", NoSave = true, Default = S.SoundEnabled,
 			Callback = function(v)
 				S.SoundEnabled = v
 				if v then PlaySound("ToggleOn") end
@@ -3837,8 +4273,10 @@ function Library.Window(self, opts)
 			end,
 		})
 
-		-- coluna direita
-		local BrandBox = tab:AddSection("BRANDING & BACKGROUND", "Right", nil, Icons.Logo)
+		----------------------------------------------------------------
+		-- 5) Branding e wallpaper (imagem)
+		----------------------------------------------------------------
+		local BrandBox = tab:AddSection("BRANDING & WALLPAPER IMAGE", nil, nil, Icons.Logo)
 		BrandBox:AddDropdown({
 			Title = "BACKGROUND EFFECT", Options = EffectNames, Default = S.BackgroundEffect or "Floating Bubbles", NoSave = true,
 			MaxVisible = 7,
@@ -3864,7 +4302,7 @@ function Library.Window(self, opts)
 			end,
 		})
 		BrandBox:AddInput({
-			Title = "BACKGROUND...", Placeholder = "https://... or Decal ID", Default = S.CustomWallpaperId or "", NoSave = true,
+			Title = "WALLPAPER IMAGE...", Placeholder = "https://... or Decal ID", Default = S.CustomWallpaperId or "", NoSave = true,
 			Callback = function(txt)
 				if txt and txt ~= "" then
 					task.spawn(function() Wallpaper.Image = LoadCustomImage(txt, "") end)
@@ -3874,8 +4312,9 @@ function Library.Window(self, opts)
 			end,
 		})
 		BrandBox:AddSlider({
-			Title = "BACKGROUND TRANSPARENCY", Min = 0, Max = 100, Default = math.floor((S.WallpaperTransparency or 0.92) * 100 + 0.5),
+			Title = "WALLPAPER TRANSPARENCY", Min = 0, Max = 100, Default = math.floor((S.WallpaperTransparency or 0.92) * 100 + 0.5),
 			Suffix = "%", NoSave = true,
+			OnDrag = function(v) Wallpaper.ImageTransparency = v / 100 end,
 			Callback = function(v)
 				S.WallpaperTransparency = v / 100
 				Wallpaper.ImageTransparency = v / 100
@@ -3893,7 +4332,10 @@ function Library.Window(self, opts)
 			end,
 		})
 
-		local ConfigBox = tab:AddSection("CONFIG & SYSTEM", "Right", nil, Icons.Settings)
+		----------------------------------------------------------------
+		-- 6) Config e sistema
+		----------------------------------------------------------------
+		local ConfigBox = tab:AddSection("CONFIG & SYSTEM", nil, nil, Icons.Settings)
 		ConfigBox:AddToggle({
 			Title = "REAL-TIME AUTO SAVE", Content = "Automatically saves the UI preferences to disk", NoSave = true,
 			Default = S.AutoSaveEnabled ~= false,
@@ -3916,7 +4358,6 @@ function Library.Window(self, opts)
 			end,
 		})
 
-		-- botao da tecla de atalho
 		local kRow = newRow(ConfigBox, { Title = "toggle key" })
 		local kBtn = new("TextButton", {
 			Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = Theme.SubBox, Text = "TOGGLE KEY: " .. win.Keybind.Name, Font = F.Bold,
@@ -3953,9 +4394,7 @@ function Library.Window(self, opts)
 			Title = "Save UI Settings", Content = "Manually writes the UI configuration to disk", Icon = Icons.Save,
 			Callback = function()
 				saveUiSettings(true)
-				Library.Notify(Library, {
-					Title = "CONFIG SAVED", Content = "Preferences saved!", Badge = "SAVED", Icon = Icons.Save,
-				})
+				Library.Notify(Library, { Title = "CONFIG SAVED", Content = "Preferences saved!", Badge = "SAVED", Icon = Icons.Save })
 			end,
 		})
 		ConfigBox:AddActionRow({
