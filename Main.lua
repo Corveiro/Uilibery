@@ -42,6 +42,18 @@ end
 
 local WHITE = Color3.fromRGB(255, 255, 255)
 
+-- Fontes da UI (troque aqui para mudar a fonte de tudo). BuilderSans = limpa e legivel em tamanho pequeno.
+local function pickFont(name, fallback)
+	local ok, f = pcall(function() return Enum.Font[name] end)
+	if ok and f then return f end
+	return fallback
+end
+local F = {
+	Regular = pickFont("BuilderSans", Enum.Font.Gotham),
+	Medium = pickFont("BuilderSansMedium", Enum.Font.GothamMedium),
+	Bold = pickFont("BuilderSansBold", Enum.Font.GothamBold),
+}
+
 local Themes = {
         NeverloseCrimson = {
             Name        = "Neverlose Crimson",
@@ -246,16 +258,16 @@ local Icons = {
 	Zap = "rbxassetid://10709791882",
 }
 
--- nomes de icone usados pelo SenaHub -> icones da StarHubUI (ou glifo quando nao existe equivalente)
+-- nomes de icone usados pelo SenaHub -> icones da StarHubUI (tudo imagem, sem emoji)
 local IconMap = {
 	home = Icons.Dashboard, settings = Icons.Settings, swords = Icons.Combat, eye = Icons.Visuals,
 	["repeat"] = Icons.Refresh, flame = Icons.Zap, bolt = Icons.Zap, server = Icons.Server, teleport = Icons.Teleport,
 	palette = Icons.Palette, save = Icons.Save, skull = Icons.Skull, bell = Icons.Bell, info = Icons.Info,
 	copy = Icons.Copy, sound = Icons.Sound, search = Icons.Search, logo = Icons.Logo, check = Icons.Check,
-}
-local GlyphMap = {
-	users = "👥", chat = "💬", forum = "🗨", donator = "💎", sparkles = "✨", star = "⭐", shop = "🛒",
-	egg = "🥚", pet = "🐾", tools = "🛠", list = "📋", map = "🗺", gift = "🎁", clock = "⏰", code = "💻", key = "🔑",
+	users = Icons.Server, chat = Icons.Bell, forum = Icons.Info, donator = Icons.Logo, sparkles = Icons.Palette,
+	star = Icons.Logo, shop = Icons.Dashboard, egg = Icons.Dashboard, pet = Icons.Visuals, tools = Icons.Settings,
+	list = Icons.Dashboard, map = Icons.Teleport, gift = Icons.Zap, clock = Icons.Refresh, code = Icons.Settings,
+	key = Icons.Settings,
 }
 
 local Library = {
@@ -277,9 +289,13 @@ local Library = {
 		WallpaperTransparency = 0.92,
 		WallpaperDimming = 0.35,
 		BackgroundEffect = "Floating Bubbles",
+		AutoSaveEnabled = true,
+		AcrylicEnabled = true,
+		BaseTheme = "NeverloseCrimson",
 	},
 }
 genv.__SenaLibInstance = Library
+Library.Fonts = F
 
 local Theme = Themes.NeverloseCrimson
 
@@ -478,7 +494,7 @@ end
 
 local function lbl(parent, props, role)
 	local p = {
-		BackgroundTransparency = 1, BorderSizePixel = 0, Font = Enum.Font.Gotham, TextSize = 10,
+		BackgroundTransparency = 1, BorderSizePixel = 0, Font = F.Regular, TextSize = 11.5,
 		TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Top,
 		RichText = true, TextWrapped = true, AutomaticSize = Enum.AutomaticSize.Y,
 		Size = UDim2.new(1, 0, 0, 0), Text = "",
@@ -613,11 +629,42 @@ local function makeKey(sec, opts, kind)
 	return base
 end
 
-local function saveUiSettings()
+local function copyTheme(t)
+	local c = {}
+	for k, v in pairs(t) do c[k] = v end
+	return c
+end
+
+local function hexToColor(h)
+	if type(h) ~= "string" then return nil end
+	h = h:gsub("#", "")
+	if #h ~= 6 then return nil end
+	local r, g, b = tonumber(h:sub(1, 2), 16), tonumber(h:sub(3, 4), 16), tonumber(h:sub(5, 6), 16)
+	if not (r and g and b) then return nil end
+	return Color3.fromRGB(r, g, b)
+end
+
+local function rebuildTheme()
 	local s = Library.Settings
+	local baseKey = (s.CurrentTheme == "Custom") and s.BaseTheme or s.CurrentTheme
+	Theme = copyTheme(Themes[baseKey] or Themes.NeverloseCrimson)
+	if s.CurrentTheme == "Custom" then
+		local c1, c2 = hexToColor(s.CustomColor1), hexToColor(s.CustomColor2)
+		if c1 and c2 then
+			Theme.Accent, Theme.Grad1, Theme.Grad2, Theme.AccentLight = c1, c1, c2, c2
+		end
+	end
+end
+
+local function saveUiSettings(force)
+	local s = Library.Settings
+	if s.AutoSaveEnabled == false and not force then return end
 	Config.set("__ui", {
-		theme = s.CurrentTheme, accent = s.AccentStyle, effect = s.BackgroundEffect, sound = s.SoundEnabled,
-		volume = s.SoundVolume, floating = s.ShowFloatingToggle, transparency = s.WindowTransparency,
+		theme = s.CurrentTheme, baseTheme = s.BaseTheme, custom1 = s.CustomColor1, custom2 = s.CustomColor2,
+		accent = s.AccentStyle, effect = s.BackgroundEffect, sound = s.SoundEnabled, volume = s.SoundVolume,
+		floating = s.ShowFloatingToggle, transparency = s.WindowTransparency, controls = s.ControlsPosition,
+		keymode = s.KeybindMode, key = s.ToggleKey, logo = s.CustomLogoUrl, wallpaper = s.CustomWallpaperId,
+		wallT = s.WallpaperTransparency, wallD = s.WallpaperDimming, acrylic = s.AcrylicEnabled, autosave = s.AutoSaveEnabled,
 	})
 end
 
@@ -625,9 +672,13 @@ local function loadUiSettings()
 	local d = Config.get("__ui")
 	if type(d) ~= "table" then return end
 	local s = Library.Settings
-	if type(d.theme) == "string" and Themes[d.theme] then
+	if type(d.baseTheme) == "string" and Themes[d.baseTheme] then s.BaseTheme = d.baseTheme end
+	if d.theme == "Custom" then
+		s.CurrentTheme = "Custom"
+		s.CustomColor1, s.CustomColor2 = d.custom1, d.custom2
+	elseif type(d.theme) == "string" and Themes[d.theme] then
 		s.CurrentTheme = d.theme
-		Theme = Themes[d.theme]
+		s.BaseTheme = d.theme
 	end
 	if d.accent == "Solid" or d.accent == "Gradient" then s.AccentStyle = d.accent end
 	if type(d.effect) == "string" then s.BackgroundEffect = d.effect end
@@ -635,6 +686,26 @@ local function loadUiSettings()
 	if type(d.volume) == "number" then s.SoundVolume = math.clamp(d.volume, 0, 1) end
 	if type(d.floating) == "boolean" then s.ShowFloatingToggle = d.floating end
 	if type(d.transparency) == "number" then s.WindowTransparency = math.clamp(d.transparency, 0, 0.8) end
+	if d.controls == "Left" or d.controls == "Right" then s.ControlsPosition = d.controls end
+	if d.keymode == "Toggle" or d.keymode == "Hold" or d.keymode == "Always" then s.KeybindMode = d.keymode end
+	if type(d.logo) == "string" and d.logo ~= "" then s.CustomLogoUrl = d.logo end
+	if type(d.wallpaper) == "string" and d.wallpaper ~= "" then s.CustomWallpaperId = d.wallpaper end
+	if type(d.wallT) == "number" then s.WallpaperTransparency = math.clamp(d.wallT, 0, 1) end
+	if type(d.wallD) == "number" then s.WallpaperDimming = math.clamp(d.wallD, 0, 1) end
+	if type(d.acrylic) == "boolean" then s.AcrylicEnabled = d.acrylic end
+	if type(d.autosave) == "boolean" then s.AutoSaveEnabled = d.autosave end
+	rebuildTheme()
+end
+
+local function applyCustomColors(c1, c2)
+	local s = Library.Settings
+	if s.CurrentTheme ~= "Custom" and Themes[s.CurrentTheme] then s.BaseTheme = s.CurrentTheme end
+	s.CurrentTheme = "Custom"
+	s.CustomColor1 = hex(c1)
+	s.CustomColor2 = hex(c2)
+	rebuildTheme()
+	applyThemeAll()
+	saveUiSettings()
 end
 
 ----------------------------------------------------------------------
@@ -716,12 +787,12 @@ function Library.Notify(a, b)
 
 		local tL = new("TextLabel", {
 			Size = UDim2.new(1, -145, 0, 16), Position = UDim2.new(0, 58, 0, 11), BackgroundTransparency = 1,
-			Font = Enum.Font.GothamBold, TextSize = 11, TextColor3 = Theme.TextTitle, TextXAlignment = Enum.TextXAlignment.Left,
+			Font = F.Bold, TextSize = 12.5, TextColor3 = Theme.TextTitle, TextXAlignment = Enum.TextXAlignment.Left,
 			TextTruncate = Enum.TextTruncate.AtEnd, Text = string.upper(title), ZIndex = 5001,
 		}, modal)
 		local sL = new("TextLabel", {
 			Size = UDim2.new(1, -145, 0, 16), Position = UDim2.new(0, 58, 0, 29), BackgroundTransparency = 1,
-			Font = Enum.Font.GothamMedium, TextSize = 9.5, TextColor3 = Theme.AccentLight, TextXAlignment = Enum.TextXAlignment.Left,
+			Font = F.Medium, TextSize = 11, TextColor3 = Theme.AccentLight, TextXAlignment = Enum.TextXAlignment.Left,
 			TextTruncate = Enum.TextTruncate.AtEnd, Text = desc, ZIndex = 5001,
 		}, modal)
 		reg("AccentLights", sL)
@@ -733,7 +804,7 @@ function Library.Notify(a, b)
 		round(tag)
 		stroke(tag, badgeCol, 0.8, 0.4)
 		new("TextLabel", {
-			Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Font = Enum.Font.GothamBold, TextSize = 8.5,
+			Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Font = F.Bold, TextSize = 10,
 			TextColor3 = badgeCol, Text = string.upper(badgeText), ZIndex = 5002,
 		}, tag)
 
@@ -793,8 +864,8 @@ local function textBlock(parent, title, content, reserve)
 		BackgroundTransparency = 1, Size = UDim2.new(1, -(reserve or 0), 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
 	}, parent)
 	vlist(col, 2)
-	local t = lbl(col, { Font = Enum.Font.GothamMedium, TextSize = 11, Text = title, LayoutOrder = 1 }, "TextBody")
-	local d = lbl(col, { Font = Enum.Font.Gotham, TextSize = 9.5, Text = content, LayoutOrder = 2 }, "TextDim")
+	local t = lbl(col, { Font = F.Medium, TextSize = 12.5, Text = title, LayoutOrder = 1 }, "TextBody")
+	local d = lbl(col, { Font = F.Regular, TextSize = 11, Text = content, LayoutOrder = 2 }, "TextDim")
 	t.Visible = title ~= ""
 	d.Visible = content ~= ""
 	return col, t, d
@@ -853,8 +924,8 @@ local function makeBtn(parent, props)
 	corner(fill, props.Radius or 8)
 	local st = stroke(fill, Theme.Border, 1, 0)
 	local text = new("TextLabel", {
-		Size = UDim2.new(1, -8, 1, 0), Position = UDim2.new(0, 4, 0, 0), BackgroundTransparency = 1, Font = Enum.Font.GothamBold,
-		TextSize = props.TextSize or 9.5, TextColor3 = WHITE, Text = "", ZIndex = 2, TextTruncate = Enum.TextTruncate.AtEnd,
+		Size = UDim2.new(1, -8, 1, 0), Position = UDim2.new(0, 4, 0, 0), BackgroundTransparency = 1, Font = F.Bold,
+		TextSize = props.TextSize or 11, TextColor3 = WHITE, Text = "", ZIndex = 2, TextTruncate = Enum.TextTruncate.AtEnd,
 		RichText = true,
 	}, btn)
 	local api = { btn = btn, fill = fill, label = text, kind = nil }
@@ -882,6 +953,10 @@ local function makeBtn(parent, props)
 			elseif kind == "dim" then
 				fill.BackgroundColor3 = Theme.Box
 				st.Color = Theme.BorderLight
+				text.TextColor3 = Theme.TextDim
+			elseif kind == "off" then
+				fill.BackgroundColor3 = Theme.SubBox
+				st.Color = Theme.Border
 				text.TextColor3 = Theme.TextDim
 			else
 				fill.BackgroundColor3 = Theme.SubBox
@@ -1069,13 +1144,13 @@ local function addSlider(sec, opts)
 	}, topRow)
 	vlist(textCol, 2)
 	local up = function(s) return string.upper(s) end
-	local t = lbl(textCol, { Font = Enum.Font.GothamBold, TextSize = 10, Text = up(title), LayoutOrder = 1 }, "TextBody")
-	local d = lbl(textCol, { Font = Enum.Font.Gotham, TextSize = 9, Text = content, LayoutOrder = 2 }, "TextDim")
+	local t = lbl(textCol, { Font = F.Bold, TextSize = 11.5, Text = up(title), LayoutOrder = 1 }, "TextBody")
+	local d = lbl(textCol, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 2 }, "TextDim")
 	t.Visible = title ~= ""
 	d.Visible = content ~= ""
 	local valLbl = new("TextLabel", {
 		Size = UDim2.new(0, 65, 0, 15), Position = UDim2.new(1, -65, 0, 0), BackgroundTransparency = 1,
-		Font = Enum.Font.GothamBold, TextSize = 10, TextColor3 = WHITE, TextXAlignment = Enum.TextXAlignment.Right,
+		Font = F.Bold, TextSize = 11.5, TextColor3 = WHITE, TextXAlignment = Enum.TextXAlignment.Right,
 		Text = "", RichText = false,
 	}, topRow)
 	ApplyGradient(valLbl, Theme.Grad1, Theme.Grad2, 0)
@@ -1084,8 +1159,8 @@ local function addSlider(sec, opts)
 
 	local function stepBtn(text, pos)
 		local b = new("TextButton", {
-			Size = UDim2.fromOffset(20, 20), Position = pos, BackgroundColor3 = Theme.SubBox, Text = text, Font = Enum.Font.GothamBold,
-			TextSize = 12, AutoButtonColor = false, BorderSizePixel = 0, TextColor3 = Theme.TextDim,
+			Size = UDim2.fromOffset(20, 20), Position = pos, BackgroundColor3 = Theme.SubBox, Text = text, Font = F.Bold,
+			TextSize = 13.5, AutoButtonColor = false, BorderSizePixel = 0, TextColor3 = Theme.TextDim,
 		}, trackRow)
 		round(b)
 		bstroke(b, 1, 0)
@@ -1174,8 +1249,8 @@ local function addDropdown(sec, opts)
 		BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 1,
 	}, row)
 	vlist(head, 2)
-	local t = lbl(head, { Font = Enum.Font.GothamMedium, TextSize = 10, Text = up(title), LayoutOrder = 1 }, "TextDim")
-	local d = lbl(head, { Font = Enum.Font.Gotham, TextSize = 9, Text = content, LayoutOrder = 2 }, "TextMuted")
+	local t = lbl(head, { Font = F.Medium, TextSize = 11.5, Text = up(title), LayoutOrder = 1 }, "TextDim")
+	local d = lbl(head, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 2 }, "TextMuted")
 	t.Visible = title ~= ""
 	d.Visible = content ~= ""
 
@@ -1188,7 +1263,7 @@ local function addDropdown(sec, opts)
 	reg("SubBoxes", Box)
 	local vLbl = lbl(Box, {
 		Size = UDim2.new(1, -26, 1, 0), Position = UDim2.new(0, 10, 0, 0), AutomaticSize = Enum.AutomaticSize.None,
-		Font = Enum.Font.GothamMedium, TextSize = 10.5, TextWrapped = false, TextTruncate = Enum.TextTruncate.AtEnd,
+		Font = F.Medium, TextSize = 12, TextWrapped = false, TextTruncate = Enum.TextTruncate.AtEnd,
 		TextYAlignment = Enum.TextYAlignment.Center, RichText = false,
 	}, "TextTitle")
 	local chev = new("ImageLabel", {
@@ -1207,8 +1282,8 @@ local function addDropdown(sec, opts)
 	reg("SubBoxes", sbFrame)
 	local searchBox = new("TextBox", {
 		BackgroundTransparency = 1, Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 8, 0, 0), Text = "",
-		PlaceholderText = "Search...", PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.TextTitle, Font = Enum.Font.Gotham,
-		TextSize = 10, TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false,
+		PlaceholderText = "Search...", PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.TextTitle, Font = F.Regular,
+		TextSize = 11.5, TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false,
 	}, sbFrame)
 	local list = new("ScrollingFrame", {
 		BackgroundTransparency = 1, BorderSizePixel = 0, Position = UDim2.new(0, 0, 0, 0), Size = UDim2.new(1, 0, 0, 24),
@@ -1308,7 +1383,7 @@ local function addDropdown(sec, opts)
 		local lab = b:FindFirstChild("Txt")
 		if lab then
 			lab.TextColor3 = on and Theme.AccentLight or Theme.TextBody
-			lab.Font = on and Enum.Font.GothamBold or Enum.Font.Gotham
+			lab.Font = on and F.Bold or F.Regular
 		end
 		local chk = b:FindFirstChild("Chk")
 		if chk then
@@ -1366,7 +1441,7 @@ local function addDropdown(sec, opts)
 				corner(b, 8)
 				new("TextLabel", {
 					Name = "Txt", Size = UDim2.new(1, -34, 1, 0), Position = UDim2.new(0, 10, 0, 0), BackgroundTransparency = 1,
-					Font = Enum.Font.Gotham, TextSize = 10, TextColor3 = Theme.TextBody, TextXAlignment = Enum.TextXAlignment.Left,
+					Font = F.Regular, TextSize = 11.5, TextColor3 = Theme.TextBody, TextXAlignment = Enum.TextXAlignment.Left,
 					TextTruncate = Enum.TextTruncate.AtEnd, Text = o, RichText = false,
 				}, b)
 				new("ImageLabel", {
@@ -1479,7 +1554,7 @@ local function addInput(sec, opts)
 
 	local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 32), LayoutOrder = 1 }, row)
 	local t = lbl(line, {
-		Size = UDim2.new(0.4, -8, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = Enum.Font.GothamBold, TextSize = 9.5,
+		Size = UDim2.new(0.4, -8, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11,
 		Text = up(title), TextYAlignment = Enum.TextYAlignment.Center,
 	}, "TextTitle")
 	t.Visible = title ~= ""
@@ -1487,7 +1562,7 @@ local function addInput(sec, opts)
 	local tb = new("TextBox", {
 		Size = hasTitle and UDim2.new(0.6, 0, 0, 26) or UDim2.new(1, 0, 0, 26),
 		Position = hasTitle and UDim2.new(0.4, 0, 0.5, -13) or UDim2.new(0, 0, 0.5, -13), BackgroundColor3 = Theme.SubBox, Text = "",
-		PlaceholderText = tostring(opts.Placeholder or ""), PlaceholderColor3 = Theme.TextMuted, Font = Enum.Font.Gotham, TextSize = 9.5,
+		PlaceholderText = tostring(opts.Placeholder or ""), PlaceholderColor3 = Theme.TextMuted, Font = F.Regular, TextSize = 11,
 		TextColor3 = Theme.TextTitle, TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false, BorderSizePixel = 0,
 		TextTruncate = Enum.TextTruncate.AtEnd,
 	}, line)
@@ -1495,7 +1570,7 @@ local function addInput(sec, opts)
 	local inSt = bstroke(tb, 1, 0)
 	reg("SubBoxes", tb)
 	padding(tb, 8, 8, 0, 0)
-	local d = lbl(row, { Font = Enum.Font.Gotham, TextSize = 9, Text = content, LayoutOrder = 2 }, "TextDim")
+	local d = lbl(row, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 2 }, "TextDim")
 	d.Visible = content ~= ""
 	onTheme(function()
 		tb.PlaceholderColor3 = Theme.TextMuted
@@ -1558,13 +1633,13 @@ local function addButton(sec, opts)
 		reg("SubBoxes", btn)
 		padding(btn, 10, 30, 6, 6)
 		vlist(btn, 2)
-		local t = lbl(btn, { Font = Enum.Font.GothamBold, TextSize = 10.5, Text = title, LayoutOrder = 1 }, "TextTitle")
-		local d = lbl(btn, { Font = Enum.Font.Gotham, TextSize = 8.5, Text = content, LayoutOrder = 2 }, "TextDim")
+		local t = lbl(btn, { Font = F.Bold, TextSize = 12, Text = title, LayoutOrder = 1 }, "TextTitle")
+		local d = lbl(btn, { Font = F.Regular, TextSize = 10, Text = content, LayoutOrder = 2 }, "TextDim")
 		t.Visible = title ~= ""
 		d.Visible = content ~= ""
 		local ic = new("ImageLabel", {
 			Size = UDim2.fromOffset(14, 14), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 22, 0.5, 0),
-			BackgroundTransparency = 1, Image = Icons.ChevronDown, ImageColor3 = Theme.AccentLight, Rotation = -90,
+			BackgroundTransparency = 1, Image = opts.Icon or Icons.ChevronDown, ImageColor3 = Theme.AccentLight, Rotation = opts.Icon and 0 or -90,
 		}, btn)
 		reg("AccentLights", ic)
 		btn.MouseEnter:Connect(function() Tween(rs, 0.15, { Color = Theme.BorderLight }) end)
@@ -1582,11 +1657,11 @@ local function addButton(sec, opts)
 	-- botao duplo: Title / SubTitle
 	local row, entry = newRow(sec, opts)
 	vlist(row, 5)
-	local d = lbl(row, { Font = Enum.Font.Gotham, TextSize = 9, Text = content, LayoutOrder = 1 }, "TextDim")
+	local d = lbl(row, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 1 }, "TextDim")
 	d.Visible = content ~= ""
 	local pair = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 32), LayoutOrder = 2 }, row)
-	local b1 = makeBtn(pair, { Size = UDim2.new(0.5, -3, 1, 0), Position = UDim2.new(0, 0, 0, 0), Kind = "accent", Radius = 10, TextSize = 10 })
-	local b2 = makeBtn(pair, { Size = UDim2.new(0.5, -3, 1, 0), Position = UDim2.new(0.5, 3, 0, 0), Kind = "sub", Radius = 10, TextSize = 10 })
+	local b1 = makeBtn(pair, { Size = UDim2.new(0.5, -3, 1, 0), Position = UDim2.new(0, 0, 0, 0), Kind = "accent", Radius = 10, TextSize = 11.5 })
+	local b2 = makeBtn(pair, { Size = UDim2.new(0.5, -3, 1, 0), Position = UDim2.new(0.5, 3, 0, 0), Kind = "sub", Radius = 10, TextSize = 11.5 })
 	b1.setText(esc(title ~= "" and title or "Run"))
 	b2.setText(esc(tostring(opts.SubTitle)))
 	b1.btn.Activated:Connect(function()
@@ -1623,8 +1698,8 @@ local function addParagraph(sec, opts)
 	reg("SubBoxes", card)
 	padding(card, 10, 10, 8, 8)
 	vlist(card, 3)
-	local t = lbl(card, { Font = Enum.Font.GothamBold, TextSize = 10.5, Text = title, LayoutOrder = 1 }, "TextTitle")
-	local d = lbl(card, { Font = Enum.Font.Gotham, TextSize = 9, Text = content, LayoutOrder = 2 }, "TextDim")
+	local t = lbl(card, { Font = F.Bold, TextSize = 12, Text = title, LayoutOrder = 1 }, "TextTitle")
+	local d = lbl(card, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 2 }, "TextDim")
 	t.Visible = title ~= ""
 	d.Visible = content ~= ""
 	local el = { Type = "Paragraph" }
@@ -1638,8 +1713,8 @@ local function addSubSection(sec, name)
 		BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 20), LayoutOrder = sec._n,
 	}, sec._holder)
 	local h = new("TextLabel", {
-		Size = UDim2.new(0, 80, 1, 0), Position = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1, Font = Enum.Font.GothamBold,
-		TextSize = 9, TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(text), AutomaticSize = Enum.AutomaticSize.X,
+		Size = UDim2.new(0, 80, 1, 0), Position = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1, Font = F.Bold,
+		TextSize = 10.5, TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(text), AutomaticSize = Enum.AutomaticSize.X,
 		TextColor3 = Theme.TextDim,
 	}, wrap)
 	regText(h, "TextDim")
@@ -1818,8 +1893,8 @@ local function addActionList(sec, opts)
 	local content = tostring(opts.Content or "")
 	local row, entry = newRow(sec, { Title = title, Content = content })
 	vlist(row, 6)
-	local t = lbl(row, { Font = Enum.Font.GothamBold, TextSize = 10, Text = string.upper(title), LayoutOrder = 1 }, "TextBody")
-	local d = lbl(row, { Font = Enum.Font.Gotham, TextSize = 9, Text = content, LayoutOrder = 2 }, "TextDim")
+	local t = lbl(row, { Font = F.Bold, TextSize = 11.5, Text = string.upper(title), LayoutOrder = 1 }, "TextBody")
+	local d = lbl(row, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 2 }, "TextDim")
 	t.Visible = title ~= ""
 	d.Visible = content ~= ""
 
@@ -1834,7 +1909,7 @@ local function addActionList(sec, opts)
 	padding(listFrame, 6, 6, 6, 6)
 	vlist(listFrame, 4)
 	local emptyLabel = lbl(listFrame, {
-		Text = tostring(opts.EmptyText or "Nothing here."), TextSize = 10, AutomaticSize = Enum.AutomaticSize.None,
+		Text = tostring(opts.EmptyText or "Nothing here."), TextSize = 11.5, AutomaticSize = Enum.AutomaticSize.None,
 		Size = UDim2.new(1, 0, 0, 28), TextXAlignment = Enum.TextXAlignment.Center, TextYAlignment = Enum.TextYAlignment.Center,
 		LayoutOrder = -1,
 	}, "TextMuted")
@@ -1855,10 +1930,10 @@ local function addActionList(sec, opts)
 				TextWrapped = false, TextTruncate = Enum.TextTruncate.AtEnd,
 			}, role)
 		end
-		rec.name = cell({ 0, 10 }, 7, UDim2.new(0.38, -10, 0, 18), 18, Enum.Font.GothamBold, 10.5, "TextTitle")
-		rec.sub = cell({ 0, 10 }, 26, UDim2.new(0.38, -10, 0, 16), 16, Enum.Font.Gotham, 9, "TextDim")
-		rec.status = cell({ 0.4, 0 }, 7, UDim2.new(0.6, -14, 0, 18), 18, Enum.Font.GothamMedium, 10, "TextBody")
-		rec.statusSub = cell({ 0.4, 0 }, 26, UDim2.new(0.6, -14, 0, 16), 16, Enum.Font.Gotham, 8.5, "TextDim")
+		rec.name = cell({ 0, 10 }, 7, UDim2.new(0.38, -10, 0, 18), 18, F.Bold, 10.5, "TextTitle")
+		rec.sub = cell({ 0, 10 }, 26, UDim2.new(0.38, -10, 0, 16), 16, F.Regular, 9, "TextDim")
+		rec.status = cell({ 0.4, 0 }, 7, UDim2.new(0.6, -14, 0, 18), 18, F.Medium, 10, "TextBody")
+		rec.statusSub = cell({ 0.4, 0 }, 26, UDim2.new(0.6, -14, 0, 16), 16, F.Regular, 8.5, "TextDim")
 		rec.btn = makeBtn(f, {
 			Size = UDim2.fromOffset(btnW, 26), AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -8, 0.5, 0), Kind = "accent",
 		})
@@ -1948,8 +2023,8 @@ local function addLiveChat(sec, opts)
 	local content = tostring(opts.Content or "")
 	local row, entry = newRow(sec, { Title = title, Content = content })
 	vlist(row, 6)
-	local t = lbl(row, { Font = Enum.Font.GothamBold, TextSize = 10, Text = string.upper(title), LayoutOrder = 1 }, "TextBody")
-	local d = lbl(row, { Font = Enum.Font.Gotham, TextSize = 9, Text = content, LayoutOrder = 2 }, "TextDim")
+	local t = lbl(row, { Font = F.Bold, TextSize = 11.5, Text = string.upper(title), LayoutOrder = 1 }, "TextBody")
+	local d = lbl(row, { Font = F.Regular, TextSize = 10.5, Text = content, LayoutOrder = 2 }, "TextDim")
 	d.Visible = content ~= ""
 
 	local msgs = new("ScrollingFrame", {
@@ -1966,7 +2041,7 @@ local function addLiveChat(sec, opts)
 	local inputRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 28), LayoutOrder = 4 }, row)
 	local box = new("TextBox", {
 		Size = UDim2.new(1, -74, 1, 0), BackgroundColor3 = Theme.SubBox, Text = "", PlaceholderText = "Type a message...",
-		PlaceholderColor3 = Theme.TextMuted, Font = Enum.Font.Gotham, TextSize = 9.5, TextColor3 = Theme.TextTitle,
+		PlaceholderColor3 = Theme.TextMuted, Font = F.Regular, TextSize = 11, TextColor3 = Theme.TextTitle,
 		TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false, BorderSizePixel = 0,
 	}, inputRow)
 	corner(box, 8)
@@ -1987,7 +2062,7 @@ local function addLiveChat(sec, opts)
 		local c = typeof(color) == "Color3" and color or Theme.AccentLight
 		local l = lbl(msgs, {
 			Text = string.format('<font color="%s"><b>%s</b></font>  %s', hex(c), esc(user or "?"), esc(text or "")),
-			TextSize = 9.5, LayoutOrder = count,
+			TextSize = 11, LayoutOrder = count,
 		}, "TextBody")
 		if count > 120 then
 			for _, k in ipairs(msgs:GetChildren()) do
@@ -2052,11 +2127,11 @@ local function addSupportCard(sec, opts)
 	reg("SubBoxes", card)
 	padding(card, 12, 12, 10, 12)
 	vlist(card, 6)
-	local t = lbl(card, { Font = Enum.Font.GothamBold, TextSize = 11, Text = string.upper(title), LayoutOrder = 1 }, "TextTitle")
-	local d = lbl(card, { Font = Enum.Font.Gotham, TextSize = 9.5, Text = content, LayoutOrder = 2 }, "TextDim")
+	local t = lbl(card, { Font = F.Bold, TextSize = 12.5, Text = string.upper(title), LayoutOrder = 1 }, "TextTitle")
+	local d = lbl(card, { Font = F.Regular, TextSize = 11, Text = content, LayoutOrder = 2 }, "TextDim")
 	local links = opts.Links or Library.SupportLinks or {}
 	for i, ln in ipairs(links) do
-		local b = makeBtn(card, { Size = UDim2.new(1, 0, 0, 30), Kind = "accent", Radius = 10, LayoutOrder = 2 + i, TextSize = 10 })
+		local b = makeBtn(card, { Size = UDim2.new(1, 0, 0, 30), Kind = "accent", Radius = 10, LayoutOrder = 2 + i, TextSize = 11.5 })
 		b.setText(esc("Copy " .. tostring(ln.Name or ln.Title or "Link")))
 		b.btn.Activated:Connect(function()
 			PlaySound("Click")
@@ -2077,18 +2152,214 @@ end
 ----------------------------------------------------------------------
 -- Secoes (GroupBox da StarHubUI)
 ----------------------------------------------------------------------
+----------------------------------------------------------------------
+-- Extras da aba System & Theme (iguais aos da StarHubUI)
+----------------------------------------------------------------------
+local Palettes = {
+	{ Name = "Crimson", Col1 = Color3.fromRGB(235, 55, 75), Col2 = Color3.fromRGB(255, 110, 80) },
+	{ Name = "Gold", Col1 = Color3.fromRGB(245, 158, 11), Col2 = Color3.fromRGB(251, 191, 36) },
+	{ Name = "Cyan", Col1 = Color3.fromRGB(6, 182, 212), Col2 = Color3.fromRGB(139, 92, 246) },
+	{ Name = "Emerald", Col1 = Color3.fromRGB(16, 185, 129), Col2 = Color3.fromRGB(52, 211, 153) },
+	{ Name = "Violet", Col1 = Color3.fromRGB(124, 58, 237), Col2 = Color3.fromRGB(192, 132, 252) },
+	{ Name = "Sakura", Col1 = Color3.fromRGB(244, 63, 94), Col2 = Color3.fromRGB(251, 113, 133) },
+	{ Name = "Glacier", Col1 = Color3.fromRGB(2, 132, 199), Col2 = Color3.fromRGB(56, 189, 248) },
+	{ Name = "Sunset", Col1 = Color3.fromRGB(234, 88, 12), Col2 = Color3.fromRGB(245, 158, 11) },
+	{ Name = "Lime", Col1 = Color3.fromRGB(132, 204, 22), Col2 = Color3.fromRGB(163, 230, 53) },
+	{ Name = "Stealth", Col1 = Color3.fromRGB(148, 163, 184), Col2 = Color3.fromRGB(203, 213, 225) },
+}
+
+local function addModeSelector(sec, opts)
+	opts = opts or {}
+	local modes = opts.Options or opts.Modes or {}
+	local key = makeKey(sec, opts, "ModeSelector")
+	local title = tostring(opts.Title or opts.Name or "")
+	local row, entry = newRow(sec, opts)
+	vlist(row, 4)
+	local t = lbl(row, { Font = F.Bold, TextSize = 11, Text = string.upper(title), LayoutOrder = 1 }, "TextDim")
+	t.Visible = title ~= ""
+	local btnRow = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 28), LayoutOrder = 2 }, row)
+	new("UIListLayout", {
+		FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder,
+	}, btnRow)
+	local el = { Type = "ModeSelector" }
+	local saved = cfgGet(key, opts)
+	local active = (type(saved) == "string" and saved) or opts.Default or modes[1]
+	el.Value = active
+	local btns = {}
+	local function refresh()
+		for name, b in pairs(btns) do b.setKind(name == active and "accent" or "off") end
+	end
+	local n = math.max(#modes, 1)
+	for i, m in ipairs(modes) do
+		local b = makeBtn(btnRow, {
+			Size = UDim2.new(1 / n, -((n - 1) * 6) / n, 1, 0), Kind = "off", Radius = 14, TextSize = 11, LayoutOrder = i,
+		})
+		b.setText(esc(m))
+		btns[m] = b
+		b.btn.Activated:Connect(function()
+			if el._locked then return end
+			PlaySound("Click")
+			active = m
+			el.Value = m
+			refresh()
+			cfgSet(key, opts, m)
+			fire(opts.Callback, m)
+		end)
+	end
+	refresh()
+	function el.Set(self, v, silent)
+		v = tostring(v)
+		if not btns[v] then return end
+		active = v
+		el.Value = v
+		refresh()
+		cfgSet(key, opts, v)
+		if not silent then fire(opts.Callback, v) end
+	end
+	el.SetValue = el.Set
+	function el.LoadValue(self, v) el.Set(self, v, true) end
+	function el.Get() return el.Value end
+	el.GetValue = el.Get
+	return attachCommon(el, row, t, nil, entry, string.upper)
+end
+
+local function addColorPalette(sec, opts)
+	opts = opts or {}
+	local row, entry = newRow(sec, { Title = "Quick accent palettes" })
+	vlist(row, 4)
+	lbl(row, { Font = F.Bold, TextSize = 11, Text = "QUICK ACCENT PALETTES (ONE-TAP)", LayoutOrder = 1 }, "TextMuted")
+	local grid = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 58), LayoutOrder = 2 }, row)
+	new("UIGridLayout", {
+		CellSize = UDim2.new(0.2, -6, 0, 24), CellPadding = UDim2.new(0, 6, 0, 6), HorizontalAlignment = Enum.HorizontalAlignment.Center,
+		VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+	}, grid)
+	for i, pal in ipairs(Palettes) do
+		local b = new("TextButton", {
+			BackgroundColor3 = pal.Col1, Text = "", AutoButtonColor = false, BorderSizePixel = 0, LayoutOrder = i,
+		}, grid)
+		corner(b, 8)
+		local st = stroke(b, WHITE, 1.2, 0.5)
+		b.MouseEnter:Connect(function()
+			Tween(st, 0.15, { Transparency = 0, Thickness = 1.8 })
+			MicroBounce(b)
+		end)
+		b.MouseLeave:Connect(function() Tween(st, 0.15, { Transparency = 0.5, Thickness = 1.2 }) end)
+		b.Activated:Connect(function()
+			PlaySound("Click")
+			MicroBounce(b)
+			applyCustomColors(pal.Col1, pal.Col2)
+			fire(opts.Callback, pal.Col1, pal.Col2, pal.Name)
+			Library.Notify(Library, { Title = "ACCENT CHANGED", Content = "Live palette switched to: " .. pal.Name })
+		end)
+	end
+	local el = { Type = "ColorPalette" }
+	return attachCommon(el, row, nil, nil, entry)
+end
+
+local function addColorPickerRow(sec, opts)
+	opts = opts or {}
+	local title = tostring(opts.Title or opts.Name or "")
+	local row, entry = newRow(sec, opts)
+	local line = new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 34) }, row)
+	local t = lbl(line, {
+		Size = UDim2.new(0.5, 0, 1, 0), AutomaticSize = Enum.AutomaticSize.None, Font = F.Bold, TextSize = 11, Text = string.upper(title),
+		TextYAlignment = Enum.TextYAlignment.Center,
+	}, "TextTitle")
+	local color = typeof(opts.Default) == "Color3" and opts.Default or Theme.Accent
+	local swatch = new("Frame", {
+		Size = UDim2.new(0, 18, 0, 18), Position = UDim2.new(1, -112, 0.5, -9), BackgroundColor3 = color, BorderSizePixel = 0,
+	}, line)
+	round(swatch)
+	stroke(swatch, WHITE, 1, 0.4)
+	local hexLbl = new("TextLabel", {
+		Size = UDim2.new(0, 70, 1, 0), Position = UDim2.new(1, -86, 0, 0), BackgroundTransparency = 1, Font = F.Bold, TextSize = 11.5,
+		TextXAlignment = Enum.TextXAlignment.Left, Text = hex(color), TextColor3 = Theme.AccentLight, RichText = false,
+	}, line)
+	reg("AccentLights", hexLbl)
+	local palIcon = new("ImageLabel", {
+		Size = UDim2.new(0, 16, 0, 16), Position = UDim2.new(1, -16, 0.5, -8), BackgroundTransparency = 1, Image = Icons.Palette,
+		ImageColor3 = Theme.TextDim,
+	}, line)
+	onTheme(function() palIcon.ImageColor3 = Theme.TextDim end, palIcon)
+	local hit = new("TextButton", {
+		Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "", AutoButtonColor = false,
+	}, line)
+
+	local el = { Type = "ColorPickerRow", Value = color }
+	function el.Set(self, c, silent)
+		if typeof(c) ~= "Color3" then return end
+		el.Value = c
+		swatch.BackgroundColor3 = c
+		hexLbl.Text = hex(c)
+		if not silent then fire(opts.Callback, c, hex(c)) end
+	end
+	el.SetValue = el.Set
+	function el.Get() return el.Value end
+	el.GetValue = el.Get
+	hit.Activated:Connect(function()
+		if el._locked then return end
+		PlaySound("Click")
+		sec._win:OpenColorPicker(el.Value, function(newCol, newHex)
+			el.Value = newCol
+			swatch.BackgroundColor3 = newCol
+			hexLbl.Text = newHex
+			fire(opts.Callback, newCol, newHex)
+		end, title)
+	end)
+	return attachCommon(el, row, t, nil, entry, string.upper)
+end
+
+local function addDangerButton(sec, opts)
+	opts = opts or {}
+	local title = tostring(opts.Title or opts.Name or "")
+	local content = tostring(opts.Content or opts.Description or "")
+	local row, entry = newRow(sec, opts)
+	local btn = new("TextButton", {
+		Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, BackgroundColor3 = Theme.Danger, Text = "",
+		AutoButtonColor = false, BorderSizePixel = 0,
+	}, row)
+	corner(btn, 10)
+	padding(btn, 32, 10, 7, 7)
+	vlist(btn, 2)
+	new("ImageLabel", {
+		Size = UDim2.fromOffset(14, 14), AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, -22, 0.5, 0),
+		BackgroundTransparency = 1, Image = opts.Icon or Icons.Skull, ImageColor3 = WHITE,
+	}, btn)
+	local t = lbl(btn, { Font = F.Bold, TextSize = 11.5, Text = title, LayoutOrder = 1, TextColor3 = WHITE })
+	local d = lbl(btn, {
+		Font = F.Regular, TextSize = 10, Text = content, LayoutOrder = 2, TextColor3 = Color3.fromRGB(255, 220, 220),
+	})
+	t.Visible = title ~= ""
+	d.Visible = content ~= ""
+	onTheme(function() btn.BackgroundColor3 = Theme.Danger end, btn)
+	local el = { Type = "DangerButton" }
+	btn.Activated:Connect(function()
+		if el._locked then return end
+		PlaySound("Click")
+		MicroBounce(btn)
+		fire(opts.Callback)
+	end)
+	return attachCommon(el, row, t, d, entry)
+end
+
 local ADDERS = {
 	AddToggle = addToggle, AddSlider = addSlider, AddDropdown = addDropdown, AddInput = addInput,
 	AddButton = addButton, AddParagraph = addParagraph, AddSubSection = addSubSection, AddKeybind = addKeybind,
 	AddColorPicker = addColorPicker, AddActionList = addActionList, AddLiveChat = addLiveChat,
-	AddSupportCard = addSupportCard,
+	AddSupportCard = addSupportCard, AddModeSelector = addModeSelector, AddColorPalette = addColorPalette,
+	AddColorPickerRow = addColorPickerRow, AddActionRow = addButton, AddDangerButton = addDangerButton,
 }
 
 local function buildSection(win, tab, name, wide, badge, icon)
+	local forceSide
+	if wide == "Left" or wide == "Right" then
+		forceSide = wide
+		wide = false
+	end
 	tab._order = tab._order + 1
 	local parentFrame
 	local side
-	if wide then
+	if wide == true then
 		parentFrame = new("Frame", {
 			BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = tab._order,
 		}, tab._page)
@@ -2111,7 +2382,9 @@ local function buildSection(win, tab, name, wide, badge, icon)
 			tab._cols = { left = left, right = right, wl = 0, wr = 0 }
 		end
 		local c = tab._cols
-		if c.wl <= c.wr then
+		local useLeft = c.wl <= c.wr
+		if forceSide == "Left" then useLeft = true elseif forceSide == "Right" then useLeft = false end
+		if useLeft then
 			parentFrame = c.left
 			side = "l"
 			c.wl = c.wl + 2
@@ -2139,15 +2412,15 @@ local function buildSection(win, tab, name, wide, badge, icon)
 		}, header)
 		reg("AccentLights", bIcon)
 		local bTitle = new("TextLabel", {
-			Size = UDim2.new(1, -90, 1, 0), Position = UDim2.new(0, 32, 0, 0), BackgroundTransparency = 1, Font = Enum.Font.GothamBold,
-			TextSize = 10.5, TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(tostring(name)), TextTruncate = Enum.TextTruncate.AtEnd,
+			Size = UDim2.new(1, -90, 1, 0), Position = UDim2.new(0, 32, 0, 0), BackgroundTransparency = 1, Font = F.Bold,
+			TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(tostring(name)), TextTruncate = Enum.TextTruncate.AtEnd,
 			TextColor3 = Theme.TextTitle, RichText = false,
 		}, header)
 		regText(bTitle, "TextTitle")
 		if badge then
 			local bb = new("TextLabel", {
 				Size = UDim2.new(0, 75, 0, 18), Position = UDim2.new(1, -85, 0.5, -9), BackgroundColor3 = Theme.SubBox,
-				Font = Enum.Font.GothamBold, TextSize = 8.5, TextColor3 = Theme.Success, Text = string.upper(tostring(badge)), BorderSizePixel = 0,
+				Font = F.Bold, TextSize = 10, TextColor3 = Theme.Success, Text = string.upper(tostring(badge)), BorderSizePixel = 0,
 			}, header)
 			round(bb)
 			reg("SubBoxes", bb)
@@ -2444,10 +2717,11 @@ function Library.Window(self, opts)
 	resetRegistry()
 
 	Config.setup(opts.Folder)
-	Theme = Themes.NeverloseCrimson
+	Library.Settings.CurrentTheme = "NeverloseCrimson"
+	Library.Settings.BaseTheme = "NeverloseCrimson"
+	rebuildTheme()
 	loadUiSettings()
 	local S = Library.Settings
-	Theme = Themes[S.CurrentTheme] or Themes.NeverloseCrimson
 
 	local WinTitle = tostring(opts.Title or "Sena")
 	local WinSub = tostring(opts.SubTitle or opts.Footer or "")
@@ -2455,9 +2729,14 @@ function Library.Window(self, opts)
 	local WH = WinSize.Y.Offset
 	local ToggleKey = Enum.KeyCode.RightControl
 	pcall(function()
-		local k = Enum.KeyCode[tostring(opts.ToggleKey or S.ToggleKey)]
+		local saved = Config.get("__ui")
+		local nm = (type(saved) == "table" and saved.key)
+			or (typeof(opts.ToggleKey) == "EnumItem" and opts.ToggleKey.Name)
+			or (opts.ToggleKey and tostring(opts.ToggleKey)) or S.ToggleKey
+		local k = Enum.KeyCode[nm]
 		if k then ToggleKey = k end
 	end)
+	S.ToggleKey = ToggleKey.Name
 
 	local win = {
 		Tabs = {}, Options = opts, _keys = {}, _conns = {}, _tabsList = {}, AllSearchableItems = {}, _dead = false,
@@ -2517,6 +2796,21 @@ function Library.Window(self, opts)
 	}, Main)
 	corner(Wallpaper, 16)
 	win.Wallpaper = Wallpaper
+	local Acrylic = new("Frame", {
+		Name = "Acrylic", Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 0,
+		Visible = S.AcrylicEnabled ~= false,
+	}, Main)
+	corner(Acrylic, 16)
+	new("UIGradient", {
+		Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.94), NumberSequenceKeypoint.new(1, 1) }), Rotation = 45,
+	}, Acrylic)
+	win.Acrylic = Acrylic
+	if S.CustomWallpaperId and S.CustomWallpaperId ~= "" then
+		task.spawn(function()
+			local res = LoadCustomImage(S.CustomWallpaperId, "")
+			if res and res ~= "" and Wallpaper.Parent then Wallpaper.Image = res end
+		end)
+	end
 	local Fx = new("Frame", {
 		Name = "FxCanvas", Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, ClipsDescendants = true, ZIndex = 0,
 	}, Main)
@@ -2627,13 +2921,13 @@ function Library.Window(self, opts)
 	end)
 
 	local TitleLabel = new("TextLabel", {
-		AutomaticSize = Enum.AutomaticSize.X, Size = UDim2.new(0, 0, 0, 16), BackgroundTransparency = 1, Font = Enum.Font.GothamBold,
-		TextSize = 13, Text = WinTitle, TextColor3 = Theme.TextTitle, RichText = false,
+		AutomaticSize = Enum.AutomaticSize.X, Size = UDim2.new(0, 0, 0, 18), BackgroundTransparency = 1, Font = F.Bold,
+		TextSize = 14.5, Text = WinTitle, TextColor3 = Theme.TextTitle, RichText = false,
 	}, Header)
 	regText(TitleLabel, "TextTitle")
 	local SubLabel = new("TextLabel", {
-		AutomaticSize = Enum.AutomaticSize.X, Size = UDim2.new(0, 0, 0, 12), BackgroundTransparency = 1, Font = Enum.Font.Gotham,
-		TextSize = 9.5, Text = WinSub, TextColor3 = Theme.TextDim, RichText = false,
+		AutomaticSize = Enum.AutomaticSize.X, Size = UDim2.new(0, 0, 0, 14), BackgroundTransparency = 1, Font = F.Regular,
+		TextSize = 11, Text = WinSub, TextColor3 = Theme.TextDim, RichText = false,
 	}, Header)
 	regText(SubLabel, "TextDim")
 	local function setControlsPosition(pos)
@@ -2710,13 +3004,13 @@ function Library.Window(self, opts)
 		ImageColor3 = Theme.TextMuted,
 	}, SearchBox)
 	local SearchInput = new("TextBox", {
-		Size = UDim2.new(1, -44, 1, 0), Position = UDim2.new(0, 26, 0, 0), BackgroundTransparency = 1, Font = Enum.Font.Gotham,
-		TextSize = 10.5, TextColor3 = Theme.TextTitle, PlaceholderColor3 = Theme.TextMuted, PlaceholderText = "Search...",
+		Size = UDim2.new(1, -44, 1, 0), Position = UDim2.new(0, 26, 0, 0), BackgroundTransparency = 1, Font = F.Regular,
+		TextSize = 12, TextColor3 = Theme.TextTitle, PlaceholderColor3 = Theme.TextMuted, PlaceholderText = "Search...",
 		ClearTextOnFocus = false, Text = "", TextXAlignment = Enum.TextXAlignment.Left,
 	}, SearchBox)
 	local sClear = new("TextButton", {
 		Size = UDim2.new(0, 16, 0, 16), Position = UDim2.new(1, -20, 0.5, -8), BackgroundTransparency = 1, Text = "X",
-		Font = Enum.Font.GothamBold, TextSize = 9, TextColor3 = Theme.TextMuted, Visible = false,
+		Font = F.Bold, TextSize = 10.5, TextColor3 = Theme.TextMuted, Visible = false,
 	}, SearchBox)
 	sClear.Activated:Connect(function()
 		SearchInput.Text = ""
@@ -2841,7 +3135,7 @@ function Library.Window(self, opts)
 
 	-- logo customizada (url/asset) sem travar a UI
 	task.spawn(function()
-		local src = opts.Logo or opts.Image
+		local src = S.CustomLogoUrl or opts.Logo or opts.Image
 		if not src then return end
 		local img = LoadCustomImage(src, Icons.Logo)
 		if img and BrandIcon.Parent then
@@ -2865,8 +3159,12 @@ function Library.Window(self, opts)
 
 	-- tecla de atalho
 	track(win, UIS.InputBegan:Connect(function(inp, gpe)
-		if not gpe and inp.KeyCode == win.Keybind then
-			if S.KeybindMode == "Hold" then toggleMain(true) else toggleMain() end
+		if not gpe and not win._listeningKey and inp.KeyCode == win.Keybind then
+			if S.KeybindMode == "Hold" then
+				toggleMain(true)
+			elseif S.KeybindMode ~= "Always" then
+				toggleMain()
+			end
 		end
 	end))
 	track(win, UIS.InputEnded:Connect(function(inp, gpe)
@@ -2880,7 +3178,7 @@ function Library.Window(self, opts)
 		o = o or {}
 		local TabTitle = tostring(o.Name or o.Title or "Tab")
 		local BadgeText = o.Badge or o.BadgeText
-		local order = #win._tabsList + 5
+		local order = o._order or (#win._tabsList + 5)
 
 		local Page = new("ScrollingFrame", {
 			Name = "Page_" .. TabTitle, Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, BorderSizePixel = 0,
@@ -2916,19 +3214,11 @@ function Library.Window(self, opts)
 
 		local iconName = tostring(o.Icon or "")
 		local low = iconName:lower()
-		local tIcon
-		if iconName:find("^rbxassetid") or IconMap[low] or not GlyphMap[low] then
-			local img = iconName:find("^rbxassetid") and iconName or (IconMap[low] or Icons.Dashboard)
-			tIcon = new("ImageLabel", {
-				Name = "TabIcon", Size = UDim2.new(0, 15, 0, 15), Position = UDim2.new(0.5, -7.5, 0.5, -7.5), BackgroundTransparency = 1,
-				Image = img, ImageColor3 = Theme.TextDim,
-			}, iconBadge)
-		else
-			tIcon = new("TextLabel", {
-				Name = "TabIcon", Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = GlyphMap[low], TextSize = 13,
-				Font = Enum.Font.GothamMedium, TextColor3 = WHITE,
-			}, iconBadge)
-		end
+		local img = iconName:find("^rbxassetid") and iconName or (IconMap[low] or Icons.Dashboard)
+		local tIcon = new("ImageLabel", {
+			Name = "TabIcon", Size = UDim2.new(0, 15, 0, 15), Position = UDim2.new(0.5, -7.5, 0.5, -7.5), BackgroundTransparency = 1,
+			Image = img, ImageColor3 = Theme.TextDim,
+		}, iconBadge)
 		local function setIconColor(col, anim)
 			if tIcon:IsA("ImageLabel") then
 				if anim then Tween(tIcon, 0.18, { ImageColor3 = col }) else tIcon.ImageColor3 = col end
@@ -2937,7 +3227,7 @@ function Library.Window(self, opts)
 
 		local tName = new("TextLabel", {
 			Name = "TabName", Size = UDim2.new(1, -70, 1, 0), Position = UDim2.new(0, 40, 0, 0), BackgroundTransparency = 1,
-			Font = Enum.Font.GothamMedium, TextSize = 11.5, TextColor3 = Theme.TextDim, TextXAlignment = Enum.TextXAlignment.Left,
+			Font = F.Medium, TextSize = 13, TextColor3 = Theme.TextDim, TextXAlignment = Enum.TextXAlignment.Left,
 			Text = TabTitle, TextTruncate = Enum.TextTruncate.AtEnd, RichText = false,
 		}, TabBtn)
 		local rightIndicator = new("ImageLabel", {
@@ -2954,7 +3244,7 @@ function Library.Window(self, opts)
 			round(bTag)
 			stroke(bTag, Theme.Success, 1, 0.5)
 			local bText = new("TextLabel", {
-				BackgroundTransparency = 1, Font = Enum.Font.GothamBold, TextSize = 8.5, TextColor3 = Theme.Success,
+				BackgroundTransparency = 1, Font = F.Bold, TextSize = 10, TextColor3 = Theme.Success,
 				Text = tostring(BadgeText), Size = UDim2.new(1, 0, 1, 0),
 			}, bTag)
 			if tostring(BadgeText) == "LIVE" then
@@ -2993,7 +3283,7 @@ function Library.Window(self, opts)
 				ibStroke.Transparency = 0
 				ibStroke.Thickness = 1.2
 				tName.TextColor3 = Theme.TextTitle
-				tName.Font = Enum.Font.GothamBold
+				tName.Font = F.Bold
 				setIconColor(WHITE)
 				if not BadgeText then
 					rightIndicator.Visible = true
@@ -3013,7 +3303,7 @@ function Library.Window(self, opts)
 				ibStroke.Transparency = 0.6
 				ibStroke.Thickness = 1
 				tName.TextColor3 = Theme.TextDim
-				tName.Font = Enum.Font.GothamMedium
+				tName.Font = F.Medium
 				setIconColor(Theme.TextDim)
 				rightIndicator.Visible = false
 				rightIndicator.ImageTransparency = 1
@@ -3079,8 +3369,8 @@ function Library.Window(self, opts)
 		tab.Select = activate
 		tab.Activate = activate
 
-		tab.AddSection = function(_, sname, wide)
-			return buildSection(win, tab, sname, wide == true, nil, nil)
+		tab.AddSection = function(_, sname, wide, badge, icon)
+			return buildSection(win, tab, sname, wide, badge, icon)
 		end
 		local defaultSec
 		for nm in pairs(ADDERS) do
@@ -3094,7 +3384,10 @@ function Library.Window(self, opts)
 		applyState(false)
 		win._tabsList[#win._tabsList + 1] = tab
 		win.Tabs[#win.Tabs + 1] = tab
-		if #win._tabsList == 1 then activate() end
+		if not o._system and not win._activated then
+			win._activated = true
+			activate()
+		end
 		return tab
 	end
 
@@ -3103,8 +3396,8 @@ function Library.Window(self, opts)
 			Name = "NavHeader_" .. tostring(text), Size = UDim2.new(1, -4, 0, 24), BackgroundTransparency = 1, LayoutOrder = order or 1,
 		}, NavScroll)
 		local h = new("TextLabel", {
-			Size = UDim2.new(0, 80, 1, 0), Position = UDim2.new(0, 6, 0, 0), BackgroundTransparency = 1, Font = Enum.Font.GothamBold,
-			TextSize = 9, TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(tostring(text)), TextColor3 = Theme.TextDim,
+			Size = UDim2.new(0, 80, 1, 0), Position = UDim2.new(0, 6, 0, 0), BackgroundTransparency = 1, Font = F.Bold,
+			TextSize = 10.5, TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(tostring(text)), TextColor3 = Theme.TextDim,
 		}, f)
 		regText(h, "TextDim")
 		local line = new("Frame", {
@@ -3170,64 +3463,522 @@ function Library.Window(self, opts)
 		return tab
 	end
 
-	function win.AddSettingsTab(_)
-		local tab = win.AddTab(win, { Name = "UI Settings", Icon = "settings" })
+	-- seletor de cor (modal da StarHubUI)
+	local picker
+	local function buildPicker()
+		local m = new("Frame", {
+			Name = "ColorPickerModal", Size = UDim2.new(0, 350, 0, 265), Position = UDim2.new(0.5, -175, 0.5, -132),
+			BackgroundColor3 = Color3.fromRGB(24, 21, 33), BorderSizePixel = 0, Visible = false, ZIndex = 100,
+			ClipsDescendants = true, Active = true,
+		}, Main)
+		corner(m, 14)
+		stroke(m, Color3.fromRGB(62, 54, 82), 1.2, 0)
+		local header = new("Frame", { Size = UDim2.new(1, 0, 0, 36), BackgroundTransparency = 1, ZIndex = 101 }, m)
+		attachDrag(win, header, m)
+		local cpTitle = new("TextLabel", {
+			Size = UDim2.new(1, -50, 1, 0), Position = UDim2.new(0, 14, 0, 0), BackgroundTransparency = 1, Font = F.Bold,
+			TextSize = 14.5, TextColor3 = WHITE, TextXAlignment = Enum.TextXAlignment.Left, Text = "Colorpicker", ZIndex = 101,
+			RichText = false,
+		}, header)
+		local cpClose = new("TextButton", {
+			Size = UDim2.new(0, 22, 0, 22), Position = UDim2.new(1, -30, 0.5, -11), BackgroundColor3 = Color3.fromRGB(36, 32, 48),
+			Text = "X", Font = F.Bold, TextSize = 11.5, TextColor3 = Color3.fromRGB(180, 175, 195), ZIndex = 102,
+			AutoButtonColor = false, BorderSizePixel = 0,
+		}, header)
+		round(cpClose)
+
+		local currH, currS, currV = 0, 1, 1
+		local oldColor, activeColor, activeCb = WHITE, WHITE, nil
+		local updating = false
+
+		local SVBox = new("Frame", {
+			Name = "SVBox", Size = UDim2.new(0, 155, 0, 125), Position = UDim2.new(0, 14, 0, 42),
+			BackgroundColor3 = Color3.fromHSV(0, 1, 1), BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 101,
+		}, m)
+		corner(SVBox, 6)
+		local whiteOv = new("Frame", { Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 102 }, SVBox)
+		new("UIGradient", {
+			Color = ColorSequence.new(WHITE),
+			Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1) }), Rotation = 0,
+		}, whiteOv)
+		local blackOv = new("Frame", {
+			Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.new(0, 0, 0), BorderSizePixel = 0, ZIndex = 103,
+		}, SVBox)
+		new("UIGradient", {
+			Color = ColorSequence.new(Color3.new(0, 0, 0)),
+			Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(1, 0) }), Rotation = 90,
+		}, blackOv)
+		local SVCursor = new("Frame", {
+			Size = UDim2.new(0, 11, 0, 11), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, ZIndex = 104,
+		}, SVBox)
+		round(SVCursor)
+		stroke(SVCursor, WHITE, 1.6, 0)
+
+		local HueBar = new("Frame", {
+			Name = "HueBar", Size = UDim2.new(0, 11, 0, 125), Position = UDim2.new(0, 178, 0, 42), BackgroundColor3 = WHITE,
+			BorderSizePixel = 0, ZIndex = 101,
+		}, m)
+		round(HueBar)
+		new("UIGradient", {
+			Rotation = 90,
+			Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
+				ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 255)),
+				ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)), ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 0)),
+			}),
+		}, HueBar)
+		local HueKnob = new("Frame", {
+			Size = UDim2.new(1, 6, 0, 6), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundColor3 = WHITE, ZIndex = 104,
+			BorderSizePixel = 0,
+		}, HueBar)
+		round(HueKnob)
+		stroke(HueKnob, Color3.fromRGB(40, 36, 52), 1.2, 0)
+
+		local inputs = new("Frame", {
+			Size = UDim2.new(1, -204, 0, 125), Position = UDim2.new(0, 198, 0, 42), BackgroundTransparency = 1, ZIndex = 101,
+		}, m)
+		vlist(inputs, 6)
+		local function makeField(labelName, order)
+			local r = new("Frame", { Size = UDim2.new(1, 0, 0, 26), BackgroundTransparency = 1, LayoutOrder = order, ZIndex = 101 }, inputs)
+			local box = new("TextBox", {
+				Size = UDim2.new(1, -44, 1, 0), BackgroundColor3 = Color3.fromRGB(36, 31, 50), TextColor3 = WHITE, Font = F.Bold,
+				TextSize = 12, ClearTextOnFocus = false, ZIndex = 102, BorderSizePixel = 0, Text = "",
+			}, r)
+			corner(box, 6)
+			stroke(box, Color3.fromRGB(56, 48, 76), 1, 0)
+			new("TextLabel", {
+				Size = UDim2.new(0, 40, 1, 0), Position = UDim2.new(1, -40, 0, 0), BackgroundTransparency = 1, Font = F.Medium,
+				TextSize = 11, TextColor3 = Color3.fromRGB(180, 175, 195), TextXAlignment = Enum.TextXAlignment.Center,
+				Text = labelName, ZIndex = 102,
+			}, r)
+			return box
+		end
+		local hexInput = makeField("Hex", 1)
+		local redInput = makeField("Red", 2)
+		local greenInput = makeField("Green", 3)
+		local blueInput = makeField("Blue", 4)
+
+		local swatchRow = new("Frame", {
+			Size = UDim2.new(0, 175, 0, 24), Position = UDim2.new(0, 14, 0, 176), BackgroundTransparency = 1, ZIndex = 101,
+		}, m)
+		local oldSwatch = new("TextButton", {
+			Size = UDim2.new(0.5, -4, 1, 0), BackgroundColor3 = oldColor, Text = "", AutoButtonColor = false, ZIndex = 102,
+			BorderSizePixel = 0,
+		}, swatchRow)
+		corner(oldSwatch, 6)
+		stroke(oldSwatch, Color3.fromRGB(62, 54, 82), 1, 0)
+		local newSwatch = new("Frame", {
+			Size = UDim2.new(0.5, -4, 1, 0), Position = UDim2.new(0.5, 4, 0, 0), BackgroundColor3 = activeColor, ZIndex = 102,
+			BorderSizePixel = 0,
+		}, swatchRow)
+		corner(newSwatch, 6)
+		stroke(newSwatch, WHITE, 1, 0.5)
+
+		local btnRow = new("Frame", {
+			Size = UDim2.new(1, -28, 0, 32), Position = UDim2.new(0, 14, 1, -44), BackgroundTransparency = 1, ZIndex = 101,
+		}, m)
+		local function modalBtn(text, x, textCol)
+			local b = new("TextButton", {
+				Size = UDim2.new(0.5, -5, 1, 0), Position = x, BackgroundColor3 = Color3.fromRGB(38, 33, 52), Text = text,
+				Font = F.Bold, TextSize = 12.5, TextColor3 = textCol, AutoButtonColor = false, ZIndex = 102, BorderSizePixel = 0,
+			}, btnRow)
+			corner(b, 8)
+			stroke(b, Color3.fromRGB(62, 54, 82), 1, 0)
+			b.MouseEnter:Connect(function() Tween(b, 0.15, { BackgroundColor3 = Color3.fromRGB(48, 42, 68) }) end)
+			b.MouseLeave:Connect(function() Tween(b, 0.15, { BackgroundColor3 = Color3.fromRGB(38, 33, 52) }) end)
+			return b
+		end
+		local doneBtn = modalBtn("Done", UDim2.new(0, 0, 0, 0), WHITE)
+		local cancelBtn = modalBtn("Cancel", UDim2.new(0.5, 5, 0, 0), Color3.fromRGB(180, 175, 195))
+
+		local function refresh(fromInputs)
+			activeColor = Color3.fromHSV(currH, currS, currV)
+			SVBox.BackgroundColor3 = Color3.fromHSV(currH, 1, 1)
+			SVCursor.Position = UDim2.new(currS, 0, 1 - currV, 0)
+			HueKnob.Position = UDim2.new(0.5, 0, currH, 0)
+			newSwatch.BackgroundColor3 = activeColor
+			if not fromInputs then
+				updating = true
+				hexInput.Text = hex(activeColor)
+				redInput.Text = tostring(math.floor(activeColor.R * 255 + 0.5))
+				greenInput.Text = tostring(math.floor(activeColor.G * 255 + 0.5))
+				blueInput.Text = tostring(math.floor(activeColor.B * 255 + 0.5))
+				updating = false
+			end
+		end
+
+		local svDrag, hueDrag = false, false
+		local function updateSV(x, y)
+			local w, h = math.max(SVBox.AbsoluteSize.X, 1), math.max(SVBox.AbsoluteSize.Y, 1)
+			currS = math.clamp((x - SVBox.AbsolutePosition.X) / w, 0, 1)
+			currV = 1 - math.clamp((y - SVBox.AbsolutePosition.Y) / h, 0, 1)
+			refresh(false)
+		end
+		local function updateHue(y)
+			currH = math.clamp((y - HueBar.AbsolutePosition.Y) / math.max(HueBar.AbsoluteSize.Y, 1), 0, 1)
+			refresh(false)
+		end
+		SVBox.InputBegan:Connect(function(i)
+			if isPress(i) then
+				svDrag = true
+				updateSV(i.Position.X, i.Position.Y)
+			end
+		end)
+		HueBar.InputBegan:Connect(function(i)
+			if isPress(i) then
+				hueDrag = true
+				updateHue(i.Position.Y)
+			end
+		end)
+		track(win, UIS.InputChanged:Connect(function(i)
+			if not isMove(i) then return end
+			if svDrag then updateSV(i.Position.X, i.Position.Y) elseif hueDrag then updateHue(i.Position.Y) end
+		end))
+		track(win, UIS.InputEnded:Connect(function(i)
+			if isPress(i) then
+				svDrag = false
+				hueDrag = false
+			end
+		end))
+
+		local function fromRgbBoxes()
+			if updating then return end
+			local r = math.clamp(tonumber(redInput.Text) or 0, 0, 255)
+			local g = math.clamp(tonumber(greenInput.Text) or 0, 0, 255)
+			local b = math.clamp(tonumber(blueInput.Text) or 0, 0, 255)
+			currH, currS, currV = Color3.toHSV(Color3.fromRGB(r, g, b))
+			refresh(false)
+		end
+		redInput.FocusLost:Connect(fromRgbBoxes)
+		greenInput.FocusLost:Connect(fromRgbBoxes)
+		blueInput.FocusLost:Connect(fromRgbBoxes)
+		hexInput.FocusLost:Connect(function()
+			if updating then return end
+			local c = hexToColor(hexInput.Text)
+			if c then
+				currH, currS, currV = Color3.toHSV(c)
+			end
+			refresh(false)
+		end)
+
+		local function close() m.Visible = false end
+		cpClose.Activated:Connect(function() PlaySound("Click") close() end)
+		cancelBtn.Activated:Connect(function() PlaySound("Click") close() end)
+		oldSwatch.Activated:Connect(function()
+			currH, currS, currV = Color3.toHSV(oldColor)
+			refresh(false)
+		end)
+		doneBtn.Activated:Connect(function()
+			PlaySound("Click")
+			local cb, c = activeCb, activeColor
+			close()
+			if cb then fire(cb, c, hex(c)) end
+		end)
+
+		return {
+			open = function(color, callback, ttl)
+				oldColor = typeof(color) == "Color3" and color or WHITE
+				activeCb = callback
+				currH, currS, currV = Color3.toHSV(oldColor)
+				cpTitle.Text = ttl and tostring(ttl) or "Colorpicker"
+				oldSwatch.BackgroundColor3 = oldColor
+				refresh(false)
+				m.Position = UDim2.new(0.5, -175, 0.5, -132)
+				m.Visible = true
+			end,
+		}
+	end
+	function win.OpenColorPicker(_, color, cb, ttl)
+		if not picker then picker = buildPicker() end
+		picker.open(color, cb, ttl)
+	end
+
+	-- aba System & Theme (igual a da StarHubUI)
+	function win.AddSystemTab(_)
+		local tab = win.AddTab(win, { Name = "System & Theme", Icon = "settings", _system = true, _order = 9000 })
 		local names, keyByName = {}, {}
 		for k, th in pairs(Themes) do
 			names[#names + 1] = th.Name
 			keyByName[th.Name] = k
 		end
 		table.sort(names)
-		local sec1 = tab:AddSection("Theme & Style")
-		sec1:AddDropdown({
-			Title = "Theme", Options = names, Default = (Themes[S.CurrentTheme] or Themes.NeverloseCrimson).Name, NoSave = true,
-			MaxVisible = 6, Callback = function(n) Library.SetTheme(Library, keyByName[n]) end,
-		})
-		sec1:AddDropdown({
-			Title = "Accent Style", Options = { "Gradient", "Solid" }, Default = S.AccentStyle, NoSave = true,
-			Callback = function(v) Library.SetAccentStyle(Library, v) end,
-		})
-		sec1:AddSlider({
-			Title = "Window Transparency", Min = 0, Max = 60, Default = math.floor(S.WindowTransparency * 100 + 0.5), Suffix = "%", NoSave = true,
-			Callback = function(v)
-				S.WindowTransparency = v / 100
-				Main.BackgroundTransparency = S.WindowTransparency
+		local function note(title, content, badge)
+			Library.Notify(Library, { Title = title, Content = content, Badge = badge })
+		end
+		local p1Row, p2Row
+		local function syncRows()
+			if p1Row then p1Row:Set(Theme.Grad1 or Theme.Accent, true) end
+			if p2Row then p2Row:Set(Theme.Grad2 or Theme.AccentLight, true) end
+		end
+
+		-- coluna esquerda
+		local ThemeBox = tab:AddSection("THEMES & ACCENT COLOR", "Left", "PALETTE", Icons.Palette)
+		ThemeBox:AddModeSelector({
+			Title = "ACCENT COLOR STYLE", Options = { "Gradient Mode", "Solid Mode" },
+			Default = (S.AccentStyle == "Solid") and "Solid Mode" or "Gradient Mode", NoSave = true,
+			Callback = function(choice)
+				S.AccentStyle = choice:find("Solid") and "Solid" or "Gradient"
+				applyThemeAll()
+				note("ACCENT STYLE CHANGED", "Rendering in " .. S.AccentStyle .. " accent mode")
 				saveUiSettings()
 			end,
 		})
-		local sec2 = tab:AddSection("Effects & Sound")
-		sec2:AddDropdown({
-			Title = "Background Effect", Options = EffectNames, Default = S.BackgroundEffect, NoSave = true, MaxVisible = 7,
-			Callback = function(v)
-				setEffect(v)
+		ThemeBox:AddDropdown({
+			Title = "READY-MADE THEME PRESET", Options = names, MaxVisible = 6, NoSave = true,
+			Default = (S.CurrentTheme == "Custom") and "Custom" or (Themes[S.CurrentTheme] or Themes.NeverloseCrimson).Name,
+			Callback = function(sel)
+				local k = keyByName[sel]
+				if k then
+					Library.SetTheme(Library, k)
+					syncRows()
+					note("THEME CHANGED", "Applied preset: " .. sel)
+				end
+			end,
+		})
+		ThemeBox:AddColorPalette({ Callback = function() syncRows() end })
+		p1Row = ThemeBox:AddColorPickerRow({
+			Title = "PRIMARY ACCENT (COLOR 1)", Default = Theme.Grad1 or Theme.Accent,
+			Callback = function(newCol, hx)
+				local c2 = (S.AccentStyle == "Solid") and newCol or (Theme.Grad2 or Theme.AccentLight)
+				applyCustomColors(newCol, c2)
+				syncRows()
+				note("PRIMARY COLOR 1 SET", "Color 1 updated to: " .. hx)
+			end,
+		})
+		p2Row = ThemeBox:AddColorPickerRow({
+			Title = "SECONDARY ACCENT (COLOR 2)", Default = Theme.Grad2 or Theme.AccentLight,
+			Callback = function(newCol, hx)
+				applyCustomColors(Theme.Grad1 or Theme.Accent, newCol)
+				syncRows()
+				note("SECONDARY COLOR 2 SET", "Color 2 updated to: " .. hx)
+			end,
+		})
+
+		local GlassBox = tab:AddSection("INTERFACE & WINDOW CONTROLS", "Left", nil, Icons.Visuals)
+		GlassBox:AddModeSelector({
+			Title = "CONTROLS ALIGNMENT", Options = { "Left (macOS)", "Right (Windows)" }, NoSave = true,
+			Default = S.ControlsPosition == "Left" and "Left (macOS)" or "Right (Windows)",
+			Callback = function(pos)
+				local pp = pos:find("Left") and "Left" or "Right"
+				setControlsPosition(pp)
+				note("LAYOUT CHANGED", "Controls moved to: " .. pos)
 				saveUiSettings()
 			end,
 		})
-		sec2:AddToggle({
-			Title = "Sound Effects", Content = "Click / toggle / tab sounds.", Default = S.SoundEnabled, NoSave = true,
-			Callback = function(v)
-				S.SoundEnabled = v
-				saveUiSettings()
+		GlassBox:AddActionRow({
+			Title = "TEST NOTIFICATION", Content = "Send sample breakout notification", Icon = Icons.Bell,
+			Callback = function()
+				Library.Notify(Library, {
+					Title = "NOTIFICATION TEST", Content = "Breakout notification modal verified & active!", Duration = 3.5,
+					Badge = "VERIFIED", BadgeColor = Color3.fromRGB(34, 197, 94), Icon = Icons.Bell,
+				})
 			end,
 		})
-		sec2:AddSlider({
-			Title = "Sound Volume", Min = 0, Max = 100, Default = math.floor(S.SoundVolume * 100 + 0.5), Suffix = "%", NoSave = true,
-			Callback = function(v)
-				S.SoundVolume = v / 100
-				saveUiSettings()
+		GlassBox:AddActionRow({
+			Title = "RESPONSIVE AUTO-SCALE", Content = "Locked for PC (100%) & Auto-Fit for Mobile", Icon = Icons.Zap,
+			Callback = function()
+				updateScale()
+				note("RESPONSIVE SCALE", "Display scale re-synchronized!", "SYSTEM")
 			end,
 		})
-		sec2:AddToggle({
-			Title = "Floating Toggle Button", Content = "Draggable logo button to open/close the window.", Default = S.ShowFloatingToggle,
-			NoSave = true,
+		GlassBox:AddToggle({
+			Title = "SHOW FLOATING TOGGLE BUTTON", Content = "Displays draggable logo button to open/close the window", NoSave = true,
+			Default = S.ShowFloatingToggle,
 			Callback = function(v)
 				S.ShowFloatingToggle = v
 				Floating.Visible = v
 				saveUiSettings()
 			end,
 		})
+		GlassBox:AddToggle({
+			Title = "ACRYLIC GLASS EFFECT", Content = "Enables translucent glossy backdrop", NoSave = true,
+			Default = S.AcrylicEnabled ~= false,
+			Callback = function(v)
+				S.AcrylicEnabled = v
+				Acrylic.Visible = v
+				saveUiSettings()
+			end,
+		})
+		GlassBox:AddSlider({
+			Title = "WINDOW TRANSPARENCY", Min = 0, Max = 80, Default = math.floor((S.WindowTransparency or 0) * 100 + 0.5),
+			Suffix = "%", NoSave = true,
+			Callback = function(v)
+				S.WindowTransparency = v / 100
+				Main.BackgroundTransparency = v / 100
+				saveUiSettings()
+			end,
+		})
+
+		local AudioBox = tab:AddSection("AUDIO & HAPTICS", "Left", nil, Icons.Zap)
+		AudioBox:AddToggle({
+			Title = "UI SOUND EFFECTS", Content = "Toggle interactive bubble audio on clicks and switches", NoSave = true,
+			Default = S.SoundEnabled,
+			Callback = function(v)
+				S.SoundEnabled = v
+				if v then PlaySound("ToggleOn") end
+				saveUiSettings()
+			end,
+		})
+		AudioBox:AddSlider({
+			Title = "SOUND VOLUME", Min = 0, Max = 100, Default = math.floor((S.SoundVolume or 0.55) * 100 + 0.5), Suffix = "%",
+			NoSave = true,
+			Callback = function(v)
+				S.SoundVolume = v / 100
+				saveUiSettings()
+			end,
+		})
+		AudioBox:AddActionRow({
+			Title = "TEST BUBBLE SOUND", Content = "Play the bubble audio sequence", Icon = Icons.Bell,
+			Callback = function()
+				PlaySound("ToggleOn")
+				task.delay(0.16, function() PlaySound("Click") end)
+				task.delay(0.32, function() PlaySound("Notify") end)
+			end,
+		})
+
+		-- coluna direita
+		local BrandBox = tab:AddSection("BRANDING & BACKGROUND", "Right", nil, Icons.Logo)
+		BrandBox:AddDropdown({
+			Title = "BACKGROUND EFFECT", Options = EffectNames, Default = S.BackgroundEffect or "Floating Bubbles", NoSave = true,
+			MaxVisible = 7,
+			Callback = function(sel)
+				setEffect(sel)
+				note("BACKGROUND EFFECT", "Active mode: " .. sel, "EFFECT")
+				saveUiSettings()
+			end,
+		})
+		BrandBox:AddInput({
+			Title = "CUSTOM LOGO...", Placeholder = "https://... or Decal ID", Default = S.CustomLogoUrl or "", NoSave = true,
+			Callback = function(txt)
+				if txt and txt ~= "" then
+					task.spawn(function()
+						local res = LoadCustomImage(txt, Icons.Logo)
+						BrandIcon.Image = res
+						flIcon.Image = res
+						flShadow.Image = res
+					end)
+					S.CustomLogoUrl = txt
+					saveUiSettings()
+				end
+			end,
+		})
+		BrandBox:AddInput({
+			Title = "BACKGROUND...", Placeholder = "https://... or Decal ID", Default = S.CustomWallpaperId or "", NoSave = true,
+			Callback = function(txt)
+				if txt and txt ~= "" then
+					task.spawn(function() Wallpaper.Image = LoadCustomImage(txt, "") end)
+					S.CustomWallpaperId = txt
+					saveUiSettings()
+				end
+			end,
+		})
+		BrandBox:AddSlider({
+			Title = "BACKGROUND TRANSPARENCY", Min = 0, Max = 100, Default = math.floor((S.WallpaperTransparency or 0.92) * 100 + 0.5),
+			Suffix = "%", NoSave = true,
+			Callback = function(v)
+				S.WallpaperTransparency = v / 100
+				Wallpaper.ImageTransparency = v / 100
+				saveUiSettings()
+			end,
+		})
+		BrandBox:AddSlider({
+			Title = "WALLPAPER DIMMING", Min = 0, Max = 100, Default = math.floor((S.WallpaperDimming or 0.35) * 100 + 0.5),
+			Suffix = "%", NoSave = true,
+			Callback = function(v)
+				S.WallpaperDimming = v / 100
+				local f = math.floor(255 * (1 - v / 100))
+				Wallpaper.ImageColor3 = Color3.fromRGB(f, f, f)
+				saveUiSettings()
+			end,
+		})
+
+		local ConfigBox = tab:AddSection("CONFIG & SYSTEM", "Right", nil, Icons.Settings)
+		ConfigBox:AddToggle({
+			Title = "REAL-TIME AUTO SAVE", Content = "Automatically saves the UI preferences to disk", NoSave = true,
+			Default = S.AutoSaveEnabled ~= false,
+			Callback = function(v)
+				S.AutoSaveEnabled = v
+				if v then
+					saveUiSettings(true)
+					note("AUTO SAVE ENABLED", "Real-time configuration auto-saving active!", "CONFIG")
+				else
+					note("AUTO SAVE PAUSED", "Auto-save disabled. Use the manual save button.", "CONFIG")
+				end
+			end,
+		})
+		ConfigBox:AddModeSelector({
+			Title = "KEYBIND MODE", Options = { "Toggle", "Hold", "Always" }, Default = S.KeybindMode or "Toggle", NoSave = true,
+			Callback = function(mode)
+				S.KeybindMode = mode
+				note("KEYBIND MODE", "Mode active: " .. mode)
+				saveUiSettings()
+			end,
+		})
+
+		-- botao da tecla de atalho
+		local kRow = newRow(ConfigBox, { Title = "toggle key" })
+		local kBtn = new("TextButton", {
+			Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = Theme.SubBox, Text = "TOGGLE KEY: " .. win.Keybind.Name, Font = F.Bold,
+			TextSize = 11, TextColor3 = Theme.AccentLight, AutoButtonColor = false, BorderSizePixel = 0,
+		}, kRow)
+		corner(kBtn, 8)
+		bstroke(kBtn, 1, 0)
+		reg("SubBoxes", kBtn)
+		reg("AccentLights", kBtn)
+		kBtn.Activated:Connect(function()
+			if win._listeningKey then return end
+			win._listeningKey = true
+			PlaySound("Click")
+			kBtn.Text = "PRESS ANY KEY..."
+			kBtn.TextColor3 = Theme.TextTitle
+			local conn
+			conn = UIS.InputBegan:Connect(function(inp)
+				if inp.UserInputType == Enum.UserInputType.Keyboard then
+					conn:Disconnect()
+					win._listeningKey = false
+					if inp.KeyCode ~= Enum.KeyCode.Escape then
+						win.Keybind = inp.KeyCode
+						S.ToggleKey = inp.KeyCode.Name
+						note("KEYBIND UPDATED", "Hub bind set to: " .. inp.KeyCode.Name)
+						saveUiSettings()
+					end
+					kBtn.Text = "TOGGLE KEY: " .. win.Keybind.Name
+					kBtn.TextColor3 = Theme.AccentLight
+				end
+			end)
+		end)
+
+		ConfigBox:AddActionRow({
+			Title = "Save UI Settings", Content = "Manually writes the UI configuration to disk", Icon = Icons.Save,
+			Callback = function()
+				saveUiSettings(true)
+				Library.Notify(Library, {
+					Title = "CONFIG SAVED", Content = "Preferences saved!", Badge = "SAVED", Icon = Icons.Save,
+				})
+			end,
+		})
+		ConfigBox:AddActionRow({
+			Title = "Reset All Settings", Content = "Deletes the saved UI settings and restores defaults", Icon = Icons.Refresh,
+			Callback = function()
+				Config.set("__ui", nil)
+				note("RESET DEFAULTS", "Saved UI settings deleted! Reopen the UI to apply defaults.", "RESET")
+			end,
+		})
+		ConfigBox:AddDangerButton({
+			Title = "Unload Script Hub", Content = "Completely unloads the hub and its UI", Icon = Icons.Skull,
+			Callback = function()
+				if type(Library.OnUnload) == "function" then fire(Library.OnUnload) end
+				pcall(function()
+					if type(genv.__SenaV4HubShutdown) == "function" then genv.__SenaV4HubShutdown() end
+				end)
+				Tween(Main, 0.22, { Size = UDim2.new(0, 0, 0, 0) })
+				task.delay(0.25, function() win.Destroy(win) end)
+			end,
+		})
 		return tab
 	end
+	win.AddSettingsTab = win.AddSystemTab
 
 	function win.SetEffect(_, mode)
 		if Effects[mode] or mode == "Off (Clean Minimal)" then
@@ -3258,6 +4009,13 @@ function Library.Window(self, opts)
 	win.Close = win.Destroy
 
 	Library.Windows[#Library.Windows + 1] = win
+	if opts.SystemTab ~= false then
+		local ok, err = pcall(win.AddSystemTab, win)
+		if not ok then warn("[SenaLib] System & Theme tab error: " .. tostring(err)) end
+	end
+	task.delay(2, function()
+		if not win._dead and not win.ActiveTab and win._tabsList[1] then win._tabsList[1].Select() end
+	end)
 	return win
 end
 
@@ -3267,10 +4025,17 @@ end
 function Library.SetTheme(a, b)
 	local name = (a == Library) and b or a
 	if type(name) ~= "string" or not Themes[name] then return end
-	Theme = Themes[name]
 	Library.Settings.CurrentTheme = name
+	Library.Settings.BaseTheme = name
+	rebuildTheme()
 	applyThemeAll()
 	saveUiSettings()
+end
+
+function Library.SetCustomColors(a, b, c)
+	local c1, c2 = b, c
+	if a ~= Library then c1, c2 = a, b end
+	if typeof(c1) == "Color3" and typeof(c2) == "Color3" then applyCustomColors(c1, c2) end
 end
 
 function Library.SetAccentStyle(a, b)
